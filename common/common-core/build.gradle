@@ -22,6 +22,6 @@ dependencies {
     api('com.github.xiaoymin:knife4j-spring-boot-starter')
     api('io.swagger:swagger-models')
     api('com.houkunlin:system-dict-starter')
-    implementation('org.springframework.boot:spring-boot-starter-amqp')
-    implementation('io.projectreactor:reactor-core')
+    api('org.springframework.boot:spring-boot-starter-amqp')
+    api('io.projectreactor:reactor-core')
 }

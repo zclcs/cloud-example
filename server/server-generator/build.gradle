@@ -35,6 +35,9 @@ processResources {
         from('../../shared-resources')
         into('/src/main/resources')
     }
+    from('src/main/java') {
+        include '**/*.xml'
+    }
 }
 
 dependencies {
@@ -48,5 +51,6 @@ dependencies {
     implementation(project(':common:common-security-starter'))
     implementation(project(':common:common-doc-starter'))
     implementation(project(':common:common-logging-starter'))
+    implementation('org.flywaydb:flyway-core')
     implementation('org.freemarker:freemarker')
 }

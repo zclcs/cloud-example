@@ -2,7 +2,7 @@ bootJar.enabled = false
 jar.enabled = true
 
 dependencies {
-    implementation project(':common:common-core')
+    api project(':common:common-core')
     api('com.baomidou:dynamic-datasource-spring-boot-starter')
     api('p6spy:p6spy')
     api(runtimeOnly('mysql:mysql-connector-java'))

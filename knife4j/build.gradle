@@ -35,6 +35,9 @@ processResources {
         from('../shared-resources')
         into('/src/main/resources')
     }
+    from('src/main/java') {
+        include '**/*.xml'
+    }
 }
 
 dependencies {
