@@ -1,0 +1,40 @@
+server:
+  port: ${PORT_SERVER_MINIO:8204}
+
+spring:
+  datasource:
+    dynamic:
+      primary: primary
+      datasource:
+        primary:
+          driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
+          url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_${DB_NAME_MINIO:minio}?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+
+  flyway:
+    table: minio_flyway_history
+
+mybatis-plus:
+  type-aliases-package: com.zclcs.common.core.entity.minio
+  mapper-locations: classpath:com/zclcs/server/minio/mapper/*.xml
+
+minio:
+  endpoint: ${ENDPOINT:http://192.168.33.10:9000}
+  root-user: ${ROOT_USER:minio}
+  root-password: ${ROOT_PASSWORD:minio123}
+  domain-name: ${DOMAIN_NAME:}
+  host: ${HOST:192.168.33.10}
+  port: ${PORT:9000}
+
+my:
+  cloud:
+    security:
+      enable: true
+      anon-uris: /v2/api-docs,/v2/api-docs-ext
+      only-fetch-by-gateway: false
+
+seata:
+  config:
+    nacos:
+      data-id: server-minio-seata.properties

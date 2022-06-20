@@ -1,0 +1,76 @@
+server:
+  port: ${PORT_GATEWAY:8301}
+
+spring:
+
+  datasource:
+    dynamic:
+      p6spy: ${LOG_SQL_ENABLED:true}
+      hikari:
+        connection-timeout: 30000
+        max-lifetime: 1800000
+        max-pool-size: 15
+        min-idle: 5
+        connection-test-query: select 1
+      primary: primary
+      datasource:
+        primary:
+          driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
+          url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_${DB_NAME_SYSTEM:system}?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai}
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        - id: ${SERVICE_NAME_AUTH:auth}
+          uri: lb://${SERVICE_NAME_AUTH:auth}
+          predicates:
+            - Path=${SERVICE_PATH_AUTH:/auth}/**
+        - id: ${SERVICE_NAME_SERVER_SYSTEM:server-system}
+          uri: lb://${SERVICE_NAME_SERVER_SYSTEM:server-system}
+          predicates:
+            - Path=${SERVICE_PATH_SERVER_SYSTEM:/system}/**
+        - id: ${SERVICE_NAME_SERVER_GENERATOR:server-generator}
+          uri: lb://${SERVICE_NAME_SERVER_GENERATOR:server-generator}
+          predicates:
+            - Path=${SERVICE_PATH_SERVER_GENERATOR:/generator}/**
+        - id: ${SERVICE_NAME_SERVER_TEST:server-test}
+          uri: lb://${SERVICE_NAME_SERVER_TEST:server-test}
+          predicates:
+            - Path=${SERVICE_PATH_SERVER_TEST:/test}/**
+        - id: ${SERVICE_NAME_SERVER_MINIO:server-minio}
+          uri: lb://${SERVICE_NAME_SERVER_MINIO:server-minio}
+          predicates:
+            - Path=${SERVICE_PATH_SERVER_MINIO:/minio}/**
+        - id: ${SERVICE_NAME_SERVER_DICT:server-dict}
+          uri: lb://${SERVICE_NAME_SERVER_DICT:server-dict}
+          predicates:
+            - Path=${SERVICE_PATH_SERVER_DICT:/dict}/**
+      loadbalancer:
+        use404: true
+      default-filters:
+        - StripPrefix=1
+
+mybatis-plus:
+  type-aliases-package: com.zclcs.common.core.entity.system
+  mapper-locations: classpath:com/zclcs/gateway/mapper/*.xml
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    banner: false
+
+my:
+  log:
+    enable-log-for-controller: ${LOG_CONTROLLER_PARAMS_GATEWAY:false}
+
+ribbon:
+  eager-load:
+    enabled: true

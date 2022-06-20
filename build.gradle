@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'idea'
+    id 'groovy-gradle-plugin'
+    id "org.springframework.boot" version '2.3.12.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.cloud.tools.jib' version '3.2.1' apply false
+}
+
+allprojects {
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    group 'com.zclcs'
+    version '1.0-SNAPSHOT'
+}
+
+bootJar.enabled = false
+jar.enabled = false
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "java-library"
+    apply plugin: "idea"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    def defaultEncoding = 'UTF-8'
+    tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
+
+    tasks.withType(AbstractCopyTask) {
+        setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
+    }
+
+    dependencies {
+        compileOnly('org.projectlombok:lombok')
+        annotationProcessor('org.projectlombok:lombok')
+        annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencyManagement {
+
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+        }
+
+        dependencies {
+            dependency("xml-apis:xml-apis:${xmlApisVersion}")
+            dependency("org.lionsoul:ip2region:${ip2regionVersion}")
+            dependency("com.google.guava:guava:${guavaVersion}")
+            dependency("com.wuwenze:ExcelKit:${excelkitVersion}")
+            dependency("com.baomidou:mybatis-plus-boot-starter:${mybatisPlusVersion}")
+            dependency("cn.hutool:hutool-core:${hutoolVersion}")
+            dependency("cn.hutool:hutool-json:${hutoolVersion}")
+            dependency("cn.hutool:hutool-crypto:${hutoolVersion}")
+            dependency("com.github.xiaoymin:knife4j-micro-spring-boot-starter:${knife4jVersion}")
+            dependency("com.github.xiaoymin:knife4j-spring-boot-starter:${knife4jVersion}")
+            dependency("io.swagger:swagger-models:${swaggerVersion}")
+            dependency("com.houkunlin:system-dict-starter:${systemDictStarterVersion}")
+            dependency("com.baomidou:dynamic-datasource-spring-boot-starter:${dynamicDatasourceVersion}")
+            dependency("p6spy:p6spy:${p6spyVersion}")
+            dependency("org.apache.skywalking:apm-toolkit-logback-1.x:${apmToolkitLogbackVersion}")
+            dependency("com.github.whvcse:easy-captcha:${easyCaptchaVersion}")
+            dependency("com.xkcoding:justauth-spring-boot-starter:${justauthVersion}")
+            dependency("com.github.xiaoymin:knife4j-aggregation-spring-boot-starter:${knife4jVersion}")
+            dependency("io.seata:seata-spring-boot-starter:${seataVersion}")
+            dependency("io.minio:minio:${minioVersion}")
+            dependency("com.squareup.okhttp3:okhttp:${okhttpVersion}")
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = "7.4.1"
+}

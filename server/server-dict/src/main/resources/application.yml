@@ -1,0 +1,54 @@
+server:
+  port: ${PORT_SERVER_DICT:8205}
+
+spring:
+  datasource:
+    dynamic:
+      primary: primary
+      datasource:
+        primary:
+          driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
+          url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_${DB_NAME_DICT:dict}?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+
+  flyway:
+    table: dict_flyway_history
+
+system:
+  dict:
+    mq-type: none
+    text-value-default-null: true
+    on-boot-refresh-dict: false
+    cache:
+      enabled: true
+      maximum-size: 500
+      initial-capacity: 50
+      duration: 30s
+      miss-num: 50
+    controller:
+      enabled: true
+      prefix: /cache
+    store-key:
+      # 树结构父级值的前缀
+      parent-prefix: '${my.redis-cache-prefix}dict:p:'
+      # 数据字典类型对象前缀
+      type-prefix: '${my.redis-cache-prefix}dict:t:'
+      # 数据字典值文本前缀
+      value-prefix: '${my.redis-cache-prefix}dict:v:'
+
+mybatis-plus:
+  type-aliases-package: com.zclcs.common.core.entity.dict
+  mapper-locations: classpath:com/zclcs/server/dict/mapper/*.xml
+
+my:
+  cloud:
+    security:
+      enable: true
+      anon-uris: /v2/api-docs,/v2/api-docs-ext
+      only-fetch-by-gateway: false
+
+seata:
+  config:
+    nacos:
+      data-id: server-dict-seata.properties

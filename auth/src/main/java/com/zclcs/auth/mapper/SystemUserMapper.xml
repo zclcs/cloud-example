@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.auth.mapper.SystemUserMapper">
+    <select id="findByName" resultType="com.zclcs.common.core.entity.system.vo.SystemUserVo">
+        select su.user_id,
+               su.username,
+               su.password,
+               su.dept_id,
+               su.email,
+               su.mobile,
+               su.status,
+               su.create_at,
+               su.update_at,
+               su.last_login_time,
+               su.gender,
+               su.is_tab,
+               su.theme,
+               su.avatar,
+               su.description,
+               group_concat(distinct sur.role_id)  roleIdString,
+               group_concat(distinct sr.role_name) roleNameString,
+               group_concat(distinct sudp.dept_id) deptIdString
+        from system_user su
+                 left join system_user_role sur on su.user_id = sur.user_id
+                 inner join system_role sr on sur.role_id = sr.role_id
+                 left join system_user_data_permission sudp on su.user_id = sudp.user_id
+        WHERE su.username = #{username}
+        group by su.user_id,
+                 su.username,
+                 su.password,
+                 su.dept_id,
+                 su.email,
+                 su.mobile,
+                 su.status,
+                 su.create_at,
+                 su.update_at,
+                 su.last_login_time,
+                 su.gender,
+                 su.is_tab,
+                 su.theme,
+                 su.avatar,
+                 su.description
+    </select>
+    <select id="findUserDataPermissions" resultType="com.zclcs.common.core.entity.system.vo.SystemUserDataPermissionVo">
+        select user_id, dept_id
+        from system_user_data_permission
+        where user_id = #{userId}
+    </select>
+
+</mapper>

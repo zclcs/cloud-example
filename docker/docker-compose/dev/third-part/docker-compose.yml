@@ -1,0 +1,208 @@
+version: '3'
+# docker network create -d bridge cloud_net 部署前 创建网络群组
+services:
+  mysql:
+    image: mysql:5.7.35
+    container_name: mysql-cloud
+    network_mode: host
+    environment:
+      # 设置密码
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      # 设置时区
+      TZ: Asia/Shanghai
+    volumes:
+      #挂载 MySQL数据
+      - ./mysql/data:/var/lib/mysql
+      #挂载 MySQL日志
+      - ./mysql/log:/var/log/mysql
+      #挂载 MySQL配置文件
+      - ./mysql/conf:/etc/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  redis:
+    image: redis:6.2.5
+    container_name: redis-cloud
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+    volumes:
+      - ./redis/data:/data #挂载 Redis数据
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf #挂载 Redis配置
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nacos:
+    image: nacos/nacos-server:2.0.3
+    container_name: nacos-standalone-mysql
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS 'http://localhost:${NACOS_SERVER_PORT}/nacos' || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      - mysql
+  minio:
+    image: minio/minio:RELEASE.2021-10-06T23-36-31Z
+    container_name: minio
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      #管理后台用户名
+      MINIO_ROOT_USER: ${ROOT_USER}
+      #管理后台密码，最小8个字符
+      MINIO_ROOT_PASSWORD: ${ROOT_PASSWORD}
+    volumes:
+      #映射当前目录下的data目录至容器内/data目录
+      - ./minio/data:/data
+      #映射配置目录
+      - ./minio/config:/root/.minio/
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS '${ENDPOINT}/minio/index.html' || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    privileged: true
+  rabbitmq:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
+    container_name: rabbitmq
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nginx:
+    image: nginx:1.21.3
+    container_name: nginx-cloud
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    privileged: true
+    user: root
+    volumes:
+      - ../cloud/web:/var/cloud/web
+      - ./nginx/:/etc/nginx/
+    healthcheck:
+      test: [ "CMD", "service", "nginx", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  canal-admin:
+    image: canal/canal-admin:v1.1.5
+    container_name: canal-admin
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      server.port: 8089
+      canal.adminUser: admin
+      canal.adminPasswd: 123456
+      spring.datasource.address: 127.0.0.1:3306
+      spring.datasource.database: third_part_canal_admin
+      spring.datasource.username: root
+      spring.datasource.password: 123456
+    volumes:
+      - ./canal-admin/logs/:/home/admin/canal-admin/logs
+  canal:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/canal:v1.1.5
+    container_name: canal
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      canal.admin.manager: 127.0.0.1:8089
+      canal.admin.port: 11110
+      canal.admin.user: admin
+      canal.admin.passwd: 6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9
+      canal.register.ip: 192.168.33.10
+      canal.admin.register.auto: 'true'
+      #集群名
+      canal.admin.register.cluster: dev
+      #Canal Server 名字
+      canal.admin.register.name: canal-server-1
+      WAIT_HOSTS: 127.0.0.1:3306, 127.0.0.1:5672, 127.0.0.1:8089, 127.0.0.1:2181, 127.0.0.1:2182, 127.0.0.1:2183
+      WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
+      WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
+      WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
+    volumes:
+      #      - ./canal/properties/canal.properties:/home/admin/canal-server/conf/canal.properties
+      #      - ./canal/properties/instance.properties:/home/admin/canal-server/conf/test/instance.properties
+      - ./canal/log/:/home/admin/canal-server/logs/
+    command: sh -c "/wait && /home/admin/app.sh"
+    env_file: .env
+  zookeeper-master:
+    image: zookeeper:3.5.9
+    container_name: zookeeper-master
+    restart: always
+    hostname: zookeeper-master
+    ports:
+      - "2181:2181"
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 1
+    volumes:
+      - ./zookeeper/master/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zookeeper/master/data:/data
+      - ./zookeeper/master/datalog:/datalog
+      - ./zookeeper/master/logs:/logs
+  zookeeper-node1:
+    image: zookeeper:3.5.9
+    container_name: zookeeper-node1
+    restart: always
+    hostname: zookeeper-node2
+    ports:
+      - "2182:2181"
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 2
+    volumes:
+      - ./zookeeper/node1/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zookeeper/node1/data:/data
+      - ./zookeeper/node1/datalog:/datalog
+      - ./zookeeper/node1/logs:/logs
+  zookeeper-node2:
+    image: zookeeper:3.5.9
+    container_name: zookeeper-node2
+    restart: always
+    hostname: zookeeper-node2
+    ports:
+      - "2183:2181"
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 3
+    volumes:
+      - ./zookeeper/node2/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zookeeper/node2/data:/data
+      - ./zookeeper/node2/datalog:/datalog
+      - ./zookeeper/node2/logs:/logs

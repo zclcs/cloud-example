@@ -1,0 +1,58 @@
+plugins {
+    id 'com.google.cloud.tools.jib'
+}
+
+jib {
+    from {
+        image = "${dockerJibFromImage}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    to {
+        image = "${dockerJibToImage}/${project.name}:${version}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    allowInsecureRegistries = true
+    container {
+        environment = ["SW_AGENT_NAME": project.name, "TZ": 'Asia/Shanghai']
+        entrypoint = "INHERIT"
+        format = "OCI"
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+}
+
+bootJar {
+    mainClassName = 'com.zclcs.GatewayApplication'
+}
+
+processResources {
+    copy {
+        from('../shared-resources')
+        into('/src/main/resources')
+    }
+}
+
+dependencies {
+    implementation('com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway')
+    implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel')
+    implementation('com.alibaba.csp:sentinel-datasource-nacos')
+    implementation(project(':common:common-core')) {
+        exclude(module: 'spring-boot-starter-web')
+        exclude(module: 'spring-cloud-starter-oauth2')
+        exclude(module: 'spring-cloud-starter-security')
+    }
+    implementation(project(':common:common-rabbitmq-starter'))
+    implementation(project(':common:common-redis-starter'))
+    implementation(project(':common:common-logging-starter')) {
+        exclude(module: 'spring-boot-starter-web')
+    }
+    implementation(project(':common:common-datasource-starter'))
+    implementation('io.projectreactor:reactor-core')
+    implementation('org.springframework.cloud:spring-cloud-starter-gateway')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+}

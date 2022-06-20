@@ -1,0 +1,47 @@
+plugins {
+    id 'com.google.cloud.tools.jib'
+}
+
+jib {
+    from {
+        image = "${dockerJibFromImage}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    to {
+        image = "${dockerJibToImage}/${project.name}:${version}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    allowInsecureRegistries = true
+    container {
+        environment = ["SW_AGENT_NAME": project.name, "TZ": 'Asia/Shanghai']
+        entrypoint = "INHERIT"
+        format = "OCI"
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+}
+
+bootJar {
+    mainClassName = 'com.zclcs.Knife4jApplication'
+}
+
+processResources {
+    copy {
+        from('../shared-resources')
+        into('/src/main/resources')
+    }
+}
+
+dependencies {
+    implementation(project(':common:common-logging-starter'))
+    implementation('org.springframework.cloud:spring-cloud-starter-security')
+    implementation('com.github.xiaoymin:knife4j-aggregation-spring-boot-starter')
+    implementation('io.swagger:swagger-models')
+    implementation('com.github.xiaoymin:knife4j-spring-boot-starter')
+    implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config')
+}

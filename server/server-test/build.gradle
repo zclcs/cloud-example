@@ -1,0 +1,51 @@
+plugins {
+    id 'com.google.cloud.tools.jib'
+}
+
+jib {
+    from {
+        image = "${dockerJibFromImage}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    to {
+        image = "${dockerJibToImage}/${project.name}:${version}"
+        auth {
+            username = "${dockerJibAuthUsername}"
+            password = "${dockerJibAuthPassword}"
+        }
+    }
+    allowInsecureRegistries = true
+    container {
+        environment = ["SW_AGENT_NAME": project.name, "TZ": 'Asia/Shanghai']
+        entrypoint = "INHERIT"
+        format = "OCI"
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+}
+
+bootJar {
+    mainClassName = 'com.zclcs.ServerTestApplication'
+}
+
+processResources {
+    copy {
+        from('../../shared-resources')
+        into('/src/main/resources')
+    }
+}
+
+dependencies {
+    implementation(project(':common:common-core'))
+    implementation(project(':common:common-seata-starter'))
+    implementation(project(':common:common-sentinel-client-starter'))
+    implementation(project(':common:common-web-starter'))
+    implementation(project(':common:common-rabbitmq-starter'))
+    implementation(project(':common:common-redis-starter'))
+    implementation(project(':common:common-datasource-starter'))
+    implementation(project(':common:common-security-starter'))
+    implementation(project(':common:common-doc-starter'))
+    implementation(project(':common:common-logging-starter'))
+}

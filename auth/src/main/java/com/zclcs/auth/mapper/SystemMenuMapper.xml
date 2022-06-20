@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.auth.mapper.SystemMenuMapper">
+
+    <sql id="baseSql">
+        select sm.menu_id,
+               sm.parent_id,
+               sm.menu_name,
+               sm.path,
+               sm.component,
+               sm.redirect,
+               sm.perms,
+               sm.icon,
+               sm.type,
+               sm.hide_menu,
+               sm.ignore_keep_alive,
+               sm.hide_breadcrumb,
+               sm.hide_children_in_menu,
+               sm.current_active_menu,
+               sm.order_num,
+               sm.create_at,
+               sm.update_at
+        from system_menu sm
+            ${ew.customSqlSegment}
+    </sql>
+    <select id="findUserPermissions" resultType="com.zclcs.common.core.entity.system.vo.SystemMenuVo">
+        select distinct m.perms
+        from system_role r
+                 left join system_user_role ur on (r.role_id = ur.role_id)
+                 left join system_user u on (u.user_id = ur.user_id)
+                 left join system_role_menu rm on (rm.role_id = r.role_id)
+                 left join system_menu m on (m.menu_id = rm.menu_id)
+        where u.username = #{userName}
+          and m.perms is not null
+          and m.perms &lt;&gt; ''
+    </select>
+    <sql id="baseSqlFromUserMenu">
+        select sm.menu_id,
+               sm.parent_id,
+               sm.menu_name,
+               sm.keep_alive_name,
+               sm.path,
+               sm.component,
+               sm.redirect,
+               sm.perms,
+               sm.icon,
+               sm.type,
+               sm.hide_menu,
+               sm.ignore_keep_alive,
+               sm.hide_breadcrumb,
+               sm.hide_children_in_menu,
+               sm.current_active_menu,
+               sm.order_num,
+               sm.create_at,
+               sm.update_at
+        from system_menu sm
+        where sm.type &lt;&gt; 1
+          and sm.menu_id in
+              (select distinct srm.menu_id
+               from system_role_menu srm
+                        left join system_role sr on (srm.role_id = sr.role_id)
+                        left join system_user_role sur on (sur.role_id = sr.role_id)
+                        left join system_user su on (su.user_id = sur.user_id)
+               where su.username = #{username})
+            ${ew.customSqlSegment}
+    </sql>
+    <select id="findListVo" resultType="com.zclcs.common.core.entity.system.vo.SystemMenuVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findUserMenuListVo" resultType="com.zclcs.common.core.entity.system.vo.SystemMenuVo">
+        <include refid="baseSqlFromUserMenu"/>
+    </select>
+
+</mapper>

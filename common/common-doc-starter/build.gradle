@@ -1,0 +1,9 @@
+bootJar.enabled = false
+jar.enabled = true
+
+dependencies {
+    api('com.github.xiaoymin:knife4j-micro-spring-boot-starter')
+    api('com.github.xiaoymin:knife4j-spring-boot-starter')
+    api('io.swagger:swagger-models')
+    api('org.springframework.boot:spring-boot-starter')
+}

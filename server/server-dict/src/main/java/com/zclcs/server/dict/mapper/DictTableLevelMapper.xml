@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.server.dict.mapper.DictTableLevelMapper">
+
+    <sql id="baseSql">
+        select dtl.id,
+               dtl.parent_id,
+               dtl.dict_name,
+               dtl.code,
+               dtl.title,
+               dtl.remark
+        from dict_table_level dtl
+            ${ew.customSqlSegment}
+    </sql>
+    <sql id="levelSql">
+        select dtl.id,
+               dtl.parent_id,
+               dtl.dict_name,
+               dtl.code,
+               dtl.title,
+               dtl.remark,
+               case
+                   when (select count(0)
+                         from dict_table_level dtlTmp
+                         where dtlTmp.parent_id =
+                               dtl.id
+                           and dtlTmp.dict_name = dtl.dict_name) > 0 then 'true'
+                   else 'false' end hasChildren
+        from dict_table_level dtl
+            ${ew.customSqlSegment}
+    </sql>
+    <select id="findPageVo" resultType="com.zclcs.common.core.entity.dict.vo.DictTableLevelVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findListVo" resultType="com.zclcs.common.core.entity.dict.vo.DictTableLevelVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findOneVo" resultType="com.zclcs.common.core.entity.dict.vo.DictTableLevelVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findLevelListVo" resultType="com.zclcs.common.core.entity.dict.vo.DictTableLevelVo">
+        <include refid="levelSql"/>
+    </select>
+</mapper>
