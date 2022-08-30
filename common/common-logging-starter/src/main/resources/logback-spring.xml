@@ -142,7 +142,7 @@
     <logger name="com.houkunlin" level="debug" additivity="false"/>
 
     <logger name="com.zclcs.common.core.client" level="DEBUG" additivity="false">
-        <appender-ref ref="console"/>
+        <!--        <appender-ref ref="console"/>-->
         <appender-ref ref="file_client"/>
     </logger>
 
