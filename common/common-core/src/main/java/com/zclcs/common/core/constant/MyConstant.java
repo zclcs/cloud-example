@@ -91,6 +91,11 @@ public interface MyConstant {
     String DICT_ARRAY = "array";
 
     /**
+     * 字典是否是array
+     */
+    String DICT_TREE = "tree";
+
+    /**
      * 行政区划表名
      */
     String AREA_CODE = "area_code";

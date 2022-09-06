@@ -37,11 +37,17 @@ public class ${className}Vo implements Serializable {
 <#if columns??>
     <#list columns as column>
     @ApiModelProperty(value = "${column.remark}")
-    <#if column.hasDict = true && column.isArray = true>
+    <#if column.hasDict = true && column.isArray = true && column.isTree = false>
     @DictText(value = "${column.remarkDict}", array = @Array)
     </#if>
-    <#if column.hasDict = true && column.isArray = false>
+    <#if column.hasDict = true && column.isArray = false && column.isTree = false>
     @DictText("${column.remarkDict}")
+    </#if>
+    <#if column.hasDict = true && column.isArray = false && column.isTree = true>
+    @DictText(value = "${column.remarkDict}", tree = true)
+    </#if>
+    <#if column.hasDict = true && column.isArray = true && column.isTree = true>
+    @DictText(value = "${column.remarkDict}", tree = true, array = @Array(toText = false))
     </#if>
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'

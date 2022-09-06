@@ -51,4 +51,8 @@ public class Column {
      * 字典是否是数组
      */
     private Boolean isArray;
+    /**
+     * 字典是否是tree
+     */
+    private Boolean isTree;
 }

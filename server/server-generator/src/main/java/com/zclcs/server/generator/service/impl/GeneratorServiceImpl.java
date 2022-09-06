@@ -97,6 +97,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 column.setHasDict(false);
             }
             column.setIsArray(StrUtil.contains(columnRemark, MyConstant.DICT_ARRAY));
+            column.setIsTree(StrUtil.contains(columnRemark, MyConstant.DICT_TREE));
         }
         try {
             generatorHelper.generateEntityFile(columns, generatorConfigVo);

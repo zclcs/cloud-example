@@ -3,6 +3,7 @@ package com.zclcs.server.dict.provider;
 import com.houkunlin.system.dict.starter.bean.DictTypeVo;
 import com.houkunlin.system.dict.starter.provider.DictProvider;
 import com.zclcs.common.core.constant.DictConstant;
+import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.core.entity.dict.DictTable;
 import com.zclcs.common.core.entity.dict.DictTableLevel;
 import com.zclcs.common.core.entity.dict.DictTableName;
@@ -48,6 +49,22 @@ public class MyProvider implements DictProvider {
             } else {
                 dictTableLevels.stream().filter(dictTableLevel -> dictTableLevel.getDictName().equals(dictTableName.getDictName()))
                         .forEach(dictTableLevel -> dictTypeBuilder.add(dictTableLevel.getCode(), dictTableLevel.getTitle()));
+            }
+            dictTypeVos.add(dictTypeBuilder.build());
+        }
+        for (DictTableName dictTableName : dictTableNames) {
+            DictTypeVo.DictTypeBuilder dictTypeBuilder = DictTypeVo.newBuilder(dictTableName.getDictName(), dictTableName.getDictTitle());
+            if (!DictConstant.DICT_TYPE_0.equals(dictTableName.getType())) {
+                dictTableLevels.stream().filter(dictTableLevel -> dictTableLevel.getDictName().equals(dictTableName.getDictName()))
+                        .forEach(dictTableLevel -> {
+                            if (dictTableLevel.getParentId().equals(MyConstant.TOP_PARENT_ID)) {
+                                dictTypeBuilder.add("", dictTableLevel.getCode(), dictTableLevel.getTitle());
+                            } else {
+                                dictTypeBuilder.add(dictTableLevel.getParentCode(), dictTableLevel.getCode(), dictTableLevel.getTitle());
+                            }
+                        });
+            } else {
+                continue;
             }
             dictTypeVos.add(dictTypeBuilder.build());
         }
