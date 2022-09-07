@@ -46,9 +46,6 @@ public class MyProvider implements DictProvider {
             if (DictConstant.DICT_TYPE_0.equals(dictTableName.getType())) {
                 dictTables.stream().filter(dictTable -> dictTable.getDictName().equals(dictTableName.getDictName()))
                         .forEach(dictTable -> dictTypeBuilder.add(dictTable.getCode(), dictTable.getTitle()));
-            } else {
-                dictTableLevels.stream().filter(dictTableLevel -> dictTableLevel.getDictName().equals(dictTableName.getDictName()))
-                        .forEach(dictTableLevel -> dictTypeBuilder.add(dictTableLevel.getCode(), dictTableLevel.getTitle()));
             }
             dictTypeVos.add(dictTypeBuilder.build());
         }
