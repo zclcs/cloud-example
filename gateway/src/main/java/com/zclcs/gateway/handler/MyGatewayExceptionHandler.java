@@ -69,7 +69,7 @@ public class MyGatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
             errorMessage = "网关转发异常";
         }
         Map<String, Object> errorAttributes = new HashMap<>(3);
-        errorAttributes.put("message", errorMessage);
+        errorAttributes.put("msg", errorMessage);
         return errorAttributes;
     }
 

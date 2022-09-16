@@ -80,7 +80,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
             systemLogAo.setStart(start);
-            rabbitTemplate.convertAndSend(RabbitConstant.LOG_EXCHANGE, RabbitConstant.SERVER_SYSTEM_LOG_ROUTE_KEY, new MessageStruct(JSONUtil.toJsonStr(systemLogAo)));
+            rabbitTemplate.convertAndSend(RabbitConstant.LOG_EXCHANGE, RabbitConstant.SERVER_SYSTEM_LOG_ROUTE_KEY, MessageStruct.builder().message(JSONUtil.toJsonStr(systemLogAo)).build());
         }
         return result;
     }

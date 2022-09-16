@@ -35,33 +35,13 @@ public class HandleServerDictCacheServiceImpl implements HandleCacheService {
                 case DICT_TABLE:
                     List<DictTable> dictTables = JSONUtil.toList(canalBinLogInfo.getData(), DictTable.class);
                     for (DictTable dictTable : dictTables) {
-                        switch (canalBinLogInfo.getType()) {
-                            case MyConstant.INSERT:
-                            case MyConstant.UPDATE:
-                                refreshDictCache(dictTable.getDictName(), dictTable.getCode(), dictTable.getTitle());
-                                break;
-                            case MyConstant.DELETE:
-                                deleteDictCache(dictTable.getDictName(), dictTable.getCode());
-                                break;
-                            default:
-                                break;
-                        }
+                        refreshCache(canalBinLogInfo, dictTable.getDictName(), dictTable.getCode(), dictTable.getTitle());
                     }
                     break;
                 case DICT_TABLE_LEVEL:
                     List<DictTableLevel> dictTableLevels = JSONUtil.toList(canalBinLogInfo.getData(), DictTableLevel.class);
                     for (DictTableLevel dictTableLevel : dictTableLevels) {
-                        switch (canalBinLogInfo.getType()) {
-                            case MyConstant.INSERT:
-                            case MyConstant.UPDATE:
-                                refreshDictCache(dictTableLevel.getDictName(), dictTableLevel.getCode(), dictTableLevel.getTitle());
-                                break;
-                            case MyConstant.DELETE:
-                                deleteDictCache(dictTableLevel.getDictName(), dictTableLevel.getCode());
-                                break;
-                            default:
-                                break;
-                        }
+                        refreshCache(canalBinLogInfo, dictTableLevel.getDictName(), dictTableLevel.getCode(), dictTableLevel.getTitle());
                     }
                     break;
                 default:
@@ -69,6 +49,20 @@ public class HandleServerDictCacheServiceImpl implements HandleCacheService {
             }
         }
         channel.basicAck(deliveryTag, false);
+    }
+
+    private void refreshCache(CanalBinLogInfo canalBinLogInfo, String dictName, String code, String title) {
+        switch (canalBinLogInfo.getType()) {
+            case MyConstant.INSERT:
+            case MyConstant.UPDATE:
+                refreshDictCache(dictName, code, title);
+                break;
+            case MyConstant.DELETE:
+                deleteDictCache(dictName, code);
+                break;
+            default:
+                break;
+        }
     }
 
     private void refreshDictCache(String dictName, String code, String title) {

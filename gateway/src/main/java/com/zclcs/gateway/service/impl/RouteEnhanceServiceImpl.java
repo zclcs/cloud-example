@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private static final String METHOD_ALL = "ALL";
-    private static final String TOKEN_CHECK_URL = "/oath2/info";
+    private static final String TOKEN_CHECK_URL = "/auth/oath2/info";
     private final RouteLogService routeLogService;
     private final BlockLogService blockLogService;
     private final RateLimitLogService rateLimitLogService;
