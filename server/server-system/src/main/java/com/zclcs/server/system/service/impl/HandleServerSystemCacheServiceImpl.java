@@ -94,8 +94,6 @@ public class HandleServerSystemCacheServiceImpl implements HandleCacheService {
                 default:
                     break;
             }
-            // 通知 MQ 消息已被成功消费,可以ACK了
-            channel.basicAck(deliveryTag, false);
         }
         channel.basicAck(deliveryTag, false);
     }

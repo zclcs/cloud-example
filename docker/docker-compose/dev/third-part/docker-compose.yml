@@ -128,10 +128,10 @@ services:
       server.port: 8089
       canal.adminUser: admin
       canal.adminPasswd: 123456
-      spring.datasource.address: 127.0.0.1:3306
+      spring.datasource.address: ${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}
       spring.datasource.database: third_part_canal_admin
-      spring.datasource.username: root
-      spring.datasource.password: 123456
+      spring.datasource.username: ${MYSQL_SERVICE_USER}
+      spring.datasource.password: ${MYSQL_SERVICE_PASSWORD}
     volumes:
       - ./canal-admin/logs/:/home/admin/canal-admin/logs
   canal:

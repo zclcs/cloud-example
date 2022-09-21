@@ -5,9 +5,6 @@ import com.zclcs.common.core.constant.RabbitConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CanalQueueHandler {
 
-    @RabbitListener(bindings = {
-            @QueueBinding(
-                    value = @Queue(value = RabbitConstant.CANAL_QUEUE, durable = "true"),
-                    exchange = @Exchange(value = RabbitConstant.CANAL_EXCHANGE),
-                    key = RabbitConstant.CANAL_ROUTE_KEY
-            )
-    })
+    @RabbitListener(queues = RabbitConstant.CANAL_QUEUE)
     public void directHandlerManualAck(String messageStruct, Message message, Channel channel) {
         //  如果手动ACK,消息会被监听消费,但是消息在队列中依旧存在,如果 未配置 acknowledge-mode 默认是会在消费完毕后自动ACK掉
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();

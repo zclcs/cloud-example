@@ -9,7 +9,7 @@ import com.zclcs.common.core.service.HandleCacheService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -42,16 +42,7 @@ public class CanalDictQueueHandler {
         this.handleServerDictCacheService = handleServerDictCacheService;
     }
 
-    @RabbitListener(bindings = {
-            @QueueBinding(
-                    value = @Queue(value = RabbitConstant.CANAL_DICT_QUEUE, durable = "true", arguments = {
-                            @Argument(name = RabbitConstant.DLX_EXCHANGE_PRE, value = RabbitConstant.DLX_EXCHANGE),
-                            @Argument(name = RabbitConstant.DLX_ROUTE_KEY_PRE, value = RabbitConstant.CANAL_DICT_DLX_ROUTE_KEY)
-                    }),
-                    exchange = @Exchange(value = RabbitConstant.CANAL_EXCHANGE),
-                    key = RabbitConstant.CANAL_DICT_ROUTE_KEY
-            )
-    })
+    @RabbitListener(queues = RabbitConstant.CANAL_DICT_QUEUE)
     public void cacheHandlerManualAck(String messageStruct, Message message, Channel channel) {
         //  如果手动ACK,消息会被监听消费,但是消息在队列中依旧存在,如果 未配置 acknowledge-mode 默认是会在消费完毕后自动ACK掉
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
@@ -76,13 +67,7 @@ public class CanalDictQueueHandler {
         }
     }
 
-    @RabbitListener(bindings = {
-            @QueueBinding(
-                    value = @Queue(value = RabbitConstant.CANAL_DICT_DLX_QUEUE, durable = "true"),
-                    exchange = @Exchange(value = RabbitConstant.DLX_EXCHANGE),
-                    key = RabbitConstant.CANAL_DICT_DLX_ROUTE_KEY
-            )
-    })
+    @RabbitListener(queues = RabbitConstant.CANAL_DICT_DLX_QUEUE)
     public void dlxHandler(String messageStruct, Message message, Channel channel) {
         // 正常队列没处理完成，便会进入该队列，在处理一次，报错要通知开发或者运维，处理完报错后，重新推送消息
         // 可能的报错：数据库挂了，或者别的问题

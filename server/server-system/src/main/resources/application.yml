@@ -15,6 +15,22 @@ spring:
   flyway:
     table: system_flyway_history
 
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
+    port: ${RABBIT_MQ_PORT:5672}
+    username: ${RABBIT_MQ_USERNAME:root}
+    password: ${RABBIT_MQ_PASSWORD:123456}
+    virtual-host: /${NACOS_NAMESPACE:dev}
+    # 手动提交消息
+    listener:
+      simple:
+        #消息必须手动确认
+        acknowledge-mode: manual
+        #限制每次发送一条数据。
+        prefetch: 1
+    publisher-returns: true
+    publisher-confirm-type: simple
+
 mybatis-plus:
   type-aliases-package: com.zclcs.common.core.entity.system
   mapper-locations: classpath:com/zclcs/server/system/mapper/*.xml

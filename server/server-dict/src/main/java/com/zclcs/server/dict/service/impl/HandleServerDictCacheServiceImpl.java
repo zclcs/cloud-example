@@ -42,6 +42,7 @@ public class HandleServerDictCacheServiceImpl implements HandleCacheService {
                     List<DictTableLevel> dictTableLevels = JSONUtil.toList(canalBinLogInfo.getData(), DictTableLevel.class);
                     for (DictTableLevel dictTableLevel : dictTableLevels) {
                         refreshCache(canalBinLogInfo, dictTableLevel.getDictName(), dictTableLevel.getCode(), dictTableLevel.getTitle());
+                        refreshCache(canalBinLogInfo, dictTableLevel.getDictName(), dictTableLevel.getParentCode(), dictTableLevel.getCode(), dictTableLevel.getTitle());
                     }
                     break;
                 default:
@@ -65,9 +66,35 @@ public class HandleServerDictCacheServiceImpl implements HandleCacheService {
         }
     }
 
+    private void refreshCache(CanalBinLogInfo canalBinLogInfo, String dictName, String parentCode, String code, String title) {
+        switch (canalBinLogInfo.getType()) {
+            case MyConstant.INSERT:
+            case MyConstant.UPDATE:
+                if (parentCode.equals(MyConstant.TOP_PARENT_CODE)) {
+                    parentCode = "";
+                }
+                refreshDictCache(dictName, parentCode, code, title);
+                break;
+            case MyConstant.DELETE:
+                deleteDictCache(dictName, code);
+                break;
+            default:
+                break;
+        }
+    }
+
     private void refreshDictCache(String dictName, String code, String title) {
         dictProvider.refreshDictCache(DictValueVo.builder()
                 .dictType(dictName)
+                .value(code)
+                .title(title)
+                .build());
+    }
+
+    private void refreshDictCache(String dictName, String parentCode, String code, String title) {
+        dictProvider.refreshDictCache(DictValueVo.builder()
+                .dictType(dictName)
+                .parentValue(parentCode)
                 .value(code)
                 .title(title)
                 .build());

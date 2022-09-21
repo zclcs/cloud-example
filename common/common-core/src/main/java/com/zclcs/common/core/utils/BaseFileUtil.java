@@ -11,6 +11,7 @@ import org.springframework.util.FileSystemUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
@@ -68,7 +69,7 @@ public abstract class BaseFileUtil {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + java.net.URLEncoder.encode(fileName, MyConstant.UTF8));
         response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
         response.setCharacterEncoding(MyConstant.UTF8);
-        try (InputStream inputStream = new FileInputStream(file); OutputStream os = response.getOutputStream()) {
+        try (InputStream inputStream = Files.newInputStream(file.toPath()); OutputStream os = response.getOutputStream()) {
             byte[] b = new byte[2048];
             int length;
             while ((length = inputStream.read(b)) > 0) {
@@ -121,7 +122,7 @@ public abstract class BaseFileUtil {
 
     private static void compressDirectory(File dir, ZipOutputStream zipOut, String baseDir) throws IOException {
         File[] files = dir.listFiles();
-        if (files != null && ArrayUtils.isNotEmpty(files)) {
+        if (ArrayUtils.isNotEmpty(files)) {
             for (File file : files) {
                 compress(file, zipOut, baseDir + dir.getName() + File.separator);
             }

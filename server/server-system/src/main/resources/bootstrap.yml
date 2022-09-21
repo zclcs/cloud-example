@@ -33,9 +33,9 @@ spring:
           - data-id: seata-client.yaml
             group: DEFAULT_GROUP
             refresh: true
-          - data-id: rabbit-mq.yaml
-            group: DEFAULT_GROUP
-            refresh: true
+          #          - data-id: rabbit-mq.yaml
+          #            group: DEFAULT_GROUP
+          #            refresh: true
           - data-id: fegin.yaml
             group: DEFAULT_GROUP
             refresh: true
