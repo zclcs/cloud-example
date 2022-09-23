@@ -1,5 +1,6 @@
 package com.zclcs.common.core.entity.dict.ao;
 
+import com.houkunlin.system.dict.starter.json.DictValid;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,6 +48,7 @@ public class DictTableNameAo implements Serializable {
 
     @Size(max = 40, message = "{noMoreThan}")
     @ApiModelProperty(value = "字典类型 0 普通 1层级-默认为0")
+    @DictValid("dict_type")
     private String type;
 
     @Size(max = 255, message = "{noMoreThan}")

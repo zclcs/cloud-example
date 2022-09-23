@@ -72,7 +72,7 @@ public class SystemUser extends BaseEntity {
     /**
      * 最近访问时间
      */
-    @TableField("lastLoginTime")
+    @TableField("last_login_time")
     private LocalDateTime lastLoginTime;
 
     /**

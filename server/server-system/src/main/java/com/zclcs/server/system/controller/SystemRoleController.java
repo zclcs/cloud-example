@@ -53,8 +53,8 @@ public class SystemRoleController {
 
     @GetMapping("options")
     @ApiOperation(value = "集合")
-    public BaseRsp<List<SystemRoleVo>> roles(@Validated SystemRoleAo systemRoleAo) {
-        List<SystemRoleVo> systemRoleList = systemRoleService.findSystemRoleList(systemRoleAo);
+    public BaseRsp<List<SystemRoleVo>> roles() {
+        List<SystemRoleVo> systemRoleList = systemRoleService.findSystemRoleList(SystemRoleAo.builder().build());
         return BaseRspUtil.data(systemRoleList);
     }
 
