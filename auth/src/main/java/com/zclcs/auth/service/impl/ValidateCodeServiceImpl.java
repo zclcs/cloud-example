@@ -60,6 +60,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (!StringUtils.equalsIgnoreCase(value, String.valueOf(codeInRedis))) {
             throw new ValidateCodeException("验证码不正确");
         }
+        redisService.del(RedisCachePrefixConstant.CODE_PREFIX + key);
     }
 
     private Captcha createCaptcha(MyValidateCodeProperties code) {
