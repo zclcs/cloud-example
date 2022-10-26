@@ -7,7 +7,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_MINIO_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_MINIO_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}, ${LOCAL_HOST_IP}:${MINIO_PORT}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}

@@ -24,8 +24,8 @@ minio:
   root-user: ${ROOT_USER:minio}
   root-password: ${ROOT_PASSWORD:minio123}
   domain-name: ${DOMAIN_NAME:}
-  host: ${HOST:192.168.33.10}
-  port: ${PORT:9000}
+  host: ${MINIO_HOST:192.168.33.10}
+  port: ${MINIO_PORT:9000}
 
 my:
   cloud:

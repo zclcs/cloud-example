@@ -42,7 +42,6 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         }
         MyValidateCodeProperties code = properties.getCode();
         setHeader(response, code.getType());
-
         Captcha captcha = createCaptcha(code);
         redisService.set(RedisCachePrefixConstant.CODE_PREFIX + key, StringUtils.lowerCase(captcha.text()), code.getTime());
         captcha.out(response.getOutputStream());

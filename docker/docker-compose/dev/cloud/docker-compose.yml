@@ -9,7 +9,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} -Dcsp.sentinel.app.type=1 ${GATEWAY_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${GATEWAY_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${PORT_SERVER_SYSTEM}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${PORT_SERVER_SYSTEM}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -44,7 +44,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_KNIFE4J_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${KNIFE4J_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${PORT_GATEWAY}, ${NACOS_HOST}:${PORT_AUTH}, ${NACOS_HOST}:${PORT_SERVER_SYSTEM}, ${NACOS_HOST}:${PORT_SERVER_DICT}, ${NACOS_HOST}:${PORT_SERVER_MINIO}, ${NACOS_HOST}:${PORT_SERVER_TEST}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${PORT_GATEWAY}, ${LOCAL_HOST_IP}:${PORT_AUTH}, ${LOCAL_HOST_IP}:${PORT_SERVER_SYSTEM}, ${LOCAL_HOST_IP}:${PORT_SERVER_DICT}, ${LOCAL_HOST_IP}:${PORT_SERVER_MINIO}, ${LOCAL_HOST_IP}:${PORT_SERVER_TEST}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -62,7 +62,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_SYSTEM_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_SYSTEM_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -83,7 +83,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_GENERATOR_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_GENERATOR_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}, ${NACOS_HOST}:${PORT_SERVER_SYSTEM}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}, ${LOCAL_HOST_IP}:${PORT_SERVER_SYSTEM}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -103,7 +103,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_DICT_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_DICT_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -123,7 +123,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_MINIO_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_MINIO_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}, ${LOCAL_HOST_IP}:${MINIO_PORT}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -144,7 +144,7 @@ services:
     network_mode: host
     command: sh -c "/wait && java ${JAVA_OPS_PREFIX} ${SERVER_TEST_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${SERVER_TEST_MAIN_CLASS}"
     environment:
-      WAIT_HOSTS: ${NACOS_HOST}:${SEATA_PORT}
+      WAIT_HOSTS: ${LOCAL_HOST_IP}:${SEATA_PORT}
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -159,37 +159,38 @@ services:
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   seata:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/seata:1.4.2
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/seata:1.5.2
     container_name: ${NACOS_NAMESPACE}_seata
     network_mode: host
     environment:
+      TZ: Asia/Shanghai
+      STORE_MODE: db
       # 指定seata服务启动端口
-      - SEATA_PORT=${SEATA_PORT}
+      SEATA_PORT: ${SEATA_PORT}
       # 注册到nacos上的ip。客户端将通过该ip访问seata服务。
       # 注意公网ip和内网ip的差异。
-      - SEATA_IP=${NACOS_DISCOVERY_IP}
-      - SEATA_CONFIG_NAME=file:/root/seata-config/registry
+      SEATA_IP: ${LOCAL_IP}
     volumes:
-      # 因为registry.conf中是nacos配置中心，只需要把registry.conf放到./seata/config文件夹中
-      - ./seata/config:/root/seata-config
+      - "./seata/config/application.yml:/seata-server/resources/application.yml"
+      - "./seata/logs:/logs/seata"
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${SEATA_PORT} || exit 1" ]
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${SEATA_MANAGER_PORT}" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   sentinel:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/sentinel:1.8.4
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/sentinel:1.8.5
     container_name: ${NACOS_NAMESPACE}_sentinel
     network_mode: host
     environment:
       # 设置时区
       TZ: Asia/Shanghai
-      NACOS_ADDR: ${NACOS_HOST}:${NACOS_PORT}
-      ADMIN_USERNAME: ${SENTINEL_ADMIN_USERNAME}
-      ADMIN_PASSWORD: ${SENTINEL_ADMIN_PASSWORD}
-      NACOS_NAMESPACE_ID: ${NACOS_NAMESPACE}
-      SENTINEL_PORT: ${SENTINEL_PORT}
+      PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
+      -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
+      -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 
+      -Ddatasource.provider.nacos.username=${NACOS_USERNAME} -Ddatasource.provider.nacos.password=${NACOS_PASSWORD} -Ddatasource.provider.nacos.namespace=${NACOS_NAMESPACE}
+      -Ddatasource.provider.nacos.group-id=SENTINEL_GROUP"
     volumes:
       - ./log/sentinel:/root/logs/csp
     healthcheck:

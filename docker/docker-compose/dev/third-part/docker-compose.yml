@@ -41,7 +41,7 @@ services:
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   nacos:
-    image: nacos/nacos-server:2.0.3
+    image: nacos/nacos-server:v2.1.2
     container_name: nacos-standalone-mysql
     network_mode: host
     environment:
@@ -51,7 +51,7 @@ services:
       - ./nacos/standalone-logs/:/home/nacos/logs
       - ./nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS 'http://localhost:${NACOS_SERVER_PORT}/nacos' || exit 1" ]
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
@@ -125,15 +125,21 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
-      server.port: 8089
-      canal.adminUser: admin
-      canal.adminPasswd: 123456
+      server.port: ${CANAL_ADMIN_PORT}
+      canal.adminUser: ${CANAL_ADMIN_USERNAME}
+      canal.adminPasswd: ${CANAL_ADMIN_PASSWORD}
       spring.datasource.address: ${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}
-      spring.datasource.database: third_part_canal_admin
+      spring.datasource.database: ${CANAL_ADMIN_DATABASE}
       spring.datasource.username: ${MYSQL_SERVICE_USER}
       spring.datasource.password: ${MYSQL_SERVICE_PASSWORD}
     volumes:
       - ./canal-admin/logs/:/home/admin/canal-admin/logs
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${CANAL_ADMIN_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
   canal:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/canal:v1.1.5
     container_name: canal
@@ -141,17 +147,17 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
-      canal.admin.manager: 127.0.0.1:8089
-      canal.admin.port: 11110
-      canal.admin.user: admin
-      canal.admin.passwd: 6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9
-      canal.register.ip: 192.168.33.10
+      canal.admin.manager: ${LOCAL_HOST_IP}:${CANAL_ADMIN_PORT}
+      canal.admin.port: ${CANAL_PORT}
+      canal.admin.user: ${CANAL_ADMIN_USERNAME}
+      canal.admin.passwd: ${CANAL_ADMIN_PASSWORD_ENCRYPT}
+      canal.register.ip: ${LOCAL_IP}
       canal.admin.register.auto: 'true'
       #集群名
-      canal.admin.register.cluster: dev
+      canal.admin.register.cluster: ${CANAL_ADMIN_REGISTER_CLUSTER}
       #Canal Server 名字
-      canal.admin.register.name: canal-server-1
-      WAIT_HOSTS: 127.0.0.1:3306, 127.0.0.1:5672, 127.0.0.1:8089, 127.0.0.1:2181, 127.0.0.1:2182, 127.0.0.1:2183
+      canal.admin.register.name: ${CANAL_ADMIN_REGISTER_CLUSTER}
+      WAIT_HOSTS: ${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}, ${LOCAL_HOST_IP}:${RABBIT_WEB_MANAGEMENT_PORT}, ${LOCAL_HOST_IP}:${CANAL_ADMIN_PORT}, 127.0.0.1:2181, 127.0.0.1:2182, 127.0.0.1:2183
       WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
       WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
       WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
@@ -160,6 +166,11 @@ services:
       #      - ./canal/properties/instance.properties:/home/admin/canal-server/conf/test/instance.properties
       - ./canal/log/:/home/admin/canal-server/logs/
     command: sh -c "/wait && /home/admin/app.sh"
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${CANAL_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   zookeeper-master:
     image: zookeeper:3.5.9
@@ -167,7 +178,7 @@ services:
     restart: always
     hostname: zookeeper-master
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_MASTER_PORT}:2181"
     environment:
       TZ: Asia/Shanghai
       ZOO_MY_ID: 1
@@ -176,13 +187,19 @@ services:
       - ./zookeeper/master/data:/data
       - ./zookeeper/master/datalog:/datalog
       - ./zookeeper/master/logs:/logs
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${ZOOKEEPER_MASTER_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
   zookeeper-node1:
     image: zookeeper:3.5.9
     container_name: zookeeper-node1
     restart: always
     hostname: zookeeper-node2
     ports:
-      - "2182:2181"
+      - "${ZOOKEEPER_NODE1_PORT}:2181"
     environment:
       TZ: Asia/Shanghai
       ZOO_MY_ID: 2
@@ -191,13 +208,18 @@ services:
       - ./zookeeper/node1/data:/data
       - ./zookeeper/node1/datalog:/datalog
       - ./zookeeper/node1/logs:/logs
+    healthcheck:
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
   zookeeper-node2:
     image: zookeeper:3.5.9
     container_name: zookeeper-node2
     restart: always
     hostname: zookeeper-node2
     ports:
-      - "2183:2181"
+      - "${ZOOKEEPER_NODE2_PORT}:2181"
     environment:
       TZ: Asia/Shanghai
       ZOO_MY_ID: 3
@@ -206,3 +228,8 @@ services:
       - ./zookeeper/node2/data:/data
       - ./zookeeper/node2/datalog:/datalog
       - ./zookeeper/node2/logs:/logs
+    healthcheck:
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env

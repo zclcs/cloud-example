@@ -11,7 +11,8 @@ jib {
         }
     }
     to {
-        image = "${dockerJibToImage}/${project.name}:${version}"
+        image = "${dockerJibToImage}/${project.name}"
+        tags = ["${version}", 'latest']
         auth {
             username = "${dockerJibAuthUsername}"
             password = "${dockerJibAuthPassword}"

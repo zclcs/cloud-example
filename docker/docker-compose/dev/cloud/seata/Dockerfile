@@ -1,1 +1,1 @@
-FROM seataio/seata-server:1.4.2
+FROM seataio/seata-server:1.5.2
