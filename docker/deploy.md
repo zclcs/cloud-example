@@ -111,16 +111,12 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 {
     "graph":"/zclcs/docker",
+    "registry-mirrors": ["https://f12xleug.mirror.aliyuncs.com"],
     "insecure-registries": ["192.168.33.10:3000"],
     "log-driver": "json-file",
     "log-opts": {
         "max-size":"100m", "max-file":"3"
-    },
-    "storage-driver": "overlay2",
-     "storage-opts": [
-        "overlay2.size=20G",
-        "overlay2.override_kernel_check=true"
-     ]
+    }
 }
 ```
 
@@ -134,10 +130,11 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 > - 解压`tar zxf apache-skywalking-apm-es7-8.7.0.tar.gz`
 > - 复制agent`cp -r ./apache-skywalking-apm-bin-es7/agent ./agent`
 > - 压缩agent`tar zcvf agent.tar.gz ./agent`
-> - 使用/agent Dockerfile 构建基础镜像`docker build -t 192.168.33.10:3000/library/jdk8-skywalking:1.0.0 .`
-> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/jdk8-skywalking:1.0.0`
+> - 使用/agent Dockerfile 构建基础镜像`docker build -t 192.168.33.10:3000/library/8-jre-centos7-skywalking:1.0.0 .`
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/8-jre-centos7-skywalking:1.0.0`
+> - 这里最好新增两个镜像一个生产用 jre 一个开发用 jdk
 > - 进入本项目目录执行maven命令(如果harbor账号密码不是默认记得改，地址及端口也是一样)
-    ：`mvn -DsendCredentialsOverHttp=true clean package`
+    ：`jib -DsendCredentialsOverHttp=true`
 
 ## 部署第三方依赖：mysql、redis、nacos、nginx、rabbitmq
 
@@ -152,6 +149,12 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 > - 复制项目 /cloud/third-part/canal 下的内容，上传至服务器
 > - 执行docker build -t 192.168.33.10:3000/library/canal:v1.1.5 .
 > - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/canal:v1.1.5`
+
+# 若无canal-admin基础镜像先创建基础镜像
+
+> - 复制项目 /cloud/third-part/canal-admin 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/canal-admin:v1.1.5 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/canal-admin:v1.1.5`
 
 # 若无seata基础镜像先创建基础镜像
 

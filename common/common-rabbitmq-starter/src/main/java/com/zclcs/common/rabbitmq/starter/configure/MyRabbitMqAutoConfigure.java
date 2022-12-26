@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
  */
 @Slf4j
 @EnableConfigurationProperties({MyRabbitMqProperties.class, GlobalProperties.class})
-@ConditionalOnProperty(value = "my.lettuce.redis.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "my.rabbit.mq.enable", havingValue = "true", matchIfMissing = true)
 public class MyRabbitMqAutoConfigure {
 
     private MyRabbitMqProperties myRabbitMqProperties;

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * 黑名单表 Entity
  *
  * @author zclcs
- * @date 2021-12-29 17:20:03.111
+ * {@code @date} 2021-12-29 17:20:03.111
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

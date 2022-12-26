@@ -13,6 +13,7 @@ import com.zclcs.common.core.constant.MyConstant;
  * @author zclcs
  */
 public abstract class BaseSortUtil {
+
     /**
      * 处理排序（分页情况下） for mybatis-plus
      *

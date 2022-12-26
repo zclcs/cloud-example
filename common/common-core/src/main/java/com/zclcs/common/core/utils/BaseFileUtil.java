@@ -133,7 +133,7 @@ public abstract class BaseFileUtil {
         if (!file.exists()) {
             return;
         }
-        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+        try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             ZipEntry entry = new ZipEntry(baseDir + file.getName());
             zipOut.putNextEntry(entry);
             int count;

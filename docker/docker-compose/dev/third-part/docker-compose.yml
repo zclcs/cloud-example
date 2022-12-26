@@ -119,7 +119,7 @@ services:
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   canal-admin:
-    image: canal/canal-admin:v1.1.5
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/canal-admin:v1.1.5
     container_name: canal-admin
     network_mode: host
     environment:
@@ -132,6 +132,10 @@ services:
       spring.datasource.database: ${CANAL_ADMIN_DATABASE}
       spring.datasource.username: ${MYSQL_SERVICE_USER}
       spring.datasource.password: ${MYSQL_SERVICE_PASSWORD}
+      WAIT_HOSTS: ${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}, ${LOCAL_HOST_IP}:${RABBIT_WEB_MANAGEMENT_PORT}, ${LOCAL_HOST_IP}:${CANAL_ADMIN_PORT}, 127.0.0.1:2181, 127.0.0.1:2182, 127.0.0.1:2183
+      WAIT_SLEEP_INTERVAL: ${DOCKER_WAIT_SLEEP_INTERVAL}
+      WAIT_HOST_CONNECT_TIMEOUT: ${DOCKER_WAIT_HOST_CONNECT_TIMEOUT}
+      WAIT_TIMEOUT: ${DOCKER_WAIT_TIMEOUT}
     volumes:
       - ./canal-admin/logs/:/home/admin/canal-admin/logs
     healthcheck:
@@ -175,7 +179,6 @@ services:
   zookeeper-master:
     image: zookeeper:3.5.9
     container_name: zookeeper-master
-    restart: always
     hostname: zookeeper-master
     ports:
       - "${ZOOKEEPER_MASTER_PORT}:2181"
@@ -196,7 +199,6 @@ services:
   zookeeper-node1:
     image: zookeeper:3.5.9
     container_name: zookeeper-node1
-    restart: always
     hostname: zookeeper-node2
     ports:
       - "${ZOOKEEPER_NODE1_PORT}:2181"
@@ -216,7 +218,6 @@ services:
   zookeeper-node2:
     image: zookeeper:3.5.9
     container_name: zookeeper-node2
-    restart: always
     hostname: zookeeper-node2
     ports:
       - "${ZOOKEEPER_NODE2_PORT}:2181"
