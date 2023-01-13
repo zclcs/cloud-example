@@ -1,0 +1,27 @@
+2023-01-12 16:50:02.485 [] INFO  system main com.zclcs.SystemApplication Starting SystemApplication using Java 17.0.5 with PID 3284 (D:\code\cloud-17\platform\platform-system\platform-system-biz\build\classes\java\main started by zhouc in D:\code\cloud-17\platform\platform-system\platform-system-biz)
+2023-01-12 16:50:02.486 [] INFO  system main com.zclcs.SystemApplication No active profile set, falling back to 1 default profile: "default"
+2023-01-12 16:50:02.612 [] INFO  system com.alibaba.nacos.client.remote.worker com.alibaba.nacos.common.remote.client [9b231577-beb0-4864-92e8-344a434ab94e_config-0] Fail to connect server, after trying 9 times, last try server is {serverIp = '127.0.0.1', server main port = 8848}, error = unknown
+2023-01-12 16:50:03.621 [] INFO  system com.alibaba.nacos.client.remote.worker com.alibaba.nacos.common.remote.client [9b231577-beb0-4864-92e8-344a434ab94e_config-0] Fail to connect server, after trying 10 times, last try server is {serverIp = '127.0.0.1', server main port = 8848}, error = unknown
+2023-01-12 16:50:04.737 [] INFO  system com.alibaba.nacos.client.remote.worker com.alibaba.nacos.common.remote.client [9b231577-beb0-4864-92e8-344a434ab94e_config-0] Fail to connect server, after trying 11 times, last try server is {serverIp = '127.0.0.1', server main port = 8848}, error = unknown
+2023-01-12 16:50:05.564 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-12 16:50:05.569 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-01-12 16:50:05.667 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 53 ms. Found 0 Redis repository interfaces.
+2023-01-12 16:50:05.968 [] INFO  system com.alibaba.nacos.client.remote.worker com.alibaba.nacos.common.remote.client [9b231577-beb0-4864-92e8-344a434ab94e_config-0] Fail to connect server, after trying 12 times, last try server is {serverIp = '127.0.0.1', server main port = 8848}, error = unknown
+2023-01-12 16:50:06.307 [] INFO  system main org.springframework.cloud.context.scope.GenericScope BeanFactory id=c175d7b9-ad4d-3cd8-80c8-dcf9f5c63e43
+2023-01-12 16:51:18.737 [] INFO  system main com.zclcs.SystemApplication Starting SystemApplication using Java 17.0.5 with PID 17288 (D:\code\cloud-17\platform\platform-system\platform-system-biz\build\classes\java\main started by zhouc in D:\code\cloud-17\platform\platform-system\platform-system-biz)
+2023-01-12 16:51:18.738 [] INFO  system main com.zclcs.SystemApplication No active profile set, falling back to 1 default profile: "default"
+2023-01-12 16:51:18.800 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=sentinel-client.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=tomcat.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=fegin.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=rabbit-mq.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=seata-client.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=logging.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=flyway.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.801 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=redis.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.802 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=dict.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.802 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=server.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:18.802 [] INFO  system main com.alibaba.cloud.nacos.configdata.NacosConfigDataLoader [Nacos Config] Load config[dataId=global-configuration.yaml, group=DEFAULT_GROUP] success
+2023-01-12 16:51:20.269 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-12 16:51:20.273 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-01-12 16:51:20.321 [] INFO  system main org.springframework.data.repository.config.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 31 ms. Found 0 Redis repository interfaces.
+2023-01-12 16:51:20.816 [] INFO  system main org.springframework.cloud.context.scope.GenericScope BeanFactory id=882d67f6-42ff-3f4c-8a8a-de44d5228728

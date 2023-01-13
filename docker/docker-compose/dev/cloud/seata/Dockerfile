@@ -1,1 +1,0 @@
-FROM seataio/seata-server:1.5.2

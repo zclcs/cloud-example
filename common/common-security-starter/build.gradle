@@ -1,9 +1,6 @@
-bootJar.enabled = false
-jar.enabled = true
-
 dependencies {
-    api(project(':common:common-core'))
-    api('org.springframework.cloud:spring-cloud-starter-oauth2')
-    api('org.springframework.cloud:spring-cloud-starter-security')
-    api('org.springframework.boot:spring-boot-starter')
+    api project(":common:common-core")
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "org.springframework.security:spring-security-oauth2-jose"
+    api "org.springframework.security:spring-security-oauth2-authorization-server"
 }

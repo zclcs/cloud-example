@@ -1,7 +1,0 @@
-bootJar.enabled = false
-jar.enabled = true
-
-dependencies {
-    api('com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel')
-    api('com.alibaba.csp:sentinel-datasource-nacos')
-}

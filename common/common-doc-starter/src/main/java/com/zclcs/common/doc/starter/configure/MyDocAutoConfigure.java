@@ -1,32 +1,24 @@
 package com.zclcs.common.doc.starter.configure;
 
-import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
+import cn.hutool.core.util.RandomUtil;
 import com.zclcs.common.doc.starter.properties.MyDocProperties;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
-import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zclcs
  */
-@Configuration
-@EnableSwagger2WebMvc
-@Import(BeanValidatorPluginsConfiguration.class)
+@AutoConfiguration
 @EnableConfigurationProperties(MyDocProperties.class)
 @ConditionalOnProperty(value = "my.doc.enable", havingValue = "true", matchIfMissing = true)
 public class MyDocAutoConfigure {
@@ -37,49 +29,44 @@ public class MyDocAutoConfigure {
         this.properties = properties;
     }
 
+    /**
+     * 根据@Tag 上的排序，写入x-order
+     *
+     * @return the global open api customizer
+     */
+    @Bean
+    public GlobalOpenApiCustomizer orderGlobalOpenApiCustomizer() {
+        return openApi -> {
+            if (openApi.getTags() != null) {
+                openApi.getTags().forEach(tag -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("x-order", RandomUtil.randomInt(0, 100));
+                    tag.setExtensions(map);
+                });
+            }
+            if (openApi.getPaths() != null) {
+                openApi.addExtension("x-test123", "333");
+                openApi.getPaths().addExtension("x-abb", RandomUtil.randomInt(1, 100));
+            }
+
+        };
+    }
+
     @Bean
     @Order(-1)
-    public Docket groupRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(groupApiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.any())
-                .build().securityContexts(CollectionUtils.newArrayList(securityContext())).securitySchemes(CollectionUtils.<SecurityScheme>newArrayList(apiKey()));
-    }
-
-    private ApiInfo groupApiInfo() {
+    public OpenAPI groupRestApi() {
         String description = String.format("<div style='font-size:%spx;color:%s;'>%s</div>",
                 properties.getDescriptionFontSize(), properties.getDescriptionColor(), properties.getDescription());
+        return new OpenAPI()
+                .info(new Info()
+                        .title(properties.getTitle())
+                        .version(properties.getVersion())
 
-        Contact contact = new Contact(properties.getName(), properties.getUrl(), properties.getEmail());
-
-        return new ApiInfoBuilder()
-                .title(properties.getTitle())
-                .description(description)
-                .termsOfServiceUrl(properties.getTermsOfServiceUrl())
-                .contact(contact)
-                .license(properties.getLicense())
-                .licenseUrl(properties.getLicenseUrl())
-                .version(properties.getVersion())
-                .build();
+                        .description(description)
+                        .termsOfService(properties.getTermsOfServiceUrl())
+                        .license(new License().name(properties.getLicense())
+                                .url(properties.getLicenseUrl())));
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey("BearerToken", "Authorization", "header");
-    }
 
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/.*"))
-                .build();
-    }
-
-    List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return CollectionUtils.newArrayList(new SecurityReference("BearerToken", authorizationScopes));
-    }
 }

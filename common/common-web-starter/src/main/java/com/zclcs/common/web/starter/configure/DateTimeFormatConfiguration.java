@@ -9,11 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zclcs.common.web.starter.properties.MyWebProperties;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.lang.Nullable;
@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * @author zclcs
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(MyWebProperties.class)
 @ConditionalOnProperty(value = "my.enableDateConverter", havingValue = "true", matchIfMissing = true)
 public class DateTimeFormatConfiguration implements WebMvcConfigurer {
@@ -42,58 +42,6 @@ public class DateTimeFormatConfiguration implements WebMvcConfigurer {
             registrar.registerFormatters(registry);
         }
     }
-
-//    /**
-//     * string转 localDate
-//     */
-//    @Bean
-//    public Converter<String, LocalDate> localDateConverter() {
-//        return source -> {
-//            if (StrUtil.isBlank(source)) {
-//                return null;
-//            }
-//            try {
-//                return LocalDate.parse(source);
-//            } catch (Exception e) {
-//                return LocalDate.parse(source, DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN));
-//            }
-//        };
-//    }
-//
-//    /**
-//     * string转 localTime
-//     */
-//    @Bean
-//    public Converter<String, LocalTime> localTimeConverter() {
-//        return source -> {
-//            if (StrUtil.isBlank(source)) {
-//                return null;
-//            }
-//            try {
-//                return LocalTime.parse(source);
-//            } catch (Exception e) {
-//                return LocalTime.parse(source, DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN));
-//            }
-//        };
-//    }
-//
-//    /**
-//     * string转 localDateTime
-//     */
-//    @Bean
-//    public Converter<String, LocalDateTime> localDateTimeConverter() {
-//        return source -> {
-//            if (StrUtil.isBlank(source)) {
-//                return null;
-//            }
-//            // 先尝试ISO格式: 2019-07-15T16:00:00
-//            try {
-//                return LocalDateTime.parse(source);
-//            } catch (Exception e) {
-//                return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN));
-//            }
-//        };
-//    }
 
     /**
      * 统一配置

@@ -1,27 +1,19 @@
-bootJar.enabled = false
-jar.enabled = true
-
 dependencies {
-    api('com.google.guava:guava')
-    api('cn.hutool:hutool-core')
-    api('cn.hutool:hutool-json')
-    api('cn.hutool:hutool-crypto')
-    api('org.springframework.boot:spring-boot-starter-validation')
-    api('xml-apis:xml-apis')
-    api('org.lionsoul:ip2region')
-    api('com.wuwenze:ExcelKit')
-    api('com.baomidou:mybatis-plus-boot-starter')
-    api('org.springframework.boot:spring-boot-starter-web')
-    api('org.springframework.cloud:spring-cloud-starter-oauth2')
-    api('org.springframework.cloud:spring-cloud-starter-security')
-    api('org.springframework.cloud:spring-cloud-starter-openfeign')
-    api('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config')
-    api('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery')
-    api('io.micrometer:micrometer-registry-prometheus')
-    api('com.github.xiaoymin:knife4j-micro-spring-boot-starter')
-    api('com.github.xiaoymin:knife4j-spring-boot-starter')
-    api('io.swagger:swagger-models')
-    api('com.houkunlin:system-dict-starter')
-    api('org.springframework.boot:spring-boot-starter-amqp')
-    api('io.projectreactor:reactor-core')
+    api "org.springframework:spring-context"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "cn.hutool:hutool-core"
+    api "org.springframework.boot:spring-boot-starter"
+    api "org.lionsoul:ip2region"
+    api "jakarta.validation:jakarta.validation-api"
+    api "org.hibernate.validator:hibernate-validator"
+    api "io.swagger.core.v3:swagger-annotations-jakarta"
 }
+
+task generateSources(type: Copy) {
+    from 'src/mica/java'
+    into "$buildDir/generated-src"
+    filter { line -> line.replace('${version}', project.version.toString()) }
+}
+
+compileJava.source "$buildDir/generated-src"
+compileJava.dependsOn generateSources

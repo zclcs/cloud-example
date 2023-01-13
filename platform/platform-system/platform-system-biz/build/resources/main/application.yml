@@ -1,0 +1,280 @@
+server:
+  
+  port: ${PORT_SERVER_SYSTEM:8201}
+  
+  tomcat:
+    threads:
+      max: 500
+      min-spare: 20
+    accept-count: 300
+
+spring:
+
+  application:
+    name: ${SERVICE_NAME_SERVER_SYSTEM:system}
+
+  cloud:
+    
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:dev}
+        group: DEFAULT_GROUP
+        prefix: ${SERVICE_NAME_SERVER_SYSTEM:system}
+        file-extension: yaml
+      discovery:
+        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:dev}
+    
+    openfeign:
+      client:
+        config:
+          default:
+            logger-level: full
+            connect-timeout: 10000
+            read-timeout: 10000
+      okhttp:
+        enabled: true
+      httpclient:
+        enabled: false
+      compression:
+        request:
+          enabled: true
+        response:
+          enabled: true
+
+    sentinel:
+      eager: true
+      transport:
+        dashboard: ${NACOS_HOST:127.0.0.1}:${SENTINEL_PORT:8858}
+      filter:
+        enabled: false
+      datasource:
+        # 流控规则
+        flow:
+          nacos:
+            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+            namespace: ${NACOS_NAMESPACE:dev}
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-flow-rules
+            data-type: json
+            rule-type: flow
+        # 熔断降级
+        degrade:
+          nacos:
+            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+            namespace: ${NACOS_NAMESPACE:dev}
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-degrade-rules
+            data-type: json
+            rule-type: degrade
+        # 热点参数限流
+        param_flow:
+          nacos:
+            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+            namespace: ${NACOS_NAMESPACE:dev}
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-param-rules
+            data-type: json
+            rule-type: param_flow
+        # 系统规则
+        system:
+          nacos:
+            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+            namespace: ${NACOS_NAMESPACE:dev}
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-system-rules
+            data-type: json
+            rule-type: system
+        # 来源访问控制（黑白名单）
+        authority:
+          nacos:
+            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+            namespace: ${NACOS_NAMESPACE:dev}
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-auth-rules
+            data-type: json
+            rule-type: authority
+
+  config:
+    import:
+      - nacos:global-configuration.yaml
+
+  aop:
+    proxy-target-class: true
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  freemarker:
+    check-template-location: false
+
+  datasource:
+    driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
+    url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_${DB_NAME_SYSTEM:system}?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:root}
+    hikari:
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-test-query: select 1
+
+  flyway:
+    table: system_flyway_history
+    # 是否开启
+    enabled: true
+    # 迁移前校验 SQL 文件是否存在问题
+    validate-on-migrate: true
+    # 禁止清理数据库表 生产环境一定要启用
+    clean-disabled: true
+    # 文件编码
+    encoding: UTF-8
+    # 校验路径下是否存在 SQL 文件
+    fail-on-missing-locations: false
+    # 最开始已经存在表结构，且不存在 flyway_schema_history 表时，需要设置为 true
+    baseline-on-migrate: true
+
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
+    port: ${RABBIT_MQ_PORT:5672}
+    username: ${RABBIT_MQ_USERNAME:root}
+    password: ${RABBIT_MQ_PASSWORD:123456}
+    virtual-host: /${NACOS_NAMESPACE:dev}
+    # 手动提交消息
+    listener:
+      simple:
+        #消息必须手动确认
+        acknowledge-mode: manual
+        #限制每次发送一条数据。
+        prefetch: 1
+    publisher-returns: true
+    publisher-confirm-type: simple
+
+
+  data:
+    redis:
+      database: ${REDIS_DATABASE:0}
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      lettuce:
+        pool:
+          min-idle: 8
+          max-idle: 500
+          max-active: 2000
+          max-wait: 10000
+      timeout: 5000
+
+  security:
+    user:
+      name: zclcs
+      password: 123456
+
+
+mybatis-plus:
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    banner: false
+  type-aliases-package: com.zclcs.common.core.entity.system
+  mapper-locations: classpath:com/zclcs/server/system/mapper/*.xml
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.zclcs
+  enable-spring-security: false
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+
+# feign 配置
+feign:
+  sentinel:
+    enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          convert:
+            CustomConversions: error
+    com:
+      netflix: info
+      zclcs: info
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error
+      codingapi: info
+
+my:
+  doc:
+    enable: true
+    title: ${spring.application.name}文档
+    description: ${my.doc.title}
+    name: zclcs
+    email: 2371219112@qq.com
+    url: https://github.com/zclcs
+    version: 2.2-RELEASE
+  log:
+    enable-log-for-controller: ${LOG_CONTROLLER_PARAMS:false}
+  cloud:
+    security:
+      enable: true
+      anon-uris: /v2/api-docs,/v2/api-docs-ext
+  lettuce:
+    redis:
+      enable: true
+
+
+# spring security 配置
+security:
+  oauth2:
+    # 通用放行URL，服务个性化，请在对应配置文件覆盖
+    ignore:
+      urls:
+        - /v3/api-docs
+
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: default_tx_group
+  #一定要是false
+  enable-auto-data-source-proxy: false
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+  config:
+    nacos:
+      server-addr: ${NACOS_DISCOVERY_IP:192.168.33.10}:${NACOS_PORT:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      namespace: ${NACOS_NAMESPACE:dev}
+      group: DEFAULT_GROUP
+      #data-id: seata.properties
+      data-id: server-system-seata.properties
+  registry:
+    type: nacos
+    nacos:
+      application: ${SERVICE_NAME_SEATA:seata}
+      server-addr: ${NACOS_DISCOVERY_IP:192.168.33.10}:${NACOS_PORT:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      namespace: ${NACOS_NAMESPACE:dev}
+      group: DEFAULT_GROUP
+

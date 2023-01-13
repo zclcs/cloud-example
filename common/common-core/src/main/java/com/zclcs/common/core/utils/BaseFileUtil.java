@@ -1,17 +1,13 @@
 package com.zclcs.common.core.utils;
 
-import com.google.common.base.Preconditions;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zclcs.common.core.constant.MyConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.FileSystemUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Optional;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
@@ -48,41 +44,6 @@ public abstract class BaseFileUtil {
     }
 
     /**
-     * 文件下载
-     *
-     * @param filePath 待下载文件路径
-     * @param fileName 下载文件名称
-     * @param delete   下载后是否删除源文件
-     * @param response HttpServletResponse
-     * @throws Exception Exception
-     */
-    public static void download(String filePath, String fileName, Boolean delete, HttpServletResponse response) throws Exception {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new Exception("文件未找到");
-        }
-
-        String fileType = getFileType(file);
-        if (!fileTypeIsValid(fileType)) {
-            throw new Exception("暂不支持该类型文件下载");
-        }
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + java.net.URLEncoder.encode(fileName, MyConstant.UTF8));
-        response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-        response.setCharacterEncoding(MyConstant.UTF8);
-        try (InputStream inputStream = Files.newInputStream(file.toPath()); OutputStream os = response.getOutputStream()) {
-            byte[] b = new byte[2048];
-            int length;
-            while ((length = inputStream.read(b)) > 0) {
-                os.write(b, 0, length);
-            }
-        } finally {
-            if (delete) {
-                FileSystemUtils.deleteRecursively(file);
-            }
-        }
-    }
-
-    /**
      * 获取文件类型
      *
      * @param file 文件
@@ -90,7 +51,7 @@ public abstract class BaseFileUtil {
      * @throws Exception Exception
      */
     private static String getFileType(File file) throws Exception {
-        Preconditions.checkNotNull(file);
+        Optional.ofNullable(file).orElseThrow(NullPointerException::new);
         if (file.isDirectory()) {
             throw new Exception("file不是文件");
         }
@@ -107,9 +68,9 @@ public abstract class BaseFileUtil {
      * @return Boolean
      */
     private static Boolean fileTypeIsValid(String fileType) {
-        Preconditions.checkNotNull(fileType);
-        fileType = StringUtils.lowerCase(fileType);
-        return ArrayUtils.contains(MyConstant.VALID_FILE_TYPE, fileType);
+        Optional.ofNullable(fileType).orElseThrow(NullPointerException::new);
+        fileType = StrUtil.lowerFirst(fileType);
+        return StrUtil.contains(MyConstant.VALID_FILE_TYPE, fileType);
     }
 
     private static void compress(File file, ZipOutputStream zipOut, String baseDir) throws IOException {
@@ -122,7 +83,8 @@ public abstract class BaseFileUtil {
 
     private static void compressDirectory(File dir, ZipOutputStream zipOut, String baseDir) throws IOException {
         File[] files = dir.listFiles();
-        if (ArrayUtils.isNotEmpty(files)) {
+        Optional.ofNullable(files).orElseThrow(NullPointerException::new);
+        if (ArrayUtil.isNotEmpty(files)) {
             for (File file : files) {
                 compress(file, zipOut, baseDir + dir.getName() + File.separator);
             }

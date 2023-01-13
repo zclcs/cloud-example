@@ -1,5 +1,7 @@
 package com.zclcs.common.core.exception;
 
+import java.io.Serial;
+
 /**
  * 系统异常
  *
@@ -7,6 +9,7 @@ package com.zclcs.common.core.exception;
  */
 public class MyException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -6916154462432027437L;
 
     public MyException(String message) {

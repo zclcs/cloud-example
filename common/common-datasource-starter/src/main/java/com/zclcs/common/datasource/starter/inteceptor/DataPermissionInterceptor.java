@@ -1,18 +1,14 @@
 package com.zclcs.common.datasource.starter.inteceptor;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
-import com.zclcs.common.core.entity.MyAuthUser;
-import com.zclcs.common.core.utils.BaseUsersUtil;
 import com.zclcs.common.datasource.starter.annotation.DataPermission;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -48,26 +44,27 @@ public class DataPermissionInterceptor implements InnerInterceptor {
 
     private String dataPermissionSql(String originSql, DataPermission dataPermission) {
         try {
-            if (StringUtils.isBlank(dataPermission.field())) {
+            if (StrUtil.isBlank(dataPermission.field())) {
                 return originSql;
             }
-            MyAuthUser user = BaseUsersUtil.getCurrentUser();
-            if (user == null) {
-                return originSql;
-            }
+            // TODO: 完善获取用户
+//            MyAuthUser user = BaseUsersUtil.getCurrentUser();
+//            if (user == null) {
+//                return originSql;
+//            }
             CCJSqlParserManager parserManager = new CCJSqlParserManager();
             Select select = (Select) parserManager.parse(new StringReader(originSql));
             PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
             Table fromItem = (Table) plainSelect.getFromItem();
 
             String selectTableName = fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
-            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StringUtils.defaultIfBlank(user.getDeptIdString(), "'WITHOUT PERMISSIONS'"));
-
-            if (plainSelect.getWhere() == null) {
-                plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));
-            } else {
-                plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(dataPermissionSql)));
-            }
+//            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StringUtils.defaultIfBlank(user.getDeptIdString(), "'WITHOUT PERMISSIONS'"));
+//
+//            if (plainSelect.getWhere() == null) {
+//                plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));
+//            } else {
+//                plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(dataPermissionSql)));
+//            }
             return select.toString();
         } catch (Exception e) {
             log.warn("get data permission sql fail: {}", e.getMessage());
@@ -91,14 +88,14 @@ public class DataPermissionInterceptor implements InnerInterceptor {
 
     private Boolean shouldFilter(MappedStatement mappedStatement, DataPermission dataPermission) {
         if (dataPermission != null) {
-            String methodName = StringUtils.substringAfterLast(mappedStatement.getId(), ".");
+            String methodName = StrUtil.subAfter(mappedStatement.getId(), ".", true);
             String methodPrefix = dataPermission.methodPrefix();
-            if (StringUtils.isNotBlank(methodPrefix) && StringUtils.startsWith(methodName, methodPrefix)) {
+            if (StrUtil.isNotBlank(methodPrefix) && StrUtil.startWith(methodName, methodPrefix)) {
                 return Boolean.TRUE;
             }
             String[] methods = dataPermission.methods();
             for (String method : methods) {
-                if (StringUtils.equals(method, methodName)) {
+                if (StrUtil.equals(method, methodName)) {
                     return Boolean.TRUE;
                 }
             }

@@ -1,89 +1,98 @@
-plugins {
-    id 'java'
-    id 'java-library'
-    id 'idea'
-    id 'groovy-gradle-plugin'
-    id "org.springframework.boot" version '2.3.12.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'com.google.cloud.tools.jib' version '3.2.1' apply false
-}
-
-allprojects {
+buildscript {
+    ext {
+        springBootVersion = "3.0.1"
+        springBootNativeVersion = "0.9.19"
+        springCloudVersion = "2022.0.0"
+        springCloudAlibabaVersion = "2022.0.0.0-RC1"
+        findbugsVersion = "3.0.2"
+        lombokVersion = "1.18.24"
+        hutoolVersion = "5.8.11"
+        ip2regionVersion = "1.7.2"
+        mybatisPlusVersion = "3.5.3.1"
+        dynamicDatasourceVersion = "3.6.0"
+        p6spyVersion = "3.9.1"
+        swagger3xVersion = "2.2.7"
+        knife4jVersion = "4.0.0"
+//    jakartaSerletApiVersion = "6.0.0"
+        apmToolkitLogbackVersion = "8.7.0"
+        easyCaptchaVersion = "1.6.2"
+        seataVersion = "1.6.1"
+        minioVersion = "8.3.1"
+        okhttpVersion = "4.9.0"
+        jibVersion = "3.2.0"
+        authorizationServerVersion = "1.0.0"
+    }
 
     repositories {
+        mavenLocal()
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/milestone" }
         mavenCentral()
-        gradlePluginPortal()
     }
-
-    group 'com.zclcs'
-    version '1.0-SNAPSHOT'
 }
 
-bootJar.enabled = false
-jar.enabled = false
+plugins {
+    id "base"
+    id "org.graalvm.buildtools.native" version "$springBootNativeVersion"
+    id "org.springframework.boot" version "$springBootVersion"
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_17
+    sc = "${springBootVersion}"
+    bom = Set.of(project(":cloud-bom"), project(":common"), project(":platform"), project(":platform:platform-system"))
+    commons = (subprojects - bom)
+}
 
 subprojects {
-    apply plugin: "java"
+    group = group
+    version = version
+}
+
+configure(commons) {
     apply plugin: "java-library"
-    apply plugin: "idea"
-    apply plugin: "org.springframework.boot"
-    apply plugin: "io.spring.dependency-management"
-
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-
-    def defaultEncoding = 'UTF-8'
-    tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
-
-    tasks.withType(AbstractCopyTask) {
-        setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
-    }
-
-    dependencies {
-        compileOnly('org.projectlombok:lombok')
-        annotationProcessor('org.projectlombok:lombok')
-        annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+    sourceCompatibility = "$javaVersion"
+    targetCompatibility = "$javaVersion"
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 
     configurations {
-        compileOnly {
-            extendsFrom annotationProcessor
+        management {
+            canBeConsumed = false
+            canBeResolved = false
+            visible = false
         }
+        compileClasspath.extendsFrom(management)
+        testCompileClasspath.extendsFrom(management)
+        runtimeClasspath.extendsFrom(management)
+        testRuntimeClasspath.extendsFrom(management)
+        annotationProcessor.extendsFrom(management)
+        testAnnotationProcessor.extendsFrom(management)
     }
 
-    dependencyManagement {
-
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
-        }
-
-        dependencies {
-            dependency("xml-apis:xml-apis:${xmlApisVersion}")
-            dependency("org.lionsoul:ip2region:${ip2regionVersion}")
-            dependency("com.google.guava:guava:${guavaVersion}")
-            dependency("com.wuwenze:ExcelKit:${excelkitVersion}")
-            dependency("com.baomidou:mybatis-plus-boot-starter:${mybatisPlusVersion}")
-            dependency("cn.hutool:hutool-core:${hutoolVersion}")
-            dependency("cn.hutool:hutool-json:${hutoolVersion}")
-            dependency("cn.hutool:hutool-crypto:${hutoolVersion}")
-            dependency("com.github.xiaoymin:knife4j-micro-spring-boot-starter:${knife4jVersion}")
-            dependency("com.github.xiaoymin:knife4j-spring-boot-starter:${knife4jVersion}")
-            dependency("io.swagger:swagger-models:${swaggerVersion}")
-            dependency("com.houkunlin:system-dict-starter:${systemDictStarterVersion}")
-            dependency("com.baomidou:dynamic-datasource-spring-boot-starter:${dynamicDatasourceVersion}")
-            dependency("p6spy:p6spy:${p6spyVersion}")
-            dependency("org.apache.skywalking:apm-toolkit-logback-1.x:${apmToolkitLogbackVersion}")
-            dependency("com.github.whvcse:easy-captcha:${easyCaptchaVersion}")
-            dependency("com.xkcoding:justauth-spring-boot-starter:${justauthVersion}")
-            dependency("com.github.xiaoymin:knife4j-aggregation-spring-boot-starter:${knife4jVersion}")
-            dependency("io.seata:seata-spring-boot-starter:${seataVersion}")
-            dependency("io.minio:minio:${minioVersion}")
-            dependency("com.squareup.okhttp3:okhttp:${okhttpVersion}")
-        }
+    dependencies {
+        // import BOM.
+        management platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+        management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+        management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
+        management platform(project(":cloud-bom"))
+        management platform(project(":common"))
+        compileOnly "org.slf4j:slf4j-api"
+        compileOnly "jakarta.servlet:jakarta.servlet-api"
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+        testAnnotationProcessor "org.projectlombok:lombok"
+        compileOnly "com.google.code.findbugs:jsr305"
+        testCompileOnly "com.google.code.findbugs:jsr305"
+        testCompileOnly "org.projectlombok:lombok"
+        testCompileOnly "org.springframework:spring-test"
+        testImplementation "org.slf4j:slf4j-api"
+        testImplementation "org.junit.jupiter:junit-jupiter"
     }
-}
 
-wrapper {
-    gradleVersion = "7.4.1"
+    compileJava.options.compilerArgs.add '-parameters'
+    compileTestJava.options.compilerArgs.add '-parameters'
+    compileJava.dependsOn(processResources)
 }

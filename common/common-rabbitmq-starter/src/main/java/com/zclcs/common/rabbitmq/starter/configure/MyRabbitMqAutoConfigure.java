@@ -1,7 +1,6 @@
 package com.zclcs.common.rabbitmq.starter.configure;
 
 import com.zclcs.common.core.constant.RabbitConstant;
-import com.zclcs.common.core.properties.GlobalProperties;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
@@ -9,6 +8,7 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,17 +21,15 @@ import org.springframework.context.annotation.Bean;
  * @author zclcs
  */
 @Slf4j
-@EnableConfigurationProperties({MyRabbitMqProperties.class, GlobalProperties.class})
-@ConditionalOnProperty(value = "my.rabbit.mq.enable", havingValue = "true", matchIfMissing = true)
+@AutoConfiguration
+@EnableConfigurationProperties({MyRabbitMqProperties.class})
+@ConditionalOnProperty(value = "my.lettuce.redis.enable", havingValue = "true", matchIfMissing = true)
 public class MyRabbitMqAutoConfigure {
 
     private MyRabbitMqProperties myRabbitMqProperties;
 
-    private GlobalProperties globalProperties;
-
-    public MyRabbitMqAutoConfigure(MyRabbitMqProperties myRabbitMqProperties, GlobalProperties globalProperties) {
+    public MyRabbitMqAutoConfigure(MyRabbitMqProperties myRabbitMqProperties) {
         this.myRabbitMqProperties = myRabbitMqProperties;
-        this.globalProperties = globalProperties;
     }
 
     @Bean
@@ -50,8 +48,8 @@ public class MyRabbitMqAutoConfigure {
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) ->
                 log.info("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
-        rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) ->
-                log.info("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", exchange, routingKey, replyCode, replyText, message));
+        rabbitTemplate.setReturnsCallback((returned) ->
+                log.info("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", returned.getExchange(), returned.getRoutingKey(), returned.getReplyCode(), returned.getReplyText(), returned.getMessage()));
         return rabbitTemplate;
     }
 
@@ -251,7 +249,7 @@ public class MyRabbitMqAutoConfigure {
     }
 
     /**
-     * canal minio 读取 binlog 更新缓存队列
+     * canal test 读取 binlog 更新缓存队列
      */
     @Bean
     public Queue canalTestQueue() {
@@ -259,7 +257,7 @@ public class MyRabbitMqAutoConfigure {
     }
 
     /**
-     * canal minio 读取 binlog 更新缓存队列
+     * canal test 死信队列
      */
     @Bean
     public Queue canalTestDlxQueue() {
@@ -267,7 +265,7 @@ public class MyRabbitMqAutoConfigure {
     }
 
     /**
-     * minio 直接模式绑定canal队列
+     * test 直接模式绑定canal队列
      *
      * @param canalTestQueue canal队列
      * @param canalExChange  直接模式交换器
@@ -278,7 +276,7 @@ public class MyRabbitMqAutoConfigure {
     }
 
     /**
-     * minio 直接模式绑定canal队列
+     * test canal死信队列绑定
      *
      * @param canalTestDlxQueue canal队列
      * @param dlxExChange       直接模式交换器

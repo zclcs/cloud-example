@@ -10,11 +10,11 @@ public interface MyConstant {
     /**
      * 排序规则：降序
      */
-    String ORDER_DESC = "descending";
+    String ORDER_DESC = "desc";
     /**
      * 排序规则：升序
      */
-    String ORDER_ASC = "ascending";
+    String ORDER_ASC = "asc";
 
     /**
      * Gateway请求头TOKEN名称（不要有空格）
@@ -28,7 +28,7 @@ public interface MyConstant {
     /**
      * 允许下载的文件类型，根据需求自己添加（小写）
      */
-    String[] VALID_FILE_TYPE = {"xlsx", "zip"};
+    String VALID_FILE_TYPE = "xlsx, zip";
 
     /**
      * 异步线程池名称

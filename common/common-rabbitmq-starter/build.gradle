@@ -1,8 +1,4 @@
-bootJar.enabled = false
-jar.enabled = true
-
 dependencies {
-    api project(':common:common-core')
-    api('org.springframework.boot:spring-boot-starter')
-    api('org.springframework.boot:spring-boot-starter-amqp')
+    api project(":common:common-core")
+    api "org.springframework.boot:spring-boot-starter-amqp"
 }

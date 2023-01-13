@@ -2,8 +2,7 @@ package com.zclcs.common.core.base;
 
 
 import cn.hutool.core.date.DateUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,16 +13,16 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value = "BaseRsp对象", description = "消息响应格式")
+@Schema(description = "消息响应格式")
 public class BaseRsp<T> {
 
-    @ApiModelProperty(value = "响应消息")
+    @Schema(description = "响应消息")
     private String msg;
 
-    @ApiModelProperty(value = "响应体")
+    @Schema(description = "响应体")
     private T data;
 
-    @ApiModelProperty(value = "时间戳")
+    @Schema(description = "时间戳")
     private long time;
 
     public BaseRsp() {

@@ -1,0 +1,6 @@
+dependencies {
+    api project(":common:common-core")
+    api project(":common:common-rabbitmq-starter")
+    api "org.springframework:spring-web"
+    api "org.springframework.boot:spring-boot-starter-aop"
+}

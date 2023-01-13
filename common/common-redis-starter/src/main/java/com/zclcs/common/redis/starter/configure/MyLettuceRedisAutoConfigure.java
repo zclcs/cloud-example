@@ -16,12 +16,12 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
 import com.zclcs.common.redis.starter.service.RedisService;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,7 +38,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author zclcs
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(MyLettuceRedisProperties.class)
 @ConditionalOnProperty(value = "my.lettuce.redis.enable", havingValue = "true", matchIfMissing = true)
 public class MyLettuceRedisAutoConfigure {

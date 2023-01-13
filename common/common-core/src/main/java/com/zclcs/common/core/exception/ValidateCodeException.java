@@ -2,6 +2,8 @@ package com.zclcs.common.core.exception;
 
 import com.zclcs.common.core.constant.HttpStatusConstant;
 
+import java.io.Serial;
+
 /**
  * 验证码类型异常
  *
@@ -9,6 +11,7 @@ import com.zclcs.common.core.constant.HttpStatusConstant;
  */
 public class ValidateCodeException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 7514854456967620043L;
 
     private int code = HttpStatusConstant.WCW;
