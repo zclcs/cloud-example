@@ -3,10 +3,33 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.UserDataPermissionMapper">
 
     <sql id="baseSql">
-        // TODO 设置分页、集合、单个查询sql
+        select sudp.user_id,
+               sudp.dept_id,
+               su.username,
+               su.password,
+               su.email,
+               su.mobile,
+               su.status,
+               su.last_login_time,
+               su.gender,
+               su.is_tab,
+               su.theme,
+               su.avatar,
+               su.description,
+               sd.parent_id,
+               sd.dept_name,
+               sd.order_num
+        from system_user_data_permission sudp
+                 inner join system_user su on sudp.user_id = su.user_id
+                 inner join system_dept sd on sudp.dept_id = sd.dept_id
+            ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        // TODO 设置统计查询sql
+        select count(*)
+        from system_user_data_permission sudp
+                 inner join system_user su on sudp.user_id = su.user_id
+                 inner join system_dept sd on sudp.dept_id = sd.dept_id
+            ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.UserDataPermissionVo">
         <include refid="baseSql"/>

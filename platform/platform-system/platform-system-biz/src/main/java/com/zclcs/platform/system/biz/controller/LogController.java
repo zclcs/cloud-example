@@ -5,10 +5,7 @@ import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.platform.system.api.entity.Log;
-import com.zclcs.platform.system.api.entity.ao.LogAo;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.biz.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,14 +63,6 @@ public class LogController {
         return BaseRspUtil.data(log);
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('log:add')")
-    @ControllerEndpoint(operation = "新增用户操作日志")
-    @Operation(summary = "新增用户操作日志")
-    public BaseRsp<Log> addLog(@RequestBody @Validated LogAo logAo) {
-        return BaseRspUtil.data(this.logService.createLog(logAo));
-    }
-
     @DeleteMapping("/{logIds}")
     @PreAuthorize("hasAuthority('log:delete')")
     @ControllerEndpoint(operation = "删除用户操作日志")
@@ -85,13 +74,5 @@ public class LogController {
         List<Long> ids = Arrays.stream(logIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.logService.deleteLog(ids);
         return BaseRspUtil.message("删除成功");
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAuthority('log:update')")
-    @ControllerEndpoint(operation = "修改用户操作日志")
-    @Operation(summary = "修改用户操作日志")
-    public BaseRsp<Log> updateLog(@RequestBody @Validated(UpdateStrategy.class) LogAo logAo) {
-        return BaseRspUtil.data(this.logService.updateLog(logAo));
     }
 }

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * 部门 Vo
@@ -34,6 +35,12 @@ public class DeptVo implements Serializable {
 
     @Schema(description = "排序")
     private Double orderNum;
+
+    @Schema(description = "创建时间-开始")
+    private LocalDate createTimeFrom;
+
+    @Schema(description = "创建时间-结束")
+    private LocalDate createTimeTo;
 
 
 }

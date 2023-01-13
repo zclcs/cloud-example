@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * 用户操作日志 Vo
@@ -47,6 +48,12 @@ public class LogVo implements Serializable {
 
     @Schema(description = "操作地点")
     private String location;
+
+    @Schema(description = "创建时间-开始")
+    private LocalDate createTimeFrom;
+
+    @Schema(description = "创建时间-结束")
+    private LocalDate createTimeTo;
 
 
 }

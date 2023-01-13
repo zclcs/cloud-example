@@ -3,10 +3,23 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.BlackListMapper">
 
     <sql id="baseSql">
-        // TODO 设置分页、集合、单个查询sql
+        select sbl.black_id,
+               sbl.black_ip,
+               sbl.request_uri,
+               sbl.request_method,
+               sbl.limit_from,
+               sbl.limit_to,
+               sbl.location,
+               sbl.black_status,
+               sbl.create_at,
+               sbl.update_at
+        from system_black_list sbl
+            ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        // TODO 设置统计查询sql
+        select count(*)
+        from system_black_list sbl
+            ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.BlackListVo">
         <include refid="baseSql"/>

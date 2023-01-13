@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.biz.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.common.core.utils.BaseAddressUtil;
 import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.datasource.starter.utils.BaseQueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Log;
-import com.zclcs.platform.system.api.entity.ao.LogAo;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.biz.mapper.LogMapper;
 import com.zclcs.platform.system.biz.service.LogService;
@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 用户操作日志 Service实现
@@ -34,53 +36,49 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     public BasePage<LogVo> findLogPage(BasePageAo basePageAo, LogVo logVo) {
         BasePage<LogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        // TODO 设置分页查询条件
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<LogVo> findLogList(LogVo logVo) {
         QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        // TODO 设置集合查询条件
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public LogVo findLog(LogVo logVo) {
         QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        // TODO 设置单个查询条件
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countLog(LogVo logVo) {
         QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        // TODO 设置统计查询条件
         return this.baseMapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<LogVo> getQueryWrapper(LogVo logVo) {
         QueryWrapper<LogVo> queryWrapper = new QueryWrapper<>();
-        // TODO 设置公共查询条件
+        queryWrapper.orderByDesc("sl.create_time");
+        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sl.username", logVo.getUsername());
+        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sl.operation", logVo.getOperation());
+        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sl.location", logVo.getLocation());
+        BaseQueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sl.create_at", logVo.getCreateTimeFrom(), logVo.getCreateTimeTo());
         return queryWrapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Log createLog(LogAo logAo) {
+    public void createLog(String className, String methodName, String params, String ip, String operation, String username, long start) {
         Log log = new Log();
-        BeanUtil.copyProperties(logAo, log);
+        log.setIp(ip);
+        log.setUsername(username);
+        log.setTime(BigDecimal.valueOf(System.currentTimeMillis() - start));
+        log.setOperation(operation);
+        log.setMethod(className + "." + methodName + "()");
+        log.setParams(Optional.ofNullable(params).orElse(""));
+        log.setLocation(BaseAddressUtil.getCityInfo(ip));
         this.save(log);
-        return log;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Log updateLog(LogAo logAo) {
-        Log log = new Log();
-        BeanUtil.copyProperties(logAo, log);
-        this.updateById(log);
-        return log;
     }
 
     @Override

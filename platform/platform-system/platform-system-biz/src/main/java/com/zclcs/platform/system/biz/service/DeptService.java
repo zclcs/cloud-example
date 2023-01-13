@@ -5,6 +5,7 @@ import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
+import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DeptVo;
 
 import java.util.List;
@@ -49,6 +50,22 @@ public interface DeptService extends IService<Dept> {
      * @return DeptVo
      */
     Integer countDept(DeptVo deptVo);
+
+    /**
+     * 获取部门列表树
+     *
+     * @param deptVo deptTreeVo
+     * @return 部门列表
+     */
+    List<DeptTreeVo> findDeptTree(DeptVo deptVo);
+
+    /**
+     * 返回本级以及下级部门编号
+     *
+     * @param deptId 部门编号
+     * @return 本级以及下级部门编号
+     */
+    List<Long> getChildDeptId(Long deptId);
 
     /**
      * 新增

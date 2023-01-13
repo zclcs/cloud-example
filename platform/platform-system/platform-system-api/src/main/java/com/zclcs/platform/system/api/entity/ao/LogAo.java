@@ -31,6 +31,12 @@ public class LogAo implements Serializable {
     @Schema(description = "日志id")
     private Long id;
 
+    @Schema(description = "类名")
+    private String className;
+
+    @Schema(description = "方法名")
+    private String methodName;
+
     @Size(max = 50, message = "{noMoreThan}")
     @Schema(description = "操作用户")
     private String username;
@@ -53,6 +59,9 @@ public class LogAo implements Serializable {
     @Size(max = 64, message = "{noMoreThan}")
     @Schema(description = "操作者ip")
     private String ip;
+
+    @Schema(description = "方法开始时间")
+    private Long start;
 
     @Size(max = 50, message = "{noMoreThan}")
     @Schema(description = "操作地点")

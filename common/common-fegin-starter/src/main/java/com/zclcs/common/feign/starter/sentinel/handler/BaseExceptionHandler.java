@@ -37,7 +37,7 @@ import java.util.Set;
  */
 @Slf4j
 @ConditionalOnExpression("!'${security.oauth2.client.clientId}'.isEmpty()")
-public class GlobalBizExceptionHandler {
+public class BaseExceptionHandler {
 
     /**
      * 全局异常.

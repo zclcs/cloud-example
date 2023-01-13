@@ -3,10 +3,21 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.RoleMenuMapper">
 
     <sql id="baseSql">
-        // TODO 设置分页、集合、单个查询sql
+        select srm.role_id,
+               srm.menu_id,
+               sr.role_name,
+               sm.menu_name
+        from system_role_menu srm
+                 inner join system_role sr on srm.role_id = sr.role_id
+                 inner join system_menu sm on srm.menu_id = sm.menu_id
+            ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        // TODO 设置统计查询sql
+        select count(*)
+        from system_role_menu srm
+                 inner join system_role sr on srm.role_id = sr.role_id
+                 inner join system_menu sm on srm.menu_id = sm.menu_id
+            ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.RoleMenuVo">
         <include refid="baseSql"/>

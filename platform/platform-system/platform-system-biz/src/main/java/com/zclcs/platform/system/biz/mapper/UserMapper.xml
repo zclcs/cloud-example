@@ -3,10 +3,35 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.UserMapper">
 
     <sql id="baseSql">
-        // TODO 设置分页、集合、单个查询sql
+        select su.user_id,
+               su.username,
+               su.password,
+               su.dept_id,
+               su.email,
+               su.mobile,
+               su.status,
+               su.last_login_time,
+               su.gender,
+               su.is_tab,
+               su.theme,
+               su.avatar,
+               su.description,
+               group_concat(distinct sur.role_id)  roleIdString,
+               group_concat(distinct sr.role_name) roleNameString,
+               group_concat(distinct sudp.dept_id) deptIdString
+        from system_user su
+                 left join system_user_role sur on su.user_id = sur.user_id
+                 inner join system_role sr on sur.role_id = sr.role_id
+                 left join system_user_data_permission sudp on su.user_id = sudp.user_id
+            ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        // TODO 设置统计查询sql
+        select count(*)
+        from system_user su
+                 left join system_user_role sur on su.user_id = sur.user_id
+                 inner join system_role sr on sur.role_id = sr.role_id
+                 left join system_user_data_permission sudp on su.user_id = sudp.user_id
+            ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.UserVo">
         <include refid="baseSql"/>

@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.biz.handler;
 
-import com.zclcs.common.feign.starter.sentinel.handler.GlobalBizExceptionHandler;
+import com.zclcs.common.feign.starter.sentinel.handler.BaseExceptionHandler;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
-public class GlobalExceptionHandler extends GlobalBizExceptionHandler {
+public class GlobalExceptionHandler extends BaseExceptionHandler {
 }
