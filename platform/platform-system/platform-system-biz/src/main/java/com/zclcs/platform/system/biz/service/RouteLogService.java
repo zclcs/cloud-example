@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.RouteLog;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import com.zclcs.platform.system.api.entity.vo.RouteLogVo;
@@ -56,15 +56,8 @@ public interface RouteLogService extends IService<RouteLog> {
      * @param routeLogAo routeLogAo
      * @return RouteLog
      */
+//    @Async(MyConstant.ASYNC_POOL)
     RouteLog createRouteLog(RouteLogAo routeLogAo);
-
-    /**
-     * 修改
-     *
-     * @param routeLogAo routeLogAo
-     * @return RouteLog
-     */
-    RouteLog updateRouteLog(RouteLogAo routeLogAo);
 
     /**
      * 删除

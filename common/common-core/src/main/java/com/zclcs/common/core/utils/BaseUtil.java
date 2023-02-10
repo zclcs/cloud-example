@@ -1,8 +1,10 @@
 package com.zclcs.common.core.utils;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.common.core.constant.RegexpConstant;
+import com.zclcs.common.core.constant.ServiceNameConstant;
 import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.constant.ValidConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -95,15 +97,19 @@ public abstract class BaseUtil {
     }
 
     public static void printSystemUpBanner(Environment environment) {
+        String applicationName = environment.getProperty("spring.application.name");
+        String serverPort = environment.getProperty("server.port");
+        String hostAddress = "http://" + NetUtil.getLocalhost().getHostAddress() + ":" + serverPort;
         String banner = "-----------------------------------------\n" +
                 "服务启动成功，时间：" + DateUtil.date() + "\n" +
-                "服务名称：" + environment.getProperty("spring.application.name") + "\n" +
-                "端口号：" + environment.getProperty("server.port") + "\n" +
+                "服务名称：" + applicationName + "\n" +
+                "端口号：" + serverPort + "\n";
+        if (ServiceNameConstant.PLATFORM_GATEWAY_SERVICE.equals(applicationName)) {
+            banner += "swaggerUI：" + hostAddress + "/webjars/swagger-ui/index.html" + "\n" +
+                    "knife4jUI：" + hostAddress + "/doc.html" + "\n";
+        }
+        banner += "swaggerDOCS：" + hostAddress + "/v3/api-docs" + "\n" +
                 "-----------------------------------------";
         System.out.println(banner);
-    }
-
-    public static void logServiceError(Throwable throwable, String serviceName) {
-        log.error("调用{}服务出错", serviceName, throwable);
     }
 }

@@ -1,12 +1,8 @@
 package com.zclcs.platform.system.biz.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.RoleMenu;
-import com.zclcs.platform.system.api.entity.ao.RoleMenuAo;
 import com.zclcs.platform.system.api.entity.vo.RoleMenuVo;
 import com.zclcs.platform.system.biz.mapper.RoleMenuMapper;
 import com.zclcs.platform.system.biz.service.RoleMenuService;
@@ -27,65 +23,25 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {
 
     @Override
-    public BasePage<RoleMenuVo> findRoleMenuPage(BasePageAo basePageAo, RoleMenuVo roleMenuVo) {
-        BasePage<RoleMenuVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<RoleMenuVo> queryWrapper = getQueryWrapper(roleMenuVo);
-        // TODO 设置分页查询条件
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRoleMenusByRoleId(List<Long> roleIds) {
+        this.lambdaUpdate().in(RoleMenu::getRoleId, roleIds).remove();
     }
 
     @Override
-    public List<RoleMenuVo> findRoleMenuList(RoleMenuVo roleMenuVo) {
-        QueryWrapper<RoleMenuVo> queryWrapper = getQueryWrapper(roleMenuVo);
-        // TODO 设置集合查询条件
-        return this.baseMapper.findListVo(queryWrapper);
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRoleMenusByMenuId(List<Long> menuIds) {
+        this.lambdaUpdate().in(RoleMenu::getMenuId, menuIds).remove();
     }
 
     @Override
-    public RoleMenuVo findRoleMenu(RoleMenuVo roleMenuVo) {
-        QueryWrapper<RoleMenuVo> queryWrapper = getQueryWrapper(roleMenuVo);
-        // TODO 设置单个查询条件
-        return this.baseMapper.findOneVo(queryWrapper);
-    }
-
-    @Override
-    public Integer countRoleMenu(RoleMenuVo roleMenuVo) {
-        QueryWrapper<RoleMenuVo> queryWrapper = getQueryWrapper(roleMenuVo);
-        // TODO 设置统计查询条件
-        return this.baseMapper.countVo(queryWrapper);
-    }
-
-    private QueryWrapper<RoleMenuVo> getQueryWrapper(RoleMenuVo roleMenuVo) {
+    public List<RoleMenuVo> getRoleMenusByRoleId(Long roleId) {
         QueryWrapper<RoleMenuVo> queryWrapper = new QueryWrapper<>();
-        // TODO 设置公共查询条件
-        return queryWrapper;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RoleMenu createRoleMenu(RoleMenuAo roleMenuAo) {
-        RoleMenu roleMenu = new RoleMenu();
-        BeanUtil.copyProperties(roleMenuAo, roleMenu);
-        this.save(roleMenu);
-        return roleMenu;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RoleMenu updateRoleMenu(RoleMenuAo roleMenuAo) {
-        RoleMenu roleMenu = new RoleMenu();
-        BeanUtil.copyProperties(roleMenuAo, roleMenu);
-        this.updateById(roleMenu);
-        return roleMenu;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRoleMenu(List<Long> ids) {
-        this.removeByIds(ids);
+        queryWrapper.eq("sr.role_id", roleId);
+        return this.baseMapper.findListVo(queryWrapper);
     }
 }

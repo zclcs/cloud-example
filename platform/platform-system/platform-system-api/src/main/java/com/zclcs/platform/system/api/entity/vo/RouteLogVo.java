@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 网关转发日志 Vo
@@ -43,6 +45,15 @@ public class RouteLogVo implements Serializable {
 
     @Schema(description = "ip对应地址")
     private String location;
+
+    @Schema(description = "创建时间")
+    private LocalDateTime createAt;
+
+    @Schema(description = "创建时间起")
+    private LocalDate createTimeFrom;
+
+    @Schema(description = "创建时间起终")
+    private LocalDate createTimeTo;
 
 
 }

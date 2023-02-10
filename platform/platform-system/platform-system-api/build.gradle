@@ -1,4 +1,5 @@
 dependencies {
-    api(project(':common:common-core'))
-    api(project(':common:common-datasource-starter'))
+    api(project(":common:common-core"))
+    api "org.springframework.cloud:spring-cloud-openfeign-core"
+    api "cn.hutool:hutool-http"
 }

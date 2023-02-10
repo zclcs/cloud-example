@@ -1,6 +1,5 @@
 dependencies {
     api project(":common:common-core")
-    api project(":common:common-web-starter")
     api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
     api "com.alibaba.csp:sentinel-datasource-nacos"
     api "org.springframework.cloud:spring-cloud-starter-openfeign"

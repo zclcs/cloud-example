@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.zclcs.common.datasource.starter.base.BaseEntity;
+import com.zclcs.common.core.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -67,5 +67,10 @@ public class LoginLog extends BaseEntity {
     @TableField("browser")
     private String browser;
 
+    /**
+     * 登录类型 01 成功 02 失败 03 登出
+     */
+    @TableField("login_type")
+    private String loginType;
 
 }

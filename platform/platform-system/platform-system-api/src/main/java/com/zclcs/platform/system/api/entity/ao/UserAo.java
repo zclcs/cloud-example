@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户 Ao
@@ -80,6 +81,12 @@ public class UserAo implements Serializable {
     @Size(max = 100, message = "{noMoreThan}")
     @Schema(description = "描述")
     private String description;
+
+    @Schema(description = "角色编号集合")
+    private List<Long> roleIds;
+
+    @Schema(description = "数据权限集合")
+    private List<Long> deptIds;
 
 
 }

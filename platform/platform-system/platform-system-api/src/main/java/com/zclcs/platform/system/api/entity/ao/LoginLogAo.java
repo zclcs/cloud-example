@@ -57,5 +57,17 @@ public class LoginLogAo implements Serializable {
     @Schema(description = "浏览器")
     private String browser;
 
+    @Size(max = 2, message = "{noMoreThan}")
+    @Schema(description = "登录类型 01 成功 02 失败 03 登出")
+    private String loginType;
+
+    @Size(max = 100, message = "{noMoreThan}")
+    @Schema(description = "创建人")
+    private String createBy;
+
+    @Size(max = 100, message = "{noMoreThan}")
+    @Schema(description = "编辑人")
+    private String updateBy;
+
 
 }

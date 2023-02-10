@@ -1,12 +1,11 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.BlockLog;
 import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.vo.BlockLogVo;
@@ -47,7 +46,7 @@ public class BlockLogController {
     @PreAuthorize("hasAuthority('blockLog:view')")
     public BaseRsp<BasePage<BlockLogVo>> findBlockLogPage(@Validated BasePageAo basePageAo, @Validated BlockLogVo blockLogVo) {
         BasePage<BlockLogVo> page = this.blockLogService.findBlockLogPage(basePageAo, blockLogVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -55,7 +54,7 @@ public class BlockLogController {
     @PreAuthorize("hasAuthority('blockLog:view')")
     public BaseRsp<List<BlockLogVo>> findBlockLogList(@Validated BlockLogVo blockLogVo) {
         List<BlockLogVo> list = this.blockLogService.findBlockLogList(blockLogVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,7 +62,7 @@ public class BlockLogController {
     @PreAuthorize("hasAuthority('blockLog:view')")
     public BaseRsp<BlockLogVo> findBlockLog(@Validated BlockLogVo blockLogVo) {
         BlockLogVo blockLog = this.blockLogService.findBlockLog(blockLogVo);
-        return BaseRspUtil.data(blockLog);
+        return RspUtil.data(blockLog);
     }
 
     @PostMapping
@@ -71,7 +70,7 @@ public class BlockLogController {
     @ControllerEndpoint(operation = "新增黑名单拦截日志")
     @Operation(summary = "新增黑名单拦截日志")
     public BaseRsp<BlockLog> addBlockLog(@RequestBody @Validated BlockLogAo blockLogAo) {
-        return BaseRspUtil.data(this.blockLogService.createBlockLog(blockLogAo));
+        return RspUtil.data(this.blockLogService.createBlockLog(blockLogAo));
     }
 
     @DeleteMapping("/{blockLogIds}")
@@ -84,14 +83,6 @@ public class BlockLogController {
     public BaseRsp<String> deleteBlockLog(@NotBlank(message = "{required}") @PathVariable String blockLogIds) {
         List<Long> ids = Arrays.stream(blockLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blockLogService.deleteBlockLog(ids);
-        return BaseRspUtil.message("删除成功");
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAuthority('blockLog:update')")
-    @ControllerEndpoint(operation = "修改黑名单拦截日志")
-    @Operation(summary = "修改黑名单拦截日志")
-    public BaseRsp<BlockLog> updateBlockLog(@RequestBody @Validated(UpdateStrategy.class) BlockLogAo blockLogAo) {
-        return BaseRspUtil.data(this.blockLogService.updateBlockLog(blockLogAo));
+        return RspUtil.message("删除成功");
     }
 }

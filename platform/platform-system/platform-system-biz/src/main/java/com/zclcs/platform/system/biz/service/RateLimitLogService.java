@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.RateLimitLog;
 import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitLogVo;
@@ -56,15 +56,8 @@ public interface RateLimitLogService extends IService<RateLimitLog> {
      * @param rateLimitLogAo rateLimitLogAo
      * @return RateLimitLog
      */
+//    @Async(MyConstant.ASYNC_POOL)
     RateLimitLog createRateLimitLog(RateLimitLogAo rateLimitLogAo);
-
-    /**
-     * 修改
-     *
-     * @param rateLimitLogAo rateLimitLogAo
-     * @return RateLimitLog
-     */
-    RateLimitLog updateRateLimitLog(RateLimitLogAo rateLimitLogAo);
 
     /**
      * 删除

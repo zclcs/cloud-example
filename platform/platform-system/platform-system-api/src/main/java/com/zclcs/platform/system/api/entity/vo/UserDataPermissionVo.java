@@ -26,8 +26,14 @@ public class UserDataPermissionVo implements Serializable {
     @Schema(description = "用户编号")
     private Long userId;
 
+    @Schema(description = "用户名称")
+    private String userName;
+
     @Schema(description = "部门编号")
     private Long deptId;
+
+    @Schema(description = "部门名称")
+    private String deptName;
 
 
 }

@@ -6,10 +6,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.utils.BaseAddressUtil;
-import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.common.datasource.starter.utils.BaseQueryWrapperUtil;
+import com.zclcs.common.core.utils.AddressUtil;
+import com.zclcs.common.core.utils.RouteEnhanceCacheUtil;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;
 import com.zclcs.platform.system.api.entity.vo.BlackListVo;
@@ -34,6 +36,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList> implements BlackListService {
+
+    private final RedisService redisService;
 
     @Override
     public BasePage<BlackListVo> findBlackListPage(BasePageAo basePageAo, BlackListVo blackListVo) {
@@ -60,14 +64,27 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         return this.baseMapper.countVo(queryWrapper);
     }
 
+    @Override
+    public void cacheAllBlackList() {
+        List<BlackList> list = this.lambdaQuery().list();
+        list.forEach(black -> {
+            String key = StrUtil.isNotBlank(black.getBlackIp()) ?
+                    RouteEnhanceCacheUtil.getBlackListCacheKey(black.getBlackIp()) :
+                    RouteEnhanceCacheUtil.getBlackListCacheKey();
+            this.setCacheBlackList(black);
+            redisService.sSet(key, black);
+        });
+        log.info("Cache blacklist into redis >>>");
+    }
+
     private QueryWrapper<BlackListVo> getQueryWrapper(BlackListVo blackListVo) {
         QueryWrapper<BlackListVo> queryWrapper = new QueryWrapper<>();
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blackListVo.getRequestUri());
-        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.request_method", blackListVo.getRequestMethod());
-        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_status", blackListVo.getBlackStatus());
-        BaseQueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_id", blackListVo.getBlackIp());
-        BaseQueryWrapperUtil.inNotEmpty(queryWrapper, "sbl.black_id", blackListVo.getBlackIds());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blackListVo.getRequestUri());
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.request_method", blackListVo.getRequestMethod());
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_status", blackListVo.getBlackStatus());
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_id", blackListVo.getBlackIp());
+        QueryWrapperUtil.inNotEmpty(queryWrapper, "sbl.black_id", blackListVo.getBlackIds());
         return queryWrapper;
     }
 
@@ -78,6 +95,11 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
         this.save(blackList);
+        setCacheBlackList(blackList);
+        String key = StrUtil.isNotBlank(blackList.getBlackIp()) ?
+                RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getBlackIp()) :
+                RouteEnhanceCacheUtil.getBlackListCacheKey();
+        redisService.sSet(key, blackList);
         return blackList;
     }
 
@@ -88,18 +110,45 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
         this.updateById(blackList);
+        if (StrUtil.isNotBlank(blackList.getBlackIp())) {
+            String cacheKey = RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getBlackIp());
+            redisService.del(cacheKey);
+            List<BlackList> list = this.lambdaQuery().eq(BlackList::getBlackId, blackList.getBlackId()).list();
+            list.forEach(this::setCacheBlackList);
+            redisService.sSet(cacheKey, list);
+        } else {
+            String cacheKey = RouteEnhanceCacheUtil.getBlackListCacheKey();
+            redisService.del(cacheKey);
+            List<BlackList> list = this.lambdaQuery().isNull(BlackList::getBlackId).or().eq(BlackList::getBlackId, "").list();
+            list.forEach(this::setCacheBlackList);
+            redisService.sSet(cacheKey, list);
+        }
         return blackList;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteBlackList(List<Long> ids) {
+        List<BlackList> list = this.lambdaQuery().in(BlackList::getBlackId, ids).list();
         this.removeByIds(ids);
+        for (BlackList blackList : list) {
+            String key = StrUtil.isNotBlank(blackList.getBlackIp()) ?
+                    RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getBlackIp()) :
+                    RouteEnhanceCacheUtil.getBlackListCacheKey();
+            setCacheBlackList(blackList);
+            redisService.setRemove(key, blackList);
+        }
+    }
+
+    private void setCacheBlackList(BlackList blackList) {
+        blackList.setCreateAt(null);
+        blackList.setUpdateAt(null);
+        blackList.setLocation(null);
     }
 
     private void setBlackList(BlackList blackList) {
         if (StrUtil.isNotBlank(blackList.getBlackIp())) {
-            blackList.setLocation(BaseAddressUtil.getCityInfo(blackList.getBlackIp()));
+            blackList.setLocation(AddressUtil.getCityInfo(blackList.getBlackIp()));
         } else {
             blackList.setLocation(null);
         }

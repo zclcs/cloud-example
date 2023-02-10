@@ -3,34 +3,42 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.UserMapper">
 
     <sql id="baseSql">
-        select su.user_id,
-               su.username,
-               su.password,
-               su.dept_id,
-               su.email,
-               su.mobile,
-               su.status,
-               su.last_login_time,
-               su.gender,
-               su.is_tab,
-               su.theme,
-               su.avatar,
-               su.description,
-               group_concat(distinct sur.role_id)  roleIdString,
-               group_concat(distinct sr.role_name) roleNameString,
-               group_concat(distinct sudp.dept_id) deptIdString
-        from system_user su
-                 left join system_user_role sur on su.user_id = sur.user_id
-                 inner join system_role sr on sur.role_id = sr.role_id
-                 left join system_user_data_permission sudp on su.user_id = sudp.user_id
+        select *
+        from (select su.user_id,
+                     su.username,
+                     su.password,
+                     su.dept_id,
+                     su.email,
+                     su.mobile,
+                     su.status,
+                     su.last_login_time,
+                     su.gender,
+                     su.is_tab,
+                     su.theme,
+                     su.avatar,
+                     su.description,
+                     group_concat(distinct sur.role_id)  roleIdString,
+                     group_concat(distinct sr.role_name) roleNameString,
+                     group_concat(distinct sudp.dept_id) deptIdString
+              from system_user su
+                       left join system_user_role sur on su.user_id = sur.user_id
+                       inner join system_role sr on sur.role_id = sr.role_id
+                       left join system_user_data_permission sudp on su.user_id = sudp.user_id
+              group by su.user_id, su.username, su.password, su.dept_id,
+                       su.email, su.mobile, su.status, su.last_login_time, su.gender,
+                       su.is_tab, su.theme, su.avatar, su.description) t1
             ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        select count(*)
-        from system_user su
-                 left join system_user_role sur on su.user_id = sur.user_id
-                 inner join system_role sr on sur.role_id = sr.role_id
-                 left join system_user_data_permission sudp on su.user_id = sudp.user_id
+        select *
+        from (select count(*)
+              from system_user su
+                       left join system_user_role sur on su.user_id = sur.user_id
+                       inner join system_role sr on sur.role_id = sr.role_id
+                       left join system_user_data_permission sudp on su.user_id = sudp.user_id
+              group by su.user_id, su.username, su.password, su.dept_id,
+                       su.email, su.mobile, su.status, su.last_login_time, su.gender,
+                       su.is_tab, su.theme, su.avatar, su.description) t1
             ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.UserVo">

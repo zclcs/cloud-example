@@ -9,7 +9,7 @@ import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.utils.BaseRspUtil;
+import com.zclcs.common.core.utils.RspUtil;
 import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;
@@ -29,7 +29,7 @@ import static feign.Util.checkNotNull;
 /**
  * 支持自动降级注入 重写 {@link SentinelInvocationHandler}
  *
- * @author lengleng
+ * @author zclcs
  * @date 2020/6/9
  */
 @Slf4j
@@ -123,7 +123,7 @@ public class MySentinelInvocationHandler implements InvocationHandler {
                         // 若是R类型 执行自动降级返回R
                         if (BaseRsp.class == method.getReturnType()) {
                             log.error("feign 服务间调用异常", ex);
-                            return BaseRspUtil.message(ex.getLocalizedMessage());
+                            return RspUtil.message(ex.getLocalizedMessage());
                         } else {
                             throw ex;
                         }

@@ -1,5 +1,6 @@
 package com.zclcs.common.redis.starter.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,17 @@ public class RedisService {
             } else {
                 redisTemplate.delete(Arrays.asList(key));
             }
+        }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param keys 可以传一个值 或多个
+     */
+    public void del(List<String> keys) {
+        if (CollectionUtil.isNotEmpty(keys)) {
+            redisTemplate.delete(keys);
         }
     }
 
@@ -577,6 +589,21 @@ public class RedisService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 0L;
+        }
+    }
+
+    /**
+     * 移除N个值为value
+     *
+     * @param keys 键
+     * @return 移除的个数
+     */
+    public List<Object> multiGet(List<String> keys) {
+        try {
+            return redisTemplate.opsForValue().multiGet(keys);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return CollectionUtil.newArrayList();
         }
     }
 }

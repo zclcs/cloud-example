@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "DeptTreeVo对象", description = "排序")
+@Schema(name = "DeptTreeVo对象", description = "部门树")
 public class DeptTreeVo extends Tree<DeptVo> implements Serializable {
 
     private static final long serialVersionUID = 1L;

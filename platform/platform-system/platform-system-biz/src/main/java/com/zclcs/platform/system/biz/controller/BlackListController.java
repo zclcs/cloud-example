@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
+import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;
 import com.zclcs.platform.system.api.entity.vo.BlackListVo;
@@ -49,7 +49,7 @@ public class BlackListController {
     @PreAuthorize("hasAuthority('blackList:view')")
     public BaseRsp<BasePage<BlackListVo>> findBlackListPage(@Validated BasePageAo basePageAo, @Validated BlackListVo blackListVo) {
         BasePage<BlackListVo> page = this.blackListService.findBlackListPage(basePageAo, blackListVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -57,7 +57,7 @@ public class BlackListController {
     @PreAuthorize("hasAuthority('blackList:view')")
     public BaseRsp<List<BlackListVo>> findBlackListList(@Validated BlackListVo blackListVo) {
         List<BlackListVo> list = this.blackListService.findBlackListList(blackListVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -65,7 +65,14 @@ public class BlackListController {
     @PreAuthorize("hasAuthority('blackList:view')")
     public BaseRsp<BlackListVo> findBlackList(@Validated BlackListVo blackListVo) {
         BlackListVo blackList = this.blackListService.findBlackList(blackListVo);
-        return BaseRspUtil.data(blackList);
+        return RspUtil.data(blackList);
+    }
+
+    @GetMapping("refresh")
+    @Operation(summary = "刷新黑名单缓存")
+    public BaseRsp<Object> refresh() {
+        this.blackListService.cacheAllBlackList();
+        return RspUtil.message();
     }
 
     @PostMapping
@@ -73,7 +80,7 @@ public class BlackListController {
     @ControllerEndpoint(operation = "新增黑名单")
     @Operation(summary = "新增黑名单")
     public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) {
-        return BaseRspUtil.data(this.blackListService.createBlackList(blackListAo));
+        return RspUtil.data(this.blackListService.createBlackList(blackListAo));
     }
 
     @DeleteMapping("/{blackListIds}")
@@ -86,7 +93,7 @@ public class BlackListController {
     public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) {
         List<Long> ids = Arrays.stream(blackListIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blackListService.deleteBlackList(ids);
-        return BaseRspUtil.message("删除成功");
+        return RspUtil.message("删除成功");
     }
 
     @PutMapping
@@ -94,6 +101,6 @@ public class BlackListController {
     @ControllerEndpoint(operation = "修改黑名单")
     @Operation(summary = "修改黑名单")
     public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated(UpdateStrategy.class) BlackListAo blackListAo) {
-        return BaseRspUtil.data(this.blackListService.updateBlackList(blackListAo));
+        return RspUtil.data(this.blackListService.updateBlackList(blackListAo));
     }
 }

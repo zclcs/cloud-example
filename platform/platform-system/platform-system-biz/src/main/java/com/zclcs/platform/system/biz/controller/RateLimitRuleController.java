@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
+import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RateLimitRule;
 import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitRuleVo;
@@ -47,7 +47,7 @@ public class RateLimitRuleController {
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     public BaseRsp<BasePage<RateLimitRuleVo>> findRateLimitRulePage(@Validated BasePageAo basePageAo, @Validated RateLimitRuleVo rateLimitRuleVo) {
         BasePage<RateLimitRuleVo> page = this.rateLimitRuleService.findRateLimitRulePage(basePageAo, rateLimitRuleVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -55,7 +55,7 @@ public class RateLimitRuleController {
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@Validated RateLimitRuleVo rateLimitRuleVo) {
         List<RateLimitRuleVo> list = this.rateLimitRuleService.findRateLimitRuleList(rateLimitRuleVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,7 +63,14 @@ public class RateLimitRuleController {
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     public BaseRsp<RateLimitRuleVo> findRateLimitRule(@Validated RateLimitRuleVo rateLimitRuleVo) {
         RateLimitRuleVo rateLimitRule = this.rateLimitRuleService.findRateLimitRule(rateLimitRuleVo);
-        return BaseRspUtil.data(rateLimitRule);
+        return RspUtil.data(rateLimitRule);
+    }
+
+    @GetMapping("refresh")
+    @Operation(summary = "刷新限流规则缓存")
+    public BaseRsp<Object> refresh() {
+        this.rateLimitRuleService.cacheAllRateLimitRules();
+        return RspUtil.message();
     }
 
     @PostMapping
@@ -71,7 +78,7 @@ public class RateLimitRuleController {
     @ControllerEndpoint(operation = "新增限流规则")
     @Operation(summary = "新增限流规则")
     public BaseRsp<RateLimitRule> addRateLimitRule(@RequestBody @Validated RateLimitRuleAo rateLimitRuleAo) {
-        return BaseRspUtil.data(this.rateLimitRuleService.createRateLimitRule(rateLimitRuleAo));
+        return RspUtil.data(this.rateLimitRuleService.createRateLimitRule(rateLimitRuleAo));
     }
 
     @DeleteMapping("/{rateLimitRuleIds}")
@@ -84,7 +91,7 @@ public class RateLimitRuleController {
     public BaseRsp<String> deleteRateLimitRule(@NotBlank(message = "{required}") @PathVariable String rateLimitRuleIds) {
         List<Long> ids = Arrays.stream(rateLimitRuleIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.rateLimitRuleService.deleteRateLimitRule(ids);
-        return BaseRspUtil.message("删除成功");
+        return RspUtil.message("删除成功");
     }
 
     @PutMapping
@@ -92,6 +99,6 @@ public class RateLimitRuleController {
     @ControllerEndpoint(operation = "修改限流规则")
     @Operation(summary = "修改限流规则")
     public BaseRsp<RateLimitRule> updateRateLimitRule(@RequestBody @Validated(UpdateStrategy.class) RateLimitRuleAo rateLimitRuleAo) {
-        return BaseRspUtil.data(this.rateLimitRuleService.updateRateLimitRule(rateLimitRuleAo));
+        return RspUtil.data(this.rateLimitRuleService.updateRateLimitRule(rateLimitRuleAo));
     }
 }

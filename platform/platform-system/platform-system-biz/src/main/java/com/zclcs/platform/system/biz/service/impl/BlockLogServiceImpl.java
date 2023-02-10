@@ -4,10 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.utils.BaseAddressUtil;
-import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.common.datasource.starter.utils.BaseQueryWrapperUtil;
+import com.zclcs.common.core.utils.AddressUtil;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.BlockLog;
 import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.vo.BlockLogVo;
@@ -60,10 +60,10 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
 
     private QueryWrapper<BlockLogVo> getQueryWrapper(BlockLogVo blockLogVo) {
         QueryWrapper<BlockLogVo> queryWrapper = new QueryWrapper<>();
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
-        BaseQueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.create_at", blockLogVo.getCreateTimeFrom(), blockLogVo.getCreateTimeTo());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.create_at", blockLogVo.getCreateTimeFrom(), blockLogVo.getCreateTimeTo());
         queryWrapper.orderByDesc("sbl.create_at");
         return queryWrapper;
     }
@@ -80,23 +80,13 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BlockLog updateBlockLog(BlockLogAo blockLogAo) {
-        BlockLog blockLog = new BlockLog();
-        BeanUtil.copyProperties(blockLogAo, blockLog);
-        setBlockLog(blockLog);
-        this.updateById(blockLog);
-        return blockLog;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void deleteBlockLog(List<Long> ids) {
         this.removeByIds(ids);
     }
 
     private void setBlockLog(BlockLog blockLog) {
         if (StrUtil.isNotBlank(blockLog.getBlockIp())) {
-            blockLog.setLocation(BaseAddressUtil.getCityInfo(blockLog.getBlockIp()));
+            blockLog.setLocation(AddressUtil.getCityInfo(blockLog.getBlockIp()));
         }
     }
 }

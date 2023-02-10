@@ -1,6 +1,6 @@
 package com.zclcs.common.logging.starter.configure;
 
-import com.zclcs.common.aop.starter.aspect.ControllerLogAspect;
+import com.zclcs.common.logging.starter.aspect.ControllerLogAspect;
 import com.zclcs.common.logging.starter.properties.MyLogProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

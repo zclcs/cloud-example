@@ -1,12 +1,11 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RouteLog;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import com.zclcs.platform.system.api.entity.vo.RouteLogVo;
@@ -47,7 +46,7 @@ public class RouteLogController {
     @PreAuthorize("hasAuthority('routeLog:view')")
     public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -55,7 +54,7 @@ public class RouteLogController {
     @PreAuthorize("hasAuthority('routeLog:view')")
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,7 +62,7 @@ public class RouteLogController {
     @PreAuthorize("hasAuthority('routeLog:view')")
     public BaseRsp<RouteLogVo> findRouteLog(@Validated RouteLogVo routeLogVo) {
         RouteLogVo routeLog = this.routeLogService.findRouteLog(routeLogVo);
-        return BaseRspUtil.data(routeLog);
+        return RspUtil.data(routeLog);
     }
 
     @PostMapping
@@ -71,7 +70,7 @@ public class RouteLogController {
     @ControllerEndpoint(operation = "新增网关转发日志")
     @Operation(summary = "新增网关转发日志")
     public BaseRsp<RouteLog> addRouteLog(@RequestBody @Validated RouteLogAo routeLogAo) {
-        return BaseRspUtil.data(this.routeLogService.createRouteLog(routeLogAo));
+        return RspUtil.data(this.routeLogService.createRouteLog(routeLogAo));
     }
 
     @DeleteMapping("/{routeLogIds}")
@@ -84,14 +83,6 @@ public class RouteLogController {
     public BaseRsp<String> deleteRouteLog(@NotBlank(message = "{required}") @PathVariable String routeLogIds) {
         List<Long> ids = Arrays.stream(routeLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.routeLogService.deleteRouteLog(ids);
-        return BaseRspUtil.message("删除成功");
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAuthority('routeLog:update')")
-    @ControllerEndpoint(operation = "修改网关转发日志")
-    @Operation(summary = "修改网关转发日志")
-    public BaseRsp<RouteLog> updateRouteLog(@RequestBody @Validated(UpdateStrategy.class) RouteLogAo routeLogAo) {
-        return BaseRspUtil.data(this.routeLogService.updateRouteLog(routeLogAo));
+        return RspUtil.message("删除成功");
     }
 }

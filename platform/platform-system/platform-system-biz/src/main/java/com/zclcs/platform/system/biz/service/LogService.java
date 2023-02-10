@@ -1,12 +1,10 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
-import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -52,10 +50,17 @@ public interface LogService extends IService<Log> {
     Integer countLog(LogVo logVo);
 
     /**
-     * @param logAo logAo
-     * @return Log
+     * 新增日志
+     *
+     * @param className
+     * @param methodName
+     * @param params
+     * @param ip
+     * @param operation
+     * @param username
+     * @param start
      */
-    @Async(MyConstant.ASYNC_POOL)
+//    @Async(MyConstant.ASYNC_POOL)
     void createLog(String className, String methodName, String params, String ip, String operation, String username, long start);
 
     /**

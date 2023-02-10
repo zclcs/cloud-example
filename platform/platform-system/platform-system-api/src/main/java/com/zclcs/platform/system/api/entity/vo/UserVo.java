@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户 Vo
@@ -33,9 +34,6 @@ public class UserVo implements Serializable {
     @Schema(description = "密码")
     private String password;
 
-    @Schema(description = "部门id")
-    private Long deptId;
-
     @Schema(description = "邮箱")
     private String email;
 
@@ -62,6 +60,33 @@ public class UserVo implements Serializable {
 
     @Schema(description = "描述")
     private String description;
+
+    @Schema(description = "部门id")
+    private Long deptId;
+
+    @Schema(description = "部门名称")
+    private String deptName;
+
+    @Schema(description = "数据权限集合字符串")
+    private String deptIdString;
+
+    @Schema(description = "用户角色编号集合字符串")
+    private String roleIdString;
+
+    @Schema(description = "用户角色名称集合字符串")
+    private String roleNameString;
+
+    @Schema(description = "角色编号集合")
+    private List<Long> roleIds;
+
+    @Schema(description = "数据权限集合")
+    private List<Long> deptIds;
+
+    @Schema(description = "用户角色名称集合")
+    private List<String> roleNames;
+
+    @Schema(description = "用户权限集合")
+    private List<String> permissions;
 
 
 }

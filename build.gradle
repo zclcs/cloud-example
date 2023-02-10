@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        springBootVersion = "3.0.1"
-        springBootNativeVersion = "0.9.19"
+        springBootVersion = "3.0.0"
+        springBootNativeVersion = "0.9.18"
         springCloudVersion = "2022.0.0"
         springCloudAlibabaVersion = "2022.0.0.0-RC1"
         findbugsVersion = "3.0.2"
@@ -11,16 +11,19 @@ buildscript {
         mybatisPlusVersion = "3.5.3.1"
         dynamicDatasourceVersion = "3.6.0"
         p6spyVersion = "3.9.1"
-        swagger3xVersion = "2.2.7"
+        swaggerCoreVersion = "2.2.7"
         knife4jVersion = "4.0.0"
-//    jakartaSerletApiVersion = "6.0.0"
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
         seataVersion = "1.6.1"
         minioVersion = "8.3.1"
         okhttpVersion = "4.9.0"
-        jibVersion = "3.2.0"
+        jibVersion = "3.3.1"
         authorizationServerVersion = "1.0.0"
+        guavaVersion = "31.1-jre"
+        easyCaptchaVersion = "1.6.2"
+        springDocVersion = "2.0.2"
+        jasyptVersion = "3.0.5"
     }
 
     repositories {
@@ -33,13 +36,12 @@ buildscript {
 
 plugins {
     id "base"
-    id "org.graalvm.buildtools.native" version "$springBootNativeVersion"
     id "org.springframework.boot" version "$springBootVersion"
+    id "org.graalvm.buildtools.native" version "$springBootNativeVersion"
 }
 
 ext {
     javaVersion = JavaVersion.VERSION_17
-    sc = "${springBootVersion}"
     bom = Set.of(project(":cloud-bom"), project(":common"), project(":platform"), project(":platform:platform-system"))
     commons = (subprojects - bom)
 }
@@ -53,7 +55,7 @@ configure(commons) {
     apply plugin: "java-library"
     sourceCompatibility = "$javaVersion"
     targetCompatibility = "$javaVersion"
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
@@ -79,17 +81,10 @@ configure(commons) {
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform(project(":cloud-bom"))
         management platform(project(":common"))
-        compileOnly "org.slf4j:slf4j-api"
-        compileOnly "jakarta.servlet:jakarta.servlet-api"
+        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
-        testAnnotationProcessor "org.projectlombok:lombok"
-        compileOnly "com.google.code.findbugs:jsr305"
-        testCompileOnly "com.google.code.findbugs:jsr305"
-        testCompileOnly "org.projectlombok:lombok"
-        testCompileOnly "org.springframework:spring-test"
-        testImplementation "org.slf4j:slf4j-api"
-        testImplementation "org.junit.jupiter:junit-jupiter"
     }
 
     compileJava.options.compilerArgs.add '-parameters'

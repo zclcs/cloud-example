@@ -2,8 +2,8 @@ package com.zclcs.common.feign.starter.sentinel.handler;
 
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.web.starter.utils.BaseWebUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.common.core.utils.RspUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,14 @@ import org.springframework.http.MediaType;
 @RequiredArgsConstructor
 public class MyUrlBlockHandler implements BlockExceptionHandler {
 
+    private final ObjectMapper objectMapper;
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, BlockException e) throws Exception {
         log.error("sentinel 降级 资源名称{}", e.getRule().getResource(), e);
-        BaseWebUtil.makeResponse(response, MediaType.APPLICATION_JSON.getType(), HttpStatus.TOO_MANY_REQUESTS.value(), BaseRspUtil.message(e.getMessage()));
+        response.setContentType(MediaType.APPLICATION_JSON.getType());
+        response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+        response.getOutputStream().write(objectMapper.writeValueAsString(RspUtil.message(e.getMessage())).getBytes());
     }
 
 }

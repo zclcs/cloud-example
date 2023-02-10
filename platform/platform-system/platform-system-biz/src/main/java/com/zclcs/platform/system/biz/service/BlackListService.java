@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;
 import com.zclcs.platform.system.api.entity.vo.BlackListVo;
@@ -49,6 +49,11 @@ public interface BlackListService extends IService<BlackList> {
      * @return BlackListVo
      */
     Integer countBlackList(BlackListVo blackListVo);
+
+    /**
+     * 缓存所有黑名单规则
+     */
+    void cacheAllBlackList();
 
     /**
      * 新增

@@ -4,8 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.zclcs.common.datasource.starter.annotation.DataPermission;
+import com.zclcs.common.security.starter.entity.SecurityUser;
+import com.zclcs.common.security.starter.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
@@ -47,24 +51,23 @@ public class DataPermissionInterceptor implements InnerInterceptor {
             if (StrUtil.isBlank(dataPermission.field())) {
                 return originSql;
             }
-            // TODO: 完善获取用户
-//            MyAuthUser user = BaseUsersUtil.getCurrentUser();
-//            if (user == null) {
-//                return originSql;
-//            }
+            SecurityUser user = SecurityUtil.getUser();
+            if (user == null) {
+                return originSql;
+            }
             CCJSqlParserManager parserManager = new CCJSqlParserManager();
             Select select = (Select) parserManager.parse(new StringReader(originSql));
             PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
             Table fromItem = (Table) plainSelect.getFromItem();
 
             String selectTableName = fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
-//            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StringUtils.defaultIfBlank(user.getDeptIdString(), "'WITHOUT PERMISSIONS'"));
-//
-//            if (plainSelect.getWhere() == null) {
-//                plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));
-//            } else {
-//                plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(dataPermissionSql)));
-//            }
+            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StrUtil.blankToDefault(user.getDeptIdString(), "'WITHOUT PERMISSIONS'"));
+
+            if (plainSelect.getWhere() == null) {
+                plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));
+            } else {
+                plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(dataPermissionSql)));
+            }
             return select.toString();
         } catch (Exception e) {
             log.warn("get data permission sql fail: {}", e.getMessage());

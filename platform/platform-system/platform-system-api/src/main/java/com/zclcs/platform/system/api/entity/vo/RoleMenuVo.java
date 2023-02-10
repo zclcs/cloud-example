@@ -26,8 +26,14 @@ public class RoleMenuVo implements Serializable {
     @Schema(description = "角色编号")
     private Long roleId;
 
+    @Schema(description = "角色名称")
+    private Long roleName;
+
     @Schema(description = "菜单编号")
     private Long menuId;
+
+    @Schema(description = "菜单名称")
+    private Long menuName;
 
 
 }

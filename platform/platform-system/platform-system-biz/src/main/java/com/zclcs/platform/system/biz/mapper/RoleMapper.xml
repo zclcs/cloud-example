@@ -3,20 +3,24 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.RoleMapper">
 
     <sql id="baseSql">
-        select sr.role_id,
-               sr.role_name,
-               sr.remark,
-               group_concat(distinct srm.menu_id) as menuIdsString
-        from system_role sr
-                 left join system_role_menu srm on sr.role_id = srm.role_id
-                 inner join system_menu sm on srm.menu_id = sm.menu_id
+        select *
+        from (select sr.role_id,
+                     sr.role_name,
+                     sr.remark,
+                     group_concat(distinct srm.menu_id) as menuIdsString
+              from system_role sr
+                       left join system_role_menu srm on sr.role_id = srm.role_id
+                       inner join system_menu sm on srm.menu_id = sm.menu_id
+              group by sr.role_id, sr.role_name, sr.remark) t1
             ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
-        select count(*)
-        from system_role sr
-                 left join system_role_menu srm on sr.role_id = srm.role_id
-                 inner join system_menu sm on srm.menu_id = sm.menu_id
+        select *
+        from (select count(*)
+              from system_role sr
+                       left join system_role_menu srm on sr.role_id = srm.role_id
+                       inner join system_menu sm on srm.menu_id = sm.menu_id
+              group by sr.role_id, sr.role_name, sr.remark) t1
             ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.RoleVo">
@@ -30,5 +34,11 @@
     </select>
     <select id="countVo" resultType="java.lang.Integer">
         <include refid="baseCountSql"/>
+    </select>
+    <select id="selectUsernamesByRoleId" resultType="java.lang.String">
+        select distinct su.username
+        from system_user_role sur
+                 inner join system_user su on sur.user_id = su.user_id
+        where role_id = #{roleId}
     </select>
 </mapper>

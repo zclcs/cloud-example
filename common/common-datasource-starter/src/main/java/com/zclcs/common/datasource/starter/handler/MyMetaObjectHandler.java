@@ -1,11 +1,13 @@
 package com.zclcs.common.datasource.starter.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.zclcs.common.security.starter.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * 填充器
@@ -19,20 +21,18 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createAt", LocalDateTime.class, LocalDateTime.now());
-        // TODO:完善获取用户信息
-//        Object createBy = metaObject.getValue("createBy");
-//        if (createBy == null) {
-//            this.strictInsertFill(metaObject, "createBy", String.class, BaseUsersUtil.getCurrentUsername());
-//        }
+        Object createBy = metaObject.getValue("createBy");
+        if (createBy == null) {
+            this.strictInsertFill(metaObject, "createBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("admin"));
+        }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updateAt", LocalDateTime.class, LocalDateTime.now());
-        // TODO:完善获取用户信息
-//        Object updateBy = metaObject.getValue("updateBy");
-//        if (updateBy == null) {
-//            this.strictInsertFill(metaObject, "updateBy", String.class, BaseUsersUtil.getCurrentUsername());
-//        }
+        Object updateBy = metaObject.getValue("updateBy");
+        if (updateBy == null) {
+            this.strictInsertFill(metaObject, "updateBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("admin"));
+        }
     }
 }

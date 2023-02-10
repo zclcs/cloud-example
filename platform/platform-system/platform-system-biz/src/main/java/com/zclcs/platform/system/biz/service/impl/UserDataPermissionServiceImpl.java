@@ -1,13 +1,7 @@
 package com.zclcs.platform.system.biz.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.UserDataPermission;
-import com.zclcs.platform.system.api.entity.ao.UserDataPermissionAo;
-import com.zclcs.platform.system.api.entity.vo.UserDataPermissionVo;
 import com.zclcs.platform.system.biz.mapper.UserDataPermissionMapper;
 import com.zclcs.platform.system.biz.service.UserDataPermissionService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户数据权限关联 Service实现
@@ -27,65 +22,23 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class UserDataPermissionServiceImpl extends ServiceImpl<UserDataPermissionMapper, UserDataPermission> implements UserDataPermissionService {
 
     @Override
-    public BasePage<UserDataPermissionVo> findUserDataPermissionPage(BasePageAo basePageAo, UserDataPermissionVo userDataPermissionVo) {
-        BasePage<UserDataPermissionVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<UserDataPermissionVo> queryWrapper = getQueryWrapper(userDataPermissionVo);
-        // TODO 设置分页查询条件
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
-    }
-
-    @Override
-    public List<UserDataPermissionVo> findUserDataPermissionList(UserDataPermissionVo userDataPermissionVo) {
-        QueryWrapper<UserDataPermissionVo> queryWrapper = getQueryWrapper(userDataPermissionVo);
-        // TODO 设置集合查询条件
-        return this.baseMapper.findListVo(queryWrapper);
-    }
-
-    @Override
-    public UserDataPermissionVo findUserDataPermission(UserDataPermissionVo userDataPermissionVo) {
-        QueryWrapper<UserDataPermissionVo> queryWrapper = getQueryWrapper(userDataPermissionVo);
-        // TODO 设置单个查询条件
-        return this.baseMapper.findOneVo(queryWrapper);
-    }
-
-    @Override
-    public Integer countUserDataPermission(UserDataPermissionVo userDataPermissionVo) {
-        QueryWrapper<UserDataPermissionVo> queryWrapper = getQueryWrapper(userDataPermissionVo);
-        // TODO 设置统计查询条件
-        return this.baseMapper.countVo(queryWrapper);
-    }
-
-    private QueryWrapper<UserDataPermissionVo> getQueryWrapper(UserDataPermissionVo userDataPermissionVo) {
-        QueryWrapper<UserDataPermissionVo> queryWrapper = new QueryWrapper<>();
-        // TODO 设置公共查询条件
-        return queryWrapper;
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteByDeptIds(List<Long> deptIds) {
+        this.lambdaUpdate().in(UserDataPermission::getDeptId, deptIds).remove();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserDataPermission createUserDataPermission(UserDataPermissionAo userDataPermissionAo) {
-        UserDataPermission userDataPermission = new UserDataPermission();
-        BeanUtil.copyProperties(userDataPermissionAo, userDataPermission);
-        this.save(userDataPermission);
-        return userDataPermission;
+    public void deleteByUserIds(List<Long> userIds) {
+        this.lambdaUpdate().in(UserDataPermission::getUserId, userIds).remove();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UserDataPermission updateUserDataPermission(UserDataPermissionAo userDataPermissionAo) {
-        UserDataPermission userDataPermission = new UserDataPermission();
-        BeanUtil.copyProperties(userDataPermissionAo, userDataPermission);
-        this.updateById(userDataPermission);
-        return userDataPermission;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteUserDataPermission(List<Long> ids) {
-        this.removeByIds(ids);
+    public List<Long> findByUserId(Long userId) {
+        return this.lambdaQuery().eq(UserDataPermission::getUserId, userId).list().stream().map(UserDataPermission::getDeptId).collect(Collectors.toList());
     }
 }

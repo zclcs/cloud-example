@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 角色 Vo
@@ -31,6 +32,18 @@ public class RoleVo implements Serializable {
 
     @Schema(description = "角色描述")
     private String remark;
+
+    @Schema(description = "角色菜单集合")
+    private List<RoleMenuVo> roleMenuVos;
+
+    @Schema(description = "角色菜单编号集合字符串")
+    private String menuIdsString;
+
+    @Schema(description = "角色菜单编号集合")
+    private List<Long> menuIds;
+
+    @Schema(description = "角色用户账号集合")
+    private List<String> usernames;
 
 
 }

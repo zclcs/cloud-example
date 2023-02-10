@@ -10,8 +10,11 @@ server:
 
 spring:
 
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
   application:
-    name: ${SERVICE_NAME_SERVER_SYSTEM:system}
+    name: platform-system
 
   cloud:
     
@@ -20,8 +23,6 @@ spring:
         server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
         namespace: ${NACOS_NAMESPACE:dev}
         group: DEFAULT_GROUP
-        prefix: ${SERVICE_NAME_SERVER_SYSTEM:system}
-        file-extension: yaml
       discovery:
         server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
         namespace: ${NACOS_NAMESPACE:dev}
@@ -99,6 +100,7 @@ spring:
   config:
     import:
       - nacos:global-configuration.yaml
+      - nacos:${spring.application.name}.yaml
 
   aop:
     proxy-target-class: true
@@ -167,39 +169,13 @@ spring:
           max-wait: 10000
       timeout: 5000
 
-  security:
-    n
-    user:
-      name: zclcs
-      password: 123456
-
-
 mybatis-plus:
   configuration:
     jdbc-type-for-null: null
   global-config:
     banner: false
-  type-aliases-package: com.zclcs.common.core.entity.system
-  mapper-locations: classpath:com/zclcs/server/system/mapper/*.xml
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
-  api-docs:
-    path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: com.zclcs
-  enable-spring-security: false
-
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-    swagger-model-name: 实体类列表
+  type-aliases-package: com.zclcs.platform.system.api.entity
+  mapper-locations: classpath:com/zclcs/platform/system/biz/mapper/*.xml
 
 # feign 配置
 feign:
@@ -224,58 +200,32 @@ logging:
       codingapi: info
 
 my:
-  doc:
-    enable: true
-    title: ${spring.application.name}文档
-    description: ${my.doc.title}
-    name: zclcs
-    email: 2371219112@qq.com
-    url: https://github.com/zclcs
-    version: 2.2-RELEASE
-  log:
-    enable-log-for-controller: ${LOG_CONTROLLER_PARAMS:false}
-  cloud:
-    security:
-      enable: true
-      anon-uris: /v2/api-docs,/v2/api-docs-ext
-  lettuce:
-    redis:
-      enable: true
-
+  redis-cache-prefix: '${NACOS_NAMESPACE:dev}:'
 
 # spring security 配置
 security:
   oauth2:
+    client:
+      client-id: ENC(imENTO7M8bLO38LFSIxnzw==)
+      client-secret: ENC(i3cDFhs26sa2Ucrfz2hnQw==)
+      scope: server
     # 通用放行URL，服务个性化，请在对应配置文件覆盖
     ignore:
       urls:
         - /v3/api-docs
 
-seata:
-  enabled: true
-  application-id: ${spring.application.name}
-  tx-service-group: default_tx_group
-  #一定要是false
-  enable-auto-data-source-proxy: false
-  service:
-    vgroup-mapping:
-      default_tx_group: default
-  config:
-    nacos:
-      server-addr: ${NACOS_DISCOVERY_IP:192.168.33.10}:${NACOS_PORT:8848}
-      username: ${NACOS_USERNAME:nacos}
-      password: ${NACOS_PASSWORD:nacos}
-      namespace: ${NACOS_NAMESPACE:dev}
-      group: DEFAULT_GROUP
-      #data-id: seata.properties
-      data-id: server-system-seata.properties
-  registry:
-    type: nacos
-    nacos:
-      application: ${SERVICE_NAME_SEATA:seata}
-      server-addr: ${NACOS_DISCOVERY_IP:192.168.33.10}:${NACOS_PORT:8848}
-      username: ${NACOS_USERNAME:nacos}
-      password: ${NACOS_PASSWORD:nacos}
-      namespace: ${NACOS_NAMESPACE:dev}
-      group: DEFAULT_GROUP
+# 加解密根密码
+jasypt:
+  encryptor:
+    password: zclcs
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
 
+# swagger 配置
+swagger:
+  enabled: true
+  title: Swagger API
+  gateway: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  base-package: com.zclcs

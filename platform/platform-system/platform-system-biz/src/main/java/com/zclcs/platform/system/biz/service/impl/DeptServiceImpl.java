@@ -6,10 +6,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.utils.BaseTreeUtil;
-import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.common.datasource.starter.utils.BaseQueryWrapperUtil;
+import com.zclcs.common.core.utils.TreeUtil;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
 import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
@@ -35,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
 
     private final UserDataPermissionService userDataPermissionService;
@@ -73,7 +73,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (StrUtil.isNotBlank(deptVo.getDeptName())) {
             return trees;
         } else {
-            return (List<DeptTreeVo>) BaseTreeUtil.build(trees);
+            return (List<DeptTreeVo>) TreeUtil.build(trees);
         }
     }
 
@@ -88,8 +88,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     private QueryWrapper<DeptVo> getQueryWrapper(DeptVo deptVo) {
         QueryWrapper<DeptVo> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("sd.order_num");
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sd.dept_name", deptVo.getDeptName());
-        BaseQueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sd.create_at", deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sd.dept_name", deptVo.getDeptName());
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sd.create_at", deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo());
         return queryWrapper;
     }
 
@@ -121,16 +121,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         ArrayList<Long> distinct = CollectionUtil.distinct(allDeptIds);
         removeByIds(distinct);
-//        userDataPermissionService.deleteByDeptIds(deptIds);
-
-//        QueryWrapper<DeptVo> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.in("sd.parent_id", distinct);
-//        List<DeptVo> deptVos = this.baseMapper.findListVo(queryWrapper);
-//        if (CollectionUtils.isNotEmpty(deptVos)) {
-//            List<Long> deptIdList = deptVos.stream().map(SystemDeptVo::getDeptId).collect(Collectors.toList());
-//            this.delete(deptIdList);
-//        }
-        this.removeByIds(ids);
+        userDataPermissionService.deleteByDeptIds(distinct);
     }
 
     private void buildTrees(List<DeptTreeVo> trees, List<DeptVo> deptVos) {
@@ -146,9 +137,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     private void getChild(List<Long> allDeptId, Dept systemDept) {
-        List<Dept> one = this.lambdaQuery().eq(Dept::getParentId, systemDept.getDeptId()).list();
-        if (CollUtil.isNotEmpty(one)) {
-            for (Dept dept : one) {
+        List<Dept> list = this.lambdaQuery().eq(Dept::getParentId, systemDept.getDeptId()).list();
+        if (CollUtil.isNotEmpty(list)) {
+            for (Dept dept : list) {
                 allDeptId.add(dept.getDeptId());
                 getChild(allDeptId, dept);
             }

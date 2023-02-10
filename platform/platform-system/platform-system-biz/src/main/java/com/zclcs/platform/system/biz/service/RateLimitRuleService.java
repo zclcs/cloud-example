@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.RateLimitRule;
 import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitRuleVo;
@@ -49,6 +49,11 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @return RateLimitRuleVo
      */
     Integer countRateLimitRule(RateLimitRuleVo rateLimitRuleVo);
+
+    /**
+     * 缓存所有限流规则
+     */
+    void cacheAllRateLimitRules();
 
     /**
      * 新增

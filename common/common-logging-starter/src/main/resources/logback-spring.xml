@@ -3,7 +3,7 @@
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
     <property name="log.path" value="log/${springAppName}"/>
     <property name="log.maxHistory" value="15"/>
-    <property name="log.maxFileSize" value="2MB"/>
+    <property name="log.maxFileSize" value="50MB"/>
     <property name="log.colorPattern"
               value="%magenta(%d{yyyy-MM-dd HH:mm:ss}) %highlight([%X{tid}]) %highlight(%-5level) %boldCyan(${springAppName:-}) %yellow(%thread) %green(%logger) %msg%n"/>
     <property name="log.pattern"
@@ -24,7 +24,7 @@
         <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/info/info.%d{yyyy-MM-dd}%i.log</fileNamePattern>
+            <fileNamePattern>${log.path}/info/info.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${log.maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -62,7 +62,7 @@
         <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/error/error.%d{yyyy-MM-dd}%i.log</fileNamePattern>
+            <fileNamePattern>${log.path}/error/error.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${log.maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -100,7 +100,7 @@
         <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/client/client.%d{yyyy-MM-dd}%i.log</fileNamePattern>
+            <fileNamePattern>${log.path}/client/client.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${log.maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -120,7 +120,7 @@
         <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/sql/sql.%d{yyyy-MM-dd}%i.log</fileNamePattern>
+            <fileNamePattern>${log.path}/sql/sql.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${log.maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -136,12 +136,12 @@
     </appender>
 
     <!--屏蔽 nacos包下的warn级别以上的日志 -->
-    <logger name="com.alibaba.nacos.client.naming" level="warn" additivity="false"/>
+    <logger name="com.alibaba.nacos" level="warn" additivity="false"/>
 
     <!-- 字典依赖日志 -->
     <logger name="com.houkunlin" level="debug" additivity="false"/>
 
-    <logger name="com.zclcs.common.core.client" level="DEBUG" additivity="false">
+    <logger name="com.zclcs.platform.system.api.fegin" level="DEBUG" additivity="false">
         <!--        <appender-ref ref="console"/>-->
         <appender-ref ref="file_client"/>
     </logger>

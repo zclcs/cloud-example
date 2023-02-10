@@ -1,10 +1,13 @@
 package com.zclcs.platform.system.biz.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.utils.AddressUtil;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.RateLimitLog;
 import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitLogVo;
@@ -27,41 +30,41 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, RateLimitLog> implements RateLimitLogService {
 
     @Override
     public BasePage<RateLimitLogVo> findRateLimitLogPage(BasePageAo basePageAo, RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        // TODO 设置分页查询条件
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<RateLimitLogVo> findRateLimitLogList(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        // TODO 设置集合查询条件
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public RateLimitLogVo findRateLimitLog(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        // TODO 设置单个查询条件
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countRateLimitLog(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        // TODO 设置统计查询条件
         return this.baseMapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<RateLimitLogVo> getQueryWrapper(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = new QueryWrapper<>();
-        // TODO 设置公共查询条件
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.rate_limit_log_ip", rateLimitLogVo.getRateLimitLogIp());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_uri", rateLimitLogVo.getRequestUri());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_method", rateLimitLogVo.getRequestMethod());
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srll.create_at", rateLimitLogVo.getCreateTimeFrom(), rateLimitLogVo.getCreateTimeTo());
+        queryWrapper.orderByDesc("srll.create_at");
         return queryWrapper;
     }
 
@@ -70,16 +73,8 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
     public RateLimitLog createRateLimitLog(RateLimitLogAo rateLimitLogAo) {
         RateLimitLog rateLimitLog = new RateLimitLog();
         BeanUtil.copyProperties(rateLimitLogAo, rateLimitLog);
+        setRateLimitLog(rateLimitLog);
         this.save(rateLimitLog);
-        return rateLimitLog;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RateLimitLog updateRateLimitLog(RateLimitLogAo rateLimitLogAo) {
-        RateLimitLog rateLimitLog = new RateLimitLog();
-        BeanUtil.copyProperties(rateLimitLogAo, rateLimitLog);
-        this.updateById(rateLimitLog);
         return rateLimitLog;
     }
 
@@ -87,5 +82,11 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
     @Transactional(rollbackFor = Exception.class)
     public void deleteRateLimitLog(List<Long> ids) {
         this.removeByIds(ids);
+    }
+
+    private void setRateLimitLog(RateLimitLog rateLimitLog) {
+        if (StrUtil.isNotBlank(rateLimitLog.getRateLimitLogIp())) {
+            rateLimitLog.setLocation(AddressUtil.getCityInfo(rateLimitLog.getRateLimitLogIp()));
+        }
     }
 }

@@ -1,14 +1,11 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.platform.system.api.entity.LoginLog;
-import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.vo.LoginLogVo;
 import com.zclcs.platform.system.biz.service.LoginLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +44,7 @@ public class LoginLogController {
     @PreAuthorize("hasAuthority('loginLog:view')")
     public BaseRsp<BasePage<LoginLogVo>> findLoginLogPage(@Validated BasePageAo basePageAo, @Validated LoginLogVo loginLogVo) {
         BasePage<LoginLogVo> page = this.loginLogService.findLoginLogPage(basePageAo, loginLogVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -55,7 +52,7 @@ public class LoginLogController {
     @PreAuthorize("hasAuthority('loginLog:view')")
     public BaseRsp<List<LoginLogVo>> findLoginLogList(@Validated LoginLogVo loginLogVo) {
         List<LoginLogVo> list = this.loginLogService.findLoginLogList(loginLogVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,15 +60,7 @@ public class LoginLogController {
     @PreAuthorize("hasAuthority('loginLog:view')")
     public BaseRsp<LoginLogVo> findLoginLog(@Validated LoginLogVo loginLogVo) {
         LoginLogVo loginLog = this.loginLogService.findLoginLog(loginLogVo);
-        return BaseRspUtil.data(loginLog);
-    }
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('loginLog:add')")
-    @ControllerEndpoint(operation = "新增登录日志")
-    @Operation(summary = "新增登录日志")
-    public BaseRsp<LoginLog> addLoginLog(@RequestBody @Validated LoginLogAo loginLogAo) {
-        return BaseRspUtil.data(this.loginLogService.createLoginLog(loginLogAo));
+        return RspUtil.data(loginLog);
     }
 
     @DeleteMapping("/{loginLogIds}")
@@ -84,14 +73,6 @@ public class LoginLogController {
     public BaseRsp<String> deleteLoginLog(@NotBlank(message = "{required}") @PathVariable String loginLogIds) {
         List<Long> ids = Arrays.stream(loginLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.loginLogService.deleteLoginLog(ids);
-        return BaseRspUtil.message("删除成功");
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAuthority('loginLog:update')")
-    @ControllerEndpoint(operation = "修改登录日志")
-    @Operation(summary = "修改登录日志")
-    public BaseRsp<LoginLog> updateLoginLog(@RequestBody @Validated(UpdateStrategy.class) LoginLogAo loginLogAo) {
-        return BaseRspUtil.data(this.loginLogService.updateLoginLog(loginLogAo));
+        return RspUtil.message("删除成功");
     }
 }

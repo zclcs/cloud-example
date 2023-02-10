@@ -27,11 +27,11 @@ public class BlackListVo implements Serializable {
     @Schema(description = "黑名单id")
     private Long blackId;
 
-    @Schema(description = "黑名单ip")
-    private String blackIp;
-
     @Schema(description = "黑名单id集合")
     private List<Long> blackIds;
+
+    @Schema(description = "黑名单ip")
+    private String blackIp;
 
     @Schema(description = "请求uri（支持通配符）")
     private String requestUri;

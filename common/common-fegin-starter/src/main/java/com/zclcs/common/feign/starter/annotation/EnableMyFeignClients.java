@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * @author lengleng
+ * @author zclcs
  * @date 2019/2/1
  */
 @Target(ElementType.TYPE)
@@ -37,7 +37,7 @@ public @interface EnableMyFeignClients {
      *
      * @return the array of 'basePackages'.
      */
-    String[] basePackages() default {"com.pig4cloud.pig"};
+    String[] basePackages() default {"com.zclcs"};
 
     /**
      * Type-safe alternative to {@link #basePackages()} for specifying the packages to

@@ -2,7 +2,7 @@ package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
 import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;

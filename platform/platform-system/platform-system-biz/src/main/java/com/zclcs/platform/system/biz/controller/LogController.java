@@ -1,11 +1,12 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.platform.system.api.entity.ao.LogAo;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.biz.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,7 @@ public class LogController {
     @PreAuthorize("hasAuthority('log:view')")
     public BaseRsp<BasePage<LogVo>> findLogPage(@Validated BasePageAo basePageAo, @Validated LogVo logVo) {
         BasePage<LogVo> page = this.logService.findLogPage(basePageAo, logVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -52,7 +53,7 @@ public class LogController {
     @PreAuthorize("hasAuthority('log:view')")
     public BaseRsp<List<LogVo>> findLogList(@Validated LogVo logVo) {
         List<LogVo> list = this.logService.findLogList(logVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -60,7 +61,13 @@ public class LogController {
     @PreAuthorize("hasAuthority('log:view')")
     public BaseRsp<LogVo> findLog(@Validated LogVo logVo) {
         LogVo log = this.logService.findLog(logVo);
-        return BaseRspUtil.data(log);
+        return RspUtil.data(log);
+    }
+
+    @PostMapping
+    @Operation(summary = "保存日志")
+    public void saveLog(@RequestBody @Validated LogAo log) {
+        this.logService.createLog(log.getClassName(), log.getMethodName(), log.getParams(), log.getIp(), log.getOperation(), log.getUsername(), log.getStart());
     }
 
     @DeleteMapping("/{logIds}")
@@ -73,6 +80,6 @@ public class LogController {
     public BaseRsp<String> deleteLog(@NotBlank(message = "{required}") @PathVariable String logIds) {
         List<Long> ids = Arrays.stream(logIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.logService.deleteLog(ids);
-        return BaseRspUtil.message("删除成功");
+        return RspUtil.message("删除成功");
     }
 }

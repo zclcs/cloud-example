@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 菜单 Vo
@@ -25,6 +26,9 @@ public class MenuVo implements Serializable {
 
     @Schema(description = "菜单/按钮id")
     private Long menuId;
+
+    @Schema(description = "菜单/按钮id集合")
+    private List<Long> menuIds;
 
     @Schema(description = "上级菜单id")
     private Long parentId;
@@ -52,6 +56,9 @@ public class MenuVo implements Serializable {
 
     @Schema(description = "类型 0菜单 1按钮 2目录")
     private String type;
+
+    @Schema(description = "菜单类型集合 0菜单 1按钮 2目录")
+    private List<String> types;
 
     @Schema(description = "是否隐藏菜单 1是 0否")
     private String hideMenu;

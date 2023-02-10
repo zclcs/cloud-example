@@ -1,10 +1,7 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.RoleMenu;
-import com.zclcs.platform.system.api.entity.ao.RoleMenuAo;
 import com.zclcs.platform.system.api.entity.vo.RoleMenuVo;
 
 import java.util.List;
@@ -18,59 +15,25 @@ import java.util.List;
 public interface RoleMenuService extends IService<RoleMenu> {
 
     /**
-     * 查询（分页）
+     * 删除角色菜单关联数据
      *
-     * @param basePageAo basePageAo
-     * @param roleMenuVo roleMenuVo
-     * @return BasePage<RoleMenuVo>
+     * @param roleIds 角色id
      */
-    BasePage<RoleMenuVo> findRoleMenuPage(BasePageAo basePageAo, RoleMenuVo roleMenuVo);
+    void deleteRoleMenusByRoleId(List<Long> roleIds);
 
     /**
-     * 查询（所有）
+     * 删除角色菜单关联数据
      *
-     * @param roleMenuVo roleMenuVo
-     * @return List<RoleMenuVo>
+     * @param menuIds 菜单id
      */
-    List<RoleMenuVo> findRoleMenuList(RoleMenuVo roleMenuVo);
+    void deleteRoleMenusByMenuId(List<Long> menuIds);
 
     /**
-     * 查询（单个）
+     * 获取角色对应的菜单列表
      *
-     * @param roleMenuVo roleMenuVo
-     * @return RoleMenuVo
+     * @param roleId 角色id
+     * @return 菜单列表
      */
-    RoleMenuVo findRoleMenu(RoleMenuVo roleMenuVo);
-
-    /**
-     * 统计
-     *
-     * @param roleMenuVo roleMenuVo
-     * @return RoleMenuVo
-     */
-    Integer countRoleMenu(RoleMenuVo roleMenuVo);
-
-    /**
-     * 新增
-     *
-     * @param roleMenuAo roleMenuAo
-     * @return RoleMenu
-     */
-    RoleMenu createRoleMenu(RoleMenuAo roleMenuAo);
-
-    /**
-     * 修改
-     *
-     * @param roleMenuAo roleMenuAo
-     * @return RoleMenu
-     */
-    RoleMenu updateRoleMenu(RoleMenuAo roleMenuAo);
-
-    /**
-     * 删除
-     *
-     * @param ids ids
-     */
-    void deleteRoleMenu(List<Long> ids);
+    List<RoleMenuVo> getRoleMenusByRoleId(Long roleId);
 
 }

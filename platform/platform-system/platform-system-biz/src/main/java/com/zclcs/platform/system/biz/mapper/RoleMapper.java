@@ -3,7 +3,7 @@ package com.zclcs.platform.system.biz.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.platform.system.api.entity.Role;
 import com.zclcs.platform.system.api.entity.vo.RoleVo;
 import org.apache.ibatis.annotations.Param;
@@ -50,5 +50,13 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return 对象
      */
     Integer countVo(@Param(Constants.WRAPPER) Wrapper<RoleVo> ew);
+
+    /**
+     * 通过角色id获取账号
+     *
+     * @param roleId 角色id
+     * @return 账号集合
+     */
+    List<String> selectUsernamesByRoleId(Long roleId);
 
 }

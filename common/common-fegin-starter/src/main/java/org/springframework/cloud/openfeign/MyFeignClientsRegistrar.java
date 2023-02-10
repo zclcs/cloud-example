@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author L.cm
- * @date 2020/2/8
+ * @author zclcs
  * <p>
  * feign 自动配置功能 from mica
  */
@@ -49,11 +48,7 @@ public class MyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, B
     }
 
     private void registerFeignClients(BeanDefinitionRegistry registry) {
-
-        List<String> feignClients = new ArrayList<>(
-                SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader()));
-
-        // 支持 springboot 2.7 + 最新版本的配置方式
+        List<String> feignClients = new ArrayList<>();
         ImportCandidates.load(FeignClient.class, getBeanClassLoader()).forEach(feignClients::add);
         // 如果 spring.factories 里为空
         if (feignClients.isEmpty()) {

@@ -7,7 +7,7 @@ import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.exception.FileDownloadException;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.exception.ValidateCodeException;
-import com.zclcs.common.core.utils.BaseRspUtil;
+import com.zclcs.common.core.utils.RspUtil;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
@@ -32,7 +32,7 @@ import java.util.Set;
  * 全局异常处理器结合sentinel 全局异常处理器不能作用在 oauth server https://gitee.com/log4j/pig/issues/I1M2TJ
  * </p>
  *
- * @author lengleng
+ * @author zclcs
  * @date 2020-06-29
  */
 @Slf4j
@@ -52,21 +52,21 @@ public class BaseExceptionHandler {
 
         // 业务异常交由 sentinel 记录
         Tracer.trace(e);
-        return BaseRspUtil.message(e.getLocalizedMessage());
+        return RspUtil.message(e.getLocalizedMessage());
     }
 
     @ExceptionHandler(value = MyException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleMyException(MyException e) {
         log.error("系统业务异常", e);
-        return BaseRspUtil.message(e.getMessage());
+        return RspUtil.message(e.getMessage());
     }
 
     @ExceptionHandler(value = ValidateCodeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleMyException(ValidateCodeException e) {
         log.error("验证码异常", e);
-        return BaseRspUtil.message(e.getMessage());
+        return RspUtil.message(e.getMessage());
     }
 
     /**
@@ -85,7 +85,7 @@ public class BaseExceptionHandler {
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));
         log.error(message.toString());
-        return BaseRspUtil.message(message.toString());
+        return RspUtil.message(message.toString());
     }
 
     /**
@@ -106,7 +106,7 @@ public class BaseExceptionHandler {
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));
         log.error(message.toString());
-        return BaseRspUtil.message(message.toString());
+        return RspUtil.message(message.toString());
     }
 
     /**
@@ -124,7 +124,7 @@ public class BaseExceptionHandler {
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));
         log.error(message.toString());
-        return BaseRspUtil.message(message.toString());
+        return RspUtil.message(message.toString());
     }
 
     @ExceptionHandler(value = FileDownloadException.class)
@@ -139,7 +139,7 @@ public class BaseExceptionHandler {
         String msg = SpringSecurityMessageSource.getAccessor().getMessage("AbstractAccessDecisionManager.accessDenied",
                 accessDeniedException.getMessage());
         log.warn("拒绝授权异常信息 ex={}", msg);
-        return BaseRspUtil.message("没有权限访问该资源");
+        return RspUtil.message("没有权限访问该资源");
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
@@ -147,7 +147,7 @@ public class BaseExceptionHandler {
     public BaseRsp<Object> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         String message = "该方法不支持" + e.getContentType() + "媒体类型";
         log.error(message);
-        return BaseRspUtil.message(message);
+        return RspUtil.message(message);
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
@@ -155,7 +155,7 @@ public class BaseExceptionHandler {
     public BaseRsp<Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         String message = "该方法不支持" + e.getMethod() + "请求方法";
         log.error(message);
-        return BaseRspUtil.message(message);
+        return RspUtil.message(message);
     }
 
 }

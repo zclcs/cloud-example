@@ -26,8 +26,14 @@ public class UserRoleVo implements Serializable {
     @Schema(description = "用户id")
     private Long userId;
 
+    @Schema(description = "用户名称")
+    private String userName;
+
     @Schema(description = "角色id")
     private Long roleId;
+
+    @Schema(description = "角色名称")
+    private String roleName;
 
 
 }

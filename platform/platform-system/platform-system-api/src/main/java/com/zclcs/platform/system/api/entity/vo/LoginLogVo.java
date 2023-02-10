@@ -45,5 +45,8 @@ public class LoginLogVo implements Serializable {
     @Schema(description = "浏览器")
     private String browser;
 
+    @Schema(description = "登录类型 01 成功 02 失败 03 登出")
+    private String loginType;
+
 
 }

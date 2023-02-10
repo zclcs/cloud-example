@@ -40,4 +40,19 @@ public interface DictConstant {
      */
     String YES_NO_0 = "0";
 
+    /**
+     * 登录成功
+     */
+    String LOGIN_LOG_LOGIN_TYPE_01 = "01";
+
+    /**
+     * 登录失败
+     */
+    String LOGIN_LOG_LOGIN_TYPE_02 = "02";
+
+    /**
+     * 登出
+     */
+    String LOGIN_LOG_LOGIN_TYPE_03 = "03";
+
 }

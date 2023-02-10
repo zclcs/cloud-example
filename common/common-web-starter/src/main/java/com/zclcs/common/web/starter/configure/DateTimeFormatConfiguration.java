@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(MyWebProperties.class)
-@ConditionalOnProperty(value = "my.enableDateConverter", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "my.enable.date.converter", havingValue = "true", matchIfMissing = true)
 public class DateTimeFormatConfiguration implements WebMvcConfigurer {
 
     @Override

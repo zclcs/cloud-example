@@ -1,11 +1,7 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
 import com.zclcs.platform.system.api.entity.UserRole;
-import com.zclcs.platform.system.api.entity.ao.UserRoleAo;
-import com.zclcs.platform.system.api.entity.vo.UserRoleVo;
 
 import java.util.List;
 
@@ -18,59 +14,25 @@ import java.util.List;
 public interface UserRoleService extends IService<UserRole> {
 
     /**
-     * 查询（分页）
+     * 删除角色用户管理关系
      *
-     * @param basePageAo basePageAo
-     * @param userRoleVo userRoleVo
-     * @return BasePage<UserRoleVo>
+     * @param roleIds 角色id数组
      */
-    BasePage<UserRoleVo> findUserRolePage(BasePageAo basePageAo, UserRoleVo userRoleVo);
+    void deleteUserRolesByRoleId(List<Long> roleIds);
 
     /**
-     * 查询（所有）
+     * 删除角色用户管理关系
      *
-     * @param userRoleVo userRoleVo
-     * @return List<UserRoleVo>
+     * @param userIds 用户id数组
      */
-    List<UserRoleVo> findUserRoleList(UserRoleVo userRoleVo);
+    void deleteUserRolesByUserId(List<Long> userIds);
 
     /**
-     * 查询（单个）
+     * 通过角色id查找对应的用户id
      *
-     * @param userRoleVo userRoleVo
-     * @return UserRoleVo
+     * @param roleIds 角色id
+     * @return 用户id集
      */
-    UserRoleVo findUserRole(UserRoleVo userRoleVo);
-
-    /**
-     * 统计
-     *
-     * @param userRoleVo userRoleVo
-     * @return UserRoleVo
-     */
-    Integer countUserRole(UserRoleVo userRoleVo);
-
-    /**
-     * 新增
-     *
-     * @param userRoleAo userRoleAo
-     * @return UserRole
-     */
-    UserRole createUserRole(UserRoleAo userRoleAo);
-
-    /**
-     * 修改
-     *
-     * @param userRoleAo userRoleAo
-     * @return UserRole
-     */
-    UserRole updateUserRole(UserRoleAo userRoleAo);
-
-    /**
-     * 删除
-     *
-     * @param ids ids
-     */
-    void deleteUserRole(List<Long> ids);
+    List<Long> findUserIdsByRoleId(List<Long> roleIds);
 
 }

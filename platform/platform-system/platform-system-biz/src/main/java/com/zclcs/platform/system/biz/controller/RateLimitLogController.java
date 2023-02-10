@@ -1,12 +1,11 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RateLimitLog;
 import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitLogVo;
@@ -47,7 +46,7 @@ public class RateLimitLogController {
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     public BaseRsp<BasePage<RateLimitLogVo>> findRateLimitLogPage(@Validated BasePageAo basePageAo, @Validated RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> page = this.rateLimitLogService.findRateLimitLogPage(basePageAo, rateLimitLogVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -55,7 +54,7 @@ public class RateLimitLogController {
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@Validated RateLimitLogVo rateLimitLogVo) {
         List<RateLimitLogVo> list = this.rateLimitLogService.findRateLimitLogList(rateLimitLogVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,7 +62,7 @@ public class RateLimitLogController {
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     public BaseRsp<RateLimitLogVo> findRateLimitLog(@Validated RateLimitLogVo rateLimitLogVo) {
         RateLimitLogVo rateLimitLog = this.rateLimitLogService.findRateLimitLog(rateLimitLogVo);
-        return BaseRspUtil.data(rateLimitLog);
+        return RspUtil.data(rateLimitLog);
     }
 
     @PostMapping
@@ -71,7 +70,7 @@ public class RateLimitLogController {
     @ControllerEndpoint(operation = "新增限流拦截日志")
     @Operation(summary = "新增限流拦截日志")
     public BaseRsp<RateLimitLog> addRateLimitLog(@RequestBody @Validated RateLimitLogAo rateLimitLogAo) {
-        return BaseRspUtil.data(this.rateLimitLogService.createRateLimitLog(rateLimitLogAo));
+        return RspUtil.data(this.rateLimitLogService.createRateLimitLog(rateLimitLogAo));
     }
 
     @DeleteMapping("/{rateLimitLogIds}")
@@ -84,14 +83,6 @@ public class RateLimitLogController {
     public BaseRsp<String> deleteRateLimitLog(@NotBlank(message = "{required}") @PathVariable String rateLimitLogIds) {
         List<Long> ids = Arrays.stream(rateLimitLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.rateLimitLogService.deleteRateLimitLog(ids);
-        return BaseRspUtil.message("删除成功");
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAuthority('rateLimitLog:update')")
-    @ControllerEndpoint(operation = "修改限流拦截日志")
-    @Operation(summary = "修改限流拦截日志")
-    public BaseRsp<RateLimitLog> updateRateLimitLog(@RequestBody @Validated(UpdateStrategy.class) RateLimitLogAo rateLimitLogAo) {
-        return BaseRspUtil.data(this.rateLimitLogService.updateRateLimitLog(rateLimitLogAo));
+        return RspUtil.message("删除成功");
     }
 }

@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 角色 Ao
@@ -39,6 +40,10 @@ public class RoleAo implements Serializable {
     @Size(max = 100, message = "{noMoreThan}")
     @Schema(description = "角色描述")
     private String remark;
+
+    @Schema(description = "菜单编号")
+    @NotNull(message = "{required}")
+    private List<Long> menuIds;
 
 
 }

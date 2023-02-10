@@ -3,9 +3,9 @@ package com.zclcs.platform.system.biz.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.datasource.starter.base.BasePage;
-import com.zclcs.common.datasource.starter.utils.BaseQueryWrapperUtil;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.LoginLog;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import com.zclcs.platform.system.api.entity.vo.LoginLogVo;
@@ -58,26 +58,16 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     private QueryWrapper<LoginLogVo> getQueryWrapper(LoginLogVo loginLogVo) {
         QueryWrapper<LoginLogVo> queryWrapper = new QueryWrapper<>();
-        BaseQueryWrapperUtil.likeNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
         return queryWrapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public LoginLog createLoginLog(LoginLogAo loginLogAo) {
+    public void createLoginLog(LoginLogAo loginLogAo) {
         LoginLog loginLog = new LoginLog();
         BeanUtil.copyProperties(loginLogAo, loginLog);
         this.save(loginLog);
-        return loginLog;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public LoginLog updateLoginLog(LoginLogAo loginLogAo) {
-        LoginLog loginLog = new LoginLog();
-        BeanUtil.copyProperties(loginLogAo, loginLog);
-        this.updateById(loginLog);
-        return loginLog;
     }
 
     @Override

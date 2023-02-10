@@ -3,6 +3,7 @@ package com.zclcs.common.feign.starter.sentinel;
 import com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration;
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.RequestOriginParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.feign.starter.sentinel.ext.MySentinelFeign;
 import com.zclcs.common.feign.starter.sentinel.handler.MyUrlBlockHandler;
 import com.zclcs.common.feign.starter.sentinel.parser.MyHeaderRequestOriginParser;
@@ -34,8 +35,8 @@ public class SentinelAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public BlockExceptionHandler blockExceptionHandler() {
-        return new MyUrlBlockHandler();
+    public BlockExceptionHandler blockExceptionHandler(ObjectMapper objectMapper) {
+        return new MyUrlBlockHandler(objectMapper);
     }
 
     @Bean

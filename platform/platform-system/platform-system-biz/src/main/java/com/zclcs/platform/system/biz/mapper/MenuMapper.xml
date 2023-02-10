@@ -59,14 +59,14 @@
                where su.username = #{username})
             ${ew.customSqlSegment}
     </sql>
-    <select id="findUserPermissions" resultType="com.zclcs.common.core.entity.system.vo.SystemMenuVo">
+    <select id="findUserPermissions" resultType="java.lang.String">
         select distinct m.perms
         from system_role r
                  left join system_user_role ur on (r.role_id = ur.role_id)
                  left join system_user u on (u.user_id = ur.user_id)
                  left join system_role_menu rm on (rm.role_id = r.role_id)
                  left join system_menu m on (m.menu_id = rm.menu_id)
-        where u.username = #{userName}
+        where u.username = #{username}
           and m.perms is not null
           and m.perms &lt;&gt; ''
     </select>

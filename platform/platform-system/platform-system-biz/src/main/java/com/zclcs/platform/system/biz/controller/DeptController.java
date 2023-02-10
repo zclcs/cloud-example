@@ -1,14 +1,15 @@
 package com.zclcs.platform.system.biz.controller;
 
-import com.zclcs.common.aop.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.StringConstant;
-import com.zclcs.common.core.utils.BaseRspUtil;
+import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.datasource.starter.base.BasePage;
+import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
+import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DeptVo;
 import com.zclcs.platform.system.biz.service.DeptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +49,15 @@ public class DeptController {
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<BasePage<DeptVo>> findDeptPage(@Validated BasePageAo basePageAo, @Validated DeptVo deptVo) {
         BasePage<DeptVo> page = this.deptService.findDeptPage(basePageAo, deptVo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
+    }
+
+    @GetMapping("options")
+    @Operation(summary = "前端下拉框")
+    @PreAuthorize("hasAuthority('dept:view')")
+    public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo dept) {
+        List<DeptTreeVo> list = this.deptService.findDeptTree(dept);
+        return RspUtil.data(list);
     }
 
     @GetMapping("list")
@@ -55,7 +65,7 @@ public class DeptController {
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<List<DeptVo>> findDeptList(@Validated DeptVo deptVo) {
         List<DeptVo> list = this.deptService.findDeptList(deptVo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -63,7 +73,7 @@ public class DeptController {
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<DeptVo> findDept(@Validated DeptVo deptVo) {
         DeptVo dept = this.deptService.findDept(deptVo);
-        return BaseRspUtil.data(dept);
+        return RspUtil.data(dept);
     }
 
     @PostMapping
@@ -71,7 +81,7 @@ public class DeptController {
     @ControllerEndpoint(operation = "新增部门")
     @Operation(summary = "新增部门")
     public BaseRsp<Dept> addDept(@RequestBody @Validated DeptAo deptAo) {
-        return BaseRspUtil.data(this.deptService.createDept(deptAo));
+        return RspUtil.data(this.deptService.createDept(deptAo));
     }
 
     @DeleteMapping("/{deptIds}")
@@ -84,7 +94,7 @@ public class DeptController {
     public BaseRsp<String> deleteDept(@NotBlank(message = "{required}") @PathVariable String deptIds) {
         List<Long> ids = Arrays.stream(deptIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.deptService.deleteDept(ids);
-        return BaseRspUtil.message("删除成功");
+        return RspUtil.message("删除成功");
     }
 
     @PutMapping
@@ -92,6 +102,6 @@ public class DeptController {
     @ControllerEndpoint(operation = "修改部门")
     @Operation(summary = "修改部门")
     public BaseRsp<Dept> updateDept(@RequestBody @Validated(UpdateStrategy.class) DeptAo deptAo) {
-        return BaseRspUtil.data(this.deptService.updateDept(deptAo));
+        return RspUtil.data(this.deptService.updateDept(deptAo));
     }
 }
