@@ -1,5 +1,4 @@
 apply plugin: "org.springframework.boot"
-apply plugin: "org.graalvm.buildtools.native"
 
 bootJar {
     mainClass = "com.zclcs.AuthApplication"
@@ -10,10 +9,6 @@ processResources {
         from("../../shared-resources")
         into("/src/main/resources")
     }
-}
-
-tasks.named("bootBuildImage") {
-    imageName = "192.168.33.10:3000/cloud/${project.name}"
 }
 
 dependencies {

@@ -36,13 +36,20 @@ buildscript {
 
 plugins {
     id "base"
-    id "org.springframework.boot" version "$springBootVersion"
-    id "org.graalvm.buildtools.native" version "$springBootNativeVersion"
+    id "org.springframework.boot" version "$springBootVersion" apply false
+    id "org.graalvm.buildtools.native" version "$springBootNativeVersion" apply false
+    id "com.google.cloud.tools.jib" version "$jibVersion" apply false
 }
 
 ext {
     javaVersion = JavaVersion.VERSION_17
     bom = Set.of(project(":cloud-bom"), project(":common"), project(":platform"), project(":platform:platform-system"))
+    jibPackage = Set.of(project(":platform:platform-auth"),
+            project(":platform:platform-gateway"),
+            project(":platform:platform-system:platform-system-biz"))
+    nativePackage = Set.of(project(":platform:platform-auth"),
+            project(":platform:platform-gateway"),
+            project(":platform:platform-system:platform-system-biz"))
     commons = (subprojects - bom)
 }
 
@@ -91,3 +98,38 @@ configure(commons) {
     compileTestJava.options.compilerArgs.add '-parameters'
     compileJava.dependsOn(processResources)
 }
+
+configure(jibPackage) {
+    apply plugin: "java"
+    apply plugin: "com.google.cloud.tools.jib"
+
+    jib {
+        from {
+            image = "${dockerJibFromImage}"
+            auth {
+                username = "${dockerJibAuthUsername}"
+                password = "${dockerJibAuthPassword}"
+            }
+        }
+        to {
+            image = "${dockerJibToImage}/${project.name}"
+            tags = ["${version}", "latest"]
+            auth {
+                username = "${dockerJibAuthUsername}"
+                password = "${dockerJibAuthPassword}"
+            }
+        }
+        allowInsecureRegistries = true
+        container {
+            environment = ["SW_AGENT_NAME": project.name, "TZ": "Asia/Shanghai"]
+            entrypoint = "INHERIT"
+            format = "OCI"
+            creationTime = "USE_CURRENT_TIMESTAMP"
+        }
+    }
+}
+
+//configure(nativePackage) {
+//    apply plugin: "org.graalvm.buildtools.native"
+//
+//}
