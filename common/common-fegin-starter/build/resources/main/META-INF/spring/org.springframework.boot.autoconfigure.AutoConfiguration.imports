@@ -1,3 +1,0 @@
-com.zclcs.common.feign.starter.MyFeignAutoConfiguration
-com.zclcs.common.feign.starter.sentinel.SentinelAutoConfiguration
-com.zclcs.common.feign.starter.sentinel.handler.GlobalBizExceptionHandler
