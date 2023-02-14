@@ -87,12 +87,13 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
     private void checkCode(ServerHttpRequest request) {
         String code = request.getQueryParams().getFirst("code");
 
-        if (CharSequenceUtil.isBlank(code)) {
+        if (StrUtil.isBlank(code)) {
             throw new ValidateCodeException("验证码不能为空");
         }
 
         String randomStr = request.getQueryParams().getFirst("randomStr");
-        if (CharSequenceUtil.isBlank(randomStr)) {
+
+        if (StrUtil.isBlank(randomStr)) {
             randomStr = request.getQueryParams().getFirst(SecurityConstant.SMS_PARAMETER_NAME);
         }
 

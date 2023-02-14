@@ -1,6 +1,7 @@
 package com.zclcs.platform.gateway.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.zclcs.common.core.exception.ValidateCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -50,6 +51,8 @@ public class MyGatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
         } else if (error instanceof ResponseStatusException
                 && StrUtil.containsIgnoreCase(error.getMessage(), HttpStatus.NOT_FOUND.toString())) {
             errorMessage = "未找到该资源";
+        } else if (error instanceof ValidateCodeException) {
+            errorMessage = error.getMessage();
         }
 //        else if (error instanceof FlowException) {
 //            errorMessage = "接口限流";

@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BasePage;
+import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;

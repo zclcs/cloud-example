@@ -6,6 +6,7 @@ import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import com.zclcs.common.core.constant.ImageTypeConstant;
 import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.exception.ValidateCodeException;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,9 @@ public class ImageCodeHandler implements HandlerFunction<ServerResponse> {
 
         // 保存验证码信息
         Optional<String> randomStr = serverRequest.queryParam("randomStr");
+
+        randomStr.filter(StrUtil::isNotBlank).orElseThrow(() -> new ValidateCodeException("随机值不能为空"));
+
         randomStr.ifPresent(s -> redisService.set(RedisCachePrefixConstant.CODE_PREFIX + s, result,
                 myValidateCodeProperties.getTime()));
 
