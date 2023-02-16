@@ -22,11 +22,11 @@ public class MyValidateCodeProperties {
     /**
      * 图片宽度，px
      */
-    private Integer width = 130;
+    private Integer width = 120;
     /**
      * 图片高度，px
      */
-    private Integer height = 48;
+    private Integer height = 40;
     /**
      * 验证码位数
      */

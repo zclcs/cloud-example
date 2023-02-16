@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,14 +47,21 @@ public class SecurityUser extends User implements OAuth2AuthenticatedPrincipal {
     @Getter
     private final String phone;
 
+    /**
+     * 角色集合
+     */
+    @Getter
+    private final List<String> roles;
+
     public SecurityUser(Long id, Long deptId, String deptIdString, String username, String password, String phone, boolean enabled,
                         boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-                        Collection<? extends GrantedAuthority> authorities) {
+                        Collection<? extends GrantedAuthority> authorities, List<String> roles) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.id = id;
         this.deptId = deptId;
         this.deptIdString = deptIdString;
         this.phone = phone;
+        this.roles = roles;
     }
 
     /**

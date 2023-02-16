@@ -1,8 +1,8 @@
 package com.zclcs.common.security.starter.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.lang.Nullable;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
@@ -24,15 +24,13 @@ import java.util.concurrent.TimeUnit;
  * @author zclcs
  */
 @Service
-@RequiredArgsConstructor
 public class MyRedisOAuth2AuthorizationServiceImpl implements OAuth2AuthorizationService {
 
     private final static Long TIMEOUT = 10L;
 
     private static final String AUTHORIZATION = "token";
 
-    private final RedisTemplate<String, Object> redisTemplate;
-
+    private RedisTemplate<String, Object> redisTemplateJava;
 
     private static boolean isState(OAuth2Authorization authorization) {
         return Objects.nonNull(authorization.getAttribute("state"));
@@ -52,14 +50,19 @@ public class MyRedisOAuth2AuthorizationServiceImpl implements OAuth2Authorizatio
         return Objects.nonNull(authorization.getAccessToken());
     }
 
+    @Qualifier("redisTemplateJava")
+    @Autowired
+    public void setRedisTemplateJava(RedisTemplate<String, Object> redisTemplateJava) {
+        this.redisTemplateJava = redisTemplateJava;
+    }
+
     @Override
     public void save(OAuth2Authorization authorization) {
         Assert.notNull(authorization, "authorization cannot be null");
 
         if (isState(authorization)) {
             String token = authorization.getAttribute("state");
-            redisTemplate.setValueSerializer(RedisSerializer.java());
-            redisTemplate.opsForValue().set(buildKey(OAuth2ParameterNames.STATE, token), authorization, TIMEOUT,
+            redisTemplateJava.opsForValue().set(buildKey(OAuth2ParameterNames.STATE, token), authorization, TIMEOUT,
                     TimeUnit.MINUTES);
         }
 
@@ -69,24 +72,21 @@ public class MyRedisOAuth2AuthorizationServiceImpl implements OAuth2Authorizatio
             OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
             long between = ChronoUnit.MINUTES.between(authorizationCodeToken.getIssuedAt(),
                     authorizationCodeToken.getExpiresAt());
-            redisTemplate.setValueSerializer(RedisSerializer.java());
-            redisTemplate.opsForValue().set(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()),
+            redisTemplateJava.opsForValue().set(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()),
                     authorization, between, TimeUnit.MINUTES);
         }
 
         if (isRefreshToken(authorization)) {
             OAuth2RefreshToken refreshToken = authorization.getRefreshToken().getToken();
             long between = ChronoUnit.SECONDS.between(refreshToken.getIssuedAt(), refreshToken.getExpiresAt());
-            redisTemplate.setValueSerializer(RedisSerializer.java());
-            redisTemplate.opsForValue().set(buildKey(OAuth2ParameterNames.REFRESH_TOKEN, refreshToken.getTokenValue()),
+            redisTemplateJava.opsForValue().set(buildKey(OAuth2ParameterNames.REFRESH_TOKEN, refreshToken.getTokenValue()),
                     authorization, between, TimeUnit.SECONDS);
         }
 
         if (isAccessToken(authorization)) {
             OAuth2AccessToken accessToken = authorization.getAccessToken().getToken();
             long between = ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt());
-            redisTemplate.setValueSerializer(RedisSerializer.java());
-            redisTemplate.opsForValue().set(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()),
+            redisTemplateJava.opsForValue().set(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()),
                     authorization, between, TimeUnit.SECONDS);
         }
     }
@@ -117,7 +117,7 @@ public class MyRedisOAuth2AuthorizationServiceImpl implements OAuth2Authorizatio
             OAuth2AccessToken accessToken = authorization.getAccessToken().getToken();
             keys.add(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()));
         }
-        redisTemplate.delete(keys);
+        redisTemplateJava.delete(keys);
     }
 
     @Override
@@ -131,8 +131,7 @@ public class MyRedisOAuth2AuthorizationServiceImpl implements OAuth2Authorizatio
     public OAuth2Authorization findByToken(String token, @Nullable OAuth2TokenType tokenType) {
         Assert.hasText(token, "token cannot be empty");
         Assert.notNull(tokenType, "tokenType cannot be empty");
-        redisTemplate.setValueSerializer(RedisSerializer.java());
-        return (OAuth2Authorization) redisTemplate.opsForValue().get(buildKey(tokenType.getValue(), token));
+        return (OAuth2Authorization) redisTemplateJava.opsForValue().get(buildKey(tokenType.getValue(), token));
     }
 
     private String buildKey(String type, String id) {

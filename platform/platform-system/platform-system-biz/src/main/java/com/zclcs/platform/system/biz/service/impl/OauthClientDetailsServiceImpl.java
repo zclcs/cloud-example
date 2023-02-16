@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
@@ -22,7 +21,6 @@ import com.zclcs.platform.system.biz.mapper.OauthClientDetailsMapper;
 import com.zclcs.platform.system.biz.service.MenuService;
 import com.zclcs.platform.system.biz.service.OauthClientDetailsService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -82,11 +80,11 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
         return this.baseMapper.countVo(queryWrapper);
     }
 
-    @SneakyThrows(JsonProcessingException.class)
+    //    @SneakyThrows(JsonProcessingException.class)
     @Override
     public OauthClientDetailsVo findById(String clientId) {
         Object obj = redisService.get(RedisCachePrefixConstant.CLIENT_DETAILS_PREFIX + clientId);
-        log.info("client_details {}", objectMapper.writeValueAsString(obj));
+//        log.info("client_details {}", objectMapper.writeValueAsString(obj));
         if (obj == null) {
             synchronized (this) {
                 // 再查一次，防止上个已经抢到锁的线程已经更新过了
