@@ -7,6 +7,7 @@
         from (select sr.role_id,
                      sr.role_name,
                      sr.remark,
+                     sr.create_at,
                      group_concat(distinct srm.menu_id) as menuIdsString
               from system_role sr
                        left join system_role_menu srm on sr.role_id = srm.role_id

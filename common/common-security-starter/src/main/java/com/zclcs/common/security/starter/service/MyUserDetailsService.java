@@ -65,11 +65,10 @@ public interface MyUserDetailsService extends UserDetailsService, Ordered {
 
         Collection<GrantedAuthority> authorities = AuthorityUtils
                 .createAuthorityList(dbAuthsSet.toArray(new String[0]));
-        userVo.setRoleNames(StrUtil.split(userVo.getRoleNameString(), StrUtil.COMMA));
         // 构造security用户
         return new SecurityUser(userVo.getUserId(), userVo.getDeptId(), userVo.getDeptIdString(), userVo.getUsername(),
                 SecurityConstant.BCRYPT + userVo.getPassword(), userVo.getMobile(), true, true, true,
-                StrUtil.equals(userVo.getStatus(), MyConstant.STATUS_VALID), authorities, userVo.getRoleNames());
+                StrUtil.equals(userVo.getStatus(), MyConstant.STATUS_VALID), authorities);
     }
 
     /**

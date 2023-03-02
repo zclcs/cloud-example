@@ -80,8 +80,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public List<Long> getChildDeptId(Long deptId) {
         List<Long> deptIds = new ArrayList<>();
+        Dept one = this.lambdaQuery().eq(Dept::getDeptId, deptId).one();
+        if (one == null) {
+            return deptIds;
+        }
         deptIds.add(deptId);
-        getChild(deptIds, this.lambdaQuery().eq(Dept::getDeptId, deptId).one());
+        getChild(deptIds, one);
         return deptIds;
     }
 

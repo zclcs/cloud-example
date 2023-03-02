@@ -79,8 +79,7 @@ public class UserController {
     @GetMapping("info")
     @Operation(summary = "用户信息")
     public BaseRsp<UserVo> findUserInfo() {
-        String name = SecurityUtil.getUsername();
-        UserVo userDetail = userService.findUserDetail(name);
+        UserVo userDetail = userService.findUserDetail(SecurityUtil.getUsername());
         if (userDetail == null) {
             RspUtil.message("获取当前用户信息失败");
         }

@@ -193,7 +193,7 @@ public class MyTokenEndpoint {
         int pageSize = MapUtil.getInt(params, MyConstant.PAGE_SIZE);
         int pageNum = MapUtil.getInt(params, MyConstant.PAGE_NUM);
         Set<Object> keys = redisService.sGet(key);
-        List<String> pages = keys.stream().map(Object::toString).skip((pageSize - 1) * pageNum).limit(pageNum).collect(Collectors.toList());
+        List<String> pages = keys.stream().map(Object::toString).skip((long) (pageSize - 1) * pageNum).limit(pageNum).collect(Collectors.toList());
         BasePage<TokenVo> basePage = new BasePage<>(pageNum, pageSize);
 
         List<TokenVo> tokenVoList = redisService.multiGet(pages).stream().map(obj -> {

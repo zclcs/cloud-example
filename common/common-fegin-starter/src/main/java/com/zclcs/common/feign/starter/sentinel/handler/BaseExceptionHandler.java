@@ -64,7 +64,7 @@ public class BaseExceptionHandler {
 
     @ExceptionHandler(value = ValidateCodeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public BaseRsp<Object> handleMyException(ValidateCodeException e) {
+    public BaseRsp<Object> handleValidateCodeException(ValidateCodeException e) {
         log.error("验证码异常", e);
         return RspUtil.message(e.getMessage());
     }

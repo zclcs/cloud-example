@@ -101,7 +101,11 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
 
         Object codeObj = redisService.get(key);
 
-        if (ObjectUtil.isEmpty(codeObj) || !code.equals(codeObj)) {
+        if (ObjectUtil.isEmpty(codeObj)) {
+            throw new ValidateCodeException("验证码已过期");
+        }
+
+        if (!code.equals(codeObj)) {
             throw new ValidateCodeException("验证码不合法");
         }
 

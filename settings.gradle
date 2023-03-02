@@ -10,6 +10,7 @@ include 'common:common-redis-starter'
 include 'common:common-security-starter'
 include 'common:common-web-starter'
 include 'common:common-seata-starter'
+include 'common:common-dict-starter'
 
 include 'platform'
 include 'platform:platform-system'

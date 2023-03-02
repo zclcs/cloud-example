@@ -33,5 +33,8 @@ dependencies {
         api "com.github.whvcse:easy-captcha:$easyCaptchaVersion"
         api "org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion"
         api "org.springdoc:springdoc-openapi-starter-webmvc-api:$springDocVersion"
+        api "org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion"
+        api "com.google.guava:guava:$guavaVersion"
+        api "org.javassist:javassist:$javassistVersion"
     }
 }

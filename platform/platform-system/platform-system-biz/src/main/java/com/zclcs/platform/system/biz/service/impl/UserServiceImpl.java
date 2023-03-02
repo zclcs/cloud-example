@@ -104,9 +104,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private QueryWrapper<UserVo> getQueryWrapper(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
         AtomicReference<List<Long>> deptList = new AtomicReference<>();
-        Optional.ofNullable(userVo.getDeptId()).ifPresentOrElse(deptId ->
-                        deptList.set(deptService.getChildDeptId(deptId)),
-                () -> deptList.set(CollectionUtil.newArrayList(0L)));
+        Optional.ofNullable(userVo.getDeptId()).ifPresent(deptId -> {
+            List<Long> childDeptId = deptService.getChildDeptId(deptId);
+            if (CollectionUtil.isNotEmpty(childDeptId)) {
+                deptList.set(childDeptId);
+            } else {
+                deptList.set(CollectionUtil.newArrayList(0L));
+            }
+        });
         QueryWrapperUtil.inNotEmpty(queryWrapper, "t1.dept_id", deptList.get());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "t1.username", userVo.getUsername());
         return queryWrapper;
@@ -130,13 +135,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserVo cacheAndGetUserDetail(String username) {
-        UserVo systemUserVo = this.findByName(username);
-        if (systemUserVo == null) {
+        UserVo userVo = this.findByName(username);
+        if (userVo == null) {
             return null;
         }
-        systemUserVo.setPermissions(menuService.findUserPermissions(username));
-        redisService.set(RedisCachePrefixConstant.USER + username, systemUserVo);
-        return systemUserVo;
+        userVo.setRoleNames(StrUtil.split(userVo.getRoleNameString(), StrUtil.COMMA));
+        userVo.setRoleIds(StrUtil.split(userVo.getRoleIdString(), StrUtil.COMMA).stream().map(Long::valueOf).collect(Collectors.toList()));
+        userVo.setPermissions(menuService.findUserPermissions(username));
+        redisService.set(RedisCachePrefixConstant.USER + username, userVo);
+        return userVo;
     }
 
     @Override

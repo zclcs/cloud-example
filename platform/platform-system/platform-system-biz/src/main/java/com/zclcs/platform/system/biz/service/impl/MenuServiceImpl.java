@@ -6,6 +6,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.constant.MyConstant;
@@ -46,6 +47,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     private final RoleMenuService roleMenuService;
     private final RedisService redisService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<MenuVo> findMenuPage(BasePageAo basePageAo, MenuVo menuVo) {

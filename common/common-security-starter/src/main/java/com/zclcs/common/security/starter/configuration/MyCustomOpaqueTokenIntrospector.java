@@ -64,7 +64,7 @@ public class MyCustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector 
             log.warn("用户不不存在 {}", notFoundException.getLocalizedMessage());
             throw notFoundException;
         } catch (Exception ex) {
-            log.error("资源服务器 introspect Token error {}", ex.getLocalizedMessage());
+            log.error("资源服务器 introspect Token error {}", ex.getLocalizedMessage(), ex);
         }
         return (SecurityUser) userDetails;
     }

@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":common:common-datasource-starter"))
     implementation(project(":common:common-security-starter"))
     implementation(project(":common:common-fegin-starter"))
+    implementation(project(":common:common-dict-starter"))
 //    implementation(project(":common:common-seata-starter"))
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
