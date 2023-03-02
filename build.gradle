@@ -16,7 +16,7 @@ allprojects {
     }
 
     group 'com.zclcs'
-    version '1.0-SNAPSHOT'
+    version '1.0'
 }
 
 bootJar.enabled = false
