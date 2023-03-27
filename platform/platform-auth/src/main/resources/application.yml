@@ -1,6 +1,6 @@
 server:
 
-  port: ${PORT_AUTH:8101}
+  port: ${PORT_PLATFORM_AUTH:8101}
 
 spring:
 

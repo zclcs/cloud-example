@@ -1,0 +1,1 @@
+FROM linking0606/sentinel-dashboard:1.8.5

@@ -33,10 +33,10 @@ CREATE TABLE `config_info`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uk_configinfo_datagrouptenant` (`data_id`, `group_id`, `tenant_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 12
+  AUTO_INCREMENT = 13
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_info'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_info
@@ -73,9 +73,9 @@ VALUES (6, 'rabbitmq.yaml', 'DEFAULT_GROUP',
         'dev', 'rabbitmq配置', NULL, NULL, 'yaml', NULL, '');
 INSERT INTO `config_info`
 VALUES (7, 'redis.yaml', 'DEFAULT_GROUP',
-        'spring:\r\n  data:\r\n    redis:\r\n      database: ${REDIS_DATABASE:0}\r\n      host: ${REDIS_HOST:127.0.0.1}\r\n      port: ${REDIS_PORT:6379}\r\n      lettuce:\r\n        pool:\r\n          min-idle: 8\r\n          max-idle: 500\r\n          max-active: 2000\r\n          max-wait: 10000\r\n      timeout: 5000',
-        '5918972f4533c49fa8fb70f49566395e', '2023-03-24 17:13:24', '2023-03-24 17:13:24', NULL, '192.168.33.1', '',
-        'dev', 'redis配置', NULL, NULL, 'yaml', NULL, '');
+        'spring:\n  data:\n    redis:\n      database: ${REDIS_DATABASE:0}\n      host: ${REDIS_HOST:127.0.0.1}\n      port: ${REDIS_PORT:6379}\n      password: ${REDIS_PASSWORD:123456}\n      lettuce:\n        pool:\n          min-idle: 8\n          max-idle: 500\n          max-active: 2000\n          max-wait: 10000\n      timeout: 5000',
+        '2a486148042b12896e458277106b9c59', '2023-03-24 17:13:24', '2023-03-27 11:51:15', 'nacos', '192.168.33.1', '',
+        'dev', 'redis配置', '', '', 'yaml', '', '');
 INSERT INTO `config_info`
 VALUES (8, 'mybatis-plus.yaml', 'DEFAULT_GROUP',
         'mybatis-plus:\r\n  configuration:\r\n    jdbc-type-for-null: null\r\n  global-config:\r\n    banner: false\r\n  type-aliases-package: com.zclcs.platform.system.api.entity\r\n  mapper-locations: classpath:com/zclcs/platform/system/biz/mapper/*.xml',
@@ -117,7 +117,7 @@ CREATE TABLE `config_info_aggr`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '增加租户字段'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_info_aggr
@@ -148,7 +148,7 @@ CREATE TABLE `config_info_beta`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_info_beta'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_info_beta
@@ -178,7 +178,7 @@ CREATE TABLE `config_info_tag`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_info_tag'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_info_tag
@@ -204,7 +204,7 @@ CREATE TABLE `config_tags_relation`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_tag_relation'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_tags_relation
@@ -232,7 +232,7 @@ CREATE TABLE `group_capacity`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '集群、各Group容量信息表'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of group_capacity
@@ -263,10 +263,10 @@ CREATE TABLE `his_config_info`
     INDEX `idx_gmt_modified` (`gmt_modified`) USING BTREE,
     INDEX `idx_did` (`data_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 12
+  AUTO_INCREMENT = 13
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '多租户改造'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of his_config_info
@@ -326,6 +326,11 @@ VALUES (0, 11, 'system-dict.yaml', 'DEFAULT_GROUP', '',
         'system:\r\n  dict:\r\n    text-value-default-null: true\r\n    cache:\r\n      enabled: true\r\n      maximum-size: 500\r\n      initial-capacity: 50\r\n      duration: 30s\r\n      miss-num: 50',
         '80074d97adf513b2794679d182e491d8', '2023-03-24 17:13:23', '2023-03-24 17:13:24', NULL, '192.168.33.1', 'I',
         'dev', '');
+INSERT INTO `his_config_info`
+VALUES (7, 12, 'redis.yaml', 'DEFAULT_GROUP', '',
+        'spring:\r\n  data:\r\n    redis:\r\n      database: ${REDIS_DATABASE:0}\r\n      host: ${REDIS_HOST:127.0.0.1}\r\n      port: ${REDIS_PORT:6379}\r\n      lettuce:\r\n        pool:\r\n          min-idle: 8\r\n          max-idle: 500\r\n          max-active: 2000\r\n          max-wait: 10000\r\n      timeout: 5000',
+        '5918972f4533c49fa8fb70f49566395e', '2023-03-27 11:51:15', '2023-03-27 11:51:15', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
 
 -- ----------------------------
 -- Table structure for permissions
@@ -340,7 +345,7 @@ CREATE TABLE `permissions`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8
   COLLATE = utf8_bin
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of permissions
@@ -358,7 +363,7 @@ CREATE TABLE `roles`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8
   COLLATE = utf8_bin
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of roles
@@ -388,7 +393,7 @@ CREATE TABLE `tenant_capacity`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '租户容量信息表'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tenant_capacity
@@ -415,7 +420,7 @@ CREATE TABLE `tenant_info`
   AUTO_INCREMENT = 2
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'tenant_info'
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tenant_info
@@ -436,7 +441,7 @@ CREATE TABLE `users`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8
   COLLATE = utf8_bin
-  ROW_FORMAT = Dynamic;
+  ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users

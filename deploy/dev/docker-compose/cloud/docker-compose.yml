@@ -1,0 +1,60 @@
+version: '3'
+
+# 生产环境建议不要 host 模式
+
+services:
+  platform-gateway:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-gateway:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}_platform-gateway
+    network_mode: host
+    command: sh -c "java ${JAVA_OPS_PREFIX} -Dcsp.sentinel.app.type=1 ${PLATFORM_GATEWAY_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-gateway:/log/platform-gateway
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    env_file: .env
+  platform-auth:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}_platform-auth
+    network_mode: host
+    command: sh -c "java ${JAVA_OPS_PREFIX} ${PLATFORM_AUTH_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-auth:/log/platform-auth
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_AUTH} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    env_file: .env
+  platform-system:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system-biz:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}_platform-system
+    network_mode: host
+    command: sh -c "java ${JAVA_OPS_PREFIX} ${PLATFORM_SYSTEM_JAVA_OPS} ${JAVA_OPS_SUFFIX} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-system:/log/platform-system
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    env_file: .env
+  sentinel:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/sentinel:1.8.5
+    container_name: ${NACOS_NAMESPACE}_sentinel
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
+      -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
+      -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 
+      -Ddatasource.provider.nacos.username=${NACOS_USERNAME} -Ddatasource.provider.nacos.password=${NACOS_PASSWORD} -Ddatasource.provider.nacos.namespace=${NACOS_NAMESPACE}
+      -Ddatasource.provider.nacos.group-id=SENTINEL_GROUP"
+    volumes:
+      - ./log/sentinel:/root/logs/csp
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${SENTINEL_PORT} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    env_file: .env

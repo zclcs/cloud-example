@@ -24,7 +24,7 @@ services:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
   redis:
     image: redis:6.0.8
@@ -42,7 +42,7 @@ services:
       test: [ "CMD", "redis-cli","ping" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
   nacos:
     image: nacos/nacos-server:v2.2.1
@@ -65,7 +65,7 @@ services:
       test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
     depends_on:
       mysql:
@@ -89,7 +89,7 @@ services:
       test: [ "CMD-SHELL", "curl -sS 'http://127.0.0.1:9000/minio/index.html' || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
     command: server --console-address ":9090"
   rabbitmq:
@@ -108,7 +108,7 @@ services:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
   nginx:
     image: nginx:1.21.3
@@ -126,5 +126,5 @@ services:
       test: [ "CMD", "service", "nginx", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 1
+      retries: 3
     env_file: .env
