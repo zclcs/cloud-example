@@ -1,0 +1,8 @@
+dependencies {
+    api project(":common:common-core")
+    api project(":common:common-redis-starter")
+    api annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
+    api "org.springframework.cloud:spring-cloud-openfeign-core"
+    api "com.github.ben-manes.caffeine:caffeine"
+    api "org.javassist:javassist"
+}

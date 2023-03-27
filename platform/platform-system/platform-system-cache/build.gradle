@@ -1,0 +1,5 @@
+dependencies {
+    api(project(":common:common-core"))
+    api(project(":common:common-redis-starter"))
+    api(project(":platform:platform-system:platform-system-api"))
+}
