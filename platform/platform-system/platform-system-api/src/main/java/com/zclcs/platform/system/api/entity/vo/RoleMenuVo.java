@@ -1,9 +1,11 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,22 +20,23 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RoleMenuVo对象", description = "角色菜单关联")
-public class RoleMenuVo implements Serializable {
+@Schema(title = "RoleMenuVo对象", description = "角色菜单关联")
+public class RoleMenuVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "角色编号")
+    @Schema(description = "角色id")
     private Long roleId;
 
     @Schema(description = "角色名称")
-    private Long roleName;
+    private String roleName;
 
-    @Schema(description = "菜单编号")
+    @Schema(description = "菜单id")
     private Long menuId;
 
     @Schema(description = "菜单名称")
-    private Long menuName;
+    private String menuName;
 
 
 }

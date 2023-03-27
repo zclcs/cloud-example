@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 网关转发日志 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_route_log")
-@Schema(name = "RouteLog对象", description = "网关转发日志")
-public class RouteLog extends BaseEntity {
+@Schema(title = "RouteLog对象", description = "网关转发日志")
+public class RouteLog extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 网关转发日志id
@@ -58,6 +64,18 @@ public class RouteLog extends BaseEntity {
      */
     @TableField("target_server")
     private String targetServer;
+
+    /**
+     * 响应code
+     */
+    @TableField("code")
+    private String code;
+
+    /**
+     * 响应时间
+     */
+    @TableField("time")
+    private Long time;
 
     /**
      * ip对应地址

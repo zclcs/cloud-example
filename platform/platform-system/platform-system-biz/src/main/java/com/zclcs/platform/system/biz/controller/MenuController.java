@@ -7,10 +7,9 @@ import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
-import com.zclcs.common.security.starter.utils.SecurityUtil;
+import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
-import com.zclcs.platform.system.api.entity.router.VueRouter;
 import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;
 import com.zclcs.platform.system.api.entity.vo.MenuVo;
 import com.zclcs.platform.system.biz.service.MenuService;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("menu")
+@RequestMapping("/menu")
 @RequiredArgsConstructor
 @Tag(name = "菜单")
 public class MenuController {
@@ -53,7 +52,7 @@ public class MenuController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "菜单查询（集合）")
     @PreAuthorize("hasAuthority('menu:view')")
     public BaseRsp<List<MenuVo>> findMenuList(@Validated MenuVo menuVo) {
@@ -61,7 +60,7 @@ public class MenuController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "菜单查询（单个）")
     @PreAuthorize("hasAuthority('menu:view')")
     public BaseRsp<MenuVo> findMenu(@Validated MenuVo menuVo) {
@@ -69,25 +68,31 @@ public class MenuController {
         return RspUtil.data(menu);
     }
 
-    @GetMapping("/routers")
-    @Operation(summary = "用户路由")
-    public BaseRsp<List<VueRouter<MenuVo>>> getUserRouters() {
-        List<VueRouter<MenuVo>> userRouters = this.menuService.findUserRouters(SecurityUtil.getUsername());
-        return RspUtil.data(userRouters);
+    @GetMapping("/findByMenuId/{menuId}")
+    @Operation(summary = "根据菜单id查询菜单")
+    @Inner
+    public BaseRsp<Menu> findByMenuId(@PathVariable Long menuId) {
+        Menu menu = this.menuService.lambdaQuery().eq(Menu::getMenuId, menuId).one();
+        return RspUtil.data(menu);
+    }
+
+    @GetMapping("/checkMenuCode")
+    @Operation(summary = "检查菜单编码")
+    @Parameters({
+            @Parameter(name = "menuId", description = "菜单id", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "menuCode", description = "菜单编码", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkMenuCode(@RequestParam(required = false) Long menuId,
+                                         @NotBlank(message = "{required}") @RequestParam String menuCode) {
+        menuService.validateMenuCode(menuCode, menuId);
+        return RspUtil.message();
     }
 
     @GetMapping("/tree")
     @Operation(summary = "菜单")
     public BaseRsp<List<MenuTreeVo>> menuList(MenuVo menu) {
-        List<MenuTreeVo> systemMenus = this.menuService.findSystemMenus(menu);
+        List<MenuTreeVo> systemMenus = this.menuService.findMenus(menu);
         return RspUtil.data(systemMenus);
-    }
-
-    @GetMapping("/permissions")
-    @Operation(summary = "权限")
-    public BaseRsp<List<String>> findUserPermissions() {
-        List<String> userPermissions = this.menuService.findUserPermissions(SecurityUtil.getUsername());
-        return RspUtil.data(userPermissions);
     }
 
     @PostMapping

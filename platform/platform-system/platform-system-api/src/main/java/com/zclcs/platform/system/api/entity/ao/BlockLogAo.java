@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,9 +22,10 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "BlockLogAo对象", description = "黑名单拦截日志")
+@Schema(title = "BlockLogAo对象", description = "黑名单拦截日志")
 public class BlockLogAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)

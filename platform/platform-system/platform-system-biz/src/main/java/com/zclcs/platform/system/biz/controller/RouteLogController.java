@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("routeLog")
+@RequestMapping("/routeLog")
 @RequiredArgsConstructor
 @Tag(name = "网关转发日志")
 public class RouteLogController {
@@ -49,7 +49,7 @@ public class RouteLogController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "网关转发日志查询（集合）")
     @PreAuthorize("hasAuthority('routeLog:view')")
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
@@ -57,7 +57,7 @@ public class RouteLogController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "网关转发日志查询（单个）")
     @PreAuthorize("hasAuthority('routeLog:view')")
     public BaseRsp<RouteLogVo> findRouteLog(@Validated RouteLogVo routeLogVo) {

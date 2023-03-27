@@ -1,13 +1,6 @@
 server:
 
-
   port: ${PORT_AUTH:8101}
-
-  tomcat:
-    threads:
-      max: 500
-      min-spare: 20
-    accept-count: 300
 
 spring:
 
@@ -28,80 +21,17 @@ spring:
         server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
         namespace: ${NACOS_NAMESPACE:dev}
 
-    openfeign:
-      client:
-        config:
-          default:
-            logger-level: full
-            connect-timeout: 10000
-            read-timeout: 10000
-      okhttp:
-        enabled: true
-      httpclient:
-        enabled: false
-      compression:
-        request:
-          enabled: true
-        response:
-          enabled: true
-
-    sentinel:
-      eager: true
-      transport:
-        dashboard: ${NACOS_HOST:127.0.0.1}:${SENTINEL_PORT:8858}
-      filter:
-        enabled: false
-      datasource:
-        # 流控规则
-        flow:
-          nacos:
-            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
-            namespace: ${NACOS_NAMESPACE:dev}
-            groupId: SENTINEL_GROUP
-            dataId: ${spring.application.name}-flow-rules
-            data-type: json
-            rule-type: flow
-        # 熔断降级
-        degrade:
-          nacos:
-            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
-            namespace: ${NACOS_NAMESPACE:dev}
-            groupId: SENTINEL_GROUP
-            dataId: ${spring.application.name}-degrade-rules
-            data-type: json
-            rule-type: degrade
-        # 热点参数限流
-        param_flow:
-          nacos:
-            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
-            namespace: ${NACOS_NAMESPACE:dev}
-            groupId: SENTINEL_GROUP
-            dataId: ${spring.application.name}-param-rules
-            data-type: json
-            rule-type: param_flow
-        # 系统规则
-        system:
-          nacos:
-            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
-            namespace: ${NACOS_NAMESPACE:dev}
-            groupId: SENTINEL_GROUP
-            dataId: ${spring.application.name}-system-rules
-            data-type: json
-            rule-type: system
-        # 来源访问控制（黑白名单）
-        authority:
-          nacos:
-            serverAddr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
-            namespace: ${NACOS_NAMESPACE:dev}
-            groupId: SENTINEL_GROUP
-            dataId: ${spring.application.name}-auth-rules
-            data-type: json
-            rule-type: authority
-
   config:
     import:
       - nacos:global-configuration.yaml
-      - nacos:${spring.application.name}.yaml
+      - nacos:tomcat.yaml
+      - nacos:openfeign.yaml
+      - nacos:sentinel.yaml
+      - nacos:rabbitmq.yaml
+      - nacos:redis.yaml
+      - nacos:jasypt.yaml
+      - nacos:swagger.yaml
+      - nacos:system-dict.yaml
 
   aop:
     proxy-target-class: true
@@ -125,60 +55,6 @@ spring:
     suffix: .ftl
     template-loader-path: classpath:/templates/
 
-  rabbitmq:
-    host: ${RABBIT_MQ_HOST:127.0.0.1}
-    port: ${RABBIT_MQ_PORT:5672}
-    username: ${RABBIT_MQ_USERNAME:root}
-    password: ${RABBIT_MQ_PASSWORD:123456}
-    virtual-host: /${NACOS_NAMESPACE:dev}
-    # 手动提交消息
-    listener:
-      simple:
-        #消息必须手动确认
-        acknowledge-mode: manual
-        #限制每次发送一条数据。
-        prefetch: 1
-    publisher-returns: true
-    publisher-confirm-type: simple
-
-  data:
-    redis:
-      database: ${REDIS_DATABASE:0}
-      host: ${REDIS_HOST:127.0.0.1}
-      port: ${REDIS_PORT:6379}
-      lettuce:
-        pool:
-          min-idle: 8
-          max-idle: 500
-          max-active: 2000
-          max-wait: 10000
-      timeout: 5000
-
-# feign 配置
-feign:
-  sentinel:
-    enabled: true
-
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          convert:
-            CustomConversions: error
-    com:
-      netflix: info
-      zclcs: info
-      alibaba:
-        cloud:
-          nacos:
-            client:
-              NacosPropertySourceBuilder: error
-      codingapi: info
-
-my:
-  redis-cache-prefix: '${NACOS_NAMESPACE:dev}:'
-
 # spring security 配置
 security:
   oauth2:
@@ -191,18 +67,3 @@ security:
       urls:
         - /v3/api-docs
 
-# 加解密根密码
-jasypt:
-  encryptor:
-    password: zclcs
-    algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator
-
-# swagger 配置
-swagger:
-  enabled: true
-  title: Swagger API
-  gateway: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}
-  token-url: ${swagger.gateway}/auth/oauth2/token
-  scope: server
-  base-package: com.zclcs

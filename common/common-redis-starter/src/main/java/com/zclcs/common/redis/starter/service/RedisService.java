@@ -3,13 +3,12 @@ package com.zclcs.common.redis.starter.service;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final RedissonClient redissonClient;
 
     /**
      * 指定缓存失效时间
@@ -88,9 +89,20 @@ public class RedisService {
     /**
      * 删除缓存
      *
-     * @param keys 可以传一个值 或多个
+     * @param keys 值集合
      */
-    public void del(List<String> keys) {
+    public void del(Collection<String> keys) {
+        if (CollectionUtil.isNotEmpty(keys)) {
+            redisTemplate.delete(keys);
+        }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param keys 值Set集合
+     */
+    public void del(Set<String> keys) {
         if (CollectionUtil.isNotEmpty(keys)) {
             redisTemplate.delete(keys);
         }
@@ -575,6 +587,16 @@ public class RedisService {
         }
     }
 
+    public Set<String> keys(String key) {
+        try {
+            Set<String> keys = redisTemplate.keys(key);
+            return keys;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
     /**
      * 移除N个值为value
      *
@@ -605,5 +627,9 @@ public class RedisService {
             log.error(e.getMessage(), e);
             return CollectionUtil.newArrayList();
         }
+    }
+
+    public <V> RBloomFilter<V> getBloomFilter(String name) {
+        return redissonClient.getBloomFilter(name);
     }
 }

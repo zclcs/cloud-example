@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("blockLog")
+@RequestMapping("/blockLog")
 @RequiredArgsConstructor
 @Tag(name = "黑名单拦截日志")
 public class BlockLogController {
@@ -49,7 +49,7 @@ public class BlockLogController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "黑名单拦截日志查询（集合）")
     @PreAuthorize("hasAuthority('blockLog:view')")
     public BaseRsp<List<BlockLogVo>> findBlockLogList(@Validated BlockLogVo blockLogVo) {
@@ -57,7 +57,7 @@ public class BlockLogController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "黑名单拦截日志查询（单个）")
     @PreAuthorize("hasAuthority('blockLog:view')")
     public BaseRsp<BlockLogVo> findBlockLog(@Validated BlockLogVo blockLogVo) {

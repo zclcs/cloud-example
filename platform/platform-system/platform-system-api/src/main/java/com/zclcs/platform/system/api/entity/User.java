@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -22,8 +24,11 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_user")
-@Schema(name = "User对象", description = "用户")
-public class User extends BaseEntity {
+@Schema(title = "User对象", description = "用户")
+public class User extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户id
@@ -38,6 +43,12 @@ public class User extends BaseEntity {
     private String username;
 
     /**
+     * 用户昵称
+     */
+    @TableField("real_name")
+    private String realName;
+
+    /**
      * 密码
      */
     @TableField("password")
@@ -47,7 +58,7 @@ public class User extends BaseEntity {
      * 部门id
      */
     @TableField("dept_id")
-    private Long deptId;
+    private String deptId;
 
     /**
      * 邮箱
@@ -62,7 +73,7 @@ public class User extends BaseEntity {
     private String mobile;
 
     /**
-     * 状态 0锁定 1有效
+     * 状态 @@system_user.status
      */
     @TableField("status")
     private String status;
@@ -74,13 +85,13 @@ public class User extends BaseEntity {
     private LocalDateTime lastLoginTime;
 
     /**
-     * 性别 0男 1女 2保密
+     * 性别 @@system_user.gender
      */
     @TableField("gender")
     private String gender;
 
     /**
-     * 是否开启tab，0关闭 1开启
+     * 是否开启tab @@yes_no
      */
     @TableField("is_tab")
     private String isTab;

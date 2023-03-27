@@ -1,9 +1,13 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
+import com.zclcs.common.dict.core.json.annotation.Array;
+import com.zclcs.common.dict.core.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,19 +23,23 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "MenuVo对象", description = "菜单")
-public class MenuVo implements Serializable {
+@Schema(title = "MenuVo对象", description = "菜单")
+public class MenuVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "菜单/按钮id")
+    @Schema(description = "目录/菜单/按钮id")
     private Long menuId;
 
-    @Schema(description = "菜单/按钮id集合")
+    @Schema(description = "目录/菜单/按钮编码（唯一值）")
+    private String menuCode;
+
+    @Schema(description = "目录/菜单/按钮id集合")
     private List<Long> menuIds;
 
-    @Schema(description = "上级菜单id")
-    private Long parentId;
+    @Schema(description = "上级目录/菜单编码")
+    private String parentCode;
 
     @Schema(description = "目录/菜单/按钮名称")
     private String menuName;
@@ -54,22 +62,28 @@ public class MenuVo implements Serializable {
     @Schema(description = "图标")
     private String icon;
 
-    @Schema(description = "类型 0菜单 1按钮 2目录")
+    @Schema(description = "类型 @@system_menu.type")
+    @DictText(value = "system_menu.type")
     private String type;
 
-    @Schema(description = "菜单类型集合 0菜单 1按钮 2目录")
+    @Schema(description = "菜单类型集合 @@system_menu.type")
+    @DictText(value = "system_menu.type", array = @Array(toText = false))
     private List<String> types;
 
-    @Schema(description = "是否隐藏菜单 1是 0否")
+    @Schema(description = "是否隐藏菜单 @@yes_no")
+    @DictText(value = "yes_no")
     private String hideMenu;
 
     @Schema(description = "是否忽略KeepAlive缓存 1是 0否")
+    @DictText(value = "yes_no")
     private String ignoreKeepAlive;
 
     @Schema(description = "隐藏该路由在面包屑上面的显示 1是 0否")
+    @DictText(value = "yes_no")
     private String hideBreadcrumb;
 
     @Schema(description = "隐藏所有子菜单 1是 0否")
+    @DictText(value = "yes_no")
     private String hideChildrenInMenu;
 
     @Schema(description = "当前激活的菜单。用于配置详情页时左侧激活的菜单路径")

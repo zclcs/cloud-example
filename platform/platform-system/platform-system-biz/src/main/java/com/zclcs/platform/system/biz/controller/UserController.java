@@ -12,9 +12,11 @@ import com.zclcs.common.security.starter.utils.PasswordUtil;
 import com.zclcs.common.security.starter.utils.SecurityUtil;
 import com.zclcs.platform.system.api.entity.User;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
+import com.zclcs.platform.system.api.entity.router.VueRouter;
+import com.zclcs.platform.system.api.entity.vo.MenuVo;
 import com.zclcs.platform.system.api.entity.vo.UserVo;
-import com.zclcs.platform.system.biz.service.UserDataPermissionService;
 import com.zclcs.platform.system.biz.service.UserService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -22,7 +24,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -43,14 +44,13 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @Tag(name = "用户")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class UserController {
 
     private final UserService userService;
-    private final UserDataPermissionService userDataPermissionService;
 
     @GetMapping
     @Operation(summary = "用户查询（分页）")
@@ -60,7 +60,7 @@ public class UserController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "用户查询（集合）")
     @PreAuthorize("hasAuthority('user:view')")
     public BaseRsp<List<UserVo>> findUserList(@Validated UserVo userVo) {
@@ -68,7 +68,7 @@ public class UserController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "用户查询（单个）")
     @PreAuthorize("hasAuthority('user:view')")
     public BaseRsp<UserVo> findUser(@Validated UserVo userVo) {
@@ -76,39 +76,47 @@ public class UserController {
         return RspUtil.data(user);
     }
 
-    @GetMapping("info")
+    @GetMapping("/findByUsername/{username}")
+    @Operation(summary = "根据用户名查询用户信息")
+    @Inner
+    public BaseRsp<User> findByUsername(@PathVariable String username) {
+        User user = userService.lambdaQuery().eq(User::getUsername, username).one();
+        return RspUtil.data(user);
+    }
+
+    @GetMapping("/findByMobile/{mobile}")
+    @Operation(summary = "根据手机号查询用户信息")
+    @Inner
+    public BaseRsp<String> findByMobile(@PathVariable String mobile) {
+        User user = userService.lambdaQuery().eq(User::getMobile, mobile).one();
+        return RspUtil.data(user.getUsername());
+    }
+
+    @GetMapping("/findUserInfo")
     @Operation(summary = "用户信息")
     public BaseRsp<UserVo> findUserInfo() {
-        UserVo userDetail = userService.findUserDetail(SecurityUtil.getUsername());
+        UserVo userDetail = SystemCacheUtil.getUserByUsername(SecurityUtil.getUsername());
         if (userDetail == null) {
             RspUtil.message("获取当前用户信息失败");
         }
         return RspUtil.data(userDetail);
     }
 
-    @GetMapping("info/{username}")
-    @Operation(summary = "用户信息")
-    @Inner
-    public BaseRsp<UserVo> findUserDetail(@PathVariable String username) {
-        UserVo userDetail = userService.findUserDetail(username);
-        if (userDetail == null) {
-            RspUtil.message("用户信息为空");
-        }
-        return RspUtil.data(userDetail);
+    @GetMapping("/permissions")
+    @Operation(summary = "权限")
+    public BaseRsp<List<String>> findUserPermissions() {
+        List<String> userPermissions = this.userService.findUserPermissions(SecurityUtil.getUsername());
+        return RspUtil.data(userPermissions);
     }
 
-    @GetMapping("infoByMobile/{mobile}")
-    @Operation(summary = "用户信息")
-    @Inner
-    public BaseRsp<UserVo> findUserDetailByMobile(@PathVariable String mobile) {
-        UserVo userDetail = userService.findUserDetailByMobile(mobile);
-        if (userDetail == null) {
-            RspUtil.message("用户信息为空");
-        }
-        return RspUtil.data(userDetail);
+    @GetMapping("/routers")
+    @Operation(summary = "用户路由")
+    public BaseRsp<List<VueRouter<MenuVo>>> getUserRouters() {
+        List<VueRouter<MenuVo>> userRouters = this.userService.findUserRouters(SecurityUtil.getUsername());
+        return RspUtil.data(userRouters);
     }
 
-    @GetMapping("options")
+    @GetMapping("/options")
     @PreAuthorize("hasAuthority('user:view')")
     @Operation(summary = "下拉树")
     public BaseRsp<List<UserVo>> userList(@Validated UserVo selectSystemUserAo) {
@@ -116,19 +124,28 @@ public class UserController {
         return RspUtil.data(userDetailPage);
     }
 
-    @GetMapping("check/{userId}/{username}")
+    @GetMapping("/checkUsername")
     @Operation(summary = "检查用户名")
     @Parameters({
-            @Parameter(name = "userId", description = "用户id", required = true, in = ParameterIn.PATH),
-            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH)
+            @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)
     })
-    public BaseRsp<Boolean> checkUserName(@NotNull(message = "{required}") @PathVariable Long userId,
-                                          @NotBlank(message = "{required}") @PathVariable String username) {
-        User one = userService.lambdaQuery().eq(User::getUserId, userId).one();
-        if (one.getUsername().equals(username)) {
-            return RspUtil.data(false);
-        }
-        return RspUtil.data(this.userService.findByName(username) != null);
+    public BaseRsp<Object> checkUserName(@RequestParam(required = false) Long userId,
+                                         @NotBlank(message = "{required}") @RequestParam String username) {
+        userService.validateUsername(username, userId);
+        return RspUtil.message();
+    }
+
+    @GetMapping("/checkUserMobile")
+    @Operation(summary = "检查用户手机号")
+    @Parameters({
+            @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "mobile", description = "手机号", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkUserMobile(@RequestParam(required = false) Long userId,
+                                           @NotBlank(message = "{required}") @RequestParam String mobile) {
+        userService.validateMobile(mobile, userId);
+        return RspUtil.message();
     }
 
     @PostMapping
@@ -160,18 +177,7 @@ public class UserController {
         return RspUtil.data(this.userService.updateUser(userAo));
     }
 
-    @GetMapping("/{userId}")
-    @PreAuthorize("hasAuthority('user:view')")
-    @Operation(summary = "获取数据权限")
-    @Parameters({
-            @Parameter(name = "userId", description = "用户id", required = true, in = ParameterIn.PATH)
-    })
-    public BaseRsp<List<Long>> findUserDataPermissions(@NotBlank(message = "{required}") @PathVariable Long userId) {
-        List<Long> dataPermissions = this.userDataPermissionService.findByUserId(userId);
-        return RspUtil.data(dataPermissions);
-    }
-
-    @GetMapping("password/mine/check/{password}")
+    @GetMapping("/checkMinePassword/{password}")
     @Operation(summary = "检查当前用户密码")
     @Parameters({
             @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
@@ -182,7 +188,7 @@ public class UserController {
         return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
     }
 
-    @GetMapping("password/{username}/check/{password}")
+    @GetMapping("/checkPassword/{username}/{password}")
     @Operation(summary = "检查用户密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
@@ -194,48 +200,52 @@ public class UserController {
         return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
     }
 
-    @PutMapping("password/mine")
+    @PutMapping("/updateMinePassword/{password}")
     @Operation(summary = "修改当前用户密码")
     @Parameters({
-            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.QUERY)
+            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
     })
     @ControllerEndpoint(operation = "修改当前用户密码")
-    public void updateMyPassword(@NotBlank(message = "{required}") String password) {
+    public BaseRsp<Object> updateMyPassword(@NotBlank(message = "{required}") @PathVariable String password) {
         userService.updatePassword(null, password);
+        return RspUtil.message();
     }
 
-    @PutMapping("password")
+    @PutMapping("/updatePassword/{username}/{password}")
     @Operation(summary = "修改密码")
     @Parameters({
-            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.QUERY)
+            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
+            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
     })
     @ControllerEndpoint(operation = "修改密码")
-    public void updatePassword(@NotBlank(message = "{required}") String username,
-                               @NotBlank(message = "{required}") String password) {
+    public BaseRsp<Object> updatePassword(@NotBlank(message = "{required}") @PathVariable String username,
+                                          @NotBlank(message = "{required}") @PathVariable String password) {
         userService.updatePassword(username, password);
+        return RspUtil.message();
     }
 
-    @PutMapping("status")
+    @PutMapping("/updateUserStatus/{username}")
     @Operation(summary = "禁用账号")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)
     })
     @ControllerEndpoint(operation = "禁用账号")
-    public void updateStatus(@NotBlank(message = "{required}") String username) {
+    public BaseRsp<Object> updateStatus(@NotBlank(message = "{required}") @PathVariable String username) {
         userService.updateStatus(username, null);
+        return RspUtil.message();
     }
 
-    @PutMapping("password/reset")
+    @PutMapping("/resetPassword/{username}")
     @PreAuthorize("hasAuthority('user:reset')")
     @Operation(summary = "重置用户密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)
     })
     @ControllerEndpoint(operation = "重置用户密码")
-    public void resetPassword(@NotBlank(message = "{required}") String username) {
+    public BaseRsp<Object> resetPassword(@NotBlank(message = "{required}") @PathVariable String username) {
         List<String> usernameList = new ArrayList<>();
         usernameList.add(username);
         this.userService.resetPassword(usernameList);
+        return RspUtil.message();
     }
 }

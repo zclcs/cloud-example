@@ -1,11 +1,11 @@
 package com.zclcs.common.security.starter.service.impl;
 
-import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.SecurityConstant;
 import com.zclcs.common.security.starter.entity.SecurityUser;
 import com.zclcs.common.security.starter.service.MyUserDetailsService;
 import com.zclcs.platform.system.api.entity.vo.UserVo;
 import com.zclcs.platform.system.api.fegin.RemoteUserService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,9 +30,9 @@ public class MyAppUserDetailsServiceImpl implements MyUserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String phone) {
 
-        BaseRsp<UserVo> result = remoteUserService.infoByMobile(phone);
+        UserVo userByMobile = SystemCacheUtil.getUserByMobile(phone);
 
-        return getUserDetails(result);
+        return getUserDetails(userByMobile);
     }
 
     /**

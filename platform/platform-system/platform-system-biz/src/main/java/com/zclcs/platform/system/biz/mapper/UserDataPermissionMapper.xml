@@ -3,8 +3,8 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.UserDataPermissionMapper">
 
     <sql id="baseSql">
-        select sudp.user_id,
-               sudp.dept_id,
+        select sudp.username,
+               sudp.dept_code,
                su.username,
                su.password,
                su.email,
@@ -16,19 +16,19 @@
                su.theme,
                su.avatar,
                su.description,
-               sd.parent_id,
+               sd.parent_code,
                sd.dept_name,
                sd.order_num
         from system_user_data_permission sudp
-                 inner join system_user su on sudp.user_id = su.user_id
-                 inner join system_dept sd on sudp.dept_id = sd.dept_id
+                 inner join system_user su on sudp.username = su.username
+                 inner join system_dept sd on sudp.dept_code = sd.dept_code
             ${ew.customSqlSegment}
     </sql>
     <sql id="baseCountSql">
         select count(*)
         from system_user_data_permission sudp
-                 inner join system_user su on sudp.user_id = su.user_id
-                 inner join system_dept sd on sudp.dept_id = sd.dept_id
+                 inner join system_user su on sudp.username = su.username
+                 inner join system_dept sd on sudp.dept_code = sd.dept_code
             ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.UserDataPermissionVo">

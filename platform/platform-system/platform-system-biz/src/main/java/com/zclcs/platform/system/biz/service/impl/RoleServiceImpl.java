@@ -1,23 +1,24 @@
 package com.zclcs.platform.system.biz.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.Role;
 import com.zclcs.platform.system.api.entity.RoleMenu;
+import com.zclcs.platform.system.api.entity.UserRole;
 import com.zclcs.platform.system.api.entity.ao.RoleAo;
 import com.zclcs.platform.system.api.entity.vo.RoleVo;
 import com.zclcs.platform.system.biz.mapper.RoleMapper;
 import com.zclcs.platform.system.biz.service.RoleMenuService;
 import com.zclcs.platform.system.biz.service.RoleService;
 import com.zclcs.platform.system.biz.service.UserRoleService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,17 +44,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     private final RoleMenuService roleMenuService;
     private final UserRoleService userRoleService;
-    private final RedisService redisService;
 
     @Override
     public BasePage<RoleVo> findRolePage(BasePageAo basePageAo, RoleVo roleVo) {
         BasePage<RoleVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<RoleVo> queryWrapper = getQueryWrapper(roleVo);
-        basePage.getList().forEach(systemRoleVo ->
-                systemRoleVo.setMenuIds(
-                        StrUtil.split(systemRoleVo.getMenuIdsString(), StrUtil.COMMA)
-                                .stream().map(Long::valueOf).collect(Collectors.toList())));
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        BasePage<RoleVo> pageVo = this.baseMapper.findPageVo(basePage, queryWrapper);
+        pageVo.getList().forEach(vo -> {
+            List<Long> menuIds = SystemCacheUtil.getMenuIdsByRoleId(vo.getRoleId());
+            vo.setMenuIds(menuIds);
+            vo.setMenuIdString(menuIds.stream().map(String::valueOf).collect(Collectors.joining(StrUtil.COMMA)));
+        });
+        return pageVo;
     }
 
     @Override
@@ -74,80 +76,59 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return this.baseMapper.countVo(queryWrapper);
     }
 
-    @Override
-    public RoleVo findById(Long roleId) {
-        Object obj = redisService.get(RedisCachePrefixConstant.ROLE + roleId);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.ROLE + roleId);
-                if (obj != null) {
-                    return (RoleVo) obj;
-                }
-                return cacheAndGetById(roleId);
-            }
-        }
-        return (RoleVo) obj;
-    }
-
-    @Override
-    public RoleVo cacheAndGetById(Long roleId) {
-        RoleVo systemRoleVo = this.findRole(RoleVo.builder().roleId(roleId).build());
-        List<String> usernames = this.selectUsernamesByRoleId(roleId);
-        systemRoleVo.setUsernames(usernames);
-        redisService.set(RedisCachePrefixConstant.ROLE + roleId, systemRoleVo);
-        return systemRoleVo;
-    }
-
-    @Override
-    public void deleteCacheById(Long roleId) {
-        redisService.del(String.valueOf(roleId));
-    }
-
-    @Override
-    public List<String> selectUsernamesByRoleId(Long roleId) {
-        return this.baseMapper.selectUsernamesByRoleId(roleId);
-    }
-
     private QueryWrapper<RoleVo> getQueryWrapper(RoleVo roleVo) {
         QueryWrapper<RoleVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "t1.role_name", roleVo.getRoleName());
-        QueryWrapperUtil.eqNotNull(queryWrapper, "t1.role_id", roleVo.getRoleId());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.role_name", roleVo.getRoleName());
+        QueryWrapperUtil.eqNotNull(queryWrapper, "tb.role_id", roleVo.getRoleId());
         queryWrapper
-                .orderByDesc("t1.create_at");
+                .orderByDesc("tb.create_at");
         return queryWrapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Role createRole(RoleAo roleAo) {
+        validateRoleCode(roleAo.getRoleCode(), roleAo.getRoleId());
+        validateRoleName(roleAo.getRoleName(), roleAo.getRoleId());
         Role role = new Role();
         BeanUtil.copyProperties(roleAo, role);
         this.save(role);
+        Long roleId = role.getRoleId();
+        SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
         roleMenuService.saveBatch(roleMenus);
+        SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
         return role;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Role updateRole(RoleAo roleAo) {
+        validateRoleName(roleAo.getRoleName(), roleAo.getRoleId());
         Role role = new Role();
         BeanUtil.copyProperties(roleAo, role);
+        role.setRoleCode(null);
         this.updateById(role);
-        ArrayList<Long> roleIds = CollectionUtil.newArrayList(role.getRoleId());
-        this.roleMenuService.deleteRoleMenusByRoleId(roleIds);
+        Long roleId = role.getRoleId();
+        SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
+        this.roleMenuService.lambdaUpdate().eq(RoleMenu::getRoleId, roleId).remove();
         roleMenuService.saveBatch(roleMenus);
+        SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
         return role;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(List<Long> ids) {
+        Object[] userIds = userRoleService.lambdaQuery().in(UserRole::getRoleId, ids).list().stream().map(UserRole::getUserId).toList().toArray();
         this.removeByIds(ids);
-        this.roleMenuService.deleteRoleMenusByRoleId(ids);
-        this.userRoleService.deleteUserRolesByRoleId(ids);
+        Object[] roleIds = ids.toArray();
+        SystemCacheUtil.deleteRoleByRoleIds(roleIds);
+        this.roleMenuService.lambdaUpdate().in(RoleMenu::getRoleId, ids).remove();
+        SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
+        this.userRoleService.lambdaUpdate().in(UserRole::getRoleId, ids).remove();
+        SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
     }
 
     private List<RoleMenu> getRoleMenus(Role role, List<Long> menuIds) {
@@ -159,5 +140,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             roleMenus.add(roleMenu);
         });
         return roleMenus;
+    }
+
+    @Override
+    public void validateRoleCode(String roleCode, Long roleId) {
+        if (MyConstant.TOP_PARENT_CODE.equals(roleCode)) {
+            throw new MyException("角色编码输入非法值");
+        }
+        Role one = this.lambdaQuery().eq(Role::getRoleCode, roleCode).one();
+        if (one != null && !one.getRoleId().equals(roleId)) {
+            throw new MyException("角色编码重复");
+        }
+    }
+
+    @Override
+    public void validateRoleName(String roleName, Long roleId) {
+        Role one = this.lambdaQuery().eq(Role::getRoleName, roleName).one();
+        if (one != null && !one.getRoleId().equals(roleId)) {
+            throw new MyException("角色名称重复");
+        }
     }
 }

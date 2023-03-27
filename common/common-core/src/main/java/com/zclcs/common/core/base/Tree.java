@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,23 @@ import java.util.List;
 @Schema(name = "Tree", description = "级联树对象")
 public class Tree<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "编码")
+    private String code;
+
+    @Schema(description = "父编码")
+    private String parentCode;
 
     @Schema(description = "值")
     private String label;
 
     @Schema(description = "子级")
     private List<Tree<T>> children;
-
-    @Schema(description = "父id")
-    private Long parentId;
 
     @Schema(description = "是否有父级")
     private boolean hasParent = false;

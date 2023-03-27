@@ -68,7 +68,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
     private void sendErrorResponse(HttpServletRequest request, HttpServletResponse response,
                                    AuthenticationException exception) throws IOException {
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
-        httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
+        httpResponse.setStatusCode(HttpStatus.FAILED_DEPENDENCY);
         String errorMessage;
 
         if (exception instanceof OAuth2AuthenticationException) {

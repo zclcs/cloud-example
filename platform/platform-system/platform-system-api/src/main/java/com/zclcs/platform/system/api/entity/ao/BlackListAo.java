@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.entity.ao;
 
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
+import com.zclcs.common.dict.core.json.annotation.DictValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -22,9 +24,10 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "BlackListAo对象", description = "黑名单")
+@Schema(title = "BlackListAo对象", description = "黑名单")
 public class BlackListAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
@@ -37,12 +40,12 @@ public class BlackListAo implements Serializable {
 
     @Size(max = 200, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求uri（支持通配符）", required = true)
+    @Schema(description = "请求uri（支持通配符）", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestUri;
 
     @Size(max = 10, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求方法，如果为ALL则表示对所有方法生效", required = true)
+    @Schema(description = "请求方法，如果为ALL则表示对所有方法生效", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestMethod;
 
     @Size(max = 20, message = "{noMoreThan}")
@@ -57,9 +60,9 @@ public class BlackListAo implements Serializable {
     @Schema(description = "ip对应地址")
     private String location;
 
-    //    @DictValid(value = "enable_disable", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
     @Schema(description = "黑名单状态 默认 1 @@enable_disable")
+    @DictValid(value = "enable_disable", message = "{dict}")
     private String blackStatus;
 
 

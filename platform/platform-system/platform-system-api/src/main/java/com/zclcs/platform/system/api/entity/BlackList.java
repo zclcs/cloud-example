@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 黑名单 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_black_list")
-@Schema(name = "BlackList对象", description = "黑名单")
-public class BlackList extends BaseEntity {
+@Schema(title = "BlackList对象", description = "黑名单")
+public class BlackList extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 黑名单id

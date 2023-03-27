@@ -13,6 +13,8 @@ public class MyLettuceRedisProperties {
      */
     private String redisCachePrefix = "dev";
 
+    private Boolean lettuceRedisEnable = true;
+
     public String getRedisCachePrefix() {
         return redisCachePrefix;
     }
@@ -21,10 +23,19 @@ public class MyLettuceRedisProperties {
         this.redisCachePrefix = redisCachePrefix;
     }
 
+    public Boolean getLettuceRedisEnable() {
+        return lettuceRedisEnable;
+    }
+
+    public void setLettuceRedisEnable(Boolean lettuceRedisEnable) {
+        this.lettuceRedisEnable = lettuceRedisEnable;
+    }
+
     @Override
     public String toString() {
         return "MyLettuceRedisProperties{" +
                 "redisCachePrefix='" + redisCachePrefix + '\'' +
+                ", lettuceRedisEnable=" + lettuceRedisEnable +
                 '}';
     }
 }

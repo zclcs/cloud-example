@@ -7,6 +7,7 @@ import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Role;
 import com.zclcs.platform.system.api.entity.ao.RoleAo;
 import com.zclcs.platform.system.api.entity.vo.RoleVo;
@@ -17,7 +18,6 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("role")
+@RequestMapping("/role")
 @RequiredArgsConstructor
 @Tag(name = "角色")
 public class RoleController {
@@ -51,7 +51,7 @@ public class RoleController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "角色查询（集合）")
     @PreAuthorize("hasAuthority('role:view')")
     public BaseRsp<List<RoleVo>> findRoleList(@Validated RoleVo roleVo) {
@@ -59,7 +59,7 @@ public class RoleController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "角色查询（单个）")
     @PreAuthorize("hasAuthority('role:view')")
     public BaseRsp<RoleVo> findRole(@Validated RoleVo roleVo) {
@@ -67,26 +67,43 @@ public class RoleController {
         return RspUtil.data(role);
     }
 
-    @GetMapping("options")
+    @GetMapping("/findByRoleId/{roleId}")
+    @Operation(summary = "根据角色id查询角色")
+    @Inner
+    public BaseRsp<Role> findByRoleId(@PathVariable Long roleId) {
+        Role role = this.roleService.lambdaQuery().eq(Role::getRoleId, roleId).one();
+        return RspUtil.data(role);
+    }
+
+    @GetMapping("/options")
     @Operation(summary = "集合")
     public BaseRsp<List<RoleVo>> roles() {
         List<RoleVo> systemRoleList = roleService.findRoleList(RoleVo.builder().build());
         return RspUtil.data(systemRoleList);
     }
 
-    @GetMapping("check/{roleId}/{roleName}")
-    @Operation(summary = "检查用户角色名")
+    @GetMapping("/checkRoleName")
+    @Operation(summary = "检查角色名")
     @Parameters({
-            @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.PATH),
-            @Parameter(name = "roleName", description = "角色名", required = true, in = ParameterIn.PATH)
+            @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "roleName", description = "角色名", required = true, in = ParameterIn.QUERY)
     })
-    public BaseRsp<Boolean> checkRoleName(@NotNull(message = "{required}") @PathVariable Long roleId,
-                                          @NotBlank(message = "{required}") @PathVariable String roleName) {
-        Role one = roleService.lambdaQuery().eq(Role::getRoleId, roleId).one();
-        if (one.getRoleName().equals(roleName)) {
-            return RspUtil.data(false);
-        }
-        return RspUtil.data(roleService.lambdaQuery().eq(Role::getRoleName, roleName).one() != null);
+    public BaseRsp<Object> checkRoleName(@RequestParam(required = false) Long roleId,
+                                         @NotBlank(message = "{required}") @RequestParam String roleName) {
+        roleService.validateRoleName(roleName, roleId);
+        return RspUtil.message();
+    }
+
+    @GetMapping("/checkRoleCode")
+    @Operation(summary = "检查角色编码")
+    @Parameters({
+            @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "roleCode", description = "角色编码", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkRoleCode(@RequestParam(required = false) Long roleId,
+                                         @NotBlank(message = "{required}") @RequestParam String roleCode) {
+        roleService.validateRoleCode(roleCode, roleId);
+        return RspUtil.message();
     }
 
     @PostMapping

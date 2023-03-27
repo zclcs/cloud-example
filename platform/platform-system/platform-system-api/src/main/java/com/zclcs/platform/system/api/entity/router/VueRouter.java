@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,15 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VueRouter<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3327478146308500708L;
 
-    @JsonIgnore
+
     private Long id;
-    @JsonIgnore
-    private Long parentId;
+
+    private String code;
+
+    private String parentCode;
 
     private String path;
     private String name;

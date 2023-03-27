@@ -1,9 +1,11 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,9 +22,10 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RouteLogVo对象", description = "网关转发日志")
-public class RouteLogVo implements Serializable {
+@Schema(title = "RouteLogVo对象", description = "网关转发日志")
+public class RouteLogVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "网关转发日志id")
@@ -42,6 +45,12 @@ public class RouteLogVo implements Serializable {
 
     @Schema(description = "目标服务")
     private String targetServer;
+
+    @Schema(description = "响应code")
+    private String code;
+
+    @Schema(description = "响应时间")
+    private Long time;
 
     @Schema(description = "ip对应地址")
     private String location;

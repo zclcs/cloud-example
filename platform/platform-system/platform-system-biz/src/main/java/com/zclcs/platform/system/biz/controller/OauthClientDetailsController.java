@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("oauthClientDetails")
+@RequestMapping("/oauthClientDetails")
 @RequiredArgsConstructor
 @Tag(name = "终端信息")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
@@ -46,35 +47,45 @@ public class OauthClientDetailsController {
     private final OauthClientDetailsService oauthClientDetailsService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（分页）")
-    @Inner
     public BaseRsp<BasePage<OauthClientDetailsVo>> findOauthClientDetailsPage(@Validated BasePageAo basePageAo, @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         BasePage<OauthClientDetailsVo> page = this.oauthClientDetailsService.findOauthClientDetailsPage(basePageAo, oauthClientDetailsVo);
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（集合）")
-    @Inner
     public BaseRsp<List<OauthClientDetailsVo>> findOauthClientDetailsList(@Validated OauthClientDetailsVo oauthClientDetailsVo) {
         List<OauthClientDetailsVo> list = this.oauthClientDetailsService.findOauthClientDetailsList(oauthClientDetailsVo);
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
+    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（单个）")
-    @Inner
     public BaseRsp<OauthClientDetailsVo> findOauthClientDetails(@Validated OauthClientDetailsVo oauthClientDetailsVo) {
         OauthClientDetailsVo oauthClientDetails = this.oauthClientDetailsService.findOauthClientDetails(oauthClientDetailsVo);
         return RspUtil.data(oauthClientDetails);
     }
 
-    @GetMapping("one/{clientId}")
-    @Operation(summary = "终端信息查询（缓存）")
+    @GetMapping("/findByClientId/{clientId}")
+    @Operation(summary = "终端信息查询")
     @Inner
-    public BaseRsp<OauthClientDetailsVo> findById(@PathVariable String clientId) {
-        OauthClientDetailsVo oauthClientDetails = oauthClientDetailsService.findById(clientId);
+    public BaseRsp<OauthClientDetails> findByClientId(@PathVariable String clientId) {
+        OauthClientDetails oauthClientDetails = oauthClientDetailsService.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).one();
         return RspUtil.data(oauthClientDetails);
+    }
+
+    @GetMapping("/checkClientId")
+    @Operation(summary = "检查客户端编号")
+    @Parameters({
+            @Parameter(name = "clientId", description = "客户端编号", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkClientId(@NotBlank(message = "{required}") @RequestParam String clientId) {
+        oauthClientDetailsService.validateClientId(clientId);
+        return RspUtil.message();
     }
 
     @PostMapping

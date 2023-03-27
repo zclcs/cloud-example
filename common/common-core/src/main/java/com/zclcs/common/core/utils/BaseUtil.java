@@ -10,6 +10,7 @@ import com.zclcs.common.core.constant.ValidConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,5 +112,15 @@ public abstract class BaseUtil {
         banner += "swaggerDOCS：" + hostAddress + "/v3/api-docs" + "\n" +
                 "-----------------------------------------";
         System.out.println(banner);
+    }
+
+    public static <T> T getInstance(T t) {
+        try {
+            t.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
     }
 }

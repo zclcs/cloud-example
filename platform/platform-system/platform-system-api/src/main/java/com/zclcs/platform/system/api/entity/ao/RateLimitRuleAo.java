@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.entity.ao;
 
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
+import com.zclcs.common.dict.core.json.annotation.DictValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -22,9 +24,10 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RateLimitRuleAo对象", description = "限流规则")
+@Schema(title = "RateLimitRuleAo对象", description = "限流规则")
 public class RateLimitRuleAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
@@ -33,12 +36,12 @@ public class RateLimitRuleAo implements Serializable {
 
     @Size(max = 200, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求uri（不支持通配符）", required = true)
+    @Schema(description = "请求uri（不支持通配符）", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestUri;
 
     @Size(max = 10, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求方法，如果为ALL则表示对所有方法生效", required = true)
+    @Schema(description = "请求方法，如果为ALL则表示对所有方法生效", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestMethod;
 
     @Size(max = 20, message = "{noMoreThan}")
@@ -50,16 +53,16 @@ public class RateLimitRuleAo implements Serializable {
     private String limitTo;
 
     @NotNull(message = "{required}")
-    @Schema(description = "限制次数", required = true)
+    @Schema(description = "限制次数", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer rateLimitCount;
 
     @Size(max = 20, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "时间周期（单位秒）", required = true)
+    @Schema(description = "时间周期（单位秒）", requiredMode = Schema.RequiredMode.REQUIRED)
     private String intervalSec;
 
-    //    @DictValid(value = "enable_disable", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
+    @DictValid(value = "enable_disable", message = "{dict}")
     @Schema(description = "规则状态 默认 1 @@enable_disable")
     private String ruleStatus;
 

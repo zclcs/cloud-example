@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("rateLimitLog")
+@RequestMapping("/rateLimitLog")
 @RequiredArgsConstructor
 @Tag(name = "限流拦截日志")
 public class RateLimitLogController {
@@ -49,7 +49,7 @@ public class RateLimitLogController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "限流拦截日志查询（集合）")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@Validated RateLimitLogVo rateLimitLogVo) {
@@ -57,7 +57,7 @@ public class RateLimitLogController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "限流拦截日志查询（单个）")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     public BaseRsp<RateLimitLogVo> findRateLimitLog(@Validated RateLimitLogVo rateLimitLogVo) {

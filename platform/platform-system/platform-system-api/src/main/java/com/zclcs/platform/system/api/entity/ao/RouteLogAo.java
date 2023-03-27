@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,9 +22,10 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RouteLogAo对象", description = "网关转发日志")
+@Schema(title = "RouteLogAo对象", description = "网关转发日志")
 public class RouteLogAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
@@ -49,6 +51,13 @@ public class RouteLogAo implements Serializable {
     @Size(max = 20, message = "{noMoreThan}")
     @Schema(description = "目标服务")
     private String targetServer;
+
+    @Size(max = 10, message = "{noMoreThan}")
+    @Schema(description = "响应code")
+    private String code;
+
+    @Schema(description = "响应时间")
+    private Long time;
 
     @Size(max = 255, message = "{noMoreThan}")
     @Schema(description = "ip对应地址")

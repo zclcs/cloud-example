@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BasePage;
+import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
 import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
@@ -89,5 +89,21 @@ public interface DeptService extends IService<Dept> {
      * @param ids ids
      */
     void deleteDept(List<Long> ids);
+
+    /**
+     * 验证部门编码
+     *
+     * @param deptCode 部门编码
+     * @param deptId   部门id
+     */
+    void validateDeptCode(String deptCode, Long deptId);
+
+    /**
+     * 验证部门名称
+     *
+     * @param deptName 部门名称
+     * @param deptId   部门id
+     */
+    void validateDeptName(String deptName, Long deptId);
 
 }

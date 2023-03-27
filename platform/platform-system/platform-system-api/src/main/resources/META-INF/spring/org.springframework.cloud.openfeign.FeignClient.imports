@@ -1,2 +1,9 @@
+com.zclcs.platform.system.api.fegin.RemoteBlackListService
 com.zclcs.platform.system.api.fegin.RemoteClientDetailsService
+com.zclcs.platform.system.api.fegin.RemoteDeptService
+com.zclcs.platform.system.api.fegin.RemoteRateLimitRuleService
+com.zclcs.platform.system.api.fegin.RemoteRoleMenuService
+com.zclcs.platform.system.api.fegin.RemoteRoleService
+com.zclcs.platform.system.api.fegin.RemoteUserDataPermissionService
+com.zclcs.platform.system.api.fegin.RemoteUserRoleService
 com.zclcs.platform.system.api.fegin.RemoteUserService

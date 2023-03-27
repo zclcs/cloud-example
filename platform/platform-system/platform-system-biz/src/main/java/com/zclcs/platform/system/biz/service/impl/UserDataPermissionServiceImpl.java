@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 用户数据权限关联 Service实现
  *
@@ -25,20 +22,4 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class UserDataPermissionServiceImpl extends ServiceImpl<UserDataPermissionMapper, UserDataPermission> implements UserDataPermissionService {
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteByDeptIds(List<Long> deptIds) {
-        this.lambdaUpdate().in(UserDataPermission::getDeptId, deptIds).remove();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteByUserIds(List<Long> userIds) {
-        this.lambdaUpdate().in(UserDataPermission::getUserId, userIds).remove();
-    }
-
-    @Override
-    public List<Long> findByUserId(Long userId) {
-        return this.lambdaQuery().eq(UserDataPermission::getUserId, userId).list().stream().map(UserDataPermission::getDeptId).collect(Collectors.toList());
-    }
 }

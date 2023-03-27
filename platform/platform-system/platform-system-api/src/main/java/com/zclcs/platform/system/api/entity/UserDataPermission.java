@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 用户数据权限关联 Entity
  *
@@ -18,17 +21,20 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_user_data_permission")
-@Schema(name = "UserDataPermission对象", description = "用户数据权限关联")
-public class UserDataPermission extends BaseEntity {
+@Schema(title = "UserDataPermission对象", description = "用户数据权限关联")
+public class UserDataPermission extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 用户编号
+     * 用户id
      */
     @TableField(value = "user_id")
     private Long userId;
 
     /**
-     * 部门编号
+     * 部门id
      */
     @TableField(value = "dept_id")
     private Long deptId;

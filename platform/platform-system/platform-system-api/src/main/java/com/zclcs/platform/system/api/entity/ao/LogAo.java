@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -22,9 +23,10 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "LogAo对象", description = "用户操作日志")
+@Schema(title = "LogAo对象", description = "用户操作日志")
 public class LogAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)

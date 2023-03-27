@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.biz.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,32 +8,34 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.common.core.constant.DictConstant;
 import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.exception.MyException;
+import com.zclcs.common.core.properties.GlobalProperties;
 import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.common.security.starter.utils.PasswordUtil;
 import com.zclcs.common.security.starter.utils.SecurityUtil;
-import com.zclcs.platform.system.api.entity.User;
-import com.zclcs.platform.system.api.entity.UserDataPermission;
-import com.zclcs.platform.system.api.entity.UserRole;
+import com.zclcs.platform.system.api.entity.*;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
-import com.zclcs.platform.system.api.entity.vo.UserMobileVo;
+import com.zclcs.platform.system.api.entity.router.RouterMeta;
+import com.zclcs.platform.system.api.entity.router.VueRouter;
+import com.zclcs.platform.system.api.entity.vo.MenuVo;
 import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.utils.BaseRouterUtil;
 import com.zclcs.platform.system.biz.mapper.UserMapper;
-import com.zclcs.platform.system.biz.service.*;
+import com.zclcs.platform.system.biz.service.DeptService;
+import com.zclcs.platform.system.biz.service.UserDataPermissionService;
+import com.zclcs.platform.system.biz.service.UserRoleService;
+import com.zclcs.platform.system.biz.service.UserService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 /**
  * 用户 Service实现
@@ -49,20 +50,27 @@ import java.util.stream.Collectors;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final UserRoleService userRoleService;
-    private final MenuService menuService;
     private final UserDataPermissionService userDataPermissionService;
     private final DeptService deptService;
-    private final RedisService redisService;
+    private final GlobalProperties globalProperties;
 
     @Override
     public BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo) {
         BasePage<UserVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        basePage.getList().forEach(systemUserVo -> {
-            systemUserVo.setRoleIds(StrUtil.split(systemUserVo.getRoleIdString(), StrUtil.COMMA).stream().map(Long::valueOf).collect(Collectors.toList()));
-            systemUserVo.setDeptIds(StrUtil.split(systemUserVo.getDeptIdString(), StrUtil.COMMA).stream().map(Long::valueOf).collect(Collectors.toList()));
+        BasePage<UserVo> pageVo = this.baseMapper.findPageVo(basePage, queryWrapper);
+        pageVo.getList().forEach(vo -> {
+            Long userId = vo.getUserId();
+            List<Role> roles = SystemCacheUtil.getRolesByUserId(userId);
+            if (CollectionUtil.isNotEmpty(roles)) {
+                vo.setRoleIds(roles.stream().map(Role::getRoleId).toList());
+                List<String> roleNames = roles.stream().map(Role::getRoleName).toList();
+                vo.setRoleNames(roleNames);
+                vo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
+            }
+            vo.setDeptIds(SystemCacheUtil.getDeptIdsByUserId(userId));
         });
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return pageVo;
     }
 
     @Override
@@ -86,19 +94,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserVo findByName(String username) {
         QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "t1.username", username);
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.username", username);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
-    public UserMobileVo findByMobile(String mobile) {
-        User one = this.lambdaQuery().eq(User::getMobile, mobile).one();
-        UserMobileVo userMobileVo = null;
-        if (one != null) {
-            userMobileVo = new UserMobileVo();
-            BeanUtil.copyProperties(one, userMobileVo);
-        }
-        return userMobileVo;
+    public UserVo findByMobile(String mobile) {
+        QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.mobile", mobile);
+        return this.baseMapper.findOneVo(queryWrapper);
     }
 
     private QueryWrapper<UserVo> getQueryWrapper(UserVo userVo) {
@@ -109,98 +113,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (CollectionUtil.isNotEmpty(childDeptId)) {
                 deptList.set(childDeptId);
             } else {
-                deptList.set(CollectionUtil.newArrayList(0L));
+                deptList.set(CollectionUtil.newArrayList(MyConstant.TOP_PARENT_ID));
             }
         });
-        QueryWrapperUtil.inNotEmpty(queryWrapper, "t1.dept_id", deptList.get());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "t1.username", userVo.getUsername());
+        QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.dept_id", deptList.get());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.username", userVo.getUsername());
         return queryWrapper;
     }
 
     @Override
-    public UserVo findUserDetail(String username) {
-        Object obj = redisService.get(RedisCachePrefixConstant.USER + username);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.USER + username);
-                if (obj != null) {
-                    return (UserVo) obj;
-                }
-                return cacheAndGetUserDetail(username);
-            }
-        }
-        return (UserVo) obj;
+    public List<VueRouter<MenuVo>> findUserRouters(String username) {
+        List<VueRouter<MenuVo>> routes = new ArrayList<>();
+        List<Menu> menus = SystemCacheUtil.getMenusByUsername(username);
+        List<Menu> userMenus = menus.stream().filter(Objects::nonNull)
+                .filter(menu -> !menu.getType().equals(DictConstant.MENU_TYPE_1))
+                .sorted(Comparator.comparing(Menu::getOrderNum)).toList();
+        userMenus.forEach(menu -> {
+            VueRouter<MenuVo> route = new VueRouter<>();
+            route.setId(menu.getMenuId());
+            route.setCode(menu.getMenuCode());
+            route.setParentCode(menu.getParentCode());
+            route.setPath(menu.getPath());
+            route.setName(StrUtil.isNotBlank(menu.getKeepAliveName()) ? menu.getKeepAliveName() : menu.getMenuName());
+            route.setComponent(menu.getComponent());
+            route.setRedirect(menu.getRedirect());
+            route.setMeta(new RouterMeta(
+                    menu.getMenuName(),
+                    menu.getIcon(),
+                    menu.getHideMenu().equals(MyConstant.YES),
+                    menu.getIgnoreKeepAlive().equals(MyConstant.YES),
+                    menu.getHideBreadcrumb().equals(MyConstant.YES),
+                    menu.getHideChildrenInMenu().equals(MyConstant.YES),
+                    menu.getCurrentActiveMenu()));
+            routes.add(route);
+        });
+        return BaseRouterUtil.buildVueRouter(routes);
     }
 
     @Override
-    public UserVo cacheAndGetUserDetail(String username) {
-        UserVo userVo = this.findByName(username);
-        if (userVo == null) {
-            return null;
-        }
-        userVo.setRoleNames(StrUtil.split(userVo.getRoleNameString(), StrUtil.COMMA));
-        userVo.setRoleIds(StrUtil.split(userVo.getRoleIdString(), StrUtil.COMMA).stream().map(Long::valueOf).collect(Collectors.toList()));
-        userVo.setPermissions(menuService.findUserPermissions(username));
-        redisService.set(RedisCachePrefixConstant.USER + username, userVo);
-        return userVo;
-    }
-
-    @Override
-    public void deleteUserDetailCache(String username) {
-        redisService.del(RedisCachePrefixConstant.USER + username);
-    }
-
-    @Override
-    public UserVo findUserDetailByMobile(String mobile) {
-        Object obj = redisService.get(RedisCachePrefixConstant.USER_MOBILE + mobile);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.USER_MOBILE + mobile);
-                if (obj != null) {
-                    UserMobileVo userMobileVo = (UserMobileVo) obj;
-                    return (UserVo) redisService.get(RedisCachePrefixConstant.USER + userMobileVo.getUsername());
-                }
-                return cacheAndGetUserDetailByMobile(mobile);
-            }
-        }
-        UserMobileVo userMobileVo = (UserMobileVo) obj;
-        return (UserVo) redisService.get(RedisCachePrefixConstant.USER + userMobileVo.getUsername());
-    }
-
-    @Override
-    public UserVo cacheAndGetUserDetailByMobile(String mobile) {
-        UserMobileVo byMobile = this.findByMobile(mobile);
-        if (byMobile == null) {
-            return null;
-        }
-        UserVo userVo = this.findByName(byMobile.getUsername());
-        userVo.setPermissions(menuService.findUserPermissions(userVo.getUsername()));
-        redisService.set(RedisCachePrefixConstant.USER + userVo.getUsername(), userVo);
-        redisService.set(RedisCachePrefixConstant.USER_MOBILE + userVo.getMobile(), userVo);
-        return userVo;
-    }
-
-    @Override
-    public void deleteUserDetailCacheByMobile(String mobile) {
-        UserMobileVo o = (UserMobileVo) redisService.get(RedisCachePrefixConstant.USER_MOBILE + mobile);
-        if (o != null) {
-            redisService.del(RedisCachePrefixConstant.USER_MOBILE + mobile);
-            redisService.del(RedisCachePrefixConstant.USER + o.getUsername());
-        }
+    public List<String> findUserPermissions(String username) {
+        List<Menu> menus = SystemCacheUtil.getMenusByUsername(username);
+        return menus.stream().filter(Objects::nonNull).map(Menu::getPerms)
+                .filter(StrUtil::isNotBlank).toList();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User createUser(UserAo userAo) {
+        validateUsername(userAo.getUsername(), userAo.getUserId());
+        validateMobile(userAo.getMobile(), userAo.getUserId());
+        deleteCache(userAo);
         User user = new User();
         BeanUtil.copyProperties(userAo, user);
-        this.save(user);
         user.setAvatar(MyConstant.DEFAULT_AVATAR);
-        user.setPassword(PasswordUtil.PASSWORD_ENCODER.encode(MyConstant.DEFAULT_PASSWORD));
+        user.setPassword(PasswordUtil.PASSWORD_ENCODER.encode(globalProperties.getDefaultPassword()));
+        this.save(user);
+        Long userId = userAo.getUserId();
+        SystemCacheUtil.deleteRoleIdsByUserId(userId);
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
         userRoleService.saveBatch(userRoles);
+        SystemCacheUtil.deleteDeptIdsByUserId(userId);
         List<UserDataPermission> userDataPermissions = getUserDataPermissions(user, userAo.getDeptIds());
         userDataPermissionService.saveBatch(userDataPermissions);
         return user;
@@ -209,36 +181,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User updateUser(UserAo userAo) {
+        validateUsername(userAo.getUsername(), userAo.getUserId());
+        validateMobile(userAo.getMobile(), userAo.getUserId());
+        deleteCache(userAo);
         User user = new User();
         BeanUtil.copyProperties(userAo, user);
+        Long userId = user.getUserId();
         // 更新用户
         user.setPassword(null);
-        user.setUsername(null);
+
         updateById(user);
 
-        ArrayList<Long> userIds = CollUtil.newArrayList(user.getUserId());
+        userRoleService.lambdaUpdate().eq(UserRole::getUserId, userId).remove();
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
         userRoleService.saveBatch(userRoles);
+        SystemCacheUtil.deleteRoleIdsByUserId(userId);
 
-        userDataPermissionService.deleteByUserIds(userIds);
+        userDataPermissionService.lambdaUpdate().eq(UserDataPermission::getUserId, userId).remove();
         List<UserDataPermission> userDataPermissions = getUserDataPermissions(user, userAo.getDeptIds());
         userDataPermissionService.saveBatch(userDataPermissions);
+        SystemCacheUtil.deleteDeptIdsByUserId(userId);
         return user;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(List<Long> ids) {
+        List<User> list = this.lambdaQuery().in(User::getUserId, ids).list();
         this.removeByIds(ids);
+        Object[] usernames = list.stream().map(User::getUsername).toList().toArray();
+        Object[] mobiles = list.stream().map(User::getMobile).filter(StrUtil::isNotBlank).toList().toArray();
+        Object[] userIds = ids.toArray();
+        SystemCacheUtil.deleteUserCaches(usernames);
+        SystemCacheUtil.deleteUsernameByMobiles(mobiles);
         // 删除用户角色
-        this.userRoleService.deleteUserRolesByUserId(ids);
-        this.userDataPermissionService.deleteByUserIds(ids);
+        userRoleService.lambdaUpdate().in(UserRole::getUserId, ids).remove();
+        SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
+        // 删除用户权限
+        userDataPermissionService.lambdaUpdate().in(UserDataPermission::getUserId, ids).remove();
+        SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateLoginTime(String username) {
         this.lambdaUpdate().eq(User::getUsername, username).set(User::getLastLoginTime, DateUtil.date()).update();
+        SystemCacheUtil.deleteUserCache(username);
     }
 
     @Override
@@ -246,28 +234,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updatePassword(String username, String password) {
         String currentUsername = SecurityUtil.getUsername();
         this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
-                .set(User::getPassword, password).update();
+                .set(User::getPassword, PasswordUtil.PASSWORD_ENCODER.encode(password)).update();
+        SystemCacheUtil.deleteUserCache(username);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String username, String status) {
         String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(MyConstant.STATUS_LOCK);
         String currentUsername = SecurityUtil.getUsername();
         this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
                 .set(User::getStatus, orElse)
                 .update();
+        SystemCacheUtil.deleteUserCache(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPassword(List<String> usernames) {
         this.lambdaUpdate().in(User::getUsername, usernames)
-                .set(User::getPassword, PasswordUtil.PASSWORD_ENCODER.encode(MyConstant.DEFAULT_PASSWORD)).update();
+                .set(User::getPassword, PasswordUtil.PASSWORD_ENCODER.encode(globalProperties.getDefaultPassword())).update();
+        SystemCacheUtil.deleteUserCaches(usernames.toArray());
     }
 
-    private List<UserRole> getUserRoles(User user, List<Long> roles) {
+    private List<UserRole> getUserRoles(User user, List<Long> roleIds) {
         List<UserRole> userRoles = new ArrayList<>();
-        roles.stream().filter(Objects::nonNull).forEach(roleId -> {
+        roleIds.stream().filter(Objects::nonNull).forEach(roleId -> {
             UserRole userRole = new UserRole();
             userRole.setUserId(user.getUserId());
             userRole.setRoleId(roleId);
@@ -280,10 +272,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<UserDataPermission> userDataPermissions = new ArrayList<>();
         deptIds.stream().filter(Objects::nonNull).forEach(deptId -> {
             UserDataPermission permission = new UserDataPermission();
-            permission.setDeptId(deptId);
             permission.setUserId(user.getUserId());
+            permission.setDeptId(deptId);
             userDataPermissions.add(permission);
         });
         return userDataPermissions;
     }
+
+    @Override
+    public void validateUsername(String username, Long userId) {
+        UserVo userVo = this.findByName(username);
+        if (userVo != null && !userVo.getUserId().equals(userId)) {
+            throw new MyException("用户名重复");
+        }
+    }
+
+    @Override
+    public void validateMobile(String mobile, Long userId) {
+        if (StrUtil.isNotBlank(mobile)) {
+            UserVo userVo = this.findByMobile(mobile);
+            if (userVo != null && !userVo.getUserId().equals(userId)) {
+                throw new MyException("手机号重复");
+            }
+        }
+    }
+
+    private void deleteCache(UserAo userAo) {
+        deleteUserCache(userAo.getUsername(), userAo.getMobile());
+        if (userAo.getUserId() != null) {
+            User one = this.lambdaQuery().eq(User::getUserId, userAo.getUserId()).one();
+            deleteUserCache(one.getUsername(), one.getMobile());
+        }
+    }
+
+    private void deleteUserCache(String username, String mobile) {
+        SystemCacheUtil.deleteUserCache(username);
+        if (StrUtil.isNotBlank(mobile)) {
+            SystemCacheUtil.deleteUsernameByMobile(mobile);
+        }
+    }
+
 }

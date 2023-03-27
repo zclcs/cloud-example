@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 用户角色关联 Entity
  *
@@ -18,8 +21,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_user_role")
-@Schema(name = "UserRole对象", description = "用户角色关联")
-public class UserRole extends BaseEntity {
+@Schema(title = "UserRole对象", description = "用户角色关联")
+public class UserRole extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户id

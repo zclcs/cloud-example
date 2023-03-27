@@ -7,6 +7,7 @@ import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
 import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("dept")
+@RequestMapping("/dept")
 @RequiredArgsConstructor
 @Tag(name = "部门")
 public class DeptController {
@@ -52,7 +53,7 @@ public class DeptController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("options")
+    @GetMapping("/options")
     @Operation(summary = "前端下拉框")
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo dept) {
@@ -60,7 +61,7 @@ public class DeptController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "部门查询（集合）")
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<List<DeptVo>> findDeptList(@Validated DeptVo deptVo) {
@@ -68,12 +69,44 @@ public class DeptController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "部门查询（单个）")
     @PreAuthorize("hasAuthority('dept:view')")
     public BaseRsp<DeptVo> findDept(@Validated DeptVo deptVo) {
         DeptVo dept = this.deptService.findDept(deptVo);
         return RspUtil.data(dept);
+    }
+
+    @GetMapping("/findByDeptId/{deptId}")
+    @Operation(summary = "根据部门id查询部门")
+    @Inner
+    public BaseRsp<Dept> findByDeptId(@PathVariable Long deptId) {
+        Dept dept = this.deptService.lambdaQuery().eq(Dept::getDeptId, deptId).one();
+        return RspUtil.data(dept);
+    }
+
+    @GetMapping("/checkDeptName")
+    @Operation(summary = "检查部门名称")
+    @Parameters({
+            @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "deptName", description = "部门名称", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkDeptName(@RequestParam(required = false) Long deptId,
+                                         @NotBlank(message = "{required}") @RequestParam String deptName) {
+        deptService.validateDeptName(deptName, deptId);
+        return RspUtil.message();
+    }
+
+    @GetMapping("/checkDeptCode")
+    @Operation(summary = "检查部门编码")
+    @Parameters({
+            @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "deptCode", description = "部门编码", required = true, in = ParameterIn.QUERY)
+    })
+    public BaseRsp<Object> checkDeptCode(@RequestParam(required = false) Long deptId,
+                                         @NotBlank(message = "{required}") @RequestParam String deptCode) {
+        deptService.validateDeptCode(deptCode, deptId);
+        return RspUtil.message();
     }
 
     @PostMapping

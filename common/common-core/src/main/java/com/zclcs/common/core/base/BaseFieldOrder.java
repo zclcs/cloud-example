@@ -9,7 +9,7 @@ import lombok.Data;
  * @author zclcs
  */
 @Data
-@Schema(description = "分页实体")
+@Schema(title = "BaseFieldOrder", description = "分页实体")
 public class BaseFieldOrder {
 
     /**

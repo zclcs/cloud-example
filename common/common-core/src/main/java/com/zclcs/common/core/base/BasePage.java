@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author zclcs
  */
-@Schema(description = "分页对象")
+@Schema(title = "BasePage", description = "分页对象")
 public class BasePage<T> implements IPage<T> {
 
     @Serial

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("blackList")
+@RequestMapping("/blackList")
 @RequiredArgsConstructor
 @Tag(name = "黑名单")
 public class BlackListController {
@@ -52,7 +52,7 @@ public class BlackListController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "黑名单查询（集合）")
     @PreAuthorize("hasAuthority('blackList:view')")
     public BaseRsp<List<BlackListVo>> findBlackListList(@Validated BlackListVo blackListVo) {
@@ -60,7 +60,7 @@ public class BlackListController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "黑名单查询（单个）")
     @PreAuthorize("hasAuthority('blackList:view')")
     public BaseRsp<BlackListVo> findBlackList(@Validated BlackListVo blackListVo) {
@@ -68,7 +68,7 @@ public class BlackListController {
         return RspUtil.data(blackList);
     }
 
-    @GetMapping("refresh")
+    @GetMapping("/refresh")
     @Operation(summary = "刷新黑名单缓存")
     public BaseRsp<Object> refresh() {
         this.blackListService.cacheAllBlackList();

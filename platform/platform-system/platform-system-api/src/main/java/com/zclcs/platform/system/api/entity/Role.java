@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 角色 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_role")
-@Schema(name = "Role对象", description = "角色")
-public class Role extends BaseEntity {
+@Schema(title = "Role对象", description = "角色")
+public class Role extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 角色id
@@ -34,6 +40,12 @@ public class Role extends BaseEntity {
      */
     @TableField("role_name")
     private String roleName;
+
+    /**
+     * 角色编码（唯一值）
+     */
+    @TableField("role_code")
+    private String roleCode;
 
     /**
      * 角色描述

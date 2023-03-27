@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BasePage;
+import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.platform.system.api.entity.Role;
 import com.zclcs.platform.system.api.entity.ao.RoleAo;
 import com.zclcs.platform.system.api.entity.vo.RoleVo;
@@ -51,36 +51,6 @@ public interface RoleService extends IService<Role> {
     Integer countRole(RoleVo roleVo);
 
     /**
-     * 通过id获取角色
-     *
-     * @param roleId 角色id
-     * @return 角色
-     */
-    RoleVo findById(Long roleId);
-
-    /**
-     * 通过id缓存角色
-     *
-     * @param roleId 角色id
-     */
-    RoleVo cacheAndGetById(Long roleId);
-
-    /**
-     * 通过id删除角色缓存
-     *
-     * @param roleId 角色id
-     */
-    void deleteCacheById(Long roleId);
-
-    /**
-     * 通过角色id获取账号
-     *
-     * @param roleId 角色id
-     * @return 账号集合
-     */
-    List<String> selectUsernamesByRoleId(Long roleId);
-
-    /**
      * 新增
      *
      * @param roleAo roleAo
@@ -102,5 +72,21 @@ public interface RoleService extends IService<Role> {
      * @param ids ids
      */
     void deleteRole(List<Long> ids);
+
+    /**
+     * 验证角色编码
+     *
+     * @param roleCode 角色编码
+     * @param roleId   角色id
+     */
+    void validateRoleCode(String roleCode, Long roleId);
+
+    /**
+     * 验证角色名称
+     *
+     * @param roleName 角色名称
+     * @param roleId   角色id
+     */
+    void validateRoleName(String roleName, Long roleId);
 
 }

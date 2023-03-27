@@ -16,7 +16,9 @@ spring:
   config:
     import:
       - nacos:global-configuration.yaml
-      - nacos:${spring.application.name}.yaml
+      - nacos:rabbitmq.yaml
+      - nacos:redis.yaml
+      - nacos:jasypt.yaml
 
   cloud:
 
@@ -30,6 +32,9 @@ spring:
         namespace: ${NACOS_NAMESPACE:dev}
 
     gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 10s
       loadbalancer:
         use404: true
       default-filters:
@@ -61,42 +66,6 @@ spring:
           filters:
             - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/$\{path}/v3/api-docs
 
-  rabbitmq:
-    host: ${RABBIT_MQ_HOST:127.0.0.1}
-    port: ${RABBIT_MQ_PORT:5672}
-    username: ${RABBIT_MQ_USERNAME:root}
-    password: ${RABBIT_MQ_PASSWORD:123456}
-    virtual-host: /${NACOS_NAMESPACE:dev}
-    # 手动提交消息
-    listener:
-      simple:
-        #消息必须手动确认
-        acknowledge-mode: manual
-        #限制每次发送一条数据。
-        prefetch: 1
-    publisher-returns: true
-    publisher-confirm-type: simple
-
-  data:
-    redis:
-      database: ${REDIS_DATABASE:0}
-      host: ${REDIS_HOST:127.0.0.1}
-      port: ${REDIS_PORT:6379}
-      lettuce:
-        pool:
-          min-idle: 8
-          max-idle: 500
-          max-active: 2000
-          max-wait: 10000
-      timeout: 5000
-
-logging:
-  level:
-    com.zclcs: info
-
-my:
-  redis-cache-prefix: '${NACOS_NAMESPACE:dev}:'
-
 gateway:
   encode-key: 'eXTqsEKIPRsksJSK'
   ignore-clients:
@@ -115,10 +84,3 @@ security:
       urls:
         - /v3/api-docs
         - /actuator/**
-
-# 加解密根密码
-jasypt:
-  encryptor:
-    password: zclcs
-    algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator

@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 限流规则 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_rate_limit_rule")
-@Schema(name = "RateLimitRule对象", description = "限流规则")
-public class RateLimitRule extends BaseEntity {
+@Schema(title = "RateLimitRule对象", description = "限流规则")
+public class RateLimitRule extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 限流规则id

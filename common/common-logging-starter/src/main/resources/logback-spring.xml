@@ -138,9 +138,6 @@
     <!--屏蔽 nacos包下的warn级别以上的日志 -->
     <logger name="com.alibaba.nacos" level="warn" additivity="false"/>
 
-    <!-- 字典依赖日志 -->
-    <logger name="com.houkunlin" level="debug" additivity="false"/>
-
     <logger name="com.zclcs.platform.system.api.fegin" level="DEBUG" additivity="false">
         <!--        <appender-ref ref="console"/>-->
         <appender-ref ref="file_client"/>

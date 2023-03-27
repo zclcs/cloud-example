@@ -23,7 +23,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RoleAo对象", description = "角色")
+@Schema(title = "RoleAo对象", description = "角色")
 public class RoleAo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,14 +34,19 @@ public class RoleAo implements Serializable {
 
     @Size(max = 10, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "角色名称", required = true)
+    @Schema(description = "角色名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String roleName;
+
+    @Size(max = 100, message = "{noMoreThan}")
+    @NotBlank(message = "{required}")
+    @Schema(description = "角色编码", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String roleCode;
 
     @Size(max = 100, message = "{noMoreThan}")
     @Schema(description = "角色描述")
     private String remark;
 
-    @Schema(description = "菜单编号")
+    @Schema(description = "菜单编码集合")
     @NotNull(message = "{required}")
     private List<Long> menuIds;
 

@@ -41,9 +41,9 @@ import java.util.function.Function;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class PasswordDecoderFilter extends AbstractGatewayFilterFactory {
+public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private static final List<HttpMessageReader<?>> messageReaders = HandlerStrategies.withDefaults().messageReaders();
+    private static final List<HttpMessageReader<?>> MESSAGE_READERS = HandlerStrategies.withDefaults().messageReaders();
 
     private static final String PASSWORD = "password";
 
@@ -74,7 +74,7 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory {
             // 3. 前端加密密文解密逻辑
             Class inClass = String.class;
             Class outClass = String.class;
-            ServerRequest serverRequest = ServerRequest.create(exchange, messageReaders);
+            ServerRequest serverRequest = ServerRequest.create(exchange, MESSAGE_READERS);
             // 4. 解密生成新的报文
             Mono<?> modifiedBody = serverRequest.bodyToMono(inClass).flatMap(decryptAES());
 

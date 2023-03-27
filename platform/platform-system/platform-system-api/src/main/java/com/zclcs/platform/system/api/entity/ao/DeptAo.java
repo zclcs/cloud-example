@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -22,22 +23,28 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "DeptAo对象", description = "部门")
+@Schema(title = "DeptAo对象", description = "部门")
 public class DeptAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     @Schema(description = "部门id")
     private Long deptId;
 
-    @NotNull(message = "{required}")
-    @Schema(description = "上级部门id", required = true)
-    private Long parentId;
+    @Size(max = 100, message = "{noMoreThan}")
+    @NotBlank(message = "{required}")
+    @Schema(description = "部门编码", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String deptCode;
+
+    @Size(max = 100, message = "{noMoreThan}")
+    @Schema(description = "上级部门编码 不填默认顶级")
+    private String parentCode;
 
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "部门名称", required = true)
+    @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String deptName;
 
     @Schema(description = "排序")

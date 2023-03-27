@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 黑名单拦截日志 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_block_log")
-@Schema(name = "BlockLog对象", description = "黑名单拦截日志")
-public class BlockLog extends BaseEntity {
+@Schema(title = "BlockLog对象", description = "黑名单拦截日志")
+public class BlockLog extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 拦截日志id

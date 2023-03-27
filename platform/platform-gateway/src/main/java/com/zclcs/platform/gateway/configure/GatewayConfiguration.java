@@ -3,9 +3,7 @@ package com.zclcs.platform.gateway.configure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.gateway.filter.MyGatewayRequestFilter;
-import com.zclcs.platform.gateway.filter.PasswordDecoderFilter;
-import com.zclcs.platform.gateway.filter.ValidateCodeGatewayFilter;
+import com.zclcs.platform.gateway.filter.*;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
 import com.zclcs.platform.gateway.handler.MyGatewayExceptionHandler;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
@@ -72,8 +70,18 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public MyGatewayRequestFilter myGatewayRequestFilter(RouteEnhanceService routeEnhanceService) {
-        return new MyGatewayRequestFilter(routeEnhanceService);
+    public MyGatewayRequestFilter myGatewayRequestFilter() {
+        return new MyGatewayRequestFilter();
+    }
+
+    @Bean
+    public ApiLoggingFilter apiLoggingFilter(RouteEnhanceService routeEnhanceService) {
+        return new ApiLoggingFilter(routeEnhanceService);
+    }
+
+    @Bean
+    public RequestRateLimiterFilter requestRateLimiterFilter(RouteEnhanceService routeEnhanceService) {
+        return new RequestRateLimiterFilter(routeEnhanceService);
     }
 
     @Bean

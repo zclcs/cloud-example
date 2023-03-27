@@ -59,11 +59,11 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     private QueryWrapper<LogVo> getQueryWrapper(LogVo logVo) {
         QueryWrapper<LogVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("sl.create_time");
+        queryWrapper.orderByDesc("sl.create_at");
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.username", logVo.getUsername());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.operation", logVo.getOperation());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.location", logVo.getLocation());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sl.create_at", logVo.getCreateTimeFrom(), logVo.getCreateTimeTo());
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sl.create_at", logVo.getCreateAtFrom(), logVo.getCreateAtTo());
         return queryWrapper;
     }
 

@@ -1,7 +1,7 @@
 package com.zclcs.common.security.starter.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.core.constant.SecurityConstant;
 import com.zclcs.common.security.starter.entity.SecurityUser;
@@ -50,25 +50,23 @@ public interface MyUserDetailsService extends UserDetailsService, Ordered {
      * @param result 用户信息
      * @return UserDetails
      */
-    default UserDetails getUserDetails(BaseRsp<UserVo> result) {
-        UserVo userVo = Optional.ofNullable(result.getData()).orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
+    default UserDetails getUserDetails(UserVo result) {
+        Optional.ofNullable(result).map(UserVo::getUsername).filter(StrUtil::isNotBlank).orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
 
         Set<String> dbAuthsSet = new HashSet<>();
-
-        if (StrUtil.isNotBlank(userVo.getRoleIdString())) {
-            StrUtil.split(userVo.getRoleIdString(), StrUtil.COMMA).forEach(roleId -> {
-                dbAuthsSet.add(SecurityConstant.ROLE + roleId);
-            });
+        if (CollectionUtil.isNotEmpty(result.getRoleIds())) {
+            result.getRoleIds().forEach(roleId ->
+                    dbAuthsSet.add(SecurityConstant.ROLE + roleId));
             // 获取资源
-            dbAuthsSet.addAll(userVo.getPermissions());
+            dbAuthsSet.addAll(result.getPermissions());
         }
 
         Collection<GrantedAuthority> authorities = AuthorityUtils
                 .createAuthorityList(dbAuthsSet.toArray(new String[0]));
         // 构造security用户
-        return new SecurityUser(userVo.getUserId(), userVo.getDeptId(), userVo.getDeptIdString(), userVo.getUsername(),
-                SecurityConstant.BCRYPT + userVo.getPassword(), userVo.getMobile(), true, true, true,
-                StrUtil.equals(userVo.getStatus(), MyConstant.STATUS_VALID), authorities);
+        return new SecurityUser(result.getUserId(), result.getDeptId(), result.getDeptIds(), result.getUsername(),
+                SecurityConstant.BCRYPT + result.getPassword(), result.getMobile(), true, true, true,
+                StrUtil.equals(result.getStatus(), MyConstant.STATUS_VALID), authorities);
     }
 
     /**

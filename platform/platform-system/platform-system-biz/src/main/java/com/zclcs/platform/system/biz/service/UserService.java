@@ -1,11 +1,12 @@
 package com.zclcs.platform.system.biz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BasePage;
+import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.platform.system.api.entity.User;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
-import com.zclcs.platform.system.api.entity.vo.UserMobileVo;
+import com.zclcs.platform.system.api.entity.router.VueRouter;
+import com.zclcs.platform.system.api.entity.vo.MenuVo;
 import com.zclcs.platform.system.api.entity.vo.UserVo;
 
 import java.util.List;
@@ -65,53 +66,23 @@ public interface UserService extends IService<User> {
      * @param mobile 手机号
      * @return 用户
      */
-    UserMobileVo findByMobile(String mobile);
+    UserVo findByMobile(String mobile);
 
     /**
-     * 通过用户名查找用户详细信息
+     * 获取用户路由
      *
      * @param username 用户名
-     * @return 用户信息
+     * @return 用户路由
      */
-    UserVo findUserDetail(String username);
+    List<VueRouter<MenuVo>> findUserRouters(String username);
 
     /**
-     * 缓存用户信息
+     * 获取用户权限
      *
      * @param username 用户名
-     * @return 用户
+     * @return 用户权限
      */
-    UserVo cacheAndGetUserDetail(String username);
-
-    /**
-     * 删除用户信息
-     *
-     * @param username 用户名
-     */
-    void deleteUserDetailCache(String username);
-
-    /**
-     * 通过手机号查找用户详细信息
-     *
-     * @param mobile 手机号
-     * @return 用户信息
-     */
-    UserVo findUserDetailByMobile(String mobile);
-
-    /**
-     * 缓存用户信息
-     *
-     * @param mobile 手机号
-     * @return 用户
-     */
-    UserVo cacheAndGetUserDetailByMobile(String mobile);
-
-    /**
-     * 删除用户信息
-     *
-     * @param mobile 手机号
-     */
-    void deleteUserDetailCacheByMobile(String mobile);
+    List<String> findUserPermissions(String username);
 
     /**
      * 新增
@@ -165,5 +136,21 @@ public interface UserService extends IService<User> {
      * @param usernames 用户集合
      */
     void resetPassword(List<String> usernames);
+
+    /**
+     * 验证用户名
+     *
+     * @param username 用户名
+     * @param userId   用户id
+     */
+    void validateUsername(String username, Long userId);
+
+    /**
+     * 验证手机号
+     *
+     * @param mobile 手机号
+     * @param userId 用户id
+     */
+    void validateMobile(String mobile, Long userId);
 
 }

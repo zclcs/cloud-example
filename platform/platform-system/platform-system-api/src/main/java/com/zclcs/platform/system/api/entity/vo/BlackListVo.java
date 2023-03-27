@@ -1,9 +1,12 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
+import com.zclcs.common.dict.core.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,9 +22,10 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "BlackListVo对象", description = "黑名单")
-public class BlackListVo implements Serializable {
+@Schema(title = "BlackListVo对象", description = "黑名单")
+public class BlackListVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "黑名单id")
@@ -49,7 +53,7 @@ public class BlackListVo implements Serializable {
     private String location;
 
     @Schema(description = "黑名单状态 默认 1 @@enable_disable")
-//    @DictText("enable_disable")
+    @DictText(value = "enable_disable")
     private String blackStatus;
 
 

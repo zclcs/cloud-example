@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -20,17 +21,18 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RoleMenuAo对象", description = "角色菜单关联")
+@Schema(title = "RoleMenuAo对象", description = "角色菜单关联")
 public class RoleMenuAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "角色编号")
+    @Schema(description = "角色id")
     private Long roleId;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "菜单编号")
+    @Schema(description = "菜单id")
     private Long menuId;
 
 

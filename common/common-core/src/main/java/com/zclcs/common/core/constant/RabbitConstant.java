@@ -27,6 +27,8 @@ public interface RabbitConstant {
 
     String SYSTEM_RATE_LIMIT_LOG_QUEUE = "queue.system.rate.limit.log";
 
+    String SYSTEM_DICT_REFRESH_QUEUE = "queue.system.dict.refresh";
+
     String SYSTEM_LOG_ROUTE_KEY = "system-log-routing-key";
 
     String SYSTEM_LOGIN_LOG_ROUTE_KEY = "system-login-log-routing-key";
@@ -36,6 +38,8 @@ public interface RabbitConstant {
     String SYSTEM_BLOCK_LOG_LOG_ROUTE_KEY = "system-block-log-routing-key";
 
     String SYSTEM_RATE_LIMIT_LOG_ROUTE_KEY = "system-rate-limit-log-routing-key";
+
+    String SYSTEM_DICT_REFRESH_ROUTING_KEY = "system-dict-refresh-routing-key";
 
     String DELAY_QUEUE = "delay.queue";
 

@@ -58,7 +58,7 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
     public void handle(Authentication authentication) {
         log.info("用户：{} 退出成功", authentication.getPrincipal());
         LoginLogAo loginLog = LoginLogUtil.getLoginLog();
-        loginLog.setLoginType(DictConstant.LOGIN_LOG_LOGIN_TYPE_01);
+        loginLog.setLoginType(DictConstant.LOGIN_LOG_LOGIN_TYPE_03);
         loginLog.setUsername(authentication.getName());
         // 发送异步日志事件
         loginLog.setCreateBy(authentication.getName());

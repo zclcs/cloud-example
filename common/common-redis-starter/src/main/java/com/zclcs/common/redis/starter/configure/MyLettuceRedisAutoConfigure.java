@@ -98,4 +98,9 @@ public class MyLettuceRedisAutoConfigure {
 
         return template;
     }
+
+    @Bean
+    public MyRedissonAutoConfigurationCustomizer redissonAutoConfigurationCustomizer() {
+        return new MyRedissonAutoConfigurationCustomizer(properties);
+    }
 }

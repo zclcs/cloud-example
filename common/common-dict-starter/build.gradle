@@ -1,9 +1,0 @@
-dependencies {
-    api project(":common:common-core")
-    api project(":common:common-redis-starter")
-    api project(":common:common-rabbitmq-starter")
-    api annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
-    api "com.github.ben-manes.caffeine:caffeine"
-    api "org.javassist:javassist"
-    api "com.google.guava:guava"
-}

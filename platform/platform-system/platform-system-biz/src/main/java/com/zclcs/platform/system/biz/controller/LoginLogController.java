@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("loginLog")
+@RequestMapping("/loginLog")
 @RequiredArgsConstructor
 @Tag(name = "登录日志")
 public class LoginLogController {
@@ -47,7 +47,7 @@ public class LoginLogController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "登录日志查询（集合）")
     @PreAuthorize("hasAuthority('loginLog:view')")
     public BaseRsp<List<LoginLogVo>> findLoginLogList(@Validated LoginLogVo loginLogVo) {
@@ -55,7 +55,7 @@ public class LoginLogController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "登录日志查询（单个）")
     @PreAuthorize("hasAuthority('loginLog:view')")
     public BaseRsp<LoginLogVo> findLoginLog(@Validated LoginLogVo loginLogVo) {

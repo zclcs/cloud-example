@@ -15,7 +15,9 @@ dependencies {
 //    implementation("com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway")
 //    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
 //    implementation("com.alibaba.csp:sentinel-datasource-nacos")
-    implementation(project(":platform:platform-system:platform-system-api"))
+    implementation(project(":platform:platform-system:platform-system-api")) {
+        exclude(module: ":common:common-dict")
+    }
     implementation(project(":common:common-core"))
     implementation(project(":common:common-rabbitmq-starter"))
     implementation(project(":common:common-redis-starter"))

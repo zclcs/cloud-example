@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.platform.system.biz.mapper.DictItemMapper">
+
+    <sql id="baseSql">
+        select *
+        from (select sdi.id,
+                     sdi.dict_name,
+                     sdi.parent_value,
+                     sdi.value,
+                     sdi.title,
+                     sdi.type,
+                     sdi.whether_system_dict,
+                     sdi.description,
+                     sdi.sorted,
+                     sdi.is_disabled
+              from system_dict_item sdi) tb
+            ${ew.customSqlSegment}
+    </sql>
+    <sql id="baseCountSql">
+        select *
+        from (select count(*)
+              from system_dict_item sdi) tb
+            ${ew.customSqlSegment}
+    </sql>
+    <sql id="baseDictSql">
+        select *
+        from (select max(id) id, sdi.dict_name name
+              from system_dict_item sdi
+              group by sdi.dict_name) tb
+            ${ew.customSqlSegment}
+    </sql>
+    <sql id="baseCountDictSql">
+        select *
+        from (select count(*)
+              from system_dict_item sdi
+              group by sdi.dict_name) tb
+            ${ew.customSqlSegment}
+    </sql>
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="countVo" resultType="java.lang.Integer">
+        <include refid="baseCountSql"/>
+    </select>
+    <select id="findPageDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+        <include refid="baseDictSql"/>
+    </select>
+    <select id="findListDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+        <include refid="baseDictSql"/>
+    </select>
+    <select id="findOneDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+        <include refid="baseDictSql"/>
+    </select>
+    <select id="countDictVo" resultType="java.lang.Integer">
+        <include refid="baseCountDictSql"/>
+    </select>
+</mapper>

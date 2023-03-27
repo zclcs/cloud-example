@@ -51,12 +51,4 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     Integer countVo(@Param(Constants.WRAPPER) Wrapper<RoleVo> ew);
 
-    /**
-     * 通过角色id获取账号
-     *
-     * @param roleId 角色id
-     * @return 账号集合
-     */
-    List<String> selectUsernamesByRoleId(Long roleId);
-
 }

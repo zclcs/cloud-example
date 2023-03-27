@@ -1,9 +1,12 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
+import com.zclcs.common.dict.core.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,9 +21,10 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RateLimitRuleVo对象", description = "限流规则")
-public class RateLimitRuleVo implements Serializable {
+@Schema(title = "RateLimitRuleVo对象", description = "限流规则")
+public class RateLimitRuleVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "限流规则id")
@@ -45,7 +49,7 @@ public class RateLimitRuleVo implements Serializable {
     private String intervalSec;
 
     @Schema(description = "规则状态 默认 1 @@enable_disable")
-//    @DictText("enable_disable")
+    @DictText(value = "enable_disable")
     private String ruleStatus;
 
 

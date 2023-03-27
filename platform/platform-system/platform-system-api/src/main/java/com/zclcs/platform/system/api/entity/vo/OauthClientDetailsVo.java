@@ -1,9 +1,11 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,45 +21,46 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "OauthClientDetailsVo对象", description = "终端信息")
-public class OauthClientDetailsVo implements Serializable {
+@Schema(title = "OauthClientDetailsVo对象", description = "终端信息")
+public class OauthClientDetailsVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(name = "客户端ID")
+    @Schema(description = "客户端ID")
     private String clientId;
 
-    @Schema(name = "资源列表")
+    @Schema(description = "资源列表")
     private String resourceIds;
 
-    @Schema(name = "客户端密钥")
+    @Schema(description = "客户端密钥")
     private String clientSecret;
 
-    @Schema(name = "域")
+    @Schema(description = "域")
     private String scope;
 
-    @Schema(name = "认证类型")
+    @Schema(description = "认证类型")
     private String authorizedGrantTypes;
 
-    @Schema(name = "重定向地址")
+    @Schema(description = "重定向地址")
     private String webServerRedirectUri;
 
-    @Schema(name = "角色列表")
+    @Schema(description = "角色列表")
     private String authorities;
 
-    @Schema(name = "token 有效期")
+    @Schema(description = "token 有效期")
     private Integer accessTokenValidity;
 
-    @Schema(name = "刷新令牌有效期")
+    @Schema(description = "刷新令牌有效期")
     private Integer refreshTokenValidity;
 
-    @Schema(name = "令牌扩展字段JSON")
+    @Schema(description = "令牌扩展字段JSON")
     private String additionalInformation;
 
-    @Schema(name = "是否自动放行")
+    @Schema(description = "是否自动放行")
     private String autoapprove;
 
-    @Schema(name = "菜单id集合")
+    @Schema(description = "菜单id集合")
     private List<Long> menuIds;
 
 

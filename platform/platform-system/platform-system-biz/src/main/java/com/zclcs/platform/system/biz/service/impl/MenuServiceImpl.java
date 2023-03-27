@@ -3,27 +3,25 @@ package com.zclcs.platform.system.biz.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.TreeUtil;
 import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.Menu;
+import com.zclcs.platform.system.api.entity.RoleMenu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
-import com.zclcs.platform.system.api.entity.router.RouterMeta;
-import com.zclcs.platform.system.api.entity.router.VueRouter;
 import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;
 import com.zclcs.platform.system.api.entity.vo.MenuVo;
-import com.zclcs.platform.system.api.utils.BaseRouterUtil;
 import com.zclcs.platform.system.biz.mapper.MenuMapper;
 import com.zclcs.platform.system.biz.service.MenuService;
 import com.zclcs.platform.system.biz.service.RoleMenuService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,8 +44,6 @@ import java.util.List;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
     private final RoleMenuService roleMenuService;
-    private final RedisService redisService;
-    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<MenuVo> findMenuPage(BasePageAo basePageAo, MenuVo menuVo) {
@@ -59,6 +55,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<MenuVo> findMenuList(MenuVo menuVo) {
         QueryWrapper<MenuVo> queryWrapper = getQueryWrapper(menuVo);
+        queryWrapper.orderByAsc("tb.order_num");
         return this.baseMapper.findListVo(queryWrapper);
     }
 
@@ -69,26 +66,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public BasePage<MenuVo> findUserMenuPage(BasePageAo basePageAo, MenuVo menuVo, String username) {
-        BasePage<MenuVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<MenuVo> queryWrapper = getQueryWrapper(menuVo);
-        return this.baseMapper.findUserMenuPageVo(basePage, queryWrapper, username);
-    }
-
-    @Override
-    public List<MenuVo> findUserMenuList(MenuVo menuVo, String username) {
-        QueryWrapper<MenuVo> queryWrapper = getQueryWrapper(menuVo);
-        queryWrapper.orderByAsc("sm.order_num");
-        return this.baseMapper.findUserMenuListVo(queryWrapper, username);
-    }
-
-    @Override
-    public MenuVo findUserMenu(MenuVo menuVo, String username) {
-        QueryWrapper<MenuVo> queryWrapper = getQueryWrapper(menuVo);
-        return this.baseMapper.findUserMenuOneVo(queryWrapper, username);
-    }
-
-    @Override
     public Integer countMenu(MenuVo menuVo) {
         QueryWrapper<MenuVo> queryWrapper = getQueryWrapper(menuVo);
         return this.baseMapper.countVo(queryWrapper);
@@ -96,22 +73,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     private QueryWrapper<MenuVo> getQueryWrapper(MenuVo menuVo) {
         QueryWrapper<MenuVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sm.menu_name", menuVo.getMenuName());
-        QueryWrapperUtil.inNotEmpty(queryWrapper, "sm.menu_id", menuVo.getMenuIds());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sm.type", menuVo.getType());
-        QueryWrapperUtil.inNotEmpty(queryWrapper, "sm.type", menuVo.getTypes());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.menu_name", menuVo.getMenuName());
+        QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.menu_id", menuVo.getMenuIds());
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.type", menuVo.getType());
+        QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.type", menuVo.getTypes());
         return queryWrapper;
     }
 
     @Override
-    public List<MenuVo> findUserSystemMenus(String username) {
-        QueryWrapper<MenuVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByAsc("sm.order_num");
-        return this.baseMapper.findUserMenuListVo(queryWrapper, username);
-    }
-
-    @Override
-    public List<MenuTreeVo> findSystemMenus(MenuVo menu) {
+    public List<MenuTreeVo> findMenus(MenuVo menu) {
         List<MenuVo> menus = findMenuList(menu);
         List<MenuTreeVo> trees = new ArrayList<>();
         buildTrees(trees, menus);
@@ -124,108 +94,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<VueRouter<MenuVo>> findUserRouters(String username) {
-        Object obj = redisService.get(RedisCachePrefixConstant.USER_ROUTES + username);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.USER_ROUTES + username);
-                if (obj != null) {
-                    return (List<VueRouter<MenuVo>>) obj;
-                }
-                return cacheAndGetUserRouters(username);
-            }
-        }
-        return (List<VueRouter<MenuVo>>) obj;
-    }
-
-    @Override
-    public List<VueRouter<MenuVo>> cacheAndGetUserRouters(String username) {
-        List<VueRouter<MenuVo>> routes = new ArrayList<>();
-        List<MenuVo> userSystemMenus = this.findUserSystemMenus(username);
-        userSystemMenus.forEach(menu -> {
-            VueRouter<MenuVo> route = new VueRouter<>();
-            route.setId(menu.getMenuId());
-            route.setParentId(menu.getParentId());
-            route.setPath(menu.getPath());
-            route.setName(StrUtil.isNotBlank(menu.getKeepAliveName()) ? menu.getKeepAliveName() : menu.getMenuName());
-            route.setComponent(menu.getComponent());
-            route.setRedirect(menu.getRedirect());
-            route.setMeta(new RouterMeta(
-                    menu.getMenuName(),
-                    menu.getIcon(),
-                    menu.getHideMenu().equals(MyConstant.YES),
-                    menu.getIgnoreKeepAlive().equals(MyConstant.YES),
-                    menu.getHideBreadcrumb().equals(MyConstant.YES),
-                    menu.getHideChildrenInMenu().equals(MyConstant.YES),
-                    menu.getCurrentActiveMenu()));
-            routes.add(route);
-        });
-        List<VueRouter<MenuVo>> vueRouters = BaseRouterUtil.buildVueRouter(routes);
-        redisService.set(RedisCachePrefixConstant.USER_ROUTES + username, vueRouters);
-        return vueRouters;
-    }
-
-    @Override
-    public List<String> findUserPermissions(String username) {
-        Object obj = redisService.get(RedisCachePrefixConstant.USER_PERMISSIONS + username);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.USER_PERMISSIONS + username);
-                if (obj != null) {
-                    return (List<String>) obj;
-                }
-                return cacheAndGetUserPermissions(username);
-            }
-        }
-        return (List<String>) obj;
-    }
-
-    @Override
-    public List<String> cacheAndGetUserPermissions(String username) {
-        List<String> userPermissions = this.baseMapper.findUserPermissions(username);
-        redisService.set(RedisCachePrefixConstant.USER_PERMISSIONS + username, userPermissions);
-        return userPermissions;
-    }
-
-    @Override
-    public MenuVo findById(Long menuId) {
-        Object obj = redisService.get(RedisCachePrefixConstant.MENU + menuId);
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.MENU + menuId);
-                if (obj != null) {
-                    return (MenuVo) obj;
-                }
-                return cacheAndGetById(menuId);
-            }
-        }
-        return (MenuVo) obj;
-    }
-
-    @Override
-    public MenuVo cacheAndGetById(Long menuId) {
-        QueryWrapper<MenuVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("sm.menu_id", menuId);
-        MenuVo menuVo = this.baseMapper.findOneVo(queryWrapper);
-        redisService.set(RedisCachePrefixConstant.MENU + menuId, menuVo);
-        return menuVo;
-    }
-
-    @Override
-    public void deleteCacheById(Long menuId) {
-        redisService.del(RedisCachePrefixConstant.MENU + menuId);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public Menu createMenu(MenuAo menuAo) {
+        validateMenuCode(menuAo.getMenuCode(), menuAo.getMenuId());
         Menu menu = new Menu();
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.save(menu);
+        SystemCacheUtil.deleteMenuByMenuId(menu.getMenuId());
         return menu;
     }
 
@@ -233,9 +109,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = Exception.class)
     public Menu updateMenu(MenuAo menuAo) {
         Menu menu = new Menu();
+        menu.setMenuCode(null);
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.updateById(menu);
+        SystemCacheUtil.deleteMenuByMenuId(menu.getMenuId());
         return menu;
     }
 
@@ -247,16 +125,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             List<Long> childMenuIds = getChildMenuId(id);
             allMenuIds.addAll(childMenuIds);
         }
-        ArrayList<Long> distinct = CollectionUtil.distinct(allMenuIds);
-        removeByIds(distinct);
-        roleMenuService.deleteRoleMenusByMenuId(allMenuIds);
+        List<Long> distinct = CollectionUtil.distinct(allMenuIds);
+        Object[] menuIds = distinct.toArray();
+        Object[] roleIds = roleMenuService.lambdaQuery()
+                .in(RoleMenu::getMenuId, distinct).list().stream().map(RoleMenu::getRoleId).toList().toArray();
+        this.removeByIds(distinct);
+        SystemCacheUtil.deleteMenuByMenuIds(menuIds);
+        if (ArrayUtil.isNotEmpty(roleIds)) {
+            roleMenuService.lambdaUpdate().in(RoleMenu::getRoleId, roleIds).remove();
+            SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
+        }
     }
 
     private void buildTrees(List<MenuTreeVo> trees, List<MenuVo> menus) {
         menus.forEach(menu -> {
             MenuTreeVo tree = new MenuTreeVo();
             tree.setId(menu.getMenuId());
-            tree.setParentId(menu.getParentId());
+            tree.setCode(menu.getMenuCode());
+            tree.setParentCode(menu.getParentCode());
             tree.setLabel(menu.getMenuName());
             tree.setKeepAliveName(menu.getKeepAliveName());
             tree.setPath(menu.getPath());
@@ -276,8 +162,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     private void setMenu(Menu menu) {
-        if (menu.getParentId() == null) {
-            menu.setParentId(MyConstant.TOP_MENU_ID);
+        if (menu.getParentCode() == null) {
+            menu.setParentCode(MyConstant.TOP_PARENT_CODE);
 
             menu.setType(MyConstant.TYPE_DIR);
             menu.setComponent(MyConstant.LAYOUT);
@@ -298,12 +184,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     private void getChild(List<Long> allDeptId, Menu menu) {
-        List<Menu> list = this.lambdaQuery().eq(Menu::getParentId, menu.getMenuId()).list();
+        List<Menu> list = this.lambdaQuery().eq(Menu::getParentCode, menu.getMenuCode()).list();
         if (CollUtil.isNotEmpty(list)) {
             for (Menu m : list) {
                 allDeptId.add(m.getMenuId());
                 getChild(allDeptId, m);
             }
+        }
+    }
+
+    @Override
+    public void validateMenuCode(String menuCode, Long menuId) {
+        if (MyConstant.TOP_PARENT_CODE.equals(menuCode)) {
+            throw new MyException("菜单编码输入非法值");
+        }
+        Menu one = this.lambdaQuery().eq(Menu::getMenuCode, menuCode).one();
+        if (one != null && !one.getMenuId().equals(menuId)) {
+            throw new MyException("菜单编码重复");
         }
     }
 }

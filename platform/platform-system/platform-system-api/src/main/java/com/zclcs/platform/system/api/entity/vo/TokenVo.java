@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "TokenVo对象", description = "token")
+@Schema(title = "TokenVo对象", description = "token")
 public class TokenVo {
 
     @Schema(description = "tokenId")

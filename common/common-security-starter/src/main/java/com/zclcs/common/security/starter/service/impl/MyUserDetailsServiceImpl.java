@@ -1,10 +1,8 @@
 package com.zclcs.common.security.starter.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.security.starter.service.MyUserDetailsService;
 import com.zclcs.platform.system.api.entity.vo.UserVo;
-import com.zclcs.platform.system.api.fegin.RemoteUserService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -20,10 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
-    private final RemoteUserService remoteUserService;
-
-    private final ObjectMapper objectMapper;
-
     /**
      * 用户名密码登录
      *
@@ -32,8 +26,8 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) {
-        BaseRsp<UserVo> info = remoteUserService.info(username);
-        return getUserDetails(info);
+        UserVo userByUsername = SystemCacheUtil.getUserByUsername(username);
+        return getUserDetails(userByUsername);
     }
 
     @Override

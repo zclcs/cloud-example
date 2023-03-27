@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
+import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.core.constant.ParamsConstant;
 import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.core.utils.RspUtil;
@@ -122,25 +123,39 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     @SneakyThrows(JsonProcessingException.class)
     @Override
     public void saveRequestLogs(ServerWebExchange exchange) {
-        URI originUri = getGatewayOriginalRequestUrl(exchange);
-        // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
-        if (!StrUtil.equalsIgnoreCase(TOKEN_CHECK_URL, originUri.getPath())) {
-            URI url = getGatewayRequestUrl(exchange);
-            Route route = getGatewayRoute(exchange);
-            ServerHttpRequest request = exchange.getRequest();
-            String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
-            if (url != null && route != null) {
-                HttpMethod httpMethod = request.getMethod();
-                String requestMethod = httpMethod.name();
-                RouteLogAo routeLog = RouteLogAo.builder()
-                        .routeIp(requestIp)
-                        .requestUri(originUri.getPath())
-                        .targetServer(route.getId())
-                        .targetUri(url.getPath())
-                        .requestMethod(requestMethod)
-                        .build();
-                rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_ROUTE_LOG_ROUTE_KEY,
-                        MessageStruct.builder().message(objectMapper.writeValueAsString(routeLog)).build());
+        Long startTime = exchange.getAttribute(MyConstant.START_TIME);
+        if (startTime != null) {
+            URI originUri = getGatewayOriginalRequestUrl(exchange);
+            // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
+            if (!StrUtil.equalsIgnoreCase(TOKEN_CHECK_URL, originUri.getPath())) {
+                Long executeTime = (System.currentTimeMillis() - startTime);
+                int code = 500;
+                if (exchange.getResponse().getStatusCode() != null) {
+                    code = exchange.getResponse().getStatusCode().value();
+                }
+                URI url = getGatewayRequestUrl(exchange);
+                Route route = getGatewayRoute(exchange);
+                ServerHttpRequest request = exchange.getRequest();
+                String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
+                if (url != null && route != null) {
+                    HttpMethod httpMethod = request.getMethod();
+                    String requestMethod = httpMethod.name();
+                    RouteLogAo routeLog = RouteLogAo.builder()
+                            .routeIp(requestIp)
+                            .requestUri(originUri.getPath())
+                            .targetServer(route.getId())
+                            .targetUri(url.getPath())
+                            .requestMethod(requestMethod)
+                            .code(String.valueOf(code))
+                            .time(executeTime)
+                            .build();
+                    rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_ROUTE_LOG_ROUTE_KEY,
+                            MessageStruct.builder().message(objectMapper.writeValueAsString(routeLog)).build());
+                }
+                // 当前仅记录日志，后续可以添加日志队列，来过滤请求慢的接口
+                if (log.isDebugEnabled()) {
+                    log.debug("来自IP地址：{}的请求接口：{}，响应状态码：{}，请求耗时：{}ms", requestIp, originUri.getPath(), code, executeTime);
+                }
             }
         }
     }

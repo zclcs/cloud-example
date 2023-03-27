@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 角色菜单关联 Entity
  *
@@ -18,17 +21,20 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_role_menu")
-@Schema(name = "RoleMenu对象", description = "角色菜单关联")
-public class RoleMenu extends BaseEntity {
+@Schema(title = "RoleMenu对象", description = "角色菜单关联")
+public class RoleMenu extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 角色编号
+     * 角色id
      */
     @TableField(value = "role_id")
     private Long roleId;
 
     /**
-     * 菜单编号
+     * 菜单id
      */
     @TableField(value = "menu_id")
     private Long menuId;

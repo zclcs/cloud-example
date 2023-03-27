@@ -17,9 +17,10 @@ import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.common.security.starter.exception.OAuthClientException;
 import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.handler.MyAuthenticationFailureEventHandler;
-import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
+import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.vo.TokenVo;
 import com.zclcs.platform.system.api.fegin.RemoteClientDetailsService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,10 +96,11 @@ public class MyTokenEndpoint {
                                 @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId,
                                 @RequestParam(OAuth2ParameterNames.SCOPE) String scope,
                                 @RequestParam(OAuth2ParameterNames.STATE) String state) {
-        OauthClientDetailsVo clientDetails = Optional.ofNullable(remoteClientDetailsService.getClientDetailsById(clientId).getData())
+        OauthClientDetails oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
+        Optional.ofNullable(oauthClientDetailsCache).map(OauthClientDetails::getClientId).filter(StrUtil::isNotBlank)
                 .orElseThrow(() -> new OAuthClientException("clientId 不合法"));
 
-        Set<String> authorizedScopes = StringUtils.commaDelimitedListToSet(clientDetails.getScope());
+        Set<String> authorizedScopes = StringUtils.commaDelimitedListToSet(oauthClientDetailsCache.getScope());
         modelAndView.addObject("clientId", clientId);
         modelAndView.addObject("state", state);
         modelAndView.addObject("scopeList", authorizedScopes);

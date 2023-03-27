@@ -1,9 +1,11 @@
 package com.zclcs.platform.system.api.entity.vo;
 
+import com.zclcs.common.core.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -19,9 +21,10 @@ import java.time.LocalDate;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "RateLimitLogVo对象", description = "限流拦截日志")
-public class RateLimitLogVo implements Serializable {
+@Schema(title = "RateLimitLogVo对象", description = "限流拦截日志")
+public class RateLimitLogVo extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "限流日志id")

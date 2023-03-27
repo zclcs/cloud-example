@@ -58,15 +58,15 @@ public class BaseExceptionHandler {
     @ExceptionHandler(value = MyException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleMyException(MyException e) {
-        log.error("系统业务异常", e);
-        return RspUtil.message(e.getMessage());
+        log.error("系统业务异常 ex={}", e.getMessage());
+        return RspUtil.message(e.getLocalizedMessage());
     }
 
     @ExceptionHandler(value = ValidateCodeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleValidateCodeException(ValidateCodeException e) {
         log.error("验证码异常", e);
-        return RspUtil.message(e.getMessage());
+        return RspUtil.message(e.getLocalizedMessage());
     }
 
     /**

@@ -24,43 +24,93 @@ public interface RedisCachePrefixConstant {
     String CODE_PREFIX = "captcha:";
 
     /**
-     * auth_code key前缀
+     * client redis key
      */
-    String AUTH_CODE_PREFIX = "auth_code:";
+    String CLIENT_DETAILS = "client_details:%s";
 
     /**
-     * 缓存 client的 redis key，这里是 hash结构存储
+     * 用户 redis key
      */
-    String CLIENT_DETAILS_PREFIX = "client_details:";
+    String USER = "user:%s";
 
     /**
-     * 缓存 用户权限的 redis key
+     * 用户-手机号 redis key
      */
-    String USER_PERMISSIONS = "user:permissions:";
+    String USER_MOBILE = "user:mobile:%s";
 
     /**
-     * 缓存 用户路由的 redis key
+     * 用户-角色 redis key
      */
-    String USER_ROUTES = "user:routes:";
+    String USER_ROLE = "user:role:%s";
 
     /**
-     * 缓存 用户的 redis key
+     * 用户-角色缓存key布隆过滤器
      */
-    String USER = "user:";
+    String BLOOM_FILTER_USER_ROLE = "{bloom_filter_user_role}";
 
     /**
-     * 缓存 用户的 redis key
+     * 用户-数据权限 redis key
      */
-    String USER_MOBILE = "user:mobile:";
+    String USER_DATA_PERMISSION = "user:data:permission:%s";
 
     /**
-     * 缓存 角色的 redis key
+     * 用户-数据权限缓存key布隆过滤器
      */
-    String ROLE = "role:";
+    String BLOOM_FILTER_USER_DATA_PERMISSION = "{bloom_filter_user_data_permission}";
 
     /**
-     * 缓存 菜单的 redis key
+     * 角色redis key
      */
-    String MENU = "menu:";
+    String ROLE = "role:%s";
+
+    /**
+     * 角色缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_ROLE = "{bloom_filter_role}";
+
+    /**
+     * 角色-菜单 redis key
+     */
+    String ROLE_MENU = "role:menu:%s";
+
+    /**
+     * 角色-菜单缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_ROLE_MENU = "{bloom_filter_role_menu}";
+
+    /**
+     * 菜单 redis key
+     */
+    String MENU = "menu:%s";
+
+    /**
+     * 菜单缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_MENU = "{bloom_filter_menu}";
+
+    /**
+     * 部门 redis key
+     */
+    String DEPT = "dept:%s";
+
+    /**
+     * 部门缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_DEPT = "{bloom_filter_dept}";
+
+    /**
+     * 字典 redis key
+     */
+    String DICT = "dict:%s";
+
+    /**
+     * 字典项 redis key
+     */
+    String DICT_ITEM = "dict:%s:item:%s";
+
+    /**
+     * 子级字典 redis key
+     */
+    String DICT_CHILDREN = "dict:%s:children:%s";
 
 }

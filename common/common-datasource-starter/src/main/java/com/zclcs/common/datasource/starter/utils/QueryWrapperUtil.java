@@ -79,7 +79,6 @@ public class QueryWrapperUtil {
      */
     public static <T> QueryWrapper<T> betweenDateAddTimeNotBlank(QueryWrapper<T> queryWrapper, String column, LocalDate paramFrom, LocalDate paramTo) {
         if (paramFrom != null && paramTo != null) {
-            ;
             queryWrapper.between(column, paramFrom.atTime(LocalTime.MIN),
                     paramTo.atTime(LocalTime.MAX));
         }

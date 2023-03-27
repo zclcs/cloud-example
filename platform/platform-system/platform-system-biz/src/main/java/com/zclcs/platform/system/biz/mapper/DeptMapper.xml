@@ -3,7 +3,7 @@
 <mapper namespace="com.zclcs.platform.system.biz.mapper.DeptMapper">
 
     <sql id="baseSql">
-        select sd.dept_id, sd.parent_id, sd.dept_name, sd.order_num, sd.create_at, sd.update_at
+        select sd.dept_id, sd.dept_code, sd.parent_code, sd.dept_name, sd.order_num, sd.create_at, sd.update_at
         from system_dept sd
             ${ew.customSqlSegment}
     </sql>

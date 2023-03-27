@@ -51,29 +51,6 @@ public interface OauthClientDetailsService extends IService<OauthClientDetails> 
     Integer countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo);
 
     /**
-     * 通过id获取终端信息
-     *
-     * @param clientId 终端id
-     * @return 终端信息
-     */
-    OauthClientDetailsVo findById(String clientId);
-
-    /**
-     * 通过id缓存终端信息
-     *
-     * @param clientId 终端id
-     * @return 终端信息
-     */
-    OauthClientDetailsVo cacheAndGetById(String clientId);
-
-    /**
-     * 通过id删除终端信息缓存
-     *
-     * @param clientId 终端id
-     */
-    void deleteCacheById(String clientId);
-
-    /**
      * 新增
      *
      * @param oauthClientDetailsAo oauthClientDetailsAo
@@ -96,4 +73,5 @@ public interface OauthClientDetailsService extends IService<OauthClientDetails> 
      */
     void deleteOauthClientDetails(List<String> ids);
 
+    void validateClientId(String clientId);
 }

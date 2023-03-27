@@ -2,10 +2,11 @@ package com.zclcs.common.security.starter.service.impl;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.base.BaseRsp;
+import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.core.constant.SecurityConstant;
-import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
+import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.fegin.RemoteClientDetailsService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -29,16 +30,6 @@ import java.util.Optional;
  */
 @RequiredArgsConstructor
 public class MyRemoteRegisteredClientRepositoryImpl implements RegisteredClientRepository {
-
-    /**
-     * 刷新令牌有效期默认 30 天
-     */
-    private final static int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * 30;
-
-    /**
-     * 请求令牌有效期默认 12 小时
-     */
-    private final static int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60 * 12;
 
     private final RemoteClientDetailsService clientDetailsService;
 
@@ -83,38 +74,39 @@ public class MyRemoteRegisteredClientRepositoryImpl implements RegisteredClientR
      */
     @Override
     public RegisteredClient findByClientId(String clientId) {
+        OauthClientDetails oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
+        if (oauthClientDetailsCache == null || StrUtil.isBlank(oauthClientDetailsCache.getClientId())) {
+            throw new OAuth2AuthorizationCodeRequestAuthenticationException(
+                    new OAuth2Error("客户端查询异常，请检查数据库链接"), null);
+        }
 
-        BaseRsp<OauthClientDetailsVo> clientDetailsById = clientDetailsService.getClientDetailsById(clientId);
-        OauthClientDetailsVo oauthClientDetailsVo = Optional.ofNullable(clientDetailsById.getData()).orElseThrow(() -> new OAuth2AuthorizationCodeRequestAuthenticationException(
-                new OAuth2Error("客户端查询异常，请检查数据库链接"), null));
-
-        RegisteredClient.Builder builder = RegisteredClient.withId(oauthClientDetailsVo.getClientId())
-                .clientId(oauthClientDetailsVo.getClientId())
-                .clientSecret(SecurityConstant.NOOP + oauthClientDetailsVo.getClientSecret())
+        RegisteredClient.Builder builder = RegisteredClient.withId(oauthClientDetailsCache.getClientId())
+                .clientId(oauthClientDetailsCache.getClientId())
+                .clientSecret(SecurityConstant.NOOP + oauthClientDetailsCache.getClientSecret())
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 
         // 授权模式
-        Optional.ofNullable(oauthClientDetailsVo.getAuthorizedGrantTypes())
+        Optional.ofNullable(oauthClientDetailsCache.getAuthorizedGrantTypes())
                 .ifPresent(grants -> StringUtils.commaDelimitedListToSet(grants)
                         .forEach(s -> builder.authorizationGrantType(new AuthorizationGrantType(s))));
         // 回调地址
-        Optional.ofNullable(oauthClientDetailsVo.getWebServerRedirectUri()).ifPresent(redirectUri -> Arrays
+        Optional.ofNullable(oauthClientDetailsCache.getWebServerRedirectUri()).ifPresent(redirectUri -> Arrays
                 .stream(redirectUri.split(StrUtil.COMMA)).filter(StrUtil::isNotBlank).forEach(builder::redirectUri));
 
         // scope
-        Optional.ofNullable(oauthClientDetailsVo.getScope()).ifPresent(
+        Optional.ofNullable(oauthClientDetailsCache.getScope()).ifPresent(
                 scope -> Arrays.stream(scope.split(StrUtil.COMMA)).filter(StrUtil::isNotBlank).forEach(builder::scope));
 
         return builder
                 .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                         .accessTokenTimeToLive(Duration.ofSeconds(Optional
-                                .ofNullable(oauthClientDetailsVo.getAccessTokenValidity()).orElse(ACCESS_TOKEN_VALIDITY_SECONDS)))
+                                .ofNullable(oauthClientDetailsCache.getAccessTokenValidity()).orElse(MyConstant.ACCESS_TOKEN_VALIDITY_SECONDS)))
                         .refreshTokenTimeToLive(
-                                Duration.ofSeconds(Optional.ofNullable(oauthClientDetailsVo.getRefreshTokenValidity())
-                                        .orElse(REFRESH_TOKEN_VALIDITY_SECONDS)))
+                                Duration.ofSeconds(Optional.ofNullable(oauthClientDetailsCache.getRefreshTokenValidity())
+                                        .orElse(MyConstant.REFRESH_TOKEN_VALIDITY_SECONDS)))
                         .build())
                 .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(!BooleanUtil.toBoolean(oauthClientDetailsVo.getAutoapprove())).build())
+                        .requireAuthorizationConsent(!BooleanUtil.toBoolean(oauthClientDetailsCache.getAutoapprove())).build())
                 .build();
 
     }

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(description = "消息响应格式")
+@Schema(title = "BaseRsp", description = "消息响应格式")
 public class BaseRsp<T> {
 
     @Schema(description = "响应消息")

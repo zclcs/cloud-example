@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.entity.ao;
 
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
+import com.zclcs.common.dict.core.json.annotation.DictValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -22,22 +24,28 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "MenuAo对象", description = "菜单")
+@Schema(title = "MenuAo对象", description = "菜单")
 public class MenuAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "菜单/按钮id")
+    @Schema(description = "目录/菜单/按钮id")
     private Long menuId;
 
-    @NotNull(message = "{required}")
-    @Schema(description = "上级菜单id", required = true)
-    private Long parentId;
+    @Size(max = 100, message = "{noMoreThan}")
+    @NotBlank(message = "{required}")
+    @Schema(description = "目录/菜单/按钮编码", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String menuCode;
+
+    @Size(max = 100, message = "{noMoreThan}")
+    @Schema(description = "上级目录/菜单编码 不填默认顶级")
+    private String parentCode;
 
     @Size(max = 50, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "目录/菜单/按钮名称", required = true)
+    @Schema(description = "目录/菜单/按钮名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String menuName;
 
     @Size(max = 50, message = "{noMoreThan}")
@@ -66,27 +74,28 @@ public class MenuAo implements Serializable {
 
     @Size(max = 40, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "类型 0菜单 1按钮 2目录", required = true)
+    @DictValid(value = "system_menu.type")
+    @Schema(description = "类型 @@system_menu.type", requiredMode = Schema.RequiredMode.REQUIRED)
     private String type;
 
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
-    @Schema(description = "是否隐藏菜单 1是 0否", required = true)
+    @DictValid(value = "yes_no")
+    @Schema(description = "是否隐藏菜单 @@yes_no 默认否", requiredMode = Schema.RequiredMode.REQUIRED)
     private String hideMenu;
 
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
-    @Schema(description = "是否忽略KeepAlive缓存 1是 0否", required = true)
+    @DictValid(value = "yes_no")
+    @Schema(description = "是否忽略KeepAlive缓存 @@yes_no 默认否", requiredMode = Schema.RequiredMode.REQUIRED)
     private String ignoreKeepAlive;
 
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
-    @Schema(description = "隐藏该路由在面包屑上面的显示 1是 0否", required = true)
+    @DictValid(value = "yes_no")
+    @Schema(description = "隐藏该路由在面包屑上面的显示 @@yes_no 默认否", requiredMode = Schema.RequiredMode.REQUIRED)
     private String hideBreadcrumb;
 
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
-    @Schema(description = "隐藏所有子菜单 1是 0否", required = true)
+    @DictValid(value = "yes_no")
+    @Schema(description = "隐藏所有子菜单 @@yes_no 默认否", requiredMode = Schema.RequiredMode.REQUIRED)
     private String hideChildrenInMenu;
 
     @Size(max = 255, message = "{noMoreThan}")

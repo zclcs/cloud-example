@@ -27,6 +27,7 @@ buildscript {
         lombokMapstructBindingVersion = "0.2.0"
         guavaVersion = "31.1-jre"
         javassistVersion = "3.28.0-GA"
+        redissonVersion = "3.20.0"
     }
 
     repositories {

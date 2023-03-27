@@ -29,7 +29,7 @@ public class SpringDocConfiguration implements InitializingBean {
     private final GatewayConfigProperties gatewayConfigProperties;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Set<AbstractSwaggerUiConfigProperties.SwaggerUrl> swaggerUrlSet = new HashSet<>();
         AbstractSwaggerUiConfigProperties.SwaggerUrl swaggerUrl = new AbstractSwaggerUiConfigProperties.SwaggerUrl();
         Map<String, String> services = gatewayConfigProperties.getServices();

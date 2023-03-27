@@ -21,6 +21,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 import java.io.StringReader;
+import java.util.stream.Collectors;
 
 /**
  * @author zclcs
@@ -61,7 +62,8 @@ public class DataPermissionInterceptor implements InnerInterceptor {
             Table fromItem = (Table) plainSelect.getFromItem();
 
             String selectTableName = fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
-            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StrUtil.blankToDefault(user.getDeptIdString(), "'WITHOUT PERMISSIONS'"));
+            String deptIdString = user.getDeptIds().stream().map(String::valueOf).collect(Collectors.joining(StrUtil.COMMA));
+            String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StrUtil.blankToDefault(deptIdString, "'WITHOUT PERMISSIONS'"));
 
             if (plainSelect.getWhere() == null) {
                 plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));

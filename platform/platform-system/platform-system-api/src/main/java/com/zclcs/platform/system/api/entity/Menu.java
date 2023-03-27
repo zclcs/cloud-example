@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 菜单 Entity
  *
@@ -20,20 +23,29 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_menu")
-@Schema(name = "Menu对象", description = "菜单")
-public class Menu extends BaseEntity {
+@Schema(title = "Menu对象", description = "菜单")
+public class Menu extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 菜单/按钮id
+     * 目录/菜单/按钮id
      */
     @TableId(value = "menu_id", type = IdType.AUTO)
     private Long menuId;
 
     /**
-     * 上级菜单id
+     * 目录/菜单/按钮编码（唯一值）
      */
-    @TableField("parent_id")
-    private Long parentId;
+    @TableField("menu_code")
+    private String menuCode;
+
+    /**
+     * 上级目录/菜单编码
+     */
+    @TableField("parent_code")
+    private String parentCode;
 
     /**
      * 目录/菜单/按钮名称
@@ -78,31 +90,31 @@ public class Menu extends BaseEntity {
     private String icon;
 
     /**
-     * 类型 0菜单 1按钮 2目录
+     * 类型 @@system_menu.type
      */
     @TableField("type")
     private String type;
 
     /**
-     * 是否隐藏菜单 1是 0否
+     * 是否隐藏菜单 @@yes_no
      */
     @TableField("hide_menu")
     private String hideMenu;
 
     /**
-     * 是否忽略KeepAlive缓存 1是 0否
+     * 是否忽略KeepAlive缓存 @@yes_no
      */
     @TableField("ignore_keep_alive")
     private String ignoreKeepAlive;
 
     /**
-     * 隐藏该路由在面包屑上面的显示 1是 0否
+     * 隐藏该路由在面包屑上面的显示 @@yes_no
      */
     @TableField("hide_breadcrumb")
     private String hideBreadcrumb;
 
     /**
-     * 隐藏所有子菜单 1是 0否
+     * 隐藏所有子菜单 @@yes_no
      */
     @TableField("hide_children_in_menu")
     private String hideChildrenInMenu;

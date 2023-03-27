@@ -12,7 +12,7 @@ import java.util.List;
  * @author zclcs
  */
 @Data
-@Schema(description = "分页实体")
+@Schema(title = "BasePageAo", description = "分页实体")
 public class BasePageAo {
 
     /**

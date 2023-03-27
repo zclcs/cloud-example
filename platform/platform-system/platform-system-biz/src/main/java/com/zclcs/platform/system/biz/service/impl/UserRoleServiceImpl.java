@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 用户角色关联 Service实现
  *
@@ -24,21 +21,4 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements UserRoleService {
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteUserRolesByRoleId(List<Long> roleIds) {
-        this.lambdaUpdate().in(UserRole::getRoleId, roleIds).remove();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteUserRolesByUserId(List<Long> userIds) {
-        this.lambdaUpdate().in(UserRole::getUserId, userIds).remove();
-    }
-
-    @Override
-    public List<Long> findUserIdsByRoleId(List<Long> roleIds) {
-        return this.lambdaQuery().in(UserRole::getRoleId, roleIds).list().stream().map(UserRole::getUserId).collect(Collectors.toList());
-    }
 }

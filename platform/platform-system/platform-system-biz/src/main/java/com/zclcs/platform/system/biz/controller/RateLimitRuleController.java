@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("rateLimitRule")
+@RequestMapping("/rateLimitRule")
 @RequiredArgsConstructor
 @Tag(name = "限流规则")
 public class RateLimitRuleController {
@@ -50,7 +50,7 @@ public class RateLimitRuleController {
         return RspUtil.data(page);
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @Operation(summary = "限流规则查询（集合）")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@Validated RateLimitRuleVo rateLimitRuleVo) {
@@ -58,7 +58,7 @@ public class RateLimitRuleController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("one")
+    @GetMapping("/one")
     @Operation(summary = "限流规则查询（单个）")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     public BaseRsp<RateLimitRuleVo> findRateLimitRule(@Validated RateLimitRuleVo rateLimitRuleVo) {
@@ -66,7 +66,7 @@ public class RateLimitRuleController {
         return RspUtil.data(rateLimitRule);
     }
 
-    @GetMapping("refresh")
+    @GetMapping("/refresh")
     @Operation(summary = "刷新限流规则缓存")
     public BaseRsp<Object> refresh() {
         this.rateLimitRuleService.cacheAllRateLimitRules();

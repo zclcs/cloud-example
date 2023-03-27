@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 部门 Entity
  *
@@ -20,8 +23,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_dept")
-@Schema(name = "Dept对象", description = "部门")
-public class Dept extends BaseEntity {
+@Schema(title = "Dept对象", description = "部门")
+public class Dept extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 部门id
@@ -30,10 +36,16 @@ public class Dept extends BaseEntity {
     private Long deptId;
 
     /**
-     * 上级部门id
+     * 部门编码
      */
-    @TableField("parent_id")
-    private Long parentId;
+    @TableField("dept_code")
+    private String deptCode;
+
+    /**
+     * 上级部门编码
+     */
+    @TableField("parent_code")
+    private String parentCode;
 
     /**
      * 部门名称

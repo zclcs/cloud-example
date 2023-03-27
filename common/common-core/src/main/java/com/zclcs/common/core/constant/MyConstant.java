@@ -8,6 +8,16 @@ package com.zclcs.common.core.constant;
 public interface MyConstant {
 
     /**
+     * 刷新令牌有效期默认 30 天
+     */
+    int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * 30;
+
+    /**
+     * 请求令牌有效期默认 12 小时
+     */
+    int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60 * 12;
+
+    /**
      * 请求开始时间
      */
     String REQUEST_START_TIME = "REQUEST-START-TIME";
@@ -35,11 +45,6 @@ public interface MyConstant {
      * 默认头像
      */
     String DEFAULT_AVATAR = "default.jpg";
-
-    /**
-     * 默认密码
-     */
-    String DEFAULT_PASSWORD = "1234qwer";
 
     /**
      * 性别男
@@ -72,10 +77,16 @@ public interface MyConstant {
      * 目录 component 值
      */
     String LAYOUT = "Layout";
+
     /**
-     * 父菜单编号
+     * 顶级父节点id
      */
-    Long TOP_MENU_ID = 0L;
+    Long TOP_PARENT_ID = 0L;
+
+    /**
+     * 顶级父节点编码
+     */
+    String TOP_PARENT_CODE = "0";
 
     /**
      * 是
@@ -107,15 +118,6 @@ public interface MyConstant {
     String PAGE_NUM = "pageNum";
 
     /**
-     * Gateway请求头TOKEN名称（不要有空格）
-     */
-    String GATEWAY_TOKEN_HEADER = "GatewayToken";
-    /**
-     * Gateway请求头TOKEN值
-     */
-    String GATEWAY_TOKEN_VALUE = "zclcs:gateway:123456";
-
-    /**
      * 允许下载的文件类型，根据需求自己添加（小写）
      */
     String VALID_FILE_TYPE = "xlsx, zip";
@@ -124,11 +126,6 @@ public interface MyConstant {
      * 异步线程池名称
      */
     String ASYNC_POOL = "MyAsyncThreadPool";
-
-    /**
-     * OAUTH2 令牌类型 https://oauth.net/2/bearer-tokens/
-     */
-    String OAUTH2_TOKEN_TYPE = "bearer";
     /**
      * Java默认临时目录
      */
@@ -137,10 +134,6 @@ public interface MyConstant {
      * utf-8
      */
     String UTF8 = "utf-8";
-    /**
-     * 注册用户角色ID
-     */
-    Long REGISTER_ROLE_ID = 2L;
 
     String LOCALHOST = "localhost";
     String LOCALHOST_IP = "127.0.0.1";
@@ -158,17 +151,12 @@ public interface MyConstant {
     /**
      * 根节点id
      */
-    Long TOP_PARENT_ID = 0L;
+    String TOP_PARENT_VALUE = "0";
 
     /**
      * 根节点id
      */
     Integer TOP_PARENT_LEVEL = 1;
-
-    /**
-     * 根节点code
-     */
-    String TOP_PARENT_CODE = "0";
 
     /**
      * 注释中的字典信息

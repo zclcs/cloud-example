@@ -1,0 +1,132 @@
+version: '3'
+# docker network create -d bridge cloud_net 部署前 创建网络群组
+services:
+  mysql:
+    image: mysql:5.7.35
+    container_name: mysql-cloud
+    network_mode: host
+    environment:
+      # 设置密码
+      MYSQL_ROOT_PASSWORD: ${MYSQL_SERVICE_PASSWORD}
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    volumes:
+      #挂载 MySQL数据
+      - ./mysql/data:/var/lib/mysql
+      #挂载 MySQL日志
+      - ./mysql/log:/var/log/mysql
+      #挂载 MySQL配置文件
+      - ./mysql/conf:/etc/mysql
+      # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env
+  redis:
+    image: redis:6.0.8
+    container_name: redis-cloud
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
+    volumes:
+      - ./redis/data:/data #挂载 Redis数据
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf #挂载 Redis配置
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env
+  nacos:
+    image: nacos/nacos-server:v2.2.1
+    container_name: nacos-cloud
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      # TODO 修改JVM调优参数
+      JVM_XMS: 128m   #-Xms default :2g
+      JVM_XMX: 128m   #-Xmx default :2g
+      JVM_XMN: 64m    #-Xmn default :1g
+      JVM_MS: 32m     #-XX:MetaspaceSize default :128m
+      JVM_MMS: 32m    #-XX:MaxMetaspaceSize default :320m
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/init.d/application.properties:/home/nacos/conf/application.properties
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+  minio:
+    image: minio/minio:RELEASE.2021-10-06T23-36-31Z
+    container_name: minio
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      #管理后台用户名
+      MINIO_ROOT_USER: ${ROOT_USER}
+      #管理后台密码，最小8个字符
+      MINIO_ROOT_PASSWORD: ${ROOT_PASSWORD}
+    volumes:
+      #映射当前目录下的data目录至容器内/data目录
+      - ./minio/data:/data
+      #映射配置目录
+      - ./minio/config:/root/.minio/
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS '${ENDPOINT}/minio/index.html' || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    privileged: true
+  rabbitmq:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
+    container_name: rabbitmq
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env
+  nginx:
+    image: nginx:1.21.3
+    container_name: nginx-cloud
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    privileged: true
+    user: root
+    volumes:
+      - ../cloud/web:/var/cloud/web
+      - ./nginx/:/etc/nginx/
+    healthcheck:
+      test: [ "CMD", "service", "nginx", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: 1
+    env_file: .env

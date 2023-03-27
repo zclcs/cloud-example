@@ -17,16 +17,6 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 public class MyResourceServerAutoConfiguration {
 
     /**
-     * 鉴权具体的实现逻辑
-     *
-     * @return （#pms.xxx）
-     */
-    @Bean("pms")
-    public PermissionService permissionService() {
-        return new PermissionService();
-    }
-
-    /**
      * 请求令牌的抽取逻辑
      *
      * @param urlProperties 对外暴露的接口列表

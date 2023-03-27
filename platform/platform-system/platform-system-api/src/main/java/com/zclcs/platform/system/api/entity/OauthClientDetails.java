@@ -9,6 +9,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 终端信息 Entity
  *
@@ -19,8 +22,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_oauth_client_details")
-@Schema(name = "OauthClientDetails对象", description = "终端信息")
-public class OauthClientDetails extends BaseEntity {
+@Schema(title = "OauthClientDetails对象", description = "终端信息")
+public class OauthClientDetails extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 客户端ID

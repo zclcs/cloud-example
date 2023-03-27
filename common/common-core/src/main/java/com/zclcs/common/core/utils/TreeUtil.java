@@ -1,6 +1,7 @@
 package com.zclcs.common.core.utils;
 
 import com.zclcs.common.core.base.Tree;
+import com.zclcs.common.core.constant.MyConstant;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -12,10 +13,8 @@ import java.util.List;
 @UtilityClass
 public class TreeUtil {
 
-    private final static Long TOP_NODE_ID = 0L;
-
     /**
-     * 用于构建菜单或部门树
+     * 构建树
      *
      * @param nodes nodes
      * @return <T> List<? extends Tree>
@@ -26,15 +25,15 @@ public class TreeUtil {
         }
         List<Tree<T>> topNodes = new ArrayList<>();
         nodes.forEach(node -> {
-            Long pid = node.getParentId();
-            if (pid == null || TOP_NODE_ID.equals(pid)) {
+            String parentCode = node.getParentCode();
+            if (parentCode == null || MyConstant.TOP_PARENT_CODE.equals(parentCode)) {
                 node.setHasParent(false);
                 topNodes.add(node);
                 return;
             }
             for (Tree<T> n : nodes) {
-                Long id = n.getId();
-                if (id != null && id.equals(pid)) {
+                String code = n.getCode();
+                if (code != null && code.equals(parentCode)) {
                     if (n.getChildren() == null) {
                         n.initChildren();
                     }

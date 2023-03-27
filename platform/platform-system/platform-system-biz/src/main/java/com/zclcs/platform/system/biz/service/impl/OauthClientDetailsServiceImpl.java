@@ -5,14 +5,12 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.common.security.starter.utils.PasswordUtil;
+import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.entity.vo.MenuVo;
@@ -20,16 +18,14 @@ import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
 import com.zclcs.platform.system.biz.mapper.OauthClientDetailsMapper;
 import com.zclcs.platform.system.biz.service.MenuService;
 import com.zclcs.platform.system.biz.service.OauthClientDetailsService;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +41,6 @@ import java.util.stream.Collectors;
 public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetailsMapper, OauthClientDetails> implements OauthClientDetailsService {
 
     private final MenuService menuService;
-    private final RedisService redisService;
-
-    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<OauthClientDetailsVo> findOauthClientDetailsPage(BasePageAo basePageAo, OauthClientDetailsVo oauthClientDetailsVo) {
@@ -80,39 +73,6 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
         return this.baseMapper.countVo(queryWrapper);
     }
 
-    //    @SneakyThrows(JsonProcessingException.class)
-    @Override
-    public OauthClientDetailsVo findById(String clientId) {
-        Object obj = redisService.get(RedisCachePrefixConstant.CLIENT_DETAILS_PREFIX + clientId);
-//        log.info("client_details {}", objectMapper.writeValueAsString(obj));
-        if (obj == null) {
-            synchronized (this) {
-                // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = redisService.get(RedisCachePrefixConstant.CLIENT_DETAILS_PREFIX + clientId);
-                if (obj != null) {
-                    return (OauthClientDetailsVo) obj;
-                }
-                return cacheAndGetById(clientId);
-            }
-        }
-        return (OauthClientDetailsVo) obj;
-    }
-
-    @Override
-    public OauthClientDetailsVo cacheAndGetById(String clientId) {
-        OauthClientDetailsVo oauthClientDetailsVo = this.findOauthClientDetails(OauthClientDetailsVo.builder().clientId(clientId).build());
-        if (oauthClientDetailsVo == null) {
-            return null;
-        }
-        redisService.set(RedisCachePrefixConstant.CLIENT_DETAILS_PREFIX + clientId, oauthClientDetailsVo);
-        return oauthClientDetailsVo;
-    }
-
-    @Override
-    public void deleteCacheById(String clientId) {
-        redisService.del(RedisCachePrefixConstant.CLIENT_DETAILS_PREFIX + clientId);
-    }
-
     private QueryWrapper<OauthClientDetailsVo> getQueryWrapper(OauthClientDetailsVo oauthClientDetailsVo) {
         QueryWrapper<OauthClientDetailsVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotNull(queryWrapper, "socd.client_id", oauthClientDetailsVo.getClientId());
@@ -122,10 +82,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OauthClientDetails createOauthClientDetails(OauthClientDetailsAo oauthClientDetailsAo) {
-        OauthClientDetailsVo byId = this.findById(oauthClientDetailsAo.getClientId());
-        if (byId != null) {
-            throw new MyException("该Client已存在");
-        }
+        validateClientId(oauthClientDetailsAo.getClientId());
         OauthClientDetails oauthClientDetails = new OauthClientDetails();
         BeanUtil.copyProperties(oauthClientDetailsAo, oauthClientDetails);
         setAuthorities(oauthClientDetailsAo.getMenuIds(), oauthClientDetails);
@@ -137,12 +94,18 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OauthClientDetails updateOauthClientDetails(OauthClientDetailsAo oauthClientDetailsAo) {
+        Long count = this.lambdaQuery().eq(OauthClientDetails::getClientId, oauthClientDetailsAo.getClientId()).count();
+        if (count == 0L) {
+            throw new MyException("该Client不存在");
+        }
         OauthClientDetails oauthClientDetails = new OauthClientDetails();
         BeanUtil.copyProperties(oauthClientDetailsAo, oauthClientDetails);
         setAuthorities(oauthClientDetailsAo.getMenuIds(), oauthClientDetails);
         oauthClientDetails.setClientId(null);
         oauthClientDetails.setClientSecret(null);
-        this.updateById(oauthClientDetails);
+        String clientId = oauthClientDetails.getClientId();
+        this.lambdaUpdate().eq(OauthClientDetails::getClientId, clientId).update(oauthClientDetails);
+        SystemCacheUtil.deleteOauthClientDetailsCache(clientId);
         return oauthClientDetails;
     }
 
@@ -150,15 +113,23 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Transactional(rollbackFor = Exception.class)
     public void deleteOauthClientDetails(List<String> ids) {
         this.removeByIds(ids);
+        SystemCacheUtil.deleteOauthClientDetailsCache(ids.toArray());
+    }
+
+    @Override
+    public void validateClientId(String clientId) {
+        if (this.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).count() > 0L) {
+            throw new MyException("客户端id重复");
+        }
     }
 
     private void setAuthorities(List<Long> menuIds, OauthClientDetails oauthClientDetails) {
-        String permissions = menuService.findMenuList(MenuVo.builder().menuIds(menuIds).build()).stream().map(MenuVo::getPerms).collect(Collectors.joining(StrUtil.COMMA));
+        String permissions = SystemCacheUtil.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).map(Menu::getPerms).collect(Collectors.joining(StrUtil.COMMA));
         oauthClientDetails.setAuthorities(permissions);
     }
 
     private void setMenuIds(String authorities, List<MenuVo> systemMenuVos, OauthClientDetailsVo oauthClientDetailsVo) {
-        List<String> collect = Arrays.stream(authorities.split(StrUtil.COMMA)).collect(Collectors.toList());
+        List<String> collect = Arrays.stream(authorities.split(StrUtil.COMMA)).toList();
         List<Long> menuIds = new ArrayList<>();
         for (String a : collect) {
             MenuVo perms = CollectionUtil.findOneByField(systemMenuVos, "perms", a);
