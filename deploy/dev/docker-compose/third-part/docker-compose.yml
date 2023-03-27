@@ -71,29 +71,27 @@ services:
       mysql:
         condition: service_healthy
   minio:
-    image: minio/minio:RELEASE.2021-10-06T23-36-31Z
+    image: minio/minio:RELEASE.2023-01-02T09-40-09Z
     container_name: minio
     network_mode: host
     environment:
       # 设置时区
       TZ: Asia/Shanghai
-      #管理后台用户名
-      MINIO_ROOT_USER: ${ROOT_USER}
-      #管理后台密码，最小8个字符
-      MINIO_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      LANG: en_US.UTF-8
+      MINIO_CONFIG_ENV_FILE: "/etc/config.env"
+    # 数据卷挂载路径设置,将本机目录映射到容器目录
     volumes:
-      #映射当前目录下的data目录至容器内/data目录
-      - ./minio/data:/data
-      #映射配置目录
-      - ./minio/config:/root/.minio/
+      # 数据
+      - ./minio/data:/mnt/data
+      # 配置文件
+      - .env:/etc/config.env
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS '${ENDPOINT}/minio/index.html' || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS 'http://127.0.0.1:9000/minio/index.html' || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: 1
     env_file: .env
-    command: server --console-address ':9001' /data  #指定容器中的目录 /data
-    privileged: true
+    command: server --console-address ":9090"
   rabbitmq:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
     container_name: rabbitmq
