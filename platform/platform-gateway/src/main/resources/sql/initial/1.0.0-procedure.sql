@@ -82,7 +82,7 @@ CREATE PROCEDURE add_index_if_not_exists(IN dbName tinytext,
                                          IN indexName tinytext,
                                          IN indexField text)
 BEGIN
-    SET @index_type = '';
+    SET @index_type = ' INDEX ';
     IF (indexType = 2) THEN
         SET @index_type = ' UNIQUE ';
     END IF;
@@ -97,7 +97,7 @@ BEGIN
             dbName,
             '.',
             tableName,
-            ' ADD INDEX ',
+            ' ADD ',
             @index_type,
             indexName,
             ' ( ',
@@ -146,7 +146,7 @@ BEGIN
         PREPARE stmt FROM @str;
         EXECUTE stmt;
     END IF;
-    SET @index_type = '';
+    SET @index_type = ' INDEX ';
     IF (indexType = 2) THEN
         SET @index_type = ' UNIQUE ';
     END IF;
@@ -161,7 +161,7 @@ BEGIN
             dbName,
             '.',
             tableName,
-            ' ADD INDEX ',
+            ' ADD ',
             @index_type,
             indexName,
             ' ( ',
