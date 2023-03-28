@@ -211,7 +211,7 @@ END;//
 
 DROP PROCEDURE IF EXISTS insert_if_not_exists;//
 -- 如果数据不存在则新增数据，例如给 system_user 新增数据username为admin
--- call insert_if_not_exists(database(), 'system_user', 'username', 'admin', 'username=admin');//
+-- call insert_if_not_exists(database(), 'system_user', 'username', 'admin', 'username="admin"');//
 CREATE PROCEDURE insert_if_not_exists(IN dbName tinytext,
                                       IN tableName tinytext,
                                       IN columnName text,
