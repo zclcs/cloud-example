@@ -109,7 +109,6 @@ BEGIN
     FROM information_schema.statistics
     WHERE TABLE_SCHEMA = dbName
       AND table_name = tableName
-      AND column_name in (indexField)
       AND index_name = indexName;
     IF (@cnt <= 0) THEN
         PREPARE stmt FROM @str;
@@ -120,15 +119,14 @@ END;//
 DROP PROCEDURE IF EXISTS change_index_if_exists;
 //
 --  添加表的索引 举例：比如想要在数据库system_user这张表的字段name的普通索引 nk_system_user_name 修改为字段 name2的普通索引 nk_system_user_name2
---  call change_index_if_exists(database(), 'system_user', 1, 'nk_system_user_name2', 'name', 'nk_system_user_name', 'name2')
+--  call change_index_if_exists(database(), 'system_user', 1, 'nk_system_user_name2', 'name', 'nk_system_user_name')
 --  indexType 1 普通索引 nk 2 唯一索引 uk 3 全文索引 fk 4 空间索引 sk（创建空间索引的列，必须将其声明为NOT NULL，空间索引只能在存储引擎为MYISAM的表）
 CREATE PROCEDURE change_index_if_exists(IN dbName tinytext,
                                         IN tableName tinytext,
                                         IN indexType tinytext,
                                         IN indexName tinytext,
                                         IN indexField tinytext,
-                                        IN oldIndexName text,
-                                        IN oldIndexField text)
+                                        IN oldIndexName text)
 BEGIN
     SET @str = concat(
             ' DROP INDEX ',
@@ -143,7 +141,6 @@ BEGIN
     FROM information_schema.statistics
     WHERE TABLE_SCHEMA = dbName
       AND table_name = tableName
-      AND column_name in (oldIndexField)
       AND index_name = oldIndexName;
     IF (@cnt > 0) THEN
         PREPARE stmt FROM @str;
@@ -176,7 +173,6 @@ BEGIN
     FROM information_schema.statistics
     WHERE TABLE_SCHEMA = dbName
       AND table_name = tableName
-      AND column_name in (indexField)
       AND index_name = indexName;
     IF (@cnt <= 0) THEN
         PREPARE stmt FROM @str;
@@ -187,11 +183,10 @@ END;//
 DROP PROCEDURE IF EXISTS drop_index_if_exists;
 //
 --  删除表的索引 举例：比如想要在数据库system_user这张表的字段name删除普通索引 nk_system_user_name
---  call drop_index_if_exists(database(), 'system_user', 'nk_system_user_name', 'name')
+--  call drop_index_if_exists(database(), 'system_user', 'nk_system_user_name')
 CREATE PROCEDURE drop_index_if_exists(IN dbName tinytext,
                                       IN tableName tinytext,
-                                      IN indexName tinytext,
-                                      IN indexField text)
+                                      IN indexName tinytext)
 BEGIN
     SET @str = concat(
             ' DROP INDEX ',
@@ -206,7 +201,6 @@ BEGIN
     FROM information_schema.statistics
     WHERE TABLE_SCHEMA = dbName
       AND table_name = tableName
-      AND column_name in (indexField)
       AND index_name = indexName;
     IF (@cnt > 0) THEN
         PREPARE stmt FROM @str;
@@ -217,7 +211,7 @@ END;//
 
 DROP PROCEDURE IF EXISTS insert_if_not_exists;//
 -- 如果数据不存在则新增数据，例如给 system_user 新增数据username为admin
--- call change_table_name_if_exists(database(), 'system_user', 'username', 'admin', 'username=admin');//
+-- call insert_if_not_exists(database(), 'system_user', 'username', 'admin', 'username=admin');//
 CREATE PROCEDURE insert_if_not_exists(IN dbName tinytext,
                                       IN tableName tinytext,
                                       IN columnName text,
@@ -244,26 +238,4 @@ BEGIN
         );
     PREPARE stmt FROM @str;
     EXECUTE stmt;
-END;//
-
-drop procedure if exists change_table_name_if_exists;
-//
--- 修改表名称，例如给 system_user 修改表名为 system_user_2
--- call change_table_name_if_exists(database(), 'system_user', 'system_user_2');//
-create procedure change_table_name_if_exists(IN dbName tinytext,
-                                         IN oldTableName tinytext,
-                                         IN tableName tinytext)
-begin
-    IF
-        (NOT EXISTS(
-                SELECT *
-                FROM information_schema.TABLES
-                WHERE table_name = oldTableName
-                  and table_schema = dbName
-            ))
-    THEN
-        set @ddl = CONCAT('ALTER TABLE ', dbName, '.', oldTableName, ' RENAME TO ', tableName);
-        prepare stmt from @ddl;
-        execute stmt;
-    END IF;
 END;//
