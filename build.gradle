@@ -92,7 +92,7 @@ configure(commons) {
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform(project(":cloud-bom"))
         management platform(project(":common"))
-        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
+//        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"

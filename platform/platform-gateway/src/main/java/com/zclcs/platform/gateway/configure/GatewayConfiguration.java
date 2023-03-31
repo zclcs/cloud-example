@@ -6,6 +6,7 @@ import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.filter.*;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
 import com.zclcs.platform.gateway.handler.MyGatewayExceptionHandler;
+import com.zclcs.platform.gateway.handler.RoutesHandler;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -110,6 +112,13 @@ public class GatewayConfiguration {
         return executor;
     }
 
+    @Bean
+    public RoutesHandler routesHandler(ObjectMapper objectMapper,
+                                       RouteDefinitionWriter routeDefinitionWriter) {
+
+        return new RoutesHandler(objectMapper,
+                routeDefinitionWriter);
+    }
 
     @Profile({"dev", "test"})
     @Bean

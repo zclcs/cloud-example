@@ -7,6 +7,8 @@ package com.zclcs.common.core.constant;
  */
 public interface RedisCachePrefixConstant {
 
+    String GATEWAY_ROUTES = "gateway:routes";
+
     String BLACKLIST_CACHE_KEY_PREFIX = "my:route:blacklist:";
 
     String RATE_LIMIT_CACHE_KEY_PREFIX = "my:route:rate-limit:";
