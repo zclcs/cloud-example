@@ -15,7 +15,7 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml
+      - nacos:global-configuration.yaml?refresh=true
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
       - nacos:jasypt.yaml
@@ -42,35 +42,15 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-        # 认证中心
-        - id: platform-auth
-          uri: lb://platform-auth
-          predicates:
-            - Path=/auth/**
-          filters:
-            # 验证码处理
-            - ValidateCodeGatewayFilter
-            # 前端密码解密
-            - PasswordDecoderFilter
-        #system 模块
-        - id: platform-system
-          uri: lb://platform-system
-          predicates:
-            - Path=/system/**
-        # 固定路由转发配置 无修改
-        - id: openapi
-          uri: lb://pig-gateway
-          predicates:
-            - Path=/v3/api-docs/**
-          filters:
-            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/$\{path}/v3/api-docs
 
 gateway:
   encode-key: 'eXTqsEKIPRsksJSK'
   ignore-clients:
     - swagger
-  services: { "platform-system": "/system" }
+
+logging:
+  level:
+    com.zclcs: debug
 
 # spring security 配置
 security:

@@ -11,22 +11,22 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class RouteEnhanceCacheUtil {
 
-    public static String getBlackListCacheKey(String ip) {
+    public String getBlackListCacheKey(String ip) {
         if (MyConstant.LOCALHOST.equalsIgnoreCase(ip)) {
             ip = MyConstant.LOCALHOST_IP;
         }
         return String.format("%s%s", RedisCachePrefixConstant.BLACKLIST_CACHE_KEY_PREFIX, ip);
     }
 
-    public static String getBlackListCacheKey() {
+    public String getBlackListCacheKey() {
         return String.format("%sally", RedisCachePrefixConstant.BLACKLIST_CACHE_KEY_PREFIX);
     }
 
-    public static String getRateLimitCacheKey(String uri, String method) {
+    public String getRateLimitCacheKey(String uri, String method) {
         return String.format("%s%s:%s", RedisCachePrefixConstant.RATE_LIMIT_CACHE_KEY_PREFIX, uri, method);
     }
 
-    public static String getRateLimitCountKey(String uri, String ip) {
+    public String getRateLimitCountKey(String uri, String ip) {
         return String.format("%s%s:%s", RedisCachePrefixConstant.RATE_LIMIT_COUNT_KEY_PREFIX, uri, ip);
     }
 }

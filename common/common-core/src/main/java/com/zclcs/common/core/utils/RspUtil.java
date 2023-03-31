@@ -16,7 +16,7 @@ public class RspUtil {
      *
      * @return 返回json
      */
-    public static BaseRsp<Object> message() {
+    public BaseRsp<Object> message() {
         return new BaseRsp<>().setMsg(MyConstant.SUCCESS_MSG);
     }
 
@@ -26,7 +26,7 @@ public class RspUtil {
      * @param data 数据体
      * @return 返回json
      */
-    public static BaseRsp<Object> message(Object data) {
+    public BaseRsp<Object> message(Object data) {
         BaseRsp<Object> vo = new BaseRsp<>();
         vo.setData(data);
         return vo;
@@ -38,7 +38,7 @@ public class RspUtil {
      * @param data 数据体
      * @return 返回json
      */
-    public static BaseRsp<Object> message(String msg, Object data) {
+    public BaseRsp<Object> message(String msg, Object data) {
         BaseRsp<Object> vo = new BaseRsp<>();
         vo.setMsg(msg);
         vo.setData(data);
@@ -51,7 +51,7 @@ public class RspUtil {
      * @param message 消息体
      * @return 返回json
      */
-    public static <T> BaseRsp<T> message(String message) {
+    public <T> BaseRsp<T> message(String message) {
         BaseRsp<T> vo = new BaseRsp<>();
         vo.setMsg(message);
         return vo;
@@ -63,7 +63,7 @@ public class RspUtil {
      * @param myException 异常
      * @return 返回json
      */
-    public static <T> BaseRsp<T> message(MyException myException) {
+    public <T> BaseRsp<T> message(MyException myException) {
         BaseRsp<T> vo = new BaseRsp<>();
         vo.setMsg(myException.getMessage());
         return vo;
@@ -75,7 +75,7 @@ public class RspUtil {
      * @param data 数据
      * @return 返回json
      */
-    public static <T> BaseRsp<T> data(T data) {
+    public <T> BaseRsp<T> data(T data) {
         BaseRsp<T> vo = new BaseRsp<>();
         vo.setData(data);
         return vo;

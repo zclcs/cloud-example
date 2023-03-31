@@ -1,7 +1,9 @@
 package com.zclcs.platform.auth.config;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.security.starter.properties.PermitAllUrlProperties;
 import com.zclcs.platform.auth.support.CustomeOAuth2AccessTokenGenerator;
 import com.zclcs.platform.auth.support.core.CustomeOAuth2TokenCustomizer;
 import com.zclcs.platform.auth.support.core.FormIdentityLoginConfigurer;
@@ -14,6 +16,7 @@ import com.zclcs.platform.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationC
 import com.zclcs.platform.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -40,6 +43,7 @@ import java.util.Arrays;
  */
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(PermitAllUrlProperties.class)
 public class AuthorizationServerConfiguration {
 
     private final OAuth2AuthorizationService authorizationService;
@@ -47,6 +51,8 @@ public class AuthorizationServerConfiguration {
     private final ObjectMapper objectMapper;
 
     private final RabbitTemplate rabbitTemplate;
+
+    private final PermitAllUrlProperties permitAllUrl;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -70,7 +76,7 @@ public class AuthorizationServerConfiguration {
 
         DefaultSecurityFilterChain securityFilterChain = http.authorizeHttpRequests(authorizeRequests -> {
                     // 自定义接口、端点暴露
-                    authorizeRequests.requestMatchers("/token/**", "/actuator/**", "/static/css/**", "/error").permitAll();
+                    authorizeRequests.requestMatchers(ArrayUtil.toArray(permitAllUrl.getUrls(), String.class)).permitAll();
                     authorizeRequests.anyRequest().authenticated();
                     // redis存储token的实现
                 }).apply(authorizationServerConfigurer.authorizationService(authorizationService)

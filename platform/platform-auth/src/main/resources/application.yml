@@ -23,7 +23,7 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml
+      - nacos:global-configuration.yaml?refresh=true
       - nacos:tomcat.yaml
       - nacos:openfeign.yaml
       - nacos:sentinel.yaml
@@ -66,4 +66,7 @@ security:
     ignore:
       urls:
         - /v3/api-docs
+        - /token/**
+        - /static/css/**
+        - /error
 

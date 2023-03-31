@@ -86,7 +86,7 @@ public class MyTokenEndpoint {
      */
     @GetMapping("/login")
     public ModelAndView require(ModelAndView modelAndView, @RequestParam(required = false) String error) {
-        modelAndView.setViewName("ftl/login");
+        modelAndView.setViewName("login");
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -105,7 +105,7 @@ public class MyTokenEndpoint {
         modelAndView.addObject("state", state);
         modelAndView.addObject("scopeList", authorizedScopes);
         modelAndView.addObject("principalName", principal.getName());
-        modelAndView.setViewName("ftl/confirm");
+        modelAndView.setViewName("confirm");
         return modelAndView;
     }
 

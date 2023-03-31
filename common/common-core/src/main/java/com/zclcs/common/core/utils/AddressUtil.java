@@ -23,7 +23,7 @@ import java.util.Objects;
 @UtilityClass
 public class AddressUtil {
 
-    public static String getCityInfo(String ip) {
+    public String getCityInfo(String ip) {
         DbSearcher searcher = null;
         try {
             String dbPath = Objects.requireNonNull(AddressUtil.class.getResource("/ip2region/ip2region.db")).getPath();

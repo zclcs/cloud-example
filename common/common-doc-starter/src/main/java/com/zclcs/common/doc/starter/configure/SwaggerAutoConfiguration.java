@@ -52,7 +52,6 @@ public class SwaggerAutoConfiguration {
         SecurityScheme securityScheme = new SecurityScheme();
         securityScheme.setType(SecurityScheme.Type.OAUTH2);
         securityScheme.setFlows(oauthFlows);
-
         return securityScheme;
     }
 

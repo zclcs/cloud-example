@@ -16,7 +16,7 @@ spring:
         namespace: ${spring.cloud.nacos.config.namespace}
   config:
     import:
-      - nacos:global-configuration.yaml
+      - nacos:global-configuration.yaml?refresh=true
       - nacos:tomcat.yaml
       - nacos:openfeign.yaml
       - nacos:sentinel.yaml

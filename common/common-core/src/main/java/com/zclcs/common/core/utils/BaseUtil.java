@@ -7,6 +7,7 @@ import com.zclcs.common.core.constant.RegexpConstant;
 import com.zclcs.common.core.constant.ServiceNameConstant;
 import com.zclcs.common.core.constant.StringConstant;
 import com.zclcs.common.core.constant.ValidConstant;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 
@@ -19,8 +20,9 @@ import java.util.regex.Pattern;
  *
  * @author zclcs
  */
+@UtilityClass
 @Slf4j
-public abstract class BaseUtil {
+public class BaseUtil {
 
     private static final String UNKNOWN = "unknown";
 
@@ -30,7 +32,7 @@ public abstract class BaseUtil {
      * @param value 待转换值
      * @return 结果
      */
-    public static String camelToUnderscore(String value) {
+    public String camelToUnderscore(String value) {
         if (StrUtil.isBlank(value)) {
             return value;
         }
@@ -43,7 +45,7 @@ public abstract class BaseUtil {
      * @param value 待转换值
      * @return 结果
      */
-    public static String underscoreToCamel(String value) {
+    public String underscoreToCamel(String value) {
         StringBuilder result = new StringBuilder();
         String[] arr = value.split(StringConstant.UNDER_LINE);
         for (String s : arr) {
@@ -61,7 +63,7 @@ public abstract class BaseUtil {
      * @param value 要匹配的字符串
      * @return 正则校验结果
      */
-    public static boolean match(String regex, String value) {
+    public boolean match(String regex, String value) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
@@ -73,7 +75,7 @@ public abstract class BaseUtil {
      * @param areaCode 行政区划代码
      * @return 省 0 市 1 县 2
      */
-    public static String getNameByAreaCode(String areaCode) {
+    public String getNameByAreaCode(String areaCode) {
         if (StrUtil.endWith(areaCode, ValidConstant.PROVINCE_CODE_END)) {
             return ValidConstant.PROVINCE;
         }
@@ -89,7 +91,7 @@ public abstract class BaseUtil {
      * @param value 内容
      * @return 结果
      */
-    public static boolean containChinese(String value) {
+    public boolean containChinese(String value) {
         if (StrUtil.isBlank(value)) {
             return Boolean.FALSE;
         }
@@ -97,7 +99,7 @@ public abstract class BaseUtil {
         return matcher.find();
     }
 
-    public static void printSystemUpBanner(Environment environment) {
+    public void printSystemUpBanner(Environment environment) {
         String applicationName = environment.getProperty("spring.application.name");
         String serverPort = environment.getProperty("server.port");
         String hostAddress = "http://" + NetUtil.getLocalhost().getHostAddress() + ":" + serverPort;
@@ -114,7 +116,7 @@ public abstract class BaseUtil {
         System.out.println(banner);
     }
 
-    public static <T> T getInstance(T t) {
+    public <T> T getInstance(T t) {
         try {
             t.getClass().getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
