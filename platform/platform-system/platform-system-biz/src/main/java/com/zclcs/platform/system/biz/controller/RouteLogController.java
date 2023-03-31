@@ -42,24 +42,24 @@ public class RouteLogController {
     private final RouteLogService routeLogService;
 
     @GetMapping
-    @Operation(summary = "网关转发日志查询（分页）")
     @PreAuthorize("hasAuthority('routeLog:view')")
+    @Operation(summary = "网关转发日志查询（分页）")
     public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "网关转发日志查询（集合）")
     @PreAuthorize("hasAuthority('routeLog:view')")
+    @Operation(summary = "网关转发日志查询（集合）")
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "网关转发日志查询（单个）")
     @PreAuthorize("hasAuthority('routeLog:view')")
+    @Operation(summary = "网关转发日志查询（单个）")
     public BaseRsp<RouteLogVo> findRouteLog(@Validated RouteLogVo routeLogVo) {
         RouteLogVo routeLog = this.routeLogService.findRouteLog(routeLogVo);
         return RspUtil.data(routeLog);

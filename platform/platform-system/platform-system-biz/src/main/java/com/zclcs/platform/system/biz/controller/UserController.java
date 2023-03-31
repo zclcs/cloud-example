@@ -53,24 +53,24 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @Operation(summary = "用户查询（分页）")
     @PreAuthorize("hasAuthority('user:view')")
+    @Operation(summary = "用户查询（分页）")
     public BaseRsp<BasePage<UserVo>> findUserPage(@Validated BasePageAo basePageAo, @Validated UserVo userVo) {
         BasePage<UserVo> page = this.userService.findUserPage(basePageAo, userVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "用户查询（集合）")
     @PreAuthorize("hasAuthority('user:view')")
+    @Operation(summary = "用户查询（集合）")
     public BaseRsp<List<UserVo>> findUserList(@Validated UserVo userVo) {
         List<UserVo> list = this.userService.findUserList(userVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "用户查询（单个）")
     @PreAuthorize("hasAuthority('user:view')")
+    @Operation(summary = "用户查询（单个）")
     public BaseRsp<UserVo> findUser(@Validated UserVo userVo) {
         UserVo user = this.userService.findUser(userVo);
         return RspUtil.data(user);
@@ -125,6 +125,7 @@ public class UserController {
     }
 
     @GetMapping("/checkUsername")
+    @PreAuthorize("hasAnyAuthority('user:add', 'user:update')")
     @Operation(summary = "检查用户名")
     @Parameters({
             @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
@@ -137,6 +138,7 @@ public class UserController {
     }
 
     @GetMapping("/checkUserMobile")
+    @PreAuthorize("hasAnyAuthority('user:add', 'user:update')")
     @Operation(summary = "检查用户手机号")
     @Parameters({
             @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
@@ -188,18 +190,6 @@ public class UserController {
         return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
     }
 
-    @GetMapping("/checkPassword/{username}/{password}")
-    @Operation(summary = "检查用户密码")
-    @Parameters({
-            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
-            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
-    })
-    public BaseRsp<Boolean> checkPassword(@NotBlank(message = "{required}") @PathVariable String username,
-                                          @NotBlank(message = "{required}") @PathVariable String password) {
-        UserVo user = userService.findByName(username);
-        return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
-    }
-
     @PutMapping("/updateMinePassword/{password}")
     @Operation(summary = "修改当前用户密码")
     @Parameters({
@@ -211,7 +201,21 @@ public class UserController {
         return RspUtil.message();
     }
 
+    @GetMapping("/checkPassword/{username}/{password}")
+    @PreAuthorize("hasAuthority('user:updatePassword')")
+    @Operation(summary = "检查用户密码")
+    @Parameters({
+            @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
+            @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
+    })
+    public BaseRsp<Boolean> checkPassword(@NotBlank(message = "{required}") @PathVariable String username,
+                                          @NotBlank(message = "{required}") @PathVariable String password) {
+        UserVo user = userService.findByName(username);
+        return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
+    }
+
     @PutMapping("/updatePassword/{username}/{password}")
+    @PreAuthorize("hasAuthority('user:updatePassword')")
     @Operation(summary = "修改密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
@@ -225,6 +229,7 @@ public class UserController {
     }
 
     @PutMapping("/updateUserStatus/{username}")
+    @PreAuthorize("hasAuthority('user:updateStatus')")
     @Operation(summary = "禁用账号")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)
@@ -236,7 +241,7 @@ public class UserController {
     }
 
     @PutMapping("/resetPassword/{username}")
-    @PreAuthorize("hasAuthority('user:reset')")
+    @PreAuthorize("hasAuthority('user:resetPassword')")
     @Operation(summary = "重置用户密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)

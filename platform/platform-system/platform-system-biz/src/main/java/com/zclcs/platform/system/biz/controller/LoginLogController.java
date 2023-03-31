@@ -40,24 +40,24 @@ public class LoginLogController {
     private final LoginLogService loginLogService;
 
     @GetMapping
-    @Operation(summary = "登录日志查询（分页）")
     @PreAuthorize("hasAuthority('loginLog:view')")
+    @Operation(summary = "登录日志查询（分页）")
     public BaseRsp<BasePage<LoginLogVo>> findLoginLogPage(@Validated BasePageAo basePageAo, @Validated LoginLogVo loginLogVo) {
         BasePage<LoginLogVo> page = this.loginLogService.findLoginLogPage(basePageAo, loginLogVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "登录日志查询（集合）")
     @PreAuthorize("hasAuthority('loginLog:view')")
+    @Operation(summary = "登录日志查询（集合）")
     public BaseRsp<List<LoginLogVo>> findLoginLogList(@Validated LoginLogVo loginLogVo) {
         List<LoginLogVo> list = this.loginLogService.findLoginLogList(loginLogVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "登录日志查询（单个）")
     @PreAuthorize("hasAuthority('loginLog:view')")
+    @Operation(summary = "登录日志查询（单个）")
     public BaseRsp<LoginLogVo> findLoginLog(@Validated LoginLogVo loginLogVo) {
         LoginLogVo loginLog = this.loginLogService.findLoginLog(loginLogVo);
         return RspUtil.data(loginLog);

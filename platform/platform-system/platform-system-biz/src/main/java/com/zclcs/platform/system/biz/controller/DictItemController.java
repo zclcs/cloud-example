@@ -46,24 +46,24 @@ public class DictItemController {
     private final DictItemService dictItemService;
 
     @GetMapping
-    @Operation(summary = "字典项查询（分页）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（分页）")
     public BaseRsp<BasePage<DictItemVo>> findDictItemPage(@Validated BasePageAo basePageAo, @Validated DictItemVo dictItemVo) {
         BasePage<DictItemVo> page = this.dictItemService.findDictItemPage(basePageAo, dictItemVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "字典项查询（集合）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（集合）")
     public BaseRsp<List<DictItemVo>> findDictItemList(@Validated DictItemVo dictItemVo) {
         List<DictItemVo> list = this.dictItemService.findDictItemList(dictItemVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "字典项查询（单个）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（单个）")
     public BaseRsp<DictItemVo> findDictItem(@Validated DictItemVo dictItemVo) {
         DictItemVo dictItem = this.dictItemService.findDictItem(dictItemVo);
         return RspUtil.data(dictItem);
@@ -94,38 +94,39 @@ public class DictItemController {
     }
 
     @GetMapping("/tree")
-    @Operation(summary = "字典树查询")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典树查询")
     public BaseRsp<List<DictItemTreeVo>> findDictItemTree(@Validated DictItemVo dictItemVo) {
         List<DictItemTreeVo> dictItemTree = this.dictItemService.findDictItemTree(dictItemVo);
         return RspUtil.data(dictItemTree);
     }
 
     @GetMapping("/dictName")
-    @Operation(summary = "字典项查询（分页）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（分页）")
     public BaseRsp<BasePage<DictVo>> findDictPage(@Validated BasePageAo basePageAo, @Validated DictVo dictVo) {
         BasePage<DictVo> page = this.dictItemService.findDictPage(basePageAo, dictVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/dictName/list")
-    @Operation(summary = "字典项查询（集合）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（集合）")
     public BaseRsp<List<DictVo>> findDictItemList(@Validated DictVo dictVo) {
         List<DictVo> list = this.dictItemService.findDictList(dictVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/dictName/one")
-    @Operation(summary = "字典项查询（单个）")
     @PreAuthorize("hasAuthority('dictItem:view')")
+    @Operation(summary = "字典项查询（单个）")
     public BaseRsp<DictVo> findDictItem(@Validated DictVo dictVo) {
         DictVo dictItem = this.dictItemService.findDict(dictVo);
         return RspUtil.data(dictItem);
     }
 
     @GetMapping("/checkValue")
+    @PreAuthorize("hasAuthority('dictItem:add')")
     @Operation(summary = "检查字典项是否重复")
     @Parameters({
             @Parameter(name = "id", description = "字典项id", required = false, in = ParameterIn.QUERY),

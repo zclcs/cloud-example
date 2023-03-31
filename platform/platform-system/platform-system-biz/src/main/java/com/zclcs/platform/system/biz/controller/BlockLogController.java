@@ -42,24 +42,24 @@ public class BlockLogController {
     private final BlockLogService blockLogService;
 
     @GetMapping
-    @Operation(summary = "黑名单拦截日志查询（分页）")
     @PreAuthorize("hasAuthority('blockLog:view')")
+    @Operation(summary = "黑名单拦截日志查询（分页）")
     public BaseRsp<BasePage<BlockLogVo>> findBlockLogPage(@Validated BasePageAo basePageAo, @Validated BlockLogVo blockLogVo) {
         BasePage<BlockLogVo> page = this.blockLogService.findBlockLogPage(basePageAo, blockLogVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "黑名单拦截日志查询（集合）")
     @PreAuthorize("hasAuthority('blockLog:view')")
+    @Operation(summary = "黑名单拦截日志查询（集合）")
     public BaseRsp<List<BlockLogVo>> findBlockLogList(@Validated BlockLogVo blockLogVo) {
         List<BlockLogVo> list = this.blockLogService.findBlockLogList(blockLogVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "黑名单拦截日志查询（单个）")
     @PreAuthorize("hasAuthority('blockLog:view')")
+    @Operation(summary = "黑名单拦截日志查询（单个）")
     public BaseRsp<BlockLogVo> findBlockLog(@Validated BlockLogVo blockLogVo) {
         BlockLogVo blockLog = this.blockLogService.findBlockLog(blockLogVo);
         return RspUtil.data(blockLog);

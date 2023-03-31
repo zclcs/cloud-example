@@ -43,34 +43,27 @@ public class RateLimitRuleController {
     private final RateLimitRuleService rateLimitRuleService;
 
     @GetMapping
-    @Operation(summary = "限流规则查询（分页）")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @Operation(summary = "限流规则查询（分页）")
     public BaseRsp<BasePage<RateLimitRuleVo>> findRateLimitRulePage(@Validated BasePageAo basePageAo, @Validated RateLimitRuleVo rateLimitRuleVo) {
         BasePage<RateLimitRuleVo> page = this.rateLimitRuleService.findRateLimitRulePage(basePageAo, rateLimitRuleVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "限流规则查询（集合）")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @Operation(summary = "限流规则查询（集合）")
     public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@Validated RateLimitRuleVo rateLimitRuleVo) {
         List<RateLimitRuleVo> list = this.rateLimitRuleService.findRateLimitRuleList(rateLimitRuleVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "限流规则查询（单个）")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @Operation(summary = "限流规则查询（单个）")
     public BaseRsp<RateLimitRuleVo> findRateLimitRule(@Validated RateLimitRuleVo rateLimitRuleVo) {
         RateLimitRuleVo rateLimitRule = this.rateLimitRuleService.findRateLimitRule(rateLimitRuleVo);
         return RspUtil.data(rateLimitRule);
-    }
-
-    @GetMapping("/refresh")
-    @Operation(summary = "刷新限流规则缓存")
-    public BaseRsp<Object> refresh() {
-        this.rateLimitRuleService.cacheAllRateLimitRules();
-        return RspUtil.message();
     }
 
     @PostMapping

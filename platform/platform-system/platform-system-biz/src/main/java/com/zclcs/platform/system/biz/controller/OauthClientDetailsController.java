@@ -79,6 +79,7 @@ public class OauthClientDetailsController {
     }
 
     @GetMapping("/checkClientId")
+    @PreAuthorize("hasAnyAuthority('oauthClientDetails:add', 'oauthClientDetails:update')")
     @Operation(summary = "检查客户端编号")
     @Parameters({
             @Parameter(name = "clientId", description = "客户端编号", required = true, in = ParameterIn.QUERY)

@@ -131,8 +131,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .in(RoleMenu::getMenuId, distinct).list().stream().map(RoleMenu::getRoleId).toList().toArray();
         this.removeByIds(distinct);
         SystemCacheUtil.deleteMenuByMenuIds(menuIds);
+        roleMenuService.lambdaUpdate().in(RoleMenu::getMenuId, distinct).remove();
         if (ArrayUtil.isNotEmpty(roleIds)) {
-            roleMenuService.lambdaUpdate().in(RoleMenu::getRoleId, roleIds).remove();
             SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
         }
     }

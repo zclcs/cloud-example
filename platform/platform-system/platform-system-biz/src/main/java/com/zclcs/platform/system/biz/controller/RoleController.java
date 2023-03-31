@@ -44,24 +44,24 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    @Operation(summary = "角色查询（分页）")
     @PreAuthorize("hasAuthority('role:view')")
+    @Operation(summary = "角色查询（分页）")
     public BaseRsp<BasePage<RoleVo>> findRolePage(@Validated BasePageAo basePageAo, @Validated RoleVo roleVo) {
         BasePage<RoleVo> page = this.roleService.findRolePage(basePageAo, roleVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "角色查询（集合）")
     @PreAuthorize("hasAuthority('role:view')")
+    @Operation(summary = "角色查询（集合）")
     public BaseRsp<List<RoleVo>> findRoleList(@Validated RoleVo roleVo) {
         List<RoleVo> list = this.roleService.findRoleList(roleVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "角色查询（单个）")
     @PreAuthorize("hasAuthority('role:view')")
+    @Operation(summary = "角色查询（单个）")
     public BaseRsp<RoleVo> findRole(@Validated RoleVo roleVo) {
         RoleVo role = this.roleService.findRole(roleVo);
         return RspUtil.data(role);
@@ -76,7 +76,8 @@ public class RoleController {
     }
 
     @GetMapping("/options")
-    @Operation(summary = "集合")
+    @PreAuthorize("hasAnyAuthority('user:view', 'role:view')")
+    @Operation(summary = "前端下拉框")
     public BaseRsp<List<RoleVo>> roles() {
         List<RoleVo> systemRoleList = roleService.findRoleList(RoleVo.builder().build());
         return RspUtil.data(systemRoleList);
@@ -88,6 +89,7 @@ public class RoleController {
             @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "roleName", description = "角色名", required = true, in = ParameterIn.QUERY)
     })
+    @PreAuthorize("hasAnyAuthority('role:add', 'role:update')")
     public BaseRsp<Object> checkRoleName(@RequestParam(required = false) Long roleId,
                                          @NotBlank(message = "{required}") @RequestParam String roleName) {
         roleService.validateRoleName(roleName, roleId);
@@ -100,6 +102,7 @@ public class RoleController {
             @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "roleCode", description = "角色编码", required = true, in = ParameterIn.QUERY)
     })
+    @PreAuthorize("hasAnyAuthority('role:add', 'role:update')")
     public BaseRsp<Object> checkRoleCode(@RequestParam(required = false) Long roleId,
                                          @NotBlank(message = "{required}") @RequestParam String roleCode) {
         roleService.validateRoleCode(roleCode, roleId);

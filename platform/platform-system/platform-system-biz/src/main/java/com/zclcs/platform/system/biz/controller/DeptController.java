@@ -46,35 +46,43 @@ public class DeptController {
     private final DeptService deptService;
 
     @GetMapping
-    @Operation(summary = "部门查询（分页）")
     @PreAuthorize("hasAuthority('dept:view')")
+    @Operation(summary = "部门查询（分页）")
     public BaseRsp<BasePage<DeptVo>> findDeptPage(@Validated BasePageAo basePageAo, @Validated DeptVo deptVo) {
         BasePage<DeptVo> page = this.deptService.findDeptPage(basePageAo, deptVo);
         return RspUtil.data(page);
     }
 
-    @GetMapping("/options")
-    @Operation(summary = "前端下拉框")
-    @PreAuthorize("hasAuthority('dept:view')")
-    public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo dept) {
-        List<DeptTreeVo> list = this.deptService.findDeptTree(dept);
-        return RspUtil.data(list);
-    }
-
     @GetMapping("/list")
-    @Operation(summary = "部门查询（集合）")
     @PreAuthorize("hasAuthority('dept:view')")
+    @Operation(summary = "部门查询（集合）")
     public BaseRsp<List<DeptVo>> findDeptList(@Validated DeptVo deptVo) {
         List<DeptVo> list = this.deptService.findDeptList(deptVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "部门查询（单个）")
     @PreAuthorize("hasAuthority('dept:view')")
+    @Operation(summary = "部门查询（单个）")
     public BaseRsp<DeptVo> findDept(@Validated DeptVo deptVo) {
         DeptVo dept = this.deptService.findDept(deptVo);
         return RspUtil.data(dept);
+    }
+
+    @GetMapping("/tree")
+    @PreAuthorize("hasAnyAuthority('user:view', 'dept:view')")
+    @Operation(summary = "部门树")
+    public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo deptVo) {
+        List<DeptTreeVo> list = this.deptService.findDeptTree(deptVo);
+        return RspUtil.data(list);
+    }
+
+    @GetMapping("/options")
+    @PreAuthorize("hasAnyAuthority('user:view', 'dept:view')")
+    @Operation(summary = "部门前端下拉框")
+    public BaseRsp<List<DeptVo>> deptOptions(@Valid DeptVo deptVo) {
+        List<DeptVo> list = this.deptService.findDeptList(deptVo);
+        return RspUtil.data(list);
     }
 
     @GetMapping("/findByDeptId/{deptId}")
@@ -86,6 +94,7 @@ public class DeptController {
     }
 
     @GetMapping("/checkDeptName")
+    @PreAuthorize("hasAnyAuthority('dept:add', 'dept:update')")
     @Operation(summary = "检查部门名称")
     @Parameters({
             @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),
@@ -98,6 +107,7 @@ public class DeptController {
     }
 
     @GetMapping("/checkDeptCode")
+    @PreAuthorize("hasAnyAuthority('dept:add', 'dept:update')")
     @Operation(summary = "检查部门编码")
     @Parameters({
             @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),

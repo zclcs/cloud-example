@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,35 +43,28 @@ public class BlackListController {
 
     private final BlackListService blackListService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "黑名单查询（分页）")
+    @GetMapping
     @PreAuthorize("hasAuthority('blackList:view')")
+    @Operation(summary = "黑名单查询（分页）")
     public BaseRsp<BasePage<BlackListVo>> findBlackListPage(@Validated BasePageAo basePageAo, @Validated BlackListVo blackListVo) {
         BasePage<BlackListVo> page = this.blackListService.findBlackListPage(basePageAo, blackListVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "黑名单查询（集合）")
     @PreAuthorize("hasAuthority('blackList:view')")
+    @Operation(summary = "黑名单查询（集合）")
     public BaseRsp<List<BlackListVo>> findBlackListList(@Validated BlackListVo blackListVo) {
         List<BlackListVo> list = this.blackListService.findBlackListList(blackListVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "黑名单查询（单个）")
     @PreAuthorize("hasAuthority('blackList:view')")
+    @Operation(summary = "黑名单查询（单个）")
     public BaseRsp<BlackListVo> findBlackList(@Validated BlackListVo blackListVo) {
         BlackListVo blackList = this.blackListService.findBlackList(blackListVo);
         return RspUtil.data(blackList);
-    }
-
-    @GetMapping("/refresh")
-    @Operation(summary = "刷新黑名单缓存")
-    public BaseRsp<Object> refresh() {
-        this.blackListService.cacheAllBlackList();
-        return RspUtil.message();
     }
 
     @PostMapping

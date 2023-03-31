@@ -42,24 +42,24 @@ public class RateLimitLogController {
     private final RateLimitLogService rateLimitLogService;
 
     @GetMapping
-    @Operation(summary = "限流拦截日志查询（分页）")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @Operation(summary = "限流拦截日志查询（分页）")
     public BaseRsp<BasePage<RateLimitLogVo>> findRateLimitLogPage(@Validated BasePageAo basePageAo, @Validated RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> page = this.rateLimitLogService.findRateLimitLogPage(basePageAo, rateLimitLogVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "限流拦截日志查询（集合）")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @Operation(summary = "限流拦截日志查询（集合）")
     public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@Validated RateLimitLogVo rateLimitLogVo) {
         List<RateLimitLogVo> list = this.rateLimitLogService.findRateLimitLogList(rateLimitLogVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "限流拦截日志查询（单个）")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @Operation(summary = "限流拦截日志查询（单个）")
     public BaseRsp<RateLimitLogVo> findRateLimitLog(@Validated RateLimitLogVo rateLimitLogVo) {
         RateLimitLogVo rateLimitLog = this.rateLimitLogService.findRateLimitLog(rateLimitLogVo);
         return RspUtil.data(rateLimitLog);

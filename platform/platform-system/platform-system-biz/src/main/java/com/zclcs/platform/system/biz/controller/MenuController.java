@@ -45,27 +45,35 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    @Operation(summary = "菜单查询（分页）")
     @PreAuthorize("hasAuthority('menu:view')")
+    @Operation(summary = "菜单查询（分页）")
     public BaseRsp<BasePage<MenuVo>> findMenuPage(@Validated BasePageAo basePageAo, @Validated MenuVo menuVo) {
         BasePage<MenuVo> page = this.menuService.findMenuPage(basePageAo, menuVo);
         return RspUtil.data(page);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "菜单查询（集合）")
     @PreAuthorize("hasAuthority('menu:view')")
+    @Operation(summary = "菜单查询（集合）")
     public BaseRsp<List<MenuVo>> findMenuList(@Validated MenuVo menuVo) {
         List<MenuVo> list = this.menuService.findMenuList(menuVo);
         return RspUtil.data(list);
     }
 
     @GetMapping("/one")
-    @Operation(summary = "菜单查询（单个）")
     @PreAuthorize("hasAuthority('menu:view')")
+    @Operation(summary = "菜单查询（单个）")
     public BaseRsp<MenuVo> findMenu(@Validated MenuVo menuVo) {
         MenuVo menu = this.menuService.findMenu(menuVo);
         return RspUtil.data(menu);
+    }
+
+    @GetMapping("/tree")
+    @PreAuthorize("hasAnyAuthority('role:view', 'menu:view', 'oauthClientDetails:view')")
+    @Operation(summary = "菜单树")
+    public BaseRsp<List<MenuTreeVo>> menuList(MenuVo menu) {
+        List<MenuTreeVo> systemMenus = this.menuService.findMenus(menu);
+        return RspUtil.data(systemMenus);
     }
 
     @GetMapping("/findByMenuId/{menuId}")
@@ -77,6 +85,7 @@ public class MenuController {
     }
 
     @GetMapping("/checkMenuCode")
+    @PreAuthorize("hasAnyAuthority('menu:add', 'menu:update')")
     @Operation(summary = "检查菜单编码")
     @Parameters({
             @Parameter(name = "menuId", description = "菜单id", required = false, in = ParameterIn.QUERY),
@@ -86,13 +95,6 @@ public class MenuController {
                                          @NotBlank(message = "{required}") @RequestParam String menuCode) {
         menuService.validateMenuCode(menuCode, menuId);
         return RspUtil.message();
-    }
-
-    @GetMapping("/tree")
-    @Operation(summary = "菜单")
-    public BaseRsp<List<MenuTreeVo>> menuList(MenuVo menu) {
-        List<MenuTreeVo> systemMenus = this.menuService.findMenus(menu);
-        return RspUtil.data(systemMenus);
     }
 
     @PostMapping
