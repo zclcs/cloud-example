@@ -1,4 +1,5 @@
-CREATE DATABASE /*!32312 IF NOT EXISTS */ `third_part_canal_tsdb` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+CREATE DATABASE IF NOT EXISTS `third_part_canal_tsdb`
+    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 USE `third_part_canal_tsdb`;
 

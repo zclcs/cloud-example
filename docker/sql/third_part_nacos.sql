@@ -1,18 +1,7 @@
-/*
- Navicat Premium Data Transfer
+CREATE DATABASE IF NOT EXISTS `third_part_nacos`
+    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
- Source Server         : docker_mysql_192.168.30.10
- Source Server Type    : MySQL
- Source Server Version : 50735
- Source Host           : 192.168.33.10:3306
- Source Schema         : third_part_nacos
-
- Target Server Type    : MySQL
- Target Server Version : 50735
- File Encoding         : 65001
-
- Date: 26/10/2022 10:19:48
-*/
+USE `third_part_nacos`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

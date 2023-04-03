@@ -54,9 +54,7 @@ yum install -y yum-utils \
 ### 设置稳定的仓库：
 
 ```
-yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 ```
 
 ### 安装最新版的Docker引擎：
@@ -110,13 +108,14 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ```
 {
-    "graph":"/zclcs/docker",
-    "registry-mirrors": ["https://f12xleug.mirror.aliyuncs.com"],
-    "insecure-registries": ["192.168.33.10:3000"],
-    "log-driver": "json-file",
-    "log-opts": {
-        "max-size":"100m", "max-file":"3"
-    }
+  "data-root":"/zclcs/docker",
+  "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"],
+  "registry-mirrors": ["https://f12xleug.mirror.aliyuncs.com"],
+  "insecure-registries": ["192.168.33.10:3000"],
+  "log-driver": "json-file",
+  "log-opts": {
+      "max-size":"100m", "max-file":"3"
+  }
 }
 ```
 
