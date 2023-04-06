@@ -57,7 +57,7 @@ public abstract class CacheService<T> {
          * 2.1 存在攻击性的问题 一但遭受攻击 redis中会多很多不存在的key
          * 3 综合以上情况的解决方案
          * 3.1 缓存必须设备ttl时间
-         * 3.2 最好使用表id做redis key 存储
+         * 3.2 最好使用表id做redis key 存储 (关联关系不能用表id) 一对多或者多对多
          * 3.3 如果必须用业务key存储建议缓存时直接缓存null 对象
          * 3.4 增删改都必须要删除对应的key
          */

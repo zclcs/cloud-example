@@ -170,6 +170,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptCode(String deptCode, Long deptId) {
+        if (MyConstant.TOP_PARENT_CODE.equals(deptCode)) {
+            throw new MyException("部门编码输入非法值");
+        }
         Dept one = this.lambdaQuery().eq(Dept::getDeptCode, deptCode).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门编码重复");
@@ -178,9 +181,6 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptName(String deptName, Long deptId) {
-        if (MyConstant.TOP_PARENT_CODE.equals(deptName)) {
-            throw new MyException("部门编码输入非法值");
-        }
         Dept one = this.lambdaQuery().eq(Dept::getDeptName, deptName).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门名称重复");

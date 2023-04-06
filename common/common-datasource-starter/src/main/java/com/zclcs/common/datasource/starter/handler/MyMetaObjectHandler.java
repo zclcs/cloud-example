@@ -23,7 +23,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "createAt", LocalDateTime.class, LocalDateTime.now());
         Object createBy = metaObject.getValue("createBy");
         if (createBy == null) {
-            this.strictInsertFill(metaObject, "createBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("admin"));
+            this.strictInsertFill(metaObject, "createBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("system"));
         }
     }
 
@@ -32,7 +32,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictUpdateFill(metaObject, "updateAt", LocalDateTime.class, LocalDateTime.now());
         Object updateBy = metaObject.getValue("updateBy");
         if (updateBy == null) {
-            this.strictInsertFill(metaObject, "updateBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("admin"));
+            this.strictUpdateFill(metaObject, "updateBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("system"));
         }
     }
 }

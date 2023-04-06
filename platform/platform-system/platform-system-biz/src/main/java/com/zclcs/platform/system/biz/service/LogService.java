@@ -3,6 +3,7 @@ package com.zclcs.platform.system.biz.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.common.logging.starter.ao.LogAo;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 
@@ -52,16 +53,10 @@ public interface LogService extends IService<Log> {
     /**
      * 新增日志
      *
-     * @param className
-     * @param methodName
-     * @param params
-     * @param ip
-     * @param operation
-     * @param username
-     * @param start
+     * @param LogAo
      */
 //    @Async(MyConstant.ASYNC_POOL)
-    void createLog(String className, String methodName, String params, String ip, String operation, String username, long start);
+    void createLog(LogAo logAo);
 
     /**
      * 删除

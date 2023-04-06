@@ -30,4 +30,6 @@ dependencies {
 //    implementation(project(":common:common-seata-starter"))
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    implementation "io.minio:minio"
+    implementation "com.squareup.okhttp3:okhttp"
 }

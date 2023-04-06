@@ -47,8 +47,8 @@ public class SystemRateLimitLogQueueHandler {
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
         try {
             //log.info("直接队列2，处理系统登录日志，手动ACK，接收消息：{}", messageStruct.getMessage());
-            RateLimitLogAo logAo = objectMapper.readValue(messageStruct.getMessage(), RateLimitLogAo.class);
-            rateLimitLogService.createRateLimitLog(logAo);
+            RateLimitLogAo rateLimitLogAo = objectMapper.readValue(messageStruct.getMessage(), RateLimitLogAo.class);
+            rateLimitLogService.createRateLimitLog(rateLimitLogAo);
             // 通知 MQ 消息已被成功消费,可以ACK了
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {

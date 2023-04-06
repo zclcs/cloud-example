@@ -19,9 +19,7 @@ public class UserRoleCache extends CacheService<List<Long>> {
     private RemoteUserRoleService remoteUserRoleService;
 
     public UserRoleCache(RedisService redisService) {
-        super(redisService, RedisCachePrefixConstant.USER_ROLE, CacheType.CACHE_USING_BLOOM_FILTER,
-                redisService.getBloomFilter(RedisCachePrefixConstant.BLOOM_FILTER_USER_ROLE));
-        super.init(10000, 0.03);
+        super(redisService, RedisCachePrefixConstant.USER_ROLE, CacheType.CACHE_NULL, null);
     }
 
     @Autowired

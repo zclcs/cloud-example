@@ -47,8 +47,8 @@ public class SystemRouteLogQueueHandler {
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
         try {
             //log.info("处理系统网关转发日志，手动ACK，接收消息：{}", messageStruct.getMessage());
-            RouteLogAo logAo = objectMapper.readValue(messageStruct.getMessage(), RouteLogAo.class);
-            routeLogService.createRouteLog(logAo);
+            RouteLogAo routeLogAo = objectMapper.readValue(messageStruct.getMessage(), RouteLogAo.class);
+            routeLogService.createRouteLog(routeLogAo);
             // 通知 MQ 消息已被成功消费,可以ACK了
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {

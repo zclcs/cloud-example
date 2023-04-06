@@ -62,9 +62,6 @@ public class LogAo implements Serializable {
     @Schema(description = "操作者ip")
     private String ip;
 
-    @Schema(description = "方法开始时间")
-    private Long start;
-
     @Size(max = 50, message = "{noMoreThan}")
     @Schema(description = "操作地点")
     private String location;

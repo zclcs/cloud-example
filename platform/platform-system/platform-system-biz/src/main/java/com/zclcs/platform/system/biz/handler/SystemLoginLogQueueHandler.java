@@ -47,8 +47,8 @@ public class SystemLoginLogQueueHandler {
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
         try {
             //log.info("处理系统登录日志，手动ACK，接收消息：{}", messageStruct.getMessage());
-            LoginLogAo logAo = objectMapper.readValue(messageStruct.getMessage(), LoginLogAo.class);
-            loginLogService.createLoginLog(logAo);
+            LoginLogAo loginLogAo = objectMapper.readValue(messageStruct.getMessage(), LoginLogAo.class);
+            loginLogService.createLoginLog(loginLogAo);
             // 通知 MQ 消息已被成功消费,可以ACK了
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {

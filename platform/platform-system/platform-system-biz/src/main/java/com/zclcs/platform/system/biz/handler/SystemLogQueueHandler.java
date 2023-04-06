@@ -3,8 +3,8 @@ package com.zclcs.platform.system.biz.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.zclcs.common.core.constant.RabbitConstant;
+import com.zclcs.common.logging.starter.ao.LogAo;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
-import com.zclcs.platform.system.api.entity.ao.LogAo;
 import com.zclcs.platform.system.biz.service.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -48,7 +48,7 @@ public class SystemLogQueueHandler {
         try {
             //log.info("处理系统日志，手动ACK，接收消息：{}", messageStruct.getMessage());
             LogAo logAo = objectMapper.readValue(messageStruct.getMessage(), LogAo.class);
-            logService.createLog(logAo.getClassName(), logAo.getMethodName(), logAo.getParams(), logAo.getIp(), logAo.getOperation(), logAo.getUsername(), logAo.getStart());
+            logService.createLog(logAo);
             // 通知 MQ 消息已被成功消费,可以ACK了
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {

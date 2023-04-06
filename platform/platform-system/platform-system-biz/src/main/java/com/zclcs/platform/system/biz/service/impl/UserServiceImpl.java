@@ -190,7 +190,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 更新用户
         user.setPassword(null);
 
-        updateById(user);
+        this.updateById(user);
 
         userRoleService.lambdaUpdate().eq(UserRole::getUserId, userId).remove();
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());

@@ -19,9 +19,7 @@ public class RoleMenuCache extends CacheService<List<Long>> {
     private RemoteRoleMenuService remoteRoleMenuService;
 
     public RoleMenuCache(RedisService redisService) {
-        super(redisService, RedisCachePrefixConstant.ROLE_MENU, CacheType.CACHE_USING_BLOOM_FILTER,
-                redisService.getBloomFilter(RedisCachePrefixConstant.BLOOM_FILTER_ROLE_MENU));
-        super.init(10000, 0.03);
+        super(redisService, RedisCachePrefixConstant.ROLE_MENU, CacheType.CACHE_NULL, null);
     }
 
     @Autowired

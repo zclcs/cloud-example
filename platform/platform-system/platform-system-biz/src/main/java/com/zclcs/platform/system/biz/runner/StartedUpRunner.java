@@ -35,7 +35,7 @@ public class StartedUpRunner implements ApplicationRunner {
             Stopwatch stopwatch = Stopwatch.createStarted();
             blackListService.cacheAllBlackList();
             rateLimitRuleService.cacheAllRateLimitRules();
-            log.info("Cache BlackList And RateLimitRules completed - {}", stopwatch.stop());
+            log.info("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
             BaseUtil.printSystemUpBanner(environment);
 //            List<DictItem> dictItems = dictItemService.list();
 //            for (DictItem dictItem : dictItems) {

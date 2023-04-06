@@ -19,9 +19,7 @@ public class UserDataPermissionCache extends CacheService<List<Long>> {
     private RemoteUserDataPermissionService remoteUserDataPermissionService;
 
     public UserDataPermissionCache(RedisService redisService) {
-        super(redisService, RedisCachePrefixConstant.USER_DATA_PERMISSION, CacheType.CACHE_USING_BLOOM_FILTER,
-                redisService.getBloomFilter(RedisCachePrefixConstant.BLOOM_FILTER_USER_DATA_PERMISSION));
-        super.init(10000, 0.03);
+        super(redisService, RedisCachePrefixConstant.USER_DATA_PERMISSION, CacheType.CACHE_NULL, null);
     }
 
     @Autowired

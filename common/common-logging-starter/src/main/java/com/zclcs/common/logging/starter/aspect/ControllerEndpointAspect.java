@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.zclcs.common.core.constant.MyConstant.UNKNOWN;
@@ -62,8 +63,9 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
         String operation = annotation.operation();
         long start = System.currentTimeMillis();
         result = point.proceed();
+        long end = System.currentTimeMillis();
         if (StrUtil.isNotBlank(operation)) {
-            String username = getUsername();
+            String username = Optional.ofNullable(getUsername()).orElse("system");
             String ip = getHttpServletRequestIpAddress();
 
             String className = point.getTarget().getClass().getName();
@@ -83,7 +85,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setIp(ip);
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
-            systemLogAo.setStart(start);
+            systemLogAo.setTime(BigDecimal.valueOf(end - start));
             rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_LOG_ROUTE_KEY, MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
         }
         return result;

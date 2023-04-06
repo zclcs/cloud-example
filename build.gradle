@@ -16,7 +16,7 @@ buildscript {
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
         seataVersion = "1.6.1"
-        minioVersion = "8.3.1"
+        minioVersion = "8.5.2"
         okhttpVersion = "4.9.0"
         jibVersion = "3.3.1"
         authorizationServerVersion = "1.0.0"
@@ -92,7 +92,7 @@ configure(commons) {
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform(project(":cloud-bom"))
         management platform(project(":common"))
-//        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
+        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"

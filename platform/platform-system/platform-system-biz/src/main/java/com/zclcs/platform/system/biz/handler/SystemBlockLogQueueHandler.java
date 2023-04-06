@@ -47,8 +47,8 @@ public class SystemBlockLogQueueHandler {
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
         try {
             //log.info("处理系统黑名单日志，手动ACK，接收消息：{}", messageStruct.getMessage());
-            BlockLogAo logAo = objectMapper.readValue(messageStruct.getMessage(), BlockLogAo.class);
-            blockLogService.createBlockLog(logAo);
+            BlockLogAo blockLogAo = objectMapper.readValue(messageStruct.getMessage(), BlockLogAo.class);
+            blockLogService.createBlockLog(blockLogAo);
             // 通知 MQ 消息已被成功消费,可以ACK了
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {

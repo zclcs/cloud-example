@@ -6,6 +6,7 @@ import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.utils.AddressUtil;
 import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.logging.starter.ao.LogAo;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.biz.mapper.LogMapper;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,14 +69,15 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createLog(String className, String methodName, String params, String ip, String operation, String username, long start) {
+    public void createLog(LogAo logAo) {
         Log log = new Log();
+        String ip = logAo.getIp();
         log.setIp(ip);
-        log.setUsername(username);
-        log.setTime(BigDecimal.valueOf(System.currentTimeMillis() - start));
-        log.setOperation(operation);
-        log.setMethod(className + "." + methodName + "()");
-        log.setParams(Optional.ofNullable(params).orElse(""));
+        log.setUsername(logAo.getUsername());
+        log.setTime(logAo.getTime());
+        log.setOperation(logAo.getOperation());
+        log.setMethod(logAo.getClassName() + "." + logAo.getMethodName() + "()");
+        log.setParams(Optional.ofNullable(logAo.getParams()).orElse(""));
         log.setLocation(AddressUtil.getCityInfo(ip));
         this.save(log);
     }

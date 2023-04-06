@@ -109,14 +109,6 @@ public class MyRabbitMqAutoConfigure {
         return QueueBuilder.durable(RabbitConstant.SYSTEM_RATE_LIMIT_LOG_QUEUE).build();
     }
 
-    /**
-     * 记录系统字典刷新队列
-     */
-    @Bean
-    public Queue systemDictRefreshQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_DICT_REFRESH_QUEUE).build();
-    }
-
     @Bean
     public Binding systemLogQueueBinding() {
         return BindingBuilder.bind(systemLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_LOG_ROUTE_KEY);
@@ -140,10 +132,5 @@ public class MyRabbitMqAutoConfigure {
     @Bean
     public Binding systemRateLimitLogBinding() {
         return BindingBuilder.bind(systemRateLimitLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_RATE_LIMIT_LOG_ROUTE_KEY);
-    }
-
-    @Bean
-    public Binding systemDictRefreshBinding() {
-        return BindingBuilder.bind(systemDictRefreshQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_DICT_REFRESH_ROUTING_KEY);
     }
 }

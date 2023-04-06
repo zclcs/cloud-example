@@ -157,6 +157,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             tree.setHideChildrenInMenu(menu.getHideChildrenInMenu());
             tree.setCurrentActiveMenu(menu.getCurrentActiveMenu());
             tree.setOrderNum(menu.getOrderNum());
+            tree.setCreateAt(menu.getCreateAt());
             trees.add(tree);
         });
     }
