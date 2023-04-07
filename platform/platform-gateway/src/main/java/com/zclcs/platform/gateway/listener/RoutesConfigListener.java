@@ -40,6 +40,12 @@ public class RoutesConfigListener {
     @Value("${spring.cloud.nacos.config.group}")
     private String group;
 
+    @Value("${spring.cloud.nacos.config.username}")
+    private String username;
+
+    @Value("${spring.cloud.nacos.config.password}")
+    private String password;
+
     @Autowired
     public void setRoutesHandler(RoutesHandler routesHandler) {
         this.routesHandler = routesHandler;
@@ -47,10 +53,12 @@ public class RoutesConfigListener {
 
     @PostConstruct
     public void dynamicRouteByNacosListener() throws NacosException {
-        log.info("gateway-routes dynamicRouteByNacosListener config serverAddr is {} namespace is {} group is {}", serverAddr, namespace, group);
+        log.info("gateway-routes dynamicRouteByNacosListener config serverAddr is {} namespace is {} group is {} username is {} password is {}", serverAddr, namespace, group, username, password);
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
         properties.put(PropertyKeyConst.NAMESPACE, namespace);
+        properties.put(PropertyKeyConst.USERNAME, username);
+        properties.put(PropertyKeyConst.PASSWORD, password);
         ConfigService configService = NacosFactory.createConfigService(properties);
         // 添加监听，nacos上的配置变更后会执行
         configService.addListener(dataId, group, new Listener() {

@@ -140,7 +140,6 @@ public class MinioUtil {
      * @return url 路径
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expires) throws Exception {
-
         return client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).expiry(expires).build());
     }
 

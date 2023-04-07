@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.exception.MyException;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.MinioBucket;
 import com.zclcs.platform.system.api.entity.MinioFile;
 import com.zclcs.platform.system.api.entity.ao.MinioBucketAo;
@@ -45,28 +46,28 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     public BasePage<MinioFileVo> findMinioFilePage(BasePageAo basePageAo, MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StrUtil.isNotBlank(minioFileVo.getId()), "mf.id", minioFileVo.getId());
+        getQueryWrapper(minioFileVo);
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioFileVo> findMinioFileList(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StrUtil.isNotBlank(minioFileVo.getId()), "mf.id", minioFileVo.getId());
+        getQueryWrapper(minioFileVo);
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioFileVo findMinioFile(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StrUtil.isNotBlank(minioFileVo.getId()), "mf.id", minioFileVo.getId());
+        getQueryWrapper(minioFileVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) {
-        String defaultBucket = Optional.ofNullable(bucketName).filter(StrUtil::isBlank).orElse("default");
+        String defaultBucket = Optional.ofNullable(bucketName).filter(StrUtil::isNotBlank).orElse("default");
         Long bucketId;
         FileUploadVo fileUploadVo;
         if (minioBucketService.lambdaQuery().eq(MinioBucket::getBucketName, defaultBucket).count() == 0L) {
@@ -107,5 +108,12 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
             }
             this.removeById(id);
         }
+    }
+
+    private QueryWrapper<MinioFileVo> getQueryWrapper(MinioFileVo minioFileVo) {
+        QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "mf.id", minioFileVo.getId());
+        queryWrapper.orderByDesc("mf.create_at");
+        return queryWrapper;
     }
 }

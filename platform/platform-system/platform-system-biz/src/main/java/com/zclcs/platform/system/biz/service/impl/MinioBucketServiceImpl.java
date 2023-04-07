@@ -8,6 +8,7 @@ import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.constant.MinioConstant;
 import com.zclcs.common.core.exception.MyException;
+import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.MinioBucket;
 import com.zclcs.platform.system.api.entity.MinioFile;
 import com.zclcs.platform.system.api.entity.ao.MinioBucketAo;
@@ -44,21 +45,21 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
     public BasePage<MinioBucketVo> findMinioBucketPage(BasePageAo basePageAo, MinioBucketVo minioBucketVo) {
         BasePage<MinioBucketVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StrUtil.isNotBlank(minioBucketVo.getBucketName()), "mb.bucket_name", minioBucketVo.getBucketName());
+        getQueryWrapper(minioBucketVo);
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioBucketVo> findMinioBucketList(MinioBucketVo minioBucketVo) {
         QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StrUtil.isNotBlank(minioBucketVo.getBucketName()), "mb.bucket_name", minioBucketVo.getBucketName());
+        getQueryWrapper(minioBucketVo);
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioBucketVo findMinioBucket(MinioBucketVo minioBucketVo) {
         QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StrUtil.isNotBlank(minioBucketVo.getBucketName()), "mb.bucket_name", minioBucketVo.getBucketName());
+        getQueryWrapper(minioBucketVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
@@ -66,7 +67,7 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
     @Transactional(rollbackFor = Exception.class)
     public MinioBucket createMinioBucket(MinioBucketAo minioBucketAo) {
         validateBucketName(minioBucketAo.getBucketName(), minioBucketAo.getId());
-        String policy = Optional.ofNullable(minioBucketAo.getBucketPolicy()).filter(StrUtil::isNotBlank).orElse(MinioConstant.NONE);
+        String policy = Optional.ofNullable(minioBucketAo.getBucketPolicy()).filter(StrUtil::isNotBlank).orElse(MinioConstant.READ_ONLY);
         MinioBucket minioBucket = new MinioBucket();
         BeanUtil.copyProperties(minioBucketAo, minioBucket);
         minioBucket.setBucketPolicy(policy);
@@ -90,13 +91,13 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
         }
         MinioBucket minioBucket = new MinioBucket();
         BeanUtil.copyProperties(minioBucketAo, minioBucket);
-        minioBucket.setBucketName(null);
         try {
             minioUtil.setBucketPolicy(minioBucket.getBucketName(), minioBucketAo.getBucketPolicy());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new MyException("调用minio失败，" + e.getMessage());
         }
+        minioBucket.setBucketName(null);
         this.updateById(minioBucket);
         return minioBucket;
     }
@@ -128,5 +129,10 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
         }
     }
 
+    private QueryWrapper<MinioBucketVo> getQueryWrapper(MinioBucketVo minioBucketVo) {
+        QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "mb.bucket_name", minioBucketVo.getBucketName());
+        return queryWrapper;
+    }
 
 }

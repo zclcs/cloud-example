@@ -12,7 +12,7 @@
                mf.create_at,
                mf.update_at
         from system_minio_file mf
-                 join system_minio_bucket mb on mf.bucket_id = mb.id
+                 inner join system_minio_bucket mb on mf.bucket_id = mb.id
             ${ew.customSqlSegment}
     </sql>
     <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioFileVo">

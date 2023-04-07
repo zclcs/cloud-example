@@ -16,7 +16,7 @@ buildscript {
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
         seataVersion = "1.6.1"
-        minioVersion = "8.5.2"
+        minioVersion = "8.0.3"
         okhttpVersion = "4.9.0"
         jibVersion = "3.3.1"
         authorizationServerVersion = "1.0.0"

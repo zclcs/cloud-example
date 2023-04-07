@@ -41,7 +41,7 @@ public class SystemBlockLogQueueHandler {
     }
 
     @RabbitHandler
-    @RabbitListener(queues = RabbitConstant.SYSTEM_DICT_REFRESH_QUEUE)
+    @RabbitListener(queues = RabbitConstant.SYSTEM_BLOCK_LOG_QUEUE)
     public void directHandlerManualAck(MessageStruct messageStruct, Message message, Channel channel) {
         //  如果手动ACK,消息会被监听消费,但是消息在队列中依旧存在,如果 未配置 acknowledge-mode 默认是会在消费完毕后自动ACK掉
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();
