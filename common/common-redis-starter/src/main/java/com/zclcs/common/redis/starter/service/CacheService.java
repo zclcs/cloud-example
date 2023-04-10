@@ -63,7 +63,12 @@ public abstract class CacheService<T> {
          */
         String redisKey = String.format(redisPrefix, key);
         Long redisTimeOut = timeOut + RandomUtil.randomLong(1, 360);
-        T cache = this.findByKey(key);
+        T cache;
+        try {
+            cache = this.findByKey(key);
+        } catch (Exception e) {
+            return null;
+        }
         if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
             if (cache == null) {
                 rBloomFilter.add(redisKey);

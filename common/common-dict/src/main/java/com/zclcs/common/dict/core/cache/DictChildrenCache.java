@@ -31,7 +31,7 @@ public class DictChildrenCache extends CacheService<List<DictItem>> {
 
     @Override
     protected List<DictItem> findByKey(Object... key) {
-        return remoteDictItemService.findByDictNameAndParentValue((String) key[0], (String) key[1]).getData();
+        return remoteDictItemService.findByDictNameAndParentValue((String) key[0], (String) key[1]);
     }
 
 }

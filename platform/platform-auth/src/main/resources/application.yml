@@ -22,6 +22,7 @@ spring:
       discovery:
         server-addr: ${spring.cloud.nacos.config.server-addr}
         namespace: ${spring.cloud.nacos.config.namespace}
+        group: DEFAULT_GROUP
         username: ${spring.cloud.nacos.config.username}
         password: ${spring.cloud.nacos.config.password}
 

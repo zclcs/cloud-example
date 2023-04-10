@@ -1,0 +1,35 @@
+apply plugin: "org.springframework.boot"
+
+bootJar {
+    mainClass = "com.zclcs.SystemApplication"
+}
+
+processResources {
+    copy {
+        from("../../../shared-resources")
+        into("/src/main/resources")
+    }
+    from("src/main/java") {
+        include "**/*.xml"
+    }
+}
+
+dependencies {
+    implementation(project(":common:common-core"))
+    implementation(project(":common:common-doc-starter"))
+    implementation(project(":common:common-web-starter"))
+    implementation(project(":common:common-logging-starter"))
+    implementation(project(":common:common-rabbitmq-starter"))
+    implementation(project(":common:common-redis-starter"))
+    implementation(project(":common:common-datasource-starter"))
+    implementation(project(":common:common-security-starter"))
+    implementation(project(":common:common-fegin-starter"))
+    implementation(project(":common:common-dict"))
+    implementation(project(":common:common-db-merge-starter"))
+    implementation(project(":platform:platform-system-bom:platform-system-cache"))
+//    implementation(project(":common:common-seata-starter"))
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    implementation "io.minio:minio"
+    implementation "com.squareup.okhttp3:okhttp"
+}

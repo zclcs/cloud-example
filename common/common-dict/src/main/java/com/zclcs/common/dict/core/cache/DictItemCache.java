@@ -29,7 +29,7 @@ public class DictItemCache extends CacheService<DictItem> {
 
     @Override
     protected DictItem findByKey(Object... key) {
-        return remoteDictItemService.findByDictNameAndValue((String) key[0], (String) key[1]).getData();
+        return remoteDictItemService.findByDictNameAndValue((String) key[0], (String) key[1]);
     }
 
 }
