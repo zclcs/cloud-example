@@ -22,8 +22,10 @@ public interface UserService extends IService<User> {
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param userVo     userVo
+     * @see BasePageAo
+     * @see UserVo
+     * @param basePageAo BasePageAo
+     * @param userVo     UserVo
      * @return BasePage<UserVo>
      */
     BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo);

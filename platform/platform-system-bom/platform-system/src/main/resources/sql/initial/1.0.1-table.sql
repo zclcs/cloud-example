@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `system_dict_item`
     `is_disabled`         char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL     DEFAULT '0' COMMENT '是否禁用 @@yes_no',
     `version`             bigint(20)                                                    NULL     DEFAULT 1 COMMENT '版本',
     `tenant_id`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '租户id',
-    `create_at`           datetime                                                      NULL     DEFAULT NULL COMMENT '创建时间',
+    `create_at`           datetime                                                      NOT NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_at`           datetime                                                      NULL     DEFAULT NULL COMMENT '更新时间',
     `create_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT NULL COMMENT '创建人',
     `update_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT NULL COMMENT '修改人',
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `system_oauth_client_details`
     `autoapprove`             varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '是否自动放行',
     `version`                 bigint(20)                                                     NULL DEFAULT 1 COMMENT '版本',
     `tenant_id`               varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '租户id',
-    `create_at`               datetime                                                       NOT NULL COMMENT '创建时间',
+    `create_at`               datetime                                                       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_at`               datetime                                                       NULL DEFAULT NULL COMMENT '更新时间',
     `create_by`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
     `update_by`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
@@ -370,33 +370,75 @@ CREATE TABLE IF NOT EXISTS `system_user_role`
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色关联表'
   ROW_FORMAT = DYNAMIC;//
 
-CREATE TABLE IF NOT EXISTS `system_minio_bucket`  (
-                                        `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '桶id',
-                                        `bucket_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '桶名称',
-                                        `bucket_policy` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '桶权限',
-                                        `version` bigint(20) NULL DEFAULT 1 COMMENT '版本',
-                                        `tenant_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '租户id',
-                                        `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                        `update_at` datetime NULL DEFAULT NULL COMMENT '编辑时间',
-                                        `create_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-                                        `update_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编辑人',
-                                        PRIMARY KEY (`id`) USING BTREE,
-                                        UNIQUE INDEX `uk_system_minio_bucket_bucket_name`(`bucket_name`) USING BTREE COMMENT '文件桶名称唯一索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'minio桶' ROW_FORMAT = DYNAMIC;//
+CREATE TABLE IF NOT EXISTS `system_minio_bucket`
+(
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '桶id',
+    `bucket_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '桶名称',
+    `bucket_policy` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '桶权限',
+    `version` bigint(20) NULL DEFAULT 1 COMMENT '版本',
+    `tenant_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '租户id',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_at` datetime NULL DEFAULT NULL COMMENT '编辑时间',
+    `create_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `update_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编辑人',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `uk_system_minio_bucket_bucket_name`(`bucket_name`) USING BTREE COMMENT '文件桶名称唯一索引'
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+  COMMENT = 'minio桶'
+  ROW_FORMAT = DYNAMIC;//
 
-CREATE TABLE IF NOT EXISTS `system_minio_file`  (
-                                      `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件id',
-                                      `bucket_id` bigint(20) NOT NULL COMMENT '桶id',
-                                      `file_name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件名称',
-                                      `original_file_name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '原文件名称',
-                                      `file_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件路径',
-                                      `version` bigint(20) NULL DEFAULT 1 COMMENT '版本',
-                                      `tenant_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '租户id',
-                                      `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                      `update_at` datetime NULL DEFAULT NULL COMMENT '编辑时间',
-                                      `create_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-                                      `update_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编辑人',
-                                      PRIMARY KEY (`id`) USING BTREE,
-                                      INDEX `nk_system_minio_file_bucket_id`(`bucket_id`) USING BTREE COMMENT '文件表桶id索引',
-                                      INDEX `nk_system_minio_file_original_file_name`(`original_file_name`) USING BTREE COMMENT '文件表原文件名称索引'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'minio文件' ROW_FORMAT = DYNAMIC;//
+CREATE TABLE IF NOT EXISTS `system_minio_file`
+(
+    `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件id',
+    `bucket_id` bigint(20) NOT NULL COMMENT '桶id',
+    `file_name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件名称',
+    `original_file_name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '原文件名称',
+    `file_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件路径',
+    `version` bigint(20) NULL DEFAULT 1 COMMENT '版本',
+    `tenant_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '租户id',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_at` datetime NULL DEFAULT NULL COMMENT '编辑时间',
+    `create_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `update_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编辑人',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `nk_system_minio_file_bucket_id`(`bucket_id`) USING BTREE COMMENT '文件表桶id索引',
+    INDEX `nk_system_minio_file_original_file_name`(`original_file_name`) USING BTREE COMMENT '文件表原文件名称索引'
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+  COMMENT = 'minio文件'
+  ROW_FORMAT = DYNAMIC;//
+
+CREATE TABLE IF NOT EXISTS `system_generator_config`
+(
+    `id`                   bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `server_name`          varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '服务名',
+    `author`               varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '作者',
+    `base_package`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '基础包名',
+    `entity_package`       varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'entity文件存放路径',
+    `ao_package`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '入参',
+    `vo_package`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '出参',
+    `mapper_package`       varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'mapper文件存放路径',
+    `mapper_xml_package`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'mapper xml文件存放路径',
+    `service_package`      varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'servcie文件存放路径',
+    `service_impl_package` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'serviceImpl文件存放路径',
+    `controller_package`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT 'controller文件存放路径',
+    `is_trim`              char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NOT NULL COMMENT '是否去除前缀 @@yes_no',
+    `trim_value`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '前缀内容',
+    `exclude_columns`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '需要排除的字段',
+    `version`              bigint(20)                                                    NULL     DEFAULT 1 COMMENT '版本',
+    `tenant_id`            varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '租户id',
+    `create_at`            datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_at`            datetime                                                      NULL     DEFAULT NULL COMMENT '编辑时间',
+    `create_by`            varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '创建人',
+    `update_by`            varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '编辑人',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `uk_system_generator_config_server_name`(`server_name`) USING BTREE COMMENT '服务名唯一索引'
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成配置表'
+  ROW_FORMAT = DYNAMIC;//

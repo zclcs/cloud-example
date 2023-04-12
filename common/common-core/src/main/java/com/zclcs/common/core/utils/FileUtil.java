@@ -50,7 +50,7 @@ public class FileUtil {
      * @return 文件类型
      * @throws Exception Exception
      */
-    private String getFileType(File file) throws Exception {
+    public String getFileType(File file) throws Exception {
         Optional.ofNullable(file).orElseThrow(NullPointerException::new);
         if (file.isDirectory()) {
             throw new Exception("file不是文件");
@@ -67,13 +67,13 @@ public class FileUtil {
      * @param fileType fileType
      * @return Boolean
      */
-    private Boolean fileTypeIsValid(String fileType) {
+    public Boolean fileTypeIsValid(String fileType) {
         Optional.ofNullable(fileType).orElseThrow(NullPointerException::new);
         fileType = StrUtil.lowerFirst(fileType);
         return StrUtil.contains(MyConstant.VALID_FILE_TYPE, fileType);
     }
 
-    private void compress(File file, ZipOutputStream zipOut, String baseDir) throws IOException {
+    public void compress(File file, ZipOutputStream zipOut, String baseDir) throws IOException {
         if (file.isDirectory()) {
             compressDirectory(file, zipOut, baseDir);
         } else {
@@ -81,7 +81,7 @@ public class FileUtil {
         }
     }
 
-    private void compressDirectory(File dir, ZipOutputStream zipOut, String baseDir) throws IOException {
+    public void compressDirectory(File dir, ZipOutputStream zipOut, String baseDir) throws IOException {
         File[] files = dir.listFiles();
         Optional.ofNullable(files).orElseThrow(NullPointerException::new);
         if (ArrayUtil.isNotEmpty(files)) {
@@ -91,7 +91,7 @@ public class FileUtil {
         }
     }
 
-    private void compressFile(File file, ZipOutputStream zipOut, String baseDir) throws IOException {
+    public void compressFile(File file, ZipOutputStream zipOut, String baseDir) throws IOException {
         if (!file.exists()) {
             return;
         }

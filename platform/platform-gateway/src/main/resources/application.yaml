@@ -55,8 +55,7 @@ gateway:
 
 logging:
   level:
-    com.zclcs: debug
-    com.alibaba: debug
+    com.zclcs: info
 
 # spring security 配置
 security:

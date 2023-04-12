@@ -123,7 +123,7 @@ public class DictItemController {
     }
 
     @GetMapping("/checkValue")
-    @PreAuthorize("hasAuthority('dictItem:add')")
+    @PreAuthorize("hasAnyAuthority('dictItem:add', 'dictItem:update')")
     @Operation(summary = "检查字典项是否重复")
     @Parameters({
             @Parameter(name = "id", description = "字典项id", required = false, in = ParameterIn.QUERY),

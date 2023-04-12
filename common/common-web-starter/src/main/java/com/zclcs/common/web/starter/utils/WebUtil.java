@@ -1,14 +1,23 @@
 package com.zclcs.common.web.starter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.utils.FileUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -129,5 +138,40 @@ public class WebUtil {
             ip = request.getRemoteAddr();
         }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param filePath 待下载文件路径
+     * @param fileName 下载文件名称
+     * @param delete   下载后是否删除源文件
+     * @param response HttpServletResponse
+     * @throws Exception Exception
+     */
+    public static void download(String filePath, String fileName, Boolean delete, HttpServletResponse response) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new Exception("文件未找到");
+        }
+
+        String fileType = FileUtil.getFileType(file);
+        if (!FileUtil.fileTypeIsValid(fileType)) {
+            throw new Exception("暂不支持该类型文件下载");
+        }
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+        response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
+        response.setCharacterEncoding(MyConstant.UTF8);
+        try (InputStream inputStream = Files.newInputStream(file.toPath()); OutputStream os = response.getOutputStream()) {
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = inputStream.read(b)) > 0) {
+                os.write(b, 0, length);
+            }
+        } finally {
+            if (delete) {
+                FileSystemUtils.deleteRecursively(file);
+            }
+        }
     }
 }

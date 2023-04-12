@@ -22,6 +22,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -71,8 +72,10 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
         String errorMessage;
 
-        if (exception instanceof OAuth2AuthenticationException) {
-            OAuth2AuthenticationException authorizationException = (OAuth2AuthenticationException) exception;
+        if (exception instanceof OAuth2AuthenticationException authorizationException) {
+            if (authorizationException.getError().getErrorCode().equals(OAuth2ErrorCodes.INVALID_GRANT)) {
+                httpResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             errorMessage = StrUtil.isBlank(authorizationException.getError().getDescription())
                     ? authorizationException.getError().getErrorCode()
                     : authorizationException.getError().getDescription();
