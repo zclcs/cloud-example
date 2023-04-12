@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.platform.system.mapper.OauthClientDetailsMapper">
+
+    <sql id="baseSql">
+        select socd.client_id,
+               socd.resource_ids,
+               socd.client_secret,
+               socd.scope,
+               socd.authorized_grant_types,
+               socd.web_server_redirect_uri,
+               socd.authorities,
+               socd.access_token_validity,
+               socd.refresh_token_validity,
+               socd.additional_information,
+               socd.autoapprove
+        from system_oauth_client_details socd
+            ${ew.customSqlSegment}
+    </sql>
+    <sql id="baseCountSql">
+        select count(*)
+        from system_oauth_client_details socd
+            ${ew.customSqlSegment}
+    </sql>
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo">
+        <include refid="baseSql"/>
+    </select>
+    <select id="countVo" resultType="java.lang.Integer">
+        <include refid="baseCountSql"/>
+    </select>
+</mapper>

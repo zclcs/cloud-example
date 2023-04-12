@@ -47,10 +47,13 @@ plugins {
 
 ext {
     javaVersion = JavaVersion.VERSION_17
-    bom = Set.of(project(":cloud-bom"), project(":common"), project(":platform"), project(":platform:platform-system-bom"))
+    bom = Set.of(project(":cloud-bom"), project(":common"),
+            project(":platform"), project(":platform:platform-system-bom"),
+            project(":test"), project(":test:test-test-bom"))
     jibPackage = Set.of(project(":platform:platform-auth"),
             project(":platform:platform-gateway"),
-            project(":platform:platform-system-bom:platform-system"))
+            project(":platform:platform-system-bom:platform-system"),
+            project(":test:test-test-bom:test-test"))
     nativePackage = Set.of(project(":platform:platform-auth"),
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"))

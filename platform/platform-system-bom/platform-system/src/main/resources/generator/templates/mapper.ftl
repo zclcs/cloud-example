@@ -21,33 +21,33 @@ public interface ${className}Mapper extends BaseMapper<${className}> {
     /**
      * 分页
      *
-     * @param basePage 分页对象
-     * @param ew       查询条件
-     * @return 分页对象
+     * @param basePage {@link BasePage}
+     * @param ew       {@link ${className}Vo}
+     * @return {@link ${className}Vo}
      */
     BasePage<${className}Vo> findPageVo(BasePage<${className}Vo> basePage, @Param(Constants.WRAPPER) Wrapper<${className}Vo> ew);
 
     /**
      * 查找集合
      *
-     * @param ew 查询条件
-     * @return 集合对象
+     * @param ew {@link ${className}Vo}
+     * @return {@link ${className}Vo}
      */
     List<${className}Vo> findListVo(@Param(Constants.WRAPPER) Wrapper<${className}Vo> ew);
 
     /**
      * 查找单个
      *
-     * @param ew 查询条件
-     * @return 对象
+     * @param ew {@link ${className}Vo}
+     * @return {@link ${className}Vo}
      */
     ${className}Vo findOneVo(@Param(Constants.WRAPPER) Wrapper<${className}Vo> ew);
 
     /**
      * 统计
      *
-     * @param ew 查询条件
-     * @return 对象
+     * @param ew {@link ${className}Vo}
+     * @return 统计值
      */
     Integer countVo(@Param(Constants.WRAPPER) Wrapper<${className}Vo> ew);
 

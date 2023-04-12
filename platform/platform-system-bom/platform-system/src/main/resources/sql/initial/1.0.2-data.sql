@@ -7,11 +7,21 @@ call insert_if_not_exists(database(), 'system_generator_config',
                         'server_name, author, base_package, entity_package, ao_package, vo_package, mapper_package, mapper_xml_package,
                                     service_package, service_impl_package, controller_package, is_trim, trim_value, exclude_columns, create_at, create_by',
                          '"platform-system", "zclcs", "com.zclcs.platform.system", "api.entity", "api.entity.ao", "api.entity.vo",
-                                    "biz.mapper", "biz.mapper", "biz.service", "biz.service.impl",
-                                    "biz.controller", "1", "system_",
+                                    "mapper", "mapper", "service", "service.impl",
+                                    "controller", "1", "system_",
                                     "version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",
                                     now(), "system"',
                           'server_name = "platform-system"');//
+
+call insert_if_not_exists(database(), 'system_generator_config',
+                          'server_name, author, base_package, entity_package, ao_package, vo_package, mapper_package, mapper_xml_package,
+                                      service_package, service_impl_package, controller_package, is_trim, trim_value, exclude_columns, create_at, create_by',
+                          '"test-test", "zclcs", "com.zclcs.test.test", "api.entity", "api.entity.ao", "api.entity.vo",
+                                     "mapper", "mapper", "service", "service.impl",
+                                     "controller", "1", "test_",
+                                     "version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",
+                                     now(), "system"',
+                          'server_name = "test-test"');//
 
 call insert_if_not_exists(database(), 'system_dept',
                           'dept_code, parent_code, dept_name, order_num, create_at, create_by',

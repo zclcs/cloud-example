@@ -51,7 +51,7 @@ public class ${className}Controller {
     @Operation(summary = "${tableComment}查询（分页）")
     public BaseRsp<BasePage<${className}Vo>> find${className}Page(@Validated BasePageAo basePageAo, @Validated ${className}Vo ${className?uncap_first}Vo) {
         BasePage<${className}Vo> page = this.${className?uncap_first}Service.find${className}Page(basePageAo, ${className?uncap_first}Vo);
-        return BaseRspUtil.data(page);
+        return RspUtil.data(page);
     }
 
     @GetMapping("list")
@@ -59,7 +59,7 @@ public class ${className}Controller {
     @Operation(summary = "${tableComment}查询（集合）")
     public BaseRsp<List<${className}Vo>> find${className}List(@Validated ${className}Vo ${className?uncap_first}Vo) {
         List<${className}Vo> list = this.${className?uncap_first}Service.find${className}List(${className?uncap_first}Vo);
-        return BaseRspUtil.data(list);
+        return RspUtil.data(list);
     }
 
     @GetMapping("one")
@@ -67,7 +67,7 @@ public class ${className}Controller {
     @Operation(summary = "${tableComment}查询（单个）")
     public BaseRsp<${className}Vo> find${className}(@Validated ${className}Vo ${className?uncap_first}Vo) {
         ${className}Vo ${className?uncap_first} = this.${className?uncap_first}Service.find${className}(${className?uncap_first}Vo);
-        return BaseRspUtil.data(${className?uncap_first});
+        return RspUtil.data(${className?uncap_first});
     }
 
     @PostMapping
@@ -75,7 +75,7 @@ public class ${className}Controller {
     @ControllerEndpoint(operation = "新增${tableComment}")
     @Operation(summary = "新增${tableComment}")
     public BaseRsp<${className}> add${className}(@RequestBody @Validated ${className}Ao ${className?uncap_first}Ao) {
-        return BaseRspUtil.data(this.${className?uncap_first}Service.create${className}(${className?uncap_first}Ao));
+        return RspUtil.data(this.${className?uncap_first}Service.create${className}(${className?uncap_first}Ao));
     }
 
     @DeleteMapping("/{${className?uncap_first}Ids}")
@@ -88,7 +88,7 @@ public class ${className}Controller {
     public BaseRsp<String> delete${className}(@NotBlank(message = "{required}") @PathVariable String ${className?uncap_first}Ids) {
         List<Long> ids = Arrays.stream(${className?uncap_first}Ids.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.${className?uncap_first}Service.delete${className}(ids);
-        return BaseRspUtil.message("删除成功");
+        return RspUtil.message("删除成功");
     }
 
     @PutMapping
@@ -96,6 +96,6 @@ public class ${className}Controller {
     @ControllerEndpoint(operation = "修改${tableComment}")
     @Operation(summary = "修改${tableComment}")
     public BaseRsp<${className}> update${className}(@RequestBody @Validated(UpdateStrategy.class) ${className}Ao ${className?uncap_first}Ao) {
-        return BaseRspUtil.data(this.${className?uncap_first}Service.update${className}(${className?uncap_first}Ao));
+        return RspUtil.data(this.${className?uncap_first}Service.update${className}(${className?uncap_first}Ao));
     }
 }

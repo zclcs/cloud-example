@@ -52,7 +52,6 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
     @Override
     public Integer count${className}(${className}Vo ${className?uncap_first}Vo) {
     QueryWrapper<${className}Vo> queryWrapper = getQueryWrapper(${className?uncap_first}Vo);
-        // TODO 设置统计查询条件
         return this.baseMapper.countVo(queryWrapper);
     }
 

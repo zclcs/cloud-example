@@ -56,12 +56,12 @@ public class ${className}Ao implements Serializable {
     || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
         <#if column.isNullable = false && column.isKey = false>
     @NotBlank(message = "{required}")
-    @Schema(title = "${column.remark}", required = true)
+    @Schema(title = "${column.remark}", requiredMode = Schema.RequiredMode.REQUIRED)
         </#if>
     <#else>
         <#if column.isNullable = false && column.isKey = false>
     @NotNull(message = "{required}")
-    @Schema(title = "${column.remark}", required = true)
+    @Schema(title = "${column.remark}", requiredMode = Schema.RequiredMode.REQUIRED)
         </#if>
     </#if>
     <#if column.isNullable = true && column.isKey = false>

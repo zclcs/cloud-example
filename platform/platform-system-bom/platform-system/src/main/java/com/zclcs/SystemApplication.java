@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableMyResourceServer
 @EnableMyFeignClients
 @EnableDiscoveryClient
-@MapperScan("com.zclcs.platform.system.biz.mapper")
+@MapperScan("com.zclcs.platform.system.mapper")
 @SpringBootApplication
 @EnableMyDoc
 public class SystemApplication {

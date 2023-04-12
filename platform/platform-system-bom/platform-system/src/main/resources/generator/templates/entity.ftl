@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("${tableName}")
-@ApiModel(value = "${className}对象", description = "${tableComment}")
+@Schema(title = "${className}对象", description = "${tableComment}")
 public class ${className} extends BaseEntity implements Serializable {
 
     @Serial
