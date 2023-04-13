@@ -17,10 +17,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +47,7 @@ public class MinioBucketController {
     @GetMapping
     @Operation(summary = "桶查询（分页）")
     @PreAuthorize("hasAuthority('bucket:view')")
-    public BaseRsp<BasePage<MinioBucketVo>> findMinioBucketPage(@Valid BasePageAo basePageAo, MinioBucketVo minioBucketVo) {
+    public BaseRsp<BasePage<MinioBucketVo>> findMinioBucketPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MinioBucketVo minioBucketVo) {
         BasePage<MinioBucketVo> page = this.minioBucketService.findMinioBucketPage(basePageAo, minioBucketVo);
         return RspUtil.data(page);
     }
@@ -55,7 +55,7 @@ public class MinioBucketController {
     @GetMapping("/list")
     @Operation(summary = "桶查询（集合）")
     @PreAuthorize("hasAuthority('bucket:view')")
-    public BaseRsp<List<MinioBucketVo>> findMinioBucketList(MinioBucketVo minioBucketVo) {
+    public BaseRsp<List<MinioBucketVo>> findMinioBucketList(@ParameterObject @Validated MinioBucketVo minioBucketVo) {
         List<MinioBucketVo> list = this.minioBucketService.findMinioBucketList(minioBucketVo);
         return RspUtil.data(list);
     }
@@ -63,7 +63,7 @@ public class MinioBucketController {
     @GetMapping("/one")
     @Operation(summary = "桶查询（单个）")
     @PreAuthorize("hasAuthority('bucket:view')")
-    public BaseRsp<MinioBucketVo> findMinioBucket(MinioBucketVo minioBucketVo) {
+    public BaseRsp<MinioBucketVo> findMinioBucket(@ParameterObject @Validated MinioBucketVo minioBucketVo) {
         MinioBucketVo minioBucket = this.minioBucketService.findMinioBucket(minioBucketVo);
         return RspUtil.data(minioBucket);
     }

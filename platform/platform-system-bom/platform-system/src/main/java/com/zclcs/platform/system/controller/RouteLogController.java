@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class RouteLogController {
     @GetMapping
     @PreAuthorize("hasAuthority('routeLog:view')")
     @Operation(summary = "网关转发日志查询（分页）")
-    public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
+    public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
         return RspUtil.data(page);
     }
@@ -52,7 +53,7 @@ public class RouteLogController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('routeLog:view')")
     @Operation(summary = "网关转发日志查询（集合）")
-    public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
+    public BaseRsp<List<RouteLogVo>> findRouteLogList(@ParameterObject @Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
         return RspUtil.data(list);
     }
@@ -60,7 +61,7 @@ public class RouteLogController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('routeLog:view')")
     @Operation(summary = "网关转发日志查询（单个）")
-    public BaseRsp<RouteLogVo> findRouteLog(@Validated RouteLogVo routeLogVo) {
+    public BaseRsp<RouteLogVo> findRouteLog(@ParameterObject @Validated RouteLogVo routeLogVo) {
         RouteLogVo routeLog = this.routeLogService.findRouteLog(routeLogVo);
         return RspUtil.data(routeLog);
     }

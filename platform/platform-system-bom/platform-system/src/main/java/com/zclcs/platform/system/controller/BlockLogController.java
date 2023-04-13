@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class BlockLogController {
     @GetMapping
     @PreAuthorize("hasAuthority('blockLog:view')")
     @Operation(summary = "黑名单拦截日志查询（分页）")
-    public BaseRsp<BasePage<BlockLogVo>> findBlockLogPage(@Validated BasePageAo basePageAo, @Validated BlockLogVo blockLogVo) {
+    public BaseRsp<BasePage<BlockLogVo>> findBlockLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated BlockLogVo blockLogVo) {
         BasePage<BlockLogVo> page = this.blockLogService.findBlockLogPage(basePageAo, blockLogVo);
         return RspUtil.data(page);
     }
@@ -52,7 +53,7 @@ public class BlockLogController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('blockLog:view')")
     @Operation(summary = "黑名单拦截日志查询（集合）")
-    public BaseRsp<List<BlockLogVo>> findBlockLogList(@Validated BlockLogVo blockLogVo) {
+    public BaseRsp<List<BlockLogVo>> findBlockLogList(@ParameterObject @Validated BlockLogVo blockLogVo) {
         List<BlockLogVo> list = this.blockLogService.findBlockLogList(blockLogVo);
         return RspUtil.data(list);
     }
@@ -60,7 +61,7 @@ public class BlockLogController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('blockLog:view')")
     @Operation(summary = "黑名单拦截日志查询（单个）")
-    public BaseRsp<BlockLogVo> findBlockLog(@Validated BlockLogVo blockLogVo) {
+    public BaseRsp<BlockLogVo> findBlockLog(@ParameterObject @Validated BlockLogVo blockLogVo) {
         BlockLogVo blockLog = this.blockLogService.findBlockLog(blockLogVo);
         return RspUtil.data(blockLog);
     }

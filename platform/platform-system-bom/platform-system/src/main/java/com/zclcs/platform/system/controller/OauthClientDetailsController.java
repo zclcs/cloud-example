@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +50,7 @@ public class OauthClientDetailsController {
     @GetMapping
     @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（分页）")
-    public BaseRsp<BasePage<OauthClientDetailsVo>> findOauthClientDetailsPage(@Validated BasePageAo basePageAo, @Validated OauthClientDetailsVo oauthClientDetailsVo) {
+    public BaseRsp<BasePage<OauthClientDetailsVo>> findOauthClientDetailsPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         BasePage<OauthClientDetailsVo> page = this.oauthClientDetailsService.findOauthClientDetailsPage(basePageAo, oauthClientDetailsVo);
         return RspUtil.data(page);
     }
@@ -57,7 +58,7 @@ public class OauthClientDetailsController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（集合）")
-    public BaseRsp<List<OauthClientDetailsVo>> findOauthClientDetailsList(@Validated OauthClientDetailsVo oauthClientDetailsVo) {
+    public BaseRsp<List<OauthClientDetailsVo>> findOauthClientDetailsList(@ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         List<OauthClientDetailsVo> list = this.oauthClientDetailsService.findOauthClientDetailsList(oauthClientDetailsVo);
         return RspUtil.data(list);
     }
@@ -65,7 +66,7 @@ public class OauthClientDetailsController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('oauthClientDetails:view')")
     @Operation(summary = "终端信息查询（单个）")
-    public BaseRsp<OauthClientDetailsVo> findOauthClientDetails(@Validated OauthClientDetailsVo oauthClientDetailsVo) {
+    public BaseRsp<OauthClientDetailsVo> findOauthClientDetails(@ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         OauthClientDetailsVo oauthClientDetails = this.oauthClientDetailsService.findOauthClientDetails(oauthClientDetailsVo);
         return RspUtil.data(oauthClientDetails);
     }

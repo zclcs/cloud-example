@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class DeptController {
     @GetMapping
     @PreAuthorize("hasAuthority('dept:view')")
     @Operation(summary = "部门查询（分页）")
-    public BaseRsp<BasePage<DeptVo>> findDeptPage(@Validated BasePageAo basePageAo, @Validated DeptVo deptVo) {
+    public BaseRsp<BasePage<DeptVo>> findDeptPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated DeptVo deptVo) {
         BasePage<DeptVo> page = this.deptService.findDeptPage(basePageAo, deptVo);
         return RspUtil.data(page);
     }
@@ -56,7 +57,7 @@ public class DeptController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('dept:view')")
     @Operation(summary = "部门查询（集合）")
-    public BaseRsp<List<DeptVo>> findDeptList(@Validated DeptVo deptVo) {
+    public BaseRsp<List<DeptVo>> findDeptList(@ParameterObject @Validated DeptVo deptVo) {
         List<DeptVo> list = this.deptService.findDeptList(deptVo);
         return RspUtil.data(list);
     }
@@ -64,7 +65,7 @@ public class DeptController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('dept:view')")
     @Operation(summary = "部门查询（单个）")
-    public BaseRsp<DeptVo> findDept(@Validated DeptVo deptVo) {
+    public BaseRsp<DeptVo> findDept(@ParameterObject @Validated DeptVo deptVo) {
         DeptVo dept = this.deptService.findDept(deptVo);
         return RspUtil.data(dept);
     }

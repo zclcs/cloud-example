@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class RoleController {
     @GetMapping
     @PreAuthorize("hasAuthority('role:view')")
     @Operation(summary = "角色查询（分页）")
-    public BaseRsp<BasePage<RoleVo>> findRolePage(@Validated BasePageAo basePageAo, @Validated RoleVo roleVo) {
+    public BaseRsp<BasePage<RoleVo>> findRolePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RoleVo roleVo) {
         BasePage<RoleVo> page = this.roleService.findRolePage(basePageAo, roleVo);
         return RspUtil.data(page);
     }
@@ -54,7 +55,7 @@ public class RoleController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('role:view')")
     @Operation(summary = "角色查询（集合）")
-    public BaseRsp<List<RoleVo>> findRoleList(@Validated RoleVo roleVo) {
+    public BaseRsp<List<RoleVo>> findRoleList(@ParameterObject @Validated RoleVo roleVo) {
         List<RoleVo> list = this.roleService.findRoleList(roleVo);
         return RspUtil.data(list);
     }
@@ -62,7 +63,7 @@ public class RoleController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('role:view')")
     @Operation(summary = "角色查询（单个）")
-    public BaseRsp<RoleVo> findRole(@Validated RoleVo roleVo) {
+    public BaseRsp<RoleVo> findRole(@ParameterObject @Validated RoleVo roleVo) {
         RoleVo role = this.roleService.findRole(roleVo);
         return RspUtil.data(role);
     }

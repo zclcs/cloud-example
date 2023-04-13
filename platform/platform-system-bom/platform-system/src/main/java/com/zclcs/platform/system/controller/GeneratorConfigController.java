@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class GeneratorConfigController {
     @GetMapping
     @PreAuthorize("hasAuthority('generatorConfig:view')")
     @Operation(summary = "代码生成配置查询（分页）")
-    public BaseRsp<BasePage<GeneratorConfigVo>> findGeneratorConfigPage(@Validated BasePageAo basePageAo, @Validated GeneratorConfigVo generatorConfigVo) {
+    public BaseRsp<BasePage<GeneratorConfigVo>> findGeneratorConfigPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         BasePage<GeneratorConfigVo> page = this.generatorConfigService.findGeneratorConfigPage(basePageAo, generatorConfigVo);
         return RspUtil.data(page);
     }
@@ -50,7 +51,7 @@ public class GeneratorConfigController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('generatorConfig:view')")
     @Operation(summary = "代码生成配置查询（集合）")
-    public BaseRsp<List<GeneratorConfigVo>> findGeneratorConfigList(@Validated GeneratorConfigVo generatorConfigVo) {
+    public BaseRsp<List<GeneratorConfigVo>> findGeneratorConfigList(@ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         List<GeneratorConfigVo> list = this.generatorConfigService.findGeneratorConfigList(generatorConfigVo);
         return RspUtil.data(list);
     }
@@ -58,7 +59,7 @@ public class GeneratorConfigController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('generatorConfig:view')")
     @Operation(summary = "代码生成配置查询（单个）")
-    public BaseRsp<GeneratorConfigVo> findGeneratorConfig(@Validated GeneratorConfigVo generatorConfigVo) {
+    public BaseRsp<GeneratorConfigVo> findGeneratorConfig(@ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         GeneratorConfigVo generatorConfig = this.generatorConfigService.findGeneratorConfig(generatorConfigVo);
         return RspUtil.data(generatorConfig);
     }

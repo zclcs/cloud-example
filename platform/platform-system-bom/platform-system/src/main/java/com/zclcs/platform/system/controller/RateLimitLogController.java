@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class RateLimitLogController {
     @GetMapping
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     @Operation(summary = "限流拦截日志查询（分页）")
-    public BaseRsp<BasePage<RateLimitLogVo>> findRateLimitLogPage(@Validated BasePageAo basePageAo, @Validated RateLimitLogVo rateLimitLogVo) {
+    public BaseRsp<BasePage<RateLimitLogVo>> findRateLimitLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> page = this.rateLimitLogService.findRateLimitLogPage(basePageAo, rateLimitLogVo);
         return RspUtil.data(page);
     }
@@ -52,7 +53,7 @@ public class RateLimitLogController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     @Operation(summary = "限流拦截日志查询（集合）")
-    public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@Validated RateLimitLogVo rateLimitLogVo) {
+    public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         List<RateLimitLogVo> list = this.rateLimitLogService.findRateLimitLogList(rateLimitLogVo);
         return RspUtil.data(list);
     }
@@ -60,7 +61,7 @@ public class RateLimitLogController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('rateLimitLog:view')")
     @Operation(summary = "限流拦截日志查询（单个）")
-    public BaseRsp<RateLimitLogVo> findRateLimitLog(@Validated RateLimitLogVo rateLimitLogVo) {
+    public BaseRsp<RateLimitLogVo> findRateLimitLog(@ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         RateLimitLogVo rateLimitLog = this.rateLimitLogService.findRateLimitLog(rateLimitLogVo);
         return RspUtil.data(rateLimitLog);
     }

@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class RateLimitRuleController {
     @GetMapping
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     @Operation(summary = "限流规则查询（分页）")
-    public BaseRsp<BasePage<RateLimitRuleVo>> findRateLimitRulePage(@Validated BasePageAo basePageAo, @Validated RateLimitRuleVo rateLimitRuleVo) {
+    public BaseRsp<BasePage<RateLimitRuleVo>> findRateLimitRulePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         BasePage<RateLimitRuleVo> page = this.rateLimitRuleService.findRateLimitRulePage(basePageAo, rateLimitRuleVo);
         return RspUtil.data(page);
     }
@@ -53,7 +54,7 @@ public class RateLimitRuleController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     @Operation(summary = "限流规则查询（集合）")
-    public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@Validated RateLimitRuleVo rateLimitRuleVo) {
+    public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         List<RateLimitRuleVo> list = this.rateLimitRuleService.findRateLimitRuleList(rateLimitRuleVo);
         return RspUtil.data(list);
     }
@@ -61,7 +62,7 @@ public class RateLimitRuleController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('rateLimitRule:view')")
     @Operation(summary = "限流规则查询（单个）")
-    public BaseRsp<RateLimitRuleVo> findRateLimitRule(@Validated RateLimitRuleVo rateLimitRuleVo) {
+    public BaseRsp<RateLimitRuleVo> findRateLimitRule(@ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         RateLimitRuleVo rateLimitRule = this.rateLimitRuleService.findRateLimitRule(rateLimitRuleVo);
         return RspUtil.data(rateLimitRule);
     }

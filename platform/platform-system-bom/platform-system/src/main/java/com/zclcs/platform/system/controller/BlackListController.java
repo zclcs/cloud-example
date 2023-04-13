@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class BlackListController {
     @GetMapping
     @PreAuthorize("hasAuthority('blackList:view')")
     @Operation(summary = "黑名单查询（分页）")
-    public BaseRsp<BasePage<BlackListVo>> findBlackListPage(@Validated BasePageAo basePageAo, @Validated BlackListVo blackListVo) {
+    public BaseRsp<BasePage<BlackListVo>> findBlackListPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated BlackListVo blackListVo) {
         BasePage<BlackListVo> page = this.blackListService.findBlackListPage(basePageAo, blackListVo);
         return RspUtil.data(page);
     }
@@ -54,7 +55,7 @@ public class BlackListController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('blackList:view')")
     @Operation(summary = "黑名单查询（集合）")
-    public BaseRsp<List<BlackListVo>> findBlackListList(@Validated BlackListVo blackListVo) {
+    public BaseRsp<List<BlackListVo>> findBlackListList(@ParameterObject @Validated BlackListVo blackListVo) {
         List<BlackListVo> list = this.blackListService.findBlackListList(blackListVo);
         return RspUtil.data(list);
     }
@@ -62,7 +63,7 @@ public class BlackListController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('blackList:view')")
     @Operation(summary = "黑名单查询（单个）")
-    public BaseRsp<BlackListVo> findBlackList(@Validated BlackListVo blackListVo) {
+    public BaseRsp<BlackListVo> findBlackList(@ParameterObject @Validated BlackListVo blackListVo) {
         BlackListVo blackList = this.blackListService.findBlackList(blackListVo);
         return RspUtil.data(blackList);
     }

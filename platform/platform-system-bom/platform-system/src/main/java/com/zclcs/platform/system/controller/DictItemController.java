@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class DictItemController {
     @GetMapping
     @PreAuthorize("hasAuthority('dictItem:view')")
     @Operation(summary = "字典项查询（分页）")
-    public BaseRsp<BasePage<DictItemVo>> findDictItemPage(@Validated BasePageAo basePageAo, @Validated DictItemVo dictItemVo) {
+    public BaseRsp<BasePage<DictItemVo>> findDictItemPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated DictItemVo dictItemVo) {
         BasePage<DictItemVo> page = this.dictItemService.findDictItemPage(basePageAo, dictItemVo);
         return RspUtil.data(page);
     }
@@ -56,7 +57,7 @@ public class DictItemController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('dictItem:view')")
     @Operation(summary = "字典项查询（集合）")
-    public BaseRsp<List<DictItemVo>> findDictItemList(@Validated DictItemVo dictItemVo) {
+    public BaseRsp<List<DictItemVo>> findDictItemList(@ParameterObject @Validated DictItemVo dictItemVo) {
         List<DictItemVo> list = this.dictItemService.findDictItemList(dictItemVo);
         return RspUtil.data(list);
     }
@@ -64,7 +65,7 @@ public class DictItemController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('dictItem:view')")
     @Operation(summary = "字典项查询（单个）")
-    public BaseRsp<DictItemVo> findDictItem(@Validated DictItemVo dictItemVo) {
+    public BaseRsp<DictItemVo> findDictItem(@ParameterObject @Validated DictItemVo dictItemVo) {
         DictItemVo dictItem = this.dictItemService.findDictItem(dictItemVo);
         return RspUtil.data(dictItem);
     }

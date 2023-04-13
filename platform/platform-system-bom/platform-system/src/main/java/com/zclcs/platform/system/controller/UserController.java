@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +56,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('user:view')")
     @Operation(summary = "用户查询（分页）")
-    public BaseRsp<BasePage<UserVo>> findUserPage(@Validated BasePageAo basePageAo, @Validated UserVo userVo) {
+    public BaseRsp<BasePage<UserVo>> findUserPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated UserVo userVo) {
         BasePage<UserVo> page = this.userService.findUserPage(basePageAo, userVo);
         return RspUtil.data(page);
     }
@@ -63,7 +64,7 @@ public class UserController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('user:view')")
     @Operation(summary = "用户查询（集合）")
-    public BaseRsp<List<UserVo>> findUserList(@Validated UserVo userVo) {
+    public BaseRsp<List<UserVo>> findUserList(@ParameterObject @Validated UserVo userVo) {
         List<UserVo> list = this.userService.findUserList(userVo);
         return RspUtil.data(list);
     }
@@ -71,7 +72,7 @@ public class UserController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('user:view')")
     @Operation(summary = "用户查询（单个）")
-    public BaseRsp<UserVo> findUser(@Validated UserVo userVo) {
+    public BaseRsp<UserVo> findUser(@ParameterObject @Validated UserVo userVo) {
         UserVo user = this.userService.findUser(userVo);
         return RspUtil.data(user);
     }
@@ -117,8 +118,8 @@ public class UserController {
     @GetMapping("/options")
     @PreAuthorize("hasAuthority('user:view')")
     @Operation(summary = "下拉树")
-    public BaseRsp<List<UserVo>> userList(@Validated UserVo selectSystemUserAo) {
-        List<UserVo> userDetailPage = userService.findUserList(selectSystemUserAo);
+    public BaseRsp<List<UserVo>> userList(@ParameterObject @Validated UserVo userVo) {
+        List<UserVo> userDetailPage = userService.findUserList(userVo);
         return RspUtil.data(userDetailPage);
     }
 

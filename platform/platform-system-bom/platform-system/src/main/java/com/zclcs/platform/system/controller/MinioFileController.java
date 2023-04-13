@@ -20,15 +20,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +60,7 @@ public class MinioFileController {
     @GetMapping
     @Operation(summary = "文件查询（分页）")
     @PreAuthorize("hasAuthority('file:view')")
-    public BaseRsp<BasePage<MinioFileVo>> findMinioFilePage(@Valid BasePageAo basePageAo, MinioFileVo minioFileVo) {
+    public BaseRsp<BasePage<MinioFileVo>> findMinioFilePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> page = this.minioFileService.findMinioFilePage(basePageAo, minioFileVo);
         return RspUtil.data(page);
     }
@@ -67,7 +68,7 @@ public class MinioFileController {
     @GetMapping("list")
     @Operation(summary = "文件查询（集合）")
     @PreAuthorize("hasAuthority('file:view')")
-    public BaseRsp<List<MinioFileVo>> findMinioFileList(MinioFileVo minioFileVo) {
+    public BaseRsp<List<MinioFileVo>> findMinioFileList(@ParameterObject @Validated MinioFileVo minioFileVo) {
         List<MinioFileVo> list = this.minioFileService.findMinioFileList(minioFileVo);
         return RspUtil.data(list);
     }
@@ -75,7 +76,7 @@ public class MinioFileController {
     @GetMapping("one")
     @Operation(summary = "文件查询（单个）")
     @PreAuthorize("hasAuthority('file:view')")
-    public BaseRsp<MinioFileVo> findMinioFile(MinioFileVo minioFileVo) {
+    public BaseRsp<MinioFileVo> findMinioFile(@ParameterObject @Validated MinioFileVo minioFileVo) {
         MinioFileVo minioFile = this.minioFileService.findMinioFile(minioFileVo);
         return RspUtil.data(minioFile);
     }

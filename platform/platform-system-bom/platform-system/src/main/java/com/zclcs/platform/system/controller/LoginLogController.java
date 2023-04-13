@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class LoginLogController {
     @GetMapping
     @PreAuthorize("hasAuthority('loginLog:view')")
     @Operation(summary = "登录日志查询（分页）")
-    public BaseRsp<BasePage<LoginLogVo>> findLoginLogPage(@Validated BasePageAo basePageAo, @Validated LoginLogVo loginLogVo) {
+    public BaseRsp<BasePage<LoginLogVo>> findLoginLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated LoginLogVo loginLogVo) {
         BasePage<LoginLogVo> page = this.loginLogService.findLoginLogPage(basePageAo, loginLogVo);
         return RspUtil.data(page);
     }
@@ -50,7 +51,7 @@ public class LoginLogController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('loginLog:view')")
     @Operation(summary = "登录日志查询（集合）")
-    public BaseRsp<List<LoginLogVo>> findLoginLogList(@Validated LoginLogVo loginLogVo) {
+    public BaseRsp<List<LoginLogVo>> findLoginLogList(@ParameterObject @Validated LoginLogVo loginLogVo) {
         List<LoginLogVo> list = this.loginLogService.findLoginLogList(loginLogVo);
         return RspUtil.data(list);
     }
@@ -58,7 +59,7 @@ public class LoginLogController {
     @GetMapping("/one")
     @PreAuthorize("hasAuthority('loginLog:view')")
     @Operation(summary = "登录日志查询（单个）")
-    public BaseRsp<LoginLogVo> findLoginLog(@Validated LoginLogVo loginLogVo) {
+    public BaseRsp<LoginLogVo> findLoginLog(@ParameterObject @Validated LoginLogVo loginLogVo) {
         LoginLogVo loginLog = this.loginLogService.findLoginLog(loginLogVo);
         return RspUtil.data(loginLog);
     }

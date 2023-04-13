@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +50,7 @@ public class ${className}Controller {
     @GetMapping
     @PreAuthorize("hasAuthority('${className?uncap_first}:view')")
     @Operation(summary = "${tableComment}查询（分页）")
-    public BaseRsp<BasePage<${className}Vo>> find${className}Page(@Validated BasePageAo basePageAo, @Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<BasePage<${className}Vo>> find${className}Page(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
         BasePage<${className}Vo> page = this.${className?uncap_first}Service.find${className}Page(basePageAo, ${className?uncap_first}Vo);
         return RspUtil.data(page);
     }
@@ -57,7 +58,7 @@ public class ${className}Controller {
     @GetMapping("list")
     @PreAuthorize("hasAuthority('${className?uncap_first}:view')")
     @Operation(summary = "${tableComment}查询（集合）")
-    public BaseRsp<List<${className}Vo>> find${className}List(@Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<List<${className}Vo>> find${className}List(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
         List<${className}Vo> list = this.${className?uncap_first}Service.find${className}List(${className?uncap_first}Vo);
         return RspUtil.data(list);
     }
@@ -65,7 +66,7 @@ public class ${className}Controller {
     @GetMapping("one")
     @PreAuthorize("hasAuthority('${className?uncap_first}:view')")
     @Operation(summary = "${tableComment}查询（单个）")
-    public BaseRsp<${className}Vo> find${className}(@Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<${className}Vo> find${className}(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
         ${className}Vo ${className?uncap_first} = this.${className?uncap_first}Service.find${className}(${className?uncap_first}Vo);
         return RspUtil.data(${className?uncap_first});
     }
