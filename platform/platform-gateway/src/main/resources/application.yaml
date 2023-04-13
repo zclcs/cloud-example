@@ -19,6 +19,7 @@ spring:
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
       - nacos:jasypt.yaml
+      - nacos:swagger-${spring.profiles.active}.yaml
 
   cloud:
 

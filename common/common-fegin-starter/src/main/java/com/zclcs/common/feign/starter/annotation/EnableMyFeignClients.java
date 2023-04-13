@@ -55,6 +55,7 @@ public @interface EnableMyFeignClients {
      * <code>@Bean</code> definition for the pieces that make up the client, for instance
      * {@link feign.codec.Decoder}, {@link feign.codec.Encoder}, {@link feign.Contract}.
      *
+     * @return list of default configurations
      * @see FeignClientsConfiguration for the defaults
      */
     Class<?>[] defaultConfiguration() default {};
@@ -63,7 +64,7 @@ public @interface EnableMyFeignClients {
      * List of classes annotated with @FeignClient. If not empty, disables classpath
      * scanning.
      *
-     * @return
+     * @return list of FeignClient classes
      */
     Class<?>[] clients() default {};
 

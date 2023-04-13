@@ -6,16 +6,14 @@ import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.properties.MyNacosProperties;
 import com.zclcs.common.core.utils.SpringContextHolderUtil;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -26,25 +24,14 @@ import java.util.concurrent.Executor;
 @Component
 public class RoutesConfigListener {
 
-    private static final List<String> ROUTE_LIST = new ArrayList<>();
-    private final String dataId = "gateway-routes.json";
-
     private RoutesHandler routesHandler;
 
-    @Value("${spring.cloud.nacos.config.server-addr}")
-    private String serverAddr;
+    private MyNacosProperties myNacosProperties;
 
-    @Value("${spring.cloud.nacos.config.namespace}")
-    private String namespace;
-
-    @Value("${spring.cloud.nacos.config.group}")
-    private String group;
-
-    @Value("${spring.cloud.nacos.config.username}")
-    private String username;
-
-    @Value("${spring.cloud.nacos.config.password}")
-    private String password;
+    @Autowired
+    public void setNacosProperties(MyNacosProperties myNacosProperties) {
+        this.myNacosProperties = myNacosProperties;
+    }
 
     @Autowired
     public void setRoutesHandler(RoutesHandler routesHandler) {
@@ -53,7 +40,14 @@ public class RoutesConfigListener {
 
     @PostConstruct
     public void dynamicRouteByNacosListener() throws NacosException {
-        log.info("gateway-routes dynamicRouteByNacosListener config serverAddr is {} namespace is {} group is {} username is {} password is {}", serverAddr, namespace, group, username, password);
+        String serverAddr = myNacosProperties.getServerAddr();
+        String namespace = myNacosProperties.getNamespace();
+        String group = myNacosProperties.getGroup();
+        String username = myNacosProperties.getUsername();
+        String password = myNacosProperties.getPassword();
+        String dataId = "gateway-routes.json";
+        log.info("gateway-routes dynamicRouteByNacosListener config serverAddr is {} namespace is {} group is {} username is {} password is {}",
+                serverAddr, namespace, group, username, password);
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
         properties.put(PropertyKeyConst.NAMESPACE, namespace);

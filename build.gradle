@@ -11,8 +11,7 @@ buildscript {
         mybatisPlusVersion = "3.5.3.1"
         dynamicDatasourceVersion = "3.6.0"
         p6spyVersion = "3.9.1"
-        swaggerCoreVersion = "2.2.7"
-        knife4jVersion = "4.0.0"
+        knife4jVersion = "4.1.0"
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
         seataVersion = "1.6.1"
@@ -93,6 +92,7 @@ configure(commons) {
         management platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
+        management platform("com.github.xiaoymin:knife4j-dependencies:$knife4jVersion")
         management platform(project(":cloud-bom"))
         management platform(project(":common"))
         implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"

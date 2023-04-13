@@ -46,9 +46,44 @@ public class SwaggerProperties {
     private String title = "";
 
     /**
+     * 版本
+     **/
+    private String version = "";
+
+    /**
+     * 描述
+     **/
+    private String description = "";
+
+    /**
+     * 服务Url
+     **/
+    private String termsOfService = "";
+
+    /**
+     * 作者
+     **/
+    private String concatName = "";
+
+    /**
+     * 作者邮箱
+     **/
+    private String concatEmail = "";
+
+    /**
+     * 开源协议
+     **/
+    private String license = "";
+
+    /**
+     * 开源协议地址
+     **/
+    private String licenseUrl = "";
+
+    /**
      * 网关
      */
-    private String gateway;
+    private String gatewayEndPoint;
 
     /**
      * 获取token

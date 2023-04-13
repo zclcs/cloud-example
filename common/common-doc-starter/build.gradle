@@ -1,4 +1,4 @@
 dependencies {
-    api "org.springdoc:springdoc-openapi-starter-webmvc-api"
-    api "org.springframework.cloud:spring-cloud-commons"
+    api project(":common:common-core")
+    api "com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter"
 }

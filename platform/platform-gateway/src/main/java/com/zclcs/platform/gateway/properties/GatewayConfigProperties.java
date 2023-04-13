@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author zclcs
@@ -26,10 +25,5 @@ public class GatewayConfigProperties {
      * 网关不需要校验验证码的客户端
      */
     private List<String> ignoreClients;
-
-    /**
-     * 服务 api docs 映射
-     */
-    private Map<String, String> services;
 
 }

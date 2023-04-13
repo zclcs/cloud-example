@@ -33,7 +33,7 @@ CREATE TABLE `config_info`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uk_configinfo_datagrouptenant` (`data_id`, `group_id`, `tenant_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 31
+  AUTO_INCREMENT = 41
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_info'
   ROW_FORMAT = DYNAMIC;
@@ -87,25 +87,30 @@ VALUES (9, 'jasypt.yaml', 'DEFAULT_GROUP',
         'eaf193a7bdff16331a6b4a68d22bbe57', '2023-03-24 17:13:24', '2023-03-24 17:13:24', NULL, '192.168.33.1', '',
         'dev', '加解密根密码', NULL, NULL, 'yaml', NULL, '');
 INSERT INTO `config_info`
-VALUES (10, 'swagger.yaml', 'DEFAULT_GROUP',
-        'swagger:\r\n  enabled: true\r\n  title: Swagger API\r\n  gateway: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\r\n  token-url: ${swagger.gateway}/auth/oauth2/token\r\n  scope: server\r\n  base-package: com.zclcs',
-        'f15072788d118d22895646a906ad13e1', '2023-03-24 17:13:24', '2023-03-24 17:13:24', NULL, '192.168.33.1', '',
-        'dev', 'swagger', NULL, NULL, 'yaml', NULL, '');
-INSERT INTO `config_info`
 VALUES (11, 'system-dict.yaml', 'DEFAULT_GROUP',
         'system:\r\n  dict:\r\n    text-value-default-null: true\r\n    cache:\r\n      enabled: true\r\n      maximum-size: 500\r\n      initial-capacity: 50\r\n      duration: 30s\r\n      miss-num: 50',
         '80074d97adf513b2794679d182e491d8', '2023-03-24 17:13:24', '2023-03-24 17:13:24', NULL, '192.168.33.1', '',
         'dev', NULL, NULL, NULL, 'yaml', NULL, '');
 INSERT INTO `config_info`
 VALUES (29, 'gateway-routes.json', 'DEFAULT_GROUP',
-        '[\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
-        '7cc229f94674d9675e235ab2c4d03316', '2023-03-31 09:32:01', '2023-03-31 10:03:53', 'nacos', '192.168.33.1', '',
+        '[\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"test-test\",\n    \"uri\": \"lb://test-test\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/test/**\"\n        }\n      }\n    ]\n  }\n]',
+        '0a9923c3357004b4c34dabaceb95967d', '2023-03-31 09:32:01', '2023-04-13 09:33:11', 'nacos', '192.168.33.1', '',
         'dev', '', '', '', 'json', '', '');
 INSERT INTO `config_info`
 VALUES (30, 'minio.yaml', 'DEFAULT_GROUP',
-        'minio:\r\n  host: ${MINIO_HOST:127.0.0.1}\r\n  port: ${MINIO_PORT:9000}\r\n  endpoint: http://${minio.host}:${minio.port}\r\n  root-user: ${MINIO_ROOT_USER:admin}\r\n  root-password: ${MINIO_ROOT_PASSWORD:minioadmin}\r\n  domain-name: ${DOMAIN_NAME:}',
-        '7941222b40d4f2b719d9bf06d468d64f', '2023-04-03 15:19:01', '2023-04-03 15:19:01', NULL, '192.168.33.1', '',
-        'dev', NULL, NULL, NULL, 'yaml', NULL, '');
+        'minio:\n  host: ${MINIO_HOST:127.0.0.1}\n  port: ${MINIO_PORT:9000}\n  endpoint: http://${minio.host}:${minio.port}\n  root-user: ${MINIO_ROOT_USER:admin}\n  root-password: ${MINIO_ROOT_PASSWORD:minioadmin}\n  domain-name: ${MINIO_DOMAIN_NAME:}',
+        'd85d3216a6be8e2bb3c529a051e60f6b', '2023-04-03 15:19:01', '2023-04-10 11:54:10', 'nacos', '192.168.33.1', '',
+        'dev', '', '', '', 'yaml', '', '');
+INSERT INTO `config_info`
+VALUES (39, 'swagger-dev.yaml', 'DEFAULT_GROUP',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway',
+        '7f3ae7f4c46b04c0996785b425908129', '2023-04-13 14:30:36', '2023-04-13 14:43:06', 'nacos', '192.168.33.1', '',
+        'dev', 'swagger', '', '', 'yaml', '', '');
+INSERT INTO `config_info`
+VALUES (40, 'swagger-prod.yaml', 'DEFAULT_GROUP',
+        'knife4j:\n  enable: true\n  production: true\n  gateway:\n    enabled: false',
+        '18c1667d451e8a5a51647c866af9427c', '2023-04-13 14:36:12', '2023-04-13 14:43:26', 'nacos', '192.168.33.1', '',
+        'dev', 'swagger', '', '', 'yaml', '', '');
 
 -- ----------------------------
 -- Table structure for config_info_aggr
@@ -273,7 +278,7 @@ CREATE TABLE `his_config_info`
     INDEX `idx_gmt_modified` (`gmt_modified`) USING BTREE,
     INDEX `idx_did` (`data_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 42
+  AUTO_INCREMENT = 68
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '多租户改造'
   ROW_FORMAT = DYNAMIC;
@@ -485,6 +490,133 @@ INSERT INTO `his_config_info`
 VALUES (0, 41, 'minio.yaml', 'DEFAULT_GROUP', '',
         'minio:\r\n  host: ${MINIO_HOST:127.0.0.1}\r\n  port: ${MINIO_PORT:9000}\r\n  endpoint: http://${minio.host}:${minio.port}\r\n  root-user: ${MINIO_ROOT_USER:admin}\r\n  root-password: ${MINIO_ROOT_PASSWORD:minioadmin}\r\n  domain-name: ${DOMAIN_NAME:}',
         '7941222b40d4f2b719d9bf06d468d64f', '2023-04-03 15:19:00', '2023-04-03 15:19:01', NULL, '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (30, 42, 'minio.yaml', 'DEFAULT_GROUP', '',
+        'minio:\r\n  host: ${MINIO_HOST:127.0.0.1}\r\n  port: ${MINIO_PORT:9000}\r\n  endpoint: http://${minio.host}:${minio.port}\r\n  root-user: ${MINIO_ROOT_USER:admin}\r\n  root-password: ${MINIO_ROOT_PASSWORD:minioadmin}\r\n  domain-name: ${DOMAIN_NAME:}',
+        '7941222b40d4f2b719d9bf06d468d64f', '2023-04-10 11:54:09', '2023-04-10 11:54:10', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (0, 43, 'jackson.yaml', 'DEFAULT_GROUP', '',
+        'spring:\r\n  jackson:\r\n    date-format: yyyy-MM-dd HH:mm:ss\r\n    time-zone: GMT+8',
+        '46280d84b5c393c8547cc6243adf5c2b', '2023-04-12 12:02:01', '2023-04-12 12:02:01', 'nacos', '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (0, 44, 'aop.yaml', 'DEFAULT_GROUP', '', 'spring:\r\n  aop:\r\n    proxy-target-class: true',
+        'c25920c24fc93cc7a1a67ff1ecd05a46', '2023-04-12 12:02:32', '2023-04-12 12:02:32', 'nacos', '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (31, 45, 'jackson.yaml', 'DEFAULT_GROUP', '',
+        'spring:\r\n  jackson:\r\n    date-format: yyyy-MM-dd HH:mm:ss\r\n    time-zone: GMT+8',
+        '46280d84b5c393c8547cc6243adf5c2b', '2023-04-12 12:03:08', '2023-04-12 12:03:09', NULL, '192.168.33.1', 'D',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (32, 46, 'aop.yaml', 'DEFAULT_GROUP', '', 'spring:\r\n  aop:\r\n    proxy-target-class: true',
+        'c25920c24fc93cc7a1a67ff1ecd05a46', '2023-04-12 12:03:08', '2023-04-12 12:03:09', NULL, '192.168.33.1', 'D',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 47, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        '7cc229f94674d9675e235ab2c4d03316', '2023-04-12 16:15:40', '2023-04-12 16:15:40', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 48, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"openapi\",\n    \"uri\": \"lb://pig-gateway\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/v3/api-docs/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"RewritePath\",\n        \"args\": {\n            \"pattern\": \"/v3/api-docs/(?<path>.*), /$\\\\{path}/$\\\\{path}/v3/api-docs\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        'f3dbbb5909d98c8f938ecf40efcc2aca', '2023-04-12 16:18:23', '2023-04-12 16:18:24', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 49, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"openapi\",\n    \"uri\": \"lb://pig-gateway\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/v3/api-docs/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"RewritePath\",\n        \"args\": {\n            \"regexp\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\",\n            \"replacement\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        '139d630a9a517d1b47a6d807a1a2d6f4', '2023-04-12 16:19:04', '2023-04-12 16:19:04', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 50, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"openapi\",\n    \"uri\": \"lb://pig-gateway\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/v3/api-docs/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"RewritePath\",\n        \"args\": {\n            \"regexp\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\",\n            \"replacement\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        '139d630a9a517d1b47a6d807a1a2d6f4', '2023-04-12 16:27:29', '2023-04-12 16:27:29', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 51, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"openapi\",\n    \"uri\": \"lb://platform-gateway\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/v3/api-docs/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"RewritePath\",\n        \"args\": {\n            \"regexp\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\",\n            \"replacement\": \"/$\\\\{path}/$\\\\{path}/v3/api-docs\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        '6c331c9f92e4952085cb474e020cec0b', '2023-04-12 16:30:52', '2023-04-12 16:30:53', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (0, 52, 'gateway.yaml', 'DEFAULT_GROUP', '',
+        'gateway:\r\n  encode-key: \'eXTqsEKIPRsksJSK\'\r\n  ignore-clients:\r\n    - swagger\r\n  services: { \"platform-system\": \"/system\" }',
+        'f593bc76a7110ea1b83c6c9ca18e56be', '2023-04-12 17:11:25', '2023-04-12 17:11:25', 'nacos', '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (38, 53, 'gateway.yaml', 'DEFAULT_GROUP', '',
+        'gateway:\r\n  encode-key: \'eXTqsEKIPRsksJSK\'\r\n  ignore-clients:\r\n    - swagger\r\n  services: { \"platform-system\": \"/system\" }',
+        'f593bc76a7110ea1b83c6c9ca18e56be', '2023-04-12 17:20:47', '2023-04-12 17:20:47', NULL, '192.168.33.1', 'D',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 54, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  }\n]',
+        '7cc229f94674d9675e235ab2c4d03316', '2023-04-13 09:27:00', '2023-04-13 09:27:00', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (29, 55, 'gateway-routes.json', 'DEFAULT_GROUP', '',
+        '[\n  {\n    \"id\": \"platform-auth\",\n    \"uri\": \"lb://platform-auth\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/auth/**\"\n        }\n      }\n    ],\n    \"filters\": [\n      {\n        \"name\": \"ValidateCodeGatewayFilter\"\n      },\n      {\n        \"name\": \"PasswordDecoderFilter\"\n      }\n    ]\n  },\n  {\n    \"id\": \"platform-system\",\n    \"uri\": \"lb://platform-system\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/system/**\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"test-test\",\n    \"uri\": \"lb://test-test\",\n    \"predicates\": [\n      {\n        \"name\": \"Path\",\n        \"args\": {\n          \"pattern\": \"/test/**\"\n        }\n      }\n    ]\n  }\n]',
+        '0a9923c3357004b4c34dabaceb95967d', '2023-04-13 09:33:10', '2023-04-13 09:33:11', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 56, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\r\n  enabled: true\r\n  title: Swagger API\r\n  gateway: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\r\n  token-url: ${swagger.gateway}/auth/oauth2/token\r\n  scope: server\r\n  base-package: com.zclcs',
+        'f15072788d118d22895646a906ad13e1', '2023-04-13 10:54:48', '2023-04-13 10:54:48', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 57, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: API\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway}/auth/oauth2/token\n  scope: server\n  base-package: com.zclcs',
+        '5ea3c7e46bef470b362ece0eea433036', '2023-04-13 11:05:53', '2023-04-13 11:05:53', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 58, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: API\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token\n  scope: server\n  base-package: com.zclcs',
+        'e09fa47f4f645d5b86196a81627d139e', '2023-04-13 11:07:43', '2023-04-13 11:07:43', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 59, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: API\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token\n  scope: server\n  base-package: com.zclcs',
+        'e09fa47f4f645d5b86196a81627d139e', '2023-04-13 11:11:11', '2023-04-13 11:11:12', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 60, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token\n  scope: server\n  base-package: com.zclcs',
+        'd2b0b5460ecd98bf8b4ee1e72d8b24f4', '2023-04-13 11:25:23', '2023-04-13 11:25:24', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 61, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token\n  scope: server\n  base-package: com.zclcs',
+        'd42727c9f7ee4f238c52a6b5f517d0a6', '2023-04-13 11:38:50', '2023-04-13 11:38:50', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (0, 62, 'swagger-dev.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
+        '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 14:30:35', '2023-04-13 14:30:36', NULL, '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (0, 63, 'swagger-prod.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
+        '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 14:36:11', '2023-04-13 14:36:12', NULL, '192.168.33.1', 'I',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (40, 64, 'swagger-prod.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
+        '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 14:36:44', '2023-04-13 14:36:45', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (39, 65, 'swagger-dev.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
+        '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 14:43:06', '2023-04-13 14:43:06', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (40, 66, 'swagger-prod.yaml', 'DEFAULT_GROUP', '', 'knife4j:\n  enable: true\n  production: true',
+        '9ed207d1e477cd0a249feeef263326cc', '2023-04-13 14:43:26', '2023-04-13 14:43:26', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (10, 67, 'swagger.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
+        '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 15:01:58', '2023-04-13 15:01:59', NULL, '192.168.33.1', 'D',
         'dev', '');
 
 -- ----------------------------
