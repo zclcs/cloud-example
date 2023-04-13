@@ -7,9 +7,6 @@ CREATE DATABASE IF NOT EXISTS `third_part_nacos`
 
 USE `third_part_nacos`;
 
--- ----------------------------
--- Table structure for config_info
--- ----------------------------
 DROP TABLE IF EXISTS `config_info`;
 CREATE TABLE `config_info`
 (
@@ -33,7 +30,7 @@ CREATE TABLE `config_info`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uk_configinfo_datagrouptenant` (`data_id`, `group_id`, `tenant_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 41
+  AUTO_INCREMENT = 44
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = 'config_info'
   ROW_FORMAT = DYNAMIC;
@@ -103,8 +100,8 @@ VALUES (30, 'minio.yaml', 'DEFAULT_GROUP',
         'dev', '', '', '', 'yaml', '', '');
 INSERT INTO `config_info`
 VALUES (39, 'swagger-dev.yaml', 'DEFAULT_GROUP',
-        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway',
-        '7f3ae7f4c46b04c0996785b425908129', '2023-04-13 14:30:36', '2023-04-13 14:43:06', 'nacos', '192.168.33.1', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true',
+        'e433f4ae07b2784906dd24d9a7ac9554', '2023-04-13 14:30:36', '2023-04-13 16:37:46', 'nacos', '192.168.33.1', '',
         'dev', 'swagger', '', '', 'yaml', '', '');
 INSERT INTO `config_info`
 VALUES (40, 'swagger-prod.yaml', 'DEFAULT_GROUP',
@@ -278,7 +275,7 @@ CREATE TABLE `his_config_info`
     INDEX `idx_gmt_modified` (`gmt_modified`) USING BTREE,
     INDEX `idx_did` (`data_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 68
+  AUTO_INCREMENT = 71
   CHARACTER SET = utf8
   COLLATE = utf8_bin COMMENT = '多租户改造'
   ROW_FORMAT = DYNAMIC;
@@ -618,6 +615,21 @@ VALUES (10, 67, 'swagger.yaml', 'DEFAULT_GROUP', '',
         'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs',
         '3adfd38f80b8e59a51f91bdd7aba2f63', '2023-04-13 15:01:58', '2023-04-13 15:01:59', NULL, '192.168.33.1', 'D',
         'dev', '');
+INSERT INTO `his_config_info`
+VALUES (39, 68, 'swagger-dev.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway',
+        '7f3ae7f4c46b04c0996785b425908129', '2023-04-13 16:25:23', '2023-04-13 16:25:24', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (39, 69, 'swagger-dev.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway',
+        'bd7c32c2215336fbc6f4bb0e75706e3f', '2023-04-13 16:36:11', '2023-04-13 16:36:12', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
+INSERT INTO `his_config_info`
+VALUES (39, 70, 'swagger-dev.yaml', 'DEFAULT_GROUP', '',
+        'swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway',
+        'bd7c32c2215336fbc6f4bb0e75706e3f', '2023-04-13 16:37:46', '2023-04-13 16:37:46', 'nacos', '192.168.33.1', 'U',
+        'dev', '');
 
 -- ----------------------------
 -- Table structure for permissions
@@ -737,3 +749,4 @@ INSERT INTO `users`
 VALUES ('nacos', '$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu', 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
