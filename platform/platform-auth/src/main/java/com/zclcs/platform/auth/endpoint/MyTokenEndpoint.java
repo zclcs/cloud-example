@@ -11,7 +11,6 @@ import com.zclcs.common.core.constant.OAuth2ErrorCodesExpand;
 import com.zclcs.common.core.constant.RedisCachePrefixConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.utils.SpringContextHolderUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.common.security.starter.exception.OAuthClientException;
 import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
@@ -32,6 +31,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,10 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +72,7 @@ public class MyTokenEndpoint {
 
     private final OAuth2AuthorizationService oAuth2AuthorizationService;
 
-    private final RedisService redisService;
+    private final RedisTemplate<String, Object> redisTemplateJava;
 
     private final ObjectMapper objectMapper;
 
@@ -213,30 +210,40 @@ public class MyTokenEndpoint {
         String key = String.format("%s::*", RedisCachePrefixConstant.PROJECT_OAUTH_ACCESS);
         int pageSize = basePageAo.getPageSize();
         int pageNum = basePageAo.getPageNum();
-        Set<Object> keys = redisService.sGet(key);
-        List<String> pages = keys.stream().map(Object::toString).skip((long) (pageSize - 1) * pageNum).limit(pageNum).collect(Collectors.toList());
+        Set<String> keys = redisTemplateJava.keys(key);
+        List<String> pages = null;
+        if (keys != null) {
+            pages = keys.stream().skip((long) (pageSize - 1) * pageNum).limit(pageNum).collect(Collectors.toList());
+        }
         BasePage<TokenVo> basePage = new BasePage<>(pageNum, pageSize);
 
-        List<TokenVo> tokenVoList = redisService.multiGet(pages).stream().map(obj -> {
-            OAuth2Authorization authorization = (OAuth2Authorization) obj;
-            TokenVo tokenVo = new TokenVo();
-            tokenVo.setClientId(authorization.getRegisteredClientId());
-            tokenVo.setId(authorization.getId());
-            tokenVo.setUsername(authorization.getPrincipalName());
-            OAuth2Authorization.Token<OAuth2AccessToken> accessToken = authorization.getAccessToken();
-            tokenVo.setAccessToken(accessToken.getToken().getTokenValue());
+        List<TokenVo> tokenVoList = null;
+        if (pages != null) {
+            tokenVoList = Objects.requireNonNull(redisTemplateJava.opsForValue().multiGet(pages)).stream().map(obj -> {
+                OAuth2Authorization authorization = (OAuth2Authorization) obj;
+                TokenVo tokenVo = new TokenVo();
+                tokenVo.setClientId(authorization.getRegisteredClientId());
+                tokenVo.setId(authorization.getId());
+                tokenVo.setUsername(authorization.getPrincipalName());
+                OAuth2Authorization.Token<OAuth2AccessToken> accessToken = authorization.getAccessToken();
+                tokenVo.setAccessToken(accessToken.getToken().getTokenValue());
 
-            String expiresAt = TemporalAccessorUtil.format(accessToken.getToken().getExpiresAt(),
-                    DatePattern.NORM_DATETIME_PATTERN);
-            tokenVo.setExpiresAt(expiresAt);
+                String expiresAt = TemporalAccessorUtil.format(accessToken.getToken().getExpiresAt(),
+                        DatePattern.NORM_DATETIME_PATTERN);
+                tokenVo.setExpiresAt(expiresAt);
 
-            String issuedAt = TemporalAccessorUtil.format(accessToken.getToken().getIssuedAt(),
-                    DatePattern.NORM_DATETIME_PATTERN);
-            tokenVo.setIssuedAt(issuedAt);
-            return tokenVo;
-        }).collect(Collectors.toList());
+                String issuedAt = TemporalAccessorUtil.format(accessToken.getToken().getIssuedAt(),
+                        DatePattern.NORM_DATETIME_PATTERN);
+                tokenVo.setIssuedAt(issuedAt);
+                return tokenVo;
+            }).collect(Collectors.toList());
+        }
         basePage.setRecords(tokenVoList);
-        basePage.setTotal(keys.size());
+        if (keys != null) {
+            basePage.setTotal(keys.size());
+        } else {
+            basePage.setTotal(0);
+        }
         return RspUtil.data(basePage);
     }
 

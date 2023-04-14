@@ -118,6 +118,10 @@ public class RedisService {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
+    public Long getTll(String key) {
+        return redisTemplate.opsForValue().getOperations().getExpire(key);
+    }
+
     /**
      * 普通缓存放入
      *

@@ -34,6 +34,7 @@ import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -79,11 +80,13 @@ public class GeneratorServiceImpl implements GeneratorService {
             throw new MyException("代码生成配置为空");
         }
         String className = name;
+        String tableName = name;
         if (GeneratorConfigVo.TRIM_YES.equals(generatorConfigVo.getIsTrim())) {
-            className = StrUtil.removePrefix(name, generatorConfigVo.getTrimValue());
+            tableName = StrUtil.removePrefix(name, generatorConfigVo.getTrimValue());
+            className = tableName;
         }
         String underscoreToCamel = BaseUtil.underscoreToCamel(className);
-        createMenu(generateAo, underscoreToCamel);
+        createMenu(generateAo, underscoreToCamel, tableName);
         generatorConfigVo.setTableName(name);
         generatorConfigVo.setClassName(underscoreToCamel);
         generatorConfigVo.setTableComment(remark);
@@ -125,7 +128,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
     }
 
-    private void createMenu(GenerateAo generateAo, String className) {
+    private void createMenu(GenerateAo generateAo, String className, String tableName) {
         className = StrUtil.lowerFirst(className);
         String isCreateMenuNew = Optional.ofNullable(generateAo.getIsCreateMenu()).filter(StrUtil::isNotBlank).orElse(DictConstant.YES_NO_0);
         String isCreateDirNew = Optional.ofNullable(generateAo.getIsCreateDir()).filter(StrUtil::isNotBlank).orElse(DictConstant.YES_NO_0);
@@ -134,11 +137,11 @@ public class GeneratorServiceImpl implements GeneratorService {
             setDir(dir, generateAo);
             Menu dirMenu = menuService.createMenu(dir);
             MenuAo menu = new MenuAo();
-            setMenu(menu, generateAo, className, dirMenu.getMenuCode());
+            setMenu(menu, generateAo, tableName, className, dirMenu.getMenuCode());
             addMenuAndButton(menu, className);
         } else if (DictConstant.YES_NO_1.equals(isCreateMenuNew)) {
             MenuAo menu = new MenuAo();
-            setMenu(menu, generateAo, className, generateAo.getMenuCode());
+            setMenu(menu, generateAo, tableName, className, generateAo.getMenuCode());
             addMenuAndButton(menu, className);
         }
     }
@@ -147,9 +150,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         Menu parentMenu = menuService.createMenu(menuAo);
         for (int i = 0; i < ParamsConstant.AUTHS.length; i++) {
             String auth = ParamsConstant.AUTHS[i];
+            String parentMenuCode = parentMenu.getMenuCode();
+            String menuCode = parentMenuCode + StrUtil.UNDERLINE + auth.toUpperCase(Locale.ROOT);
             MenuAo button = new MenuAo();
+            button.setMenuCode(menuCode);
             button.setMenuName(ParamsConstant.BUTTON_TEXT[i]);
-            button.setParentCode(parentMenu.getMenuCode());
+            button.setParentCode(parentMenuCode);
             button.setType(DictConstant.MENU_TYPE_1);
             button.setPerms(className + StrUtil.COLON + auth);
             menuService.createMenu(button);
@@ -157,6 +163,8 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     private void setDir(MenuAo dir, GenerateAo generateAo) {
+        String menuCode = StrUtil.removePrefix(StrUtil.replace(generateAo.getDirPath(), StrUtil.SLASH, StrUtil.UNDERLINE), StrUtil.UNDERLINE).toUpperCase(Locale.ROOT);
+        dir.setMenuCode(menuCode);
         dir.setMenuName(generateAo.getDirName());
         dir.setType(DictConstant.MENU_TYPE_2);
         dir.setIcon(ParamsConstant.DEFAULT_MENU_ICON);
@@ -166,7 +174,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         dir.setHideChildrenInMenu(DictConstant.YES_NO_0);
     }
 
-    private void setMenu(MenuAo menuAo, GenerateAo generateAo, String className, String parentCode) {
+    private void setMenu(MenuAo menuAo, GenerateAo generateAo, String tableName, String className, String parentCode) {
+        String menuCode = parentCode + StrUtil.UNDERLINE + tableName.toUpperCase(Locale.ROOT);
+        menuAo.setMenuCode(menuCode);
         menuAo.setMenuName(Optional.ofNullable(generateAo.getMenuName()).filter(StrUtil::isNotBlank).orElse(generateAo.getRemark()));
         menuAo.setKeepAliveName(StrUtil.upperFirst(className));
         menuAo.setParentCode(parentCode);
