@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zclcs.platform.system.mapper.DataBaseMapper">
+
+    <select id="getSchema" resultType="com.zclcs.platform.system.api.entity.vo.SchemaVo">
+        SELECT concat(t.TABLE_SCHEMA, '.', t.TABLE_NAME) table_schema, c.COLUMN_NAME column_name
+        FROM information_schema.TABLES t
+                 inner join information_schema.COLUMNS c
+                            on t.TABLE_SCHEMA = c.TABLE_SCHEMA and t.TABLE_NAME = c.TABLE_NAME
+        where t.TABLE_SCHEMA not in ('information_schema', 'mysql', 'sys', 'performance_schema')
+    </select>
+    <select id="getData" resultType="java.util.LinkedHashMap">
+        <![CDATA[
+        ${sql}
+        ]]>
+    </select>
+</mapper>

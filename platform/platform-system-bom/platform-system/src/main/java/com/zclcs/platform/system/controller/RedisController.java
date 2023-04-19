@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/redis")
 @RequiredArgsConstructor
-@Tag(name = "redis")
+@Tag(name = "redis控制台")
 public class RedisController {
 
     private final static String BLOOM_FILTER = "bloom_filter";
@@ -85,7 +85,7 @@ public class RedisController {
     @PreAuthorize("hasAuthority('redis:view')")
     @Operation(summary = "redis key 查询（单个）")
     @Parameters({
-            @Parameter(name = "key", description = "redis key", required = true, in = ParameterIn.QUERY)
+            @Parameter(name = "key", description = "redis key", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<RedisVo> findRedis(@NotBlank(message = "{required}") @PathVariable String key) {
         key = StrUtil.removePrefix(key, globalProperties.getRedisCachePrefix());

@@ -36,6 +36,8 @@ public interface MyConstant {
      */
     String STATUS_VALID = "1";
 
+    String SELECT = "SELECT";
+
     /**
      * 用户状态：锁定
      */
