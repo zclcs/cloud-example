@@ -17,11 +17,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +58,21 @@ public class DataBaseServiceImpl implements DataBaseService {
         if (!StrUtil.containsIgnoreCase(sql, MyConstant.SELECT)) {
             throw new MyException("目前只支持查询");
         }
+        if (!StrUtil.containsIgnoreCase(sql, MyConstant.COUNT)) {
+            if (!StrUtil.containsIgnoreCase(sql, MyConstant.LIMIT)) {
+                sql += " limit 999";
+            } else {
+                int lastIndexOfIgnoreCase = StrUtil.lastIndexOfIgnoreCase(sql, MyConstant.LIMIT);
+                String sub = StrUtil.sub(sql, lastIndexOfIgnoreCase, sql.length());
+                Pattern p = Pattern.compile("[^0-9]");
+                Matcher m = p.matcher(sub);
+                String limitNumber = m.replaceAll("").trim();
+                BigDecimal bigDecimal = new BigDecimal(limitNumber);
+                if (bigDecimal.intValue() > 1000) {
+                    throw new MyException("仅仅用作开发排查问题，不要查询过多的数据");
+                }
+            }
+        }
         DataBaseDataVo dataBaseDataVo = new DataBaseDataVo();
         try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
             //获取列集
@@ -78,9 +96,6 @@ public class DataBaseServiceImpl implements DataBaseService {
                     String columnName = metaData.getColumnName(i + 1);
                     //通过列名获取值.如果列值为空,columnValue为null,不是字符型
                     Object object = rs.getObject(columnName);
-                    if (object == null) {
-                        object = "";
-                    }
                     data.put(columnName, object);
                 }
                 dataList.add(data);

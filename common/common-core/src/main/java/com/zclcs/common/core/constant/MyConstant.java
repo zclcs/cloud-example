@@ -38,6 +38,10 @@ public interface MyConstant {
 
     String SELECT = "SELECT";
 
+    String COUNT = "COUNT";
+
+    String LIMIT = "LIMIT";
+
     /**
      * 用户状态：锁定
      */
