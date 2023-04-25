@@ -18,8 +18,6 @@ services:
       - ./mysql/log:/var/log/mysql
       #挂载 MySQL配置文件
       - ./mysql/conf:/etc/mysql
-      # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
-#      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
