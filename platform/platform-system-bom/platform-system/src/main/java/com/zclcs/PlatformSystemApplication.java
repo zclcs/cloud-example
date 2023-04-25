@@ -19,9 +19,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @MapperScan("com.zclcs.platform.system.mapper")
 @SpringBootApplication
 @EnableMyDoc
-public class SystemApplication {
+public class PlatformSystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SystemApplication.class, args);
+        SpringApplication.run(PlatformSystemApplication.class, args);
     }
 }

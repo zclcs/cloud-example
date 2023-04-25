@@ -10,10 +10,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @EnableDiscoveryClient
 @SpringBootApplication
-public class GatewayApplication {
+public class PlatformGatewayApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(GatewayApplication.class)
+        new SpringApplicationBuilder(PlatformGatewayApplication.class)
                 .web(WebApplicationType.REACTIVE)
                 .run(args);
     }

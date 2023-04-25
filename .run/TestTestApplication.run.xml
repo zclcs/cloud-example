@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TestApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="TestTestApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
       <env name="DATASOURCE_DB_TYPE" value="p6spy:mysql" />
       <env name="DATASOURCE_DRIVER" value="com.p6spy.engine.spy.P6SpyDriver" />
@@ -26,7 +26,7 @@
       <env name="XXL_JOB_PORT" value="8080" />
     </envs>
     <module name="cloud-17.test.test-test-bom.test-test.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.TestApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.TestTestApplication" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.zclcs.*" />

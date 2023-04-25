@@ -1,29 +1,32 @@
 package com.zclcs.platform.system.handler;
 
+import com.google.common.base.Stopwatch;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.zclcs.platform.system.service.BlackListService;
+import com.zclcs.platform.system.service.RateLimitRuleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author zclcs
  */
 @Component
+@RequiredArgsConstructor
 public class XxlJobHandler {
 
-    /**
-     * 1、简单任务示例（Bean模式）
-     */
-    @XxlJob("test")
-    public void test() throws Exception {
-        XxlJobHelper.log("XXL-JOB, Hello World.");
+    private final BlackListService blackListService;
+    private final RateLimitRuleService rateLimitRuleService;
 
-        for (int i = 0; i < 5; i++) {
-            XxlJobHelper.log("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
-        }
-        // default success
+    /**
+     * 刷新限流配置和黑名单配置
+     */
+    @XxlJob("refreshBlackListAndRateLimitRules")
+    public void refreshBlackListAndRateLimitRules() throws Exception {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        blackListService.cacheAllBlackList();
+        rateLimitRuleService.cacheAllRateLimitRules();
+        XxlJobHelper.log("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
     }
 
 }

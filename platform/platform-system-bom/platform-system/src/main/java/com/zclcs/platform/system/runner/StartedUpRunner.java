@@ -1,8 +1,10 @@
 package com.zclcs.platform.system.runner;
 
-import com.google.common.base.Stopwatch;
 import com.zclcs.common.core.utils.BaseUtil;
-import com.zclcs.platform.system.service.*;
+import com.zclcs.platform.system.service.DictItemService;
+import com.zclcs.platform.system.service.MenuService;
+import com.zclcs.platform.system.service.RoleMenuService;
+import com.zclcs.platform.system.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -21,8 +23,6 @@ public class StartedUpRunner implements ApplicationRunner {
 
     private final ConfigurableApplicationContext context;
     private final Environment environment;
-    private final BlackListService blackListService;
-    private final RateLimitRuleService rateLimitRuleService;
     private final RoleService roleService;
     private final MenuService menuService;
     private final DictItemService dictItemService;
@@ -32,10 +32,6 @@ public class StartedUpRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if (context.isActive()) {
-            Stopwatch stopwatch = Stopwatch.createStarted();
-            blackListService.cacheAllBlackList();
-            rateLimitRuleService.cacheAllRateLimitRules();
-            log.info("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
             BaseUtil.printSystemUpBanner(environment);
 //            List<DictItem> dictItems = dictItemService.lambdaQuery().eq(DictItem::getDictName, "area_code").list();
 //            for (DictItem dictItem : dictItems) {

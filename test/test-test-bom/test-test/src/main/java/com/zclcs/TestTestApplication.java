@@ -19,9 +19,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @MapperScan("com.zclcs.test.test.mapper")
 @SpringBootApplication
 @EnableMyDoc
-public class TestApplication {
+public class TestTestApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TestApplication.class, args);
+        SpringApplication.run(TestTestApplication.class, args);
     }
 }

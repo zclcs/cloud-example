@@ -14,7 +14,7 @@ include 'common:common-db-merge-starter'
 include 'common:common-dict'
 include 'common:common-xxl-job-starter'
 
-include 'data-sync'
+include 'third-part-database-sync'
 
 include 'platform'
 include 'platform:platform-system-bom'

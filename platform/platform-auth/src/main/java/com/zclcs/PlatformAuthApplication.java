@@ -30,10 +30,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableMyDoc
-public class AuthApplication {
+public class PlatformAuthApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
+        SpringApplication.run(PlatformAuthApplication.class, args);
     }
 
 }

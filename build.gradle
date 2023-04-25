@@ -54,7 +54,7 @@ ext {
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"),
             project(":test:test-test-bom:test-test"),
-            project(":data-sync"))
+            project(":third-part-database-sync"))
     nativePackage = Set.of(project(":platform:platform-auth"),
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"))

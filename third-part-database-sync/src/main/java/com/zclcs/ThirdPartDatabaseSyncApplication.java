@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author 数据同步服务
  */
 @SpringBootApplication
-public class DataSyncApplication {
+public class ThirdPartDatabaseSyncApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DataSyncApplication.class, args);
+        SpringApplication.run(ThirdPartDatabaseSyncApplication.class, args);
     }
 }
