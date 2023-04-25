@@ -1,6 +1,5 @@
 package com.zclcs.common.rabbitmq.starter.configure;
 
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
@@ -57,16 +56,16 @@ public class MyRabbitMqAutoConfigure {
      * dlx 死信交换器
      */
     @Bean
-    public DirectExchange dlxExChange() {
-        return ExchangeBuilder.directExchange(RabbitConstant.DLX_EXCHANGE).build();
+    public DirectExchange dlxExchange() {
+        return ExchangeBuilder.directExchange(myRabbitMqProperties.getDlxExchange()).build();
     }
 
     /**
      * 直接队列交换器
      */
     @Bean
-    public DirectExchange directExChange() {
-        return ExchangeBuilder.directExchange(RabbitConstant.DIRECT_EXCHANGE).build();
+    public DirectExchange directExchange() {
+        return ExchangeBuilder.directExchange(myRabbitMqProperties.getDirectExchange()).build();
     }
 
     /**
@@ -74,7 +73,12 @@ public class MyRabbitMqAutoConfigure {
      */
     @Bean
     public Queue systemLogQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_LOG_QUEUE).build();
+        return QueueBuilder.durable(myRabbitMqProperties.getSystemLogQueue()).build();
+    }
+
+    @Bean
+    public Binding systemLogQueueBinding() {
+        return BindingBuilder.bind(systemLogQueue()).to(directExchange()).with(myRabbitMqProperties.getSystemLogQueueBinding());
     }
 
     /**
@@ -82,7 +86,12 @@ public class MyRabbitMqAutoConfigure {
      */
     @Bean
     public Queue systemLoginLogQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_LOGIN_LOG_QUEUE).build();
+        return QueueBuilder.durable(myRabbitMqProperties.getSystemLoginLogQueue()).build();
+    }
+
+    @Bean
+    public Binding systemLoginLogBinding() {
+        return BindingBuilder.bind(systemLoginLogQueue()).to(directExchange()).with(myRabbitMqProperties.getSystemLoginLogBinding());
     }
 
     /**
@@ -90,7 +99,12 @@ public class MyRabbitMqAutoConfigure {
      */
     @Bean
     public Queue systemRouteLogQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_ROUTE_LOG_QUEUE).build();
+        return QueueBuilder.durable(myRabbitMqProperties.getSystemRouteLogQueue()).build();
+    }
+
+    @Bean
+    public Binding systemRouteLogQueueBinding() {
+        return BindingBuilder.bind(systemRouteLogQueue()).to(directExchange()).with(myRabbitMqProperties.getSystemRouteLogQueueBinding());
     }
 
     /**
@@ -98,7 +112,12 @@ public class MyRabbitMqAutoConfigure {
      */
     @Bean
     public Queue systemBlockLogQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_BLOCK_LOG_QUEUE).build();
+        return QueueBuilder.durable(myRabbitMqProperties.getSystemBlockLogQueue()).build();
+    }
+
+    @Bean
+    public Binding systemBlockLogBinding() {
+        return BindingBuilder.bind(systemBlockLogQueue()).to(directExchange()).with(myRabbitMqProperties.getSystemBlockLogBinding());
     }
 
     /**
@@ -106,31 +125,11 @@ public class MyRabbitMqAutoConfigure {
      */
     @Bean
     public Queue systemRateLimitLogQueue() {
-        return QueueBuilder.durable(RabbitConstant.SYSTEM_RATE_LIMIT_LOG_QUEUE).build();
-    }
-
-    @Bean
-    public Binding systemLogQueueBinding() {
-        return BindingBuilder.bind(systemLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_LOG_ROUTE_KEY);
-    }
-
-    @Bean
-    public Binding systemLoginLogBinding() {
-        return BindingBuilder.bind(systemLoginLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_LOGIN_LOG_ROUTE_KEY);
-    }
-
-    @Bean
-    public Binding systemRouteLogQueueBinding() {
-        return BindingBuilder.bind(systemRouteLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_ROUTE_LOG_ROUTE_KEY);
-    }
-
-    @Bean
-    public Binding systemBlockLogBinding() {
-        return BindingBuilder.bind(systemBlockLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_BLOCK_LOG_LOG_ROUTE_KEY);
+        return QueueBuilder.durable(myRabbitMqProperties.getSystemRateLimitLogQueue()).build();
     }
 
     @Bean
     public Binding systemRateLimitLogBinding() {
-        return BindingBuilder.bind(systemRateLimitLogQueue()).to(directExChange()).with(RabbitConstant.SYSTEM_RATE_LIMIT_LOG_ROUTE_KEY);
+        return BindingBuilder.bind(systemRateLimitLogQueue()).to(directExchange()).with(myRabbitMqProperties.getSystemRateLimitLogBinding());
     }
 }

@@ -3,8 +3,8 @@ package com.zclcs.platform.auth.support.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
+import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import com.zclcs.common.security.starter.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import lombok.SneakyThrows;
@@ -28,6 +28,7 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
 
     private ObjectMapper objectMapper;
     private RabbitTemplate rabbitTemplate;
+    private MyRabbitMqProperties myRabbitMqProperties;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
@@ -37,6 +38,11 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setMyRabbitMqProperties(MyRabbitMqProperties myRabbitMqProperties) {
+        this.myRabbitMqProperties = myRabbitMqProperties;
     }
 
     @Override
@@ -63,7 +69,7 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
         // 发送异步日志事件
         loginLog.setCreateBy(authentication.getName());
         loginLog.setUpdateBy(authentication.getName());
-        rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_LOGIN_LOG_ROUTE_KEY, MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+        rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLoginLogBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
     }
 
 }

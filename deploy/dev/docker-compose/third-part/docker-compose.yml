@@ -19,7 +19,7 @@ services:
       #挂载 MySQL配置文件
       - ./mysql/conf:/etc/mysql
       # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
-      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+#      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
@@ -68,7 +68,7 @@ services:
       retries: 3
     env_file: .env
     depends_on:
-      mysql:
+      data-sync:
         condition: service_healthy
   minio:
     image: minio/minio:RELEASE.2021-06-17T00-10-46Z
@@ -88,7 +88,7 @@ services:
       #映射配置目录
       - ./minio/config:/root/.minio/
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS 'http://127.0.0.1:9000/minio/index.html' || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS 'http://${LOCAL_HOST_IP}:${MINIO_PORT}/minio/index.html' || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: 3
@@ -130,3 +130,47 @@ services:
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: 3
     env_file: .env
+  xxl-job:
+    image: xuxueli/xxl-job-admin:2.4.0
+    container_name: xxl-job
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      PARAMS: "--spring.datasource.url=jdbc:mysql://${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}/${XXL_JOB_DB_NAME}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
+      --spring.datasource.username=${MYSQL_SERVICE_USER} 
+      --spring.datasource.password=${MYSQL_SERVICE_PASSWORD} 
+      --xxl.job.accessToken=${XXL_JOB_TOKEN}
+      --server.port=${XXL_JOB_PORT}"
+    volumes:
+      - ./xxl-job/log:/data/applogs/xxl-job
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${XXL_JOB_PORT} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    env_file: .env
+    depends_on:
+      data-sync:
+        condition: service_healthy
+  data-sync:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/data-sync:${CLOUD_DEPOSITORY_TAG}
+    container_name: data-sync
+    network_mode: host
+    command: sh -c "java -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=./log/data-sync/java_heapdump.hprof -Dcsp.sentinel.app.type=1 -Ddruid.mysql.usePingMethod=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Dnetworkaddress.cache.ttl=10 -XX:MaxRAMPercentage=45 -XX:InitialRAMPercentage=45 -XX:MinHeapFreeRatio=0 -XX:MaxHeapFreeRatio=100 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:MaxGCPauseMillis=50 -XX:-UseBiasedLocking -XX:GuaranteedSafepointInterval=0 -XX:+UseCountedLoopSafepoints -XX:+SafepointTimeout -XX:SafepointTimeoutDelay=1000 -XX:StartFlightRecording=disk=true,maxsize=32m,maxage=3d -XX:FlightRecorderOptions=maxchunksize=32m --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -cp /app/resources:/app/classes:/app/libs/* com.zclcs.DataSyncApplication"
+    volumes:
+      - ./data-sync/log:/log/data-sync
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_DATA_SYNC} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          memory: 128M
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy

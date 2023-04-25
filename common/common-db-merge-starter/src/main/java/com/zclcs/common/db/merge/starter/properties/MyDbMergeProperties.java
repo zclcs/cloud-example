@@ -13,13 +13,9 @@ public class MyDbMergeProperties {
      */
     private Boolean enable = true;
     /**
-     * 初始化全量脚本
+     * sql脚本
      */
-    private String initSqlLocation = "sql/initial/";
-    /**
-     * 增量脚本
-     */
-    private String incrementSqlLocation = "sql/increment/";
+    private String sql = "sql/";
     /**
      * 脚本分隔符
      */
@@ -33,20 +29,12 @@ public class MyDbMergeProperties {
         this.enable = enable;
     }
 
-    public String getInitSqlLocation() {
-        return initSqlLocation;
+    public String getSql() {
+        return sql;
     }
 
-    public void setInitSqlLocation(String initSqlLocation) {
-        this.initSqlLocation = initSqlLocation;
-    }
-
-    public String getIncrementSqlLocation() {
-        return incrementSqlLocation;
-    }
-
-    public void setIncrementSqlLocation(String incrementSqlLocation) {
-        this.incrementSqlLocation = incrementSqlLocation;
+    public void setSql(String sql) {
+        this.sql = sql;
     }
 
     public String getDelimiter() {
@@ -61,8 +49,7 @@ public class MyDbMergeProperties {
     public String toString() {
         return "MyDbMergeProperties{" +
                 "enable=" + enable +
-                ", initSqlLocation='" + initSqlLocation + '\'' +
-                ", incrementSqlLocation='" + incrementSqlLocation + '\'' +
+                ", sql='" + sql + '\'' +
                 ", delimiter='" + delimiter + '\'' +
                 '}';
     }

@@ -1,10 +1,12 @@
 package com.zclcs.common.rabbitmq.starter.properties;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author zclcs
  */
+@Data
 @ConfigurationProperties(prefix = "my.rabbit.mq")
 public class MyRabbitMqProperties {
 
@@ -13,18 +15,27 @@ public class MyRabbitMqProperties {
      */
     private Boolean enable = true;
 
-    public Boolean getEnable() {
-        return enable;
-    }
+    private String dlxExchange;
 
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
+    private String directExchange;
 
-    @Override
-    public String toString() {
-        return "MyRabbitMqProperties{" +
-                "enable=" + enable +
-                '}';
-    }
+    private String systemLogQueue;
+
+    private String systemLogQueueBinding;
+
+    private String systemLoginLogQueue;
+
+    private String systemLoginLogBinding;
+
+    private String systemRouteLogQueue;
+
+    private String systemRouteLogQueueBinding;
+
+    private String systemBlockLogQueue;
+
+    private String systemBlockLogBinding;
+
+    private String systemRateLimitLogQueue;
+
+    private String systemRateLimitLogBinding;
 }

@@ -33,6 +33,7 @@ spring:
       - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
       - nacos:minio.yaml
+      - nacos:xxl-job.yaml
 
   aop:
     proxy-target-class: true
@@ -50,6 +51,9 @@ spring:
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
+mybatis-plus:
+  type-aliases-package: com.zclcs.platform.system.api.entity
+  mapper-locations: classpath:com/zclcs/platform/system/biz/mapper/*.xml
 
 # spring security 配置
 security:
@@ -62,3 +66,4 @@ security:
     ignore:
       urls:
         - /v3/api-docs
+

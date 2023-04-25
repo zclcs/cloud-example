@@ -21,6 +21,9 @@
       <env name="REDIS_HOST" value="192.168.33.10" />
       <env name="REDIS_PASSWORD" value="123456" />
       <env name="SPRING_PROFILES_ACTIVE" value="dev" />
+      <env name="XXL_JOB_HOST" value="192.168.33.10" />
+      <env name="XXL_JOB_TOKEN" value="12382e1c-fafc-4cc8-bb04-d276fd1ca7de" />
+      <env name="XXL_JOB_PORT" value="8080" />
     </envs>
     <module name="cloud-17.platform.platform-auth.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.AuthApplication" />

@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import com.zclcs.common.core.constant.MyConstant;
 import com.zclcs.common.core.constant.ParamsConstant;
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
+import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
@@ -55,6 +55,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final MyRabbitMqProperties myRabbitMqProperties;
 
     @Override
     public Mono<Void> filterBlackList(ServerWebExchange exchange) {
@@ -149,7 +150,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                             .code(String.valueOf(code))
                             .time(executeTime)
                             .build();
-                    rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_ROUTE_LOG_ROUTE_KEY,
+                    rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemRouteLogQueueBinding(),
                             MessageStruct.builder().message(objectMapper.writeValueAsString(routeLog)).build());
                 }
                 // 当前仅记录日志，后续可以添加日志队列，来过滤请求慢的接口
@@ -174,7 +175,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_BLOCK_LOG_LOG_ROUTE_KEY,
+            rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemBlockLogBinding(),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(blockLog)).build());
             log.info("Store blocked request logs >>>");
         }
@@ -194,7 +195,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_RATE_LIMIT_LOG_ROUTE_KEY,
+            rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemRateLimitLogBinding(),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(rateLimitLog)).build());
             log.info("Store rate limit logs >>>");
         }

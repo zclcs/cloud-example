@@ -42,6 +42,14 @@ public interface MyConstant {
 
     String LIMIT = "LIMIT";
 
+    String NACOS_DATABASE = "{{NACOS_DATABASE}}";
+
+    String XXL_JOB_DATABASE = "{{XXL_JOB_DATABASE}}";
+
+    String NACOS_NAMESPACE = "{{NACOS_NAMESPACE}}";
+
+    String SQL_TEMP_PATH = "/sql_tmp/";
+
     /**
      * 用户状态：锁定
      */

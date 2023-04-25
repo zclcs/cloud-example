@@ -11,6 +11,7 @@ import com.zclcs.common.core.constant.OAuth2ErrorCodesExpand;
 import com.zclcs.common.core.constant.RedisCachePrefixConstant;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.utils.SpringContextHolderUtil;
+import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import com.zclcs.common.security.starter.annotation.Inner;
 import com.zclcs.common.security.starter.exception.OAuthClientException;
 import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
@@ -77,6 +78,8 @@ public class MyTokenEndpoint {
     private final ObjectMapper objectMapper;
 
     private final RabbitTemplate rabbitTemplate;
+
+    private final MyRabbitMqProperties myRabbitMqProperties;
 
     /**
      * 认证页面
@@ -145,7 +148,7 @@ public class MyTokenEndpoint {
     public void checkToken(@RequestParam String token, HttpServletResponse response, HttpServletRequest request) {
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
 
-        AuthenticationFailureHandler authenticationFailureHandler = new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate);
+        AuthenticationFailureHandler authenticationFailureHandler = new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties);
         if (StrUtil.isBlank(token)) {
             httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
             authenticationFailureHandler.onAuthenticationFailure(request, response,

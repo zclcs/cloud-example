@@ -1,11 +1,16 @@
 package com.zclcs.common.db.merge.starter.configure;
 
 import com.zclcs.common.db.merge.starter.properties.MyDbMergeProperties;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -22,13 +27,11 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 /**
  * Copyright (C) 2020 广东腾晖信息科技开发股份有限公司
@@ -38,110 +41,99 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties(MyDbMergeProperties.class)
+@EnableConfigurationProperties({MyDbMergeProperties.class})
 @ConditionalOnProperty(value = "my.db.merge.enable", havingValue = "true", matchIfMissing = true)
 public class MyDbMergeConfigure {
 
-    private final MyDbMergeProperties properties;
+    private final MyDbMergeProperties myDbMergeProperties;
 
-    public MyDbMergeConfigure(MyDbMergeProperties properties) {
-        this.properties = properties;
+    public MyDbMergeConfigure(MyDbMergeProperties myDbMergeProperties) {
+        this.myDbMergeProperties = myDbMergeProperties;
     }
 
-    /**
-     * 是否需要执行初始全量脚本
-     *
-     * @return true-执行初始全量脚本, false-执行增量脚本
-     */
-    private static boolean initOrOther(final DataSource dataSource) throws SQLException {
-        boolean init = false;
-        final String sql = "SELECT count(*) FROM information_schema.TABLES WHERE table_schema = DATABASE()";
-        try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                long cnt = rs.getLong(1);
-                log.info("是否存在表,{}", cnt == 0 ? "否" : "是");
-                init = cnt < 1;
-            }
-        }
-        return init;
+    @Primary
+    @Bean(name = "myDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSourceProperties myDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Primary
+    @Bean(name = "myDataSource")
+    public DataSource myDataSource(@Qualifier("myDataSourceProperties") DataSourceProperties dataSourceProperties) {
+        return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+    public DataSourceInitializer dataSourceInitializer(@Qualifier("myDataSource") DataSource dataSource, @Qualifier("myDataSourceProperties") DataSourceProperties dataSourceProperties) {
+        createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
         final DataSourceInitializer initializer = new DataSourceInitializer();
         // 设置数据源
         initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(databasePopulator(dataSource));
+        initializer.setDatabasePopulator(databasePopulator());
         return initializer;
+    }
+
+    private void createDataBase(DataSourceProperties dataSourceProperties, String character, String collate) {
+        try {
+            Class.forName(dataSourceProperties.getDriverClassName());
+            String url = dataSourceProperties.getUrl();
+            String url01 = url.substring(0, url.indexOf("?"));
+            String url02 = url01.substring(0, url01.lastIndexOf("/"));
+            String datasourceName = url01.substring(url01.lastIndexOf("/") + 1);
+            Connection connection = DriverManager.getConnection(url02, dataSourceProperties.getUsername(), dataSourceProperties.getPassword());
+            Statement statement = connection.createStatement();
+            // 创建数据库
+            statement.executeUpdate("CREATE DATABASE if NOT EXISTS `" + datasourceName + "` " +
+                    "DEFAULT CHARACTER SET " + character + " COLLATE " + collate);
+
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            log.error("创建数据库失败 ：{}", e.getMessage(), e);
+        }
     }
 
     /**
      * 需要初始的SQL脚本
-     *
-     * @param dataSource 数据源
      */
-    private DatabasePopulator databasePopulator(DataSource dataSource) {
+    @SneakyThrows
+    private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator popular = new ResourceDatabasePopulator();
-        List<Resource> resources = invokeSqlScript(dataSource);
-        List<Resource> resourceList = resources.stream().distinct().collect(Collectors.toList());
+        List<Resource> resources = invokeSqlScript();
+        List<Resource> resourceList = resources.stream().distinct().toList();
         for (Resource re : resourceList) {
             popular.addScript(re);
-            log.info("====================启动 执行SQL脚本 SQL---------{}", re.getFilename());
+            log.info("Execute Sql Location : {}", re.getURL().getPath());
         }
-        popular.setSeparator(properties.getDelimiter());
+        popular.setSeparator(myDbMergeProperties.getDelimiter());
         return popular;
     }
 
     /**
      * 执行SQL脚本
      */
-    private List<Resource> invokeSqlScript(final DataSource dataSource) {
-        log.info("====================启动 执行SQL脚本 Start");
+    private List<Resource> invokeSqlScript() {
+        log.info("invoke Sql Script");
         List<Resource> resources = new ArrayList<>(1000);
         try {
-            boolean isInvokeInitSql = initOrOther(dataSource);
-
-            //执行SQL脚本-1-执行初始全量脚本
-            if (isInvokeInitSql) {
-                log.info("====================启动 执行SQL脚本-1-执行初始全量脚本 Start");
-                invokeInitSql(resources);
-                log.info("====================启动 执行SQL脚本-1-执行初始全量脚本 End");
-            }
-
-            //执行SQL脚本-2-执行增量脚本
-            if (!isInvokeInitSql) {
-                log.info("====================启动 执行SQL脚本-2-执行增量脚本 Start");
-                invokeOtherSql(resources);
-                log.info("====================启动 执行SQL脚本-2-执行增量脚本 End");
-            }
-
+            setSql(resources);
             if (!resources.isEmpty()) {
                 resources.sort(Comparator.comparing(Resource::getFilename));
             }
-            log.info("====================启动 执行SQL脚本 End");
         } catch (Exception e) {
-            log.error("执行SQL脚本发生错误:" + e.getMessage(), e);
+            log.error("获取sql脚本出错:" + e.getMessage(), e);
         }
         return resources;
     }
 
     /**
-     * 执行初始全量脚本
+     * 获取脚本
      */
-    private void invokeInitSql(List<Resource> resources) {
+    private void setSql(List<Resource> resources) {
         try {
-            getResourceForPath(properties.getInitSqlLocation(), resources);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 执行增量脚本
-     */
-    private void invokeOtherSql(List<Resource> resources) {
-        try {
-            getResourceForPath(properties.getIncrementSqlLocation(), resources);
+            List<Resource> resourceForPath = getResourceForPath(myDbMergeProperties.getSql());
+            resources.addAll(resourceForPath);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -150,10 +142,11 @@ public class MyDbMergeConfigure {
     /**
      * 根据路径加载SQL资源文件
      *
-     * @param basePath  相对目录
-     * @param resources 集合
+     * @param basePath 相对目录
+     * @return resources 集合
      */
-    private void getResourceForPath(String basePath, List<Resource> resources) {
+    private List<Resource> getResourceForPath(String basePath) {
+        List<Resource> resources = new ArrayList<>();
         try {
             Enumeration<URL> urlEnumeration = Thread.currentThread().getContextClassLoader().getResources(basePath);
             while (urlEnumeration.hasMoreElements()) {
@@ -168,6 +161,7 @@ public class MyDbMergeConfigure {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return resources;
     }
 
     /**

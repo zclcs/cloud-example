@@ -47,6 +47,9 @@ spring:
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
+mybatis-plus:
+  type-aliases-package: com.zclcs.test.test.api.entity
+  mapper-locations: classpath:com/zclcs/test/test/biz/mapper/*.xml
 
 # spring security 配置
 security:

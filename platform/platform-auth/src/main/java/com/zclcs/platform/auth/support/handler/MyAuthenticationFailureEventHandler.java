@@ -3,11 +3,11 @@ package com.zclcs.platform.auth.support.handler;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.core.constant.SecurityConstant;
 import com.zclcs.common.core.utils.I18nUtil;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
+import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import com.zclcs.common.security.starter.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +38,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
 
     private final ObjectMapper objectMapper;
     private final RabbitTemplate rabbitTemplate;
+    private final MyRabbitMqProperties myRabbitMqProperties;
 
     /**
      * Called when an authentication attempt fails.
@@ -61,7 +62,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         // 发送异步日志事件
         loginLog.setCreateBy(username);
         loginLog.setUpdateBy(username);
-        rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_LOGIN_LOG_ROUTE_KEY, MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+        rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLoginLogBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         // 写出错误信息
         sendErrorResponse(request, response, exception);
     }

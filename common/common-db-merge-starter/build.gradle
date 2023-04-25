@@ -1,4 +1,5 @@
 dependencies {
     api project(":common:common-core")
     api 'org.springframework.boot:spring-boot-starter-jdbc'
+    api runtimeOnly("com.mysql:mysql-connector-j")
 }

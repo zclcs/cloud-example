@@ -12,6 +12,9 @@ include 'common:common-web-starter'
 include 'common:common-seata-starter'
 include 'common:common-db-merge-starter'
 include 'common:common-dict'
+include 'common:common-xxl-job-starter'
+
+include 'data-sync'
 
 include 'platform'
 include 'platform:platform-system-bom'

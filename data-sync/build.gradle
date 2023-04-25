@@ -1,0 +1,24 @@
+apply plugin: "org.springframework.boot"
+
+bootJar {
+    mainClass = "com.zclcs.DataSyncApplication"
+}
+
+processResources {
+    copy {
+        from("../shared-resources/sql/1.0.0-procedure.sql")
+        into("/src/main/resources/sql/nacos")
+    }
+    copy {
+        from("../shared-resources/sql/1.0.0-procedure.sql")
+        into("/src/main/resources/sql/xxl-job")
+    }
+}
+
+dependencies {
+    implementation project(":common:common-core")
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation runtimeOnly("com.mysql:mysql-connector-j")
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.apache.skywalking:apm-toolkit-logback-1.x"
+}

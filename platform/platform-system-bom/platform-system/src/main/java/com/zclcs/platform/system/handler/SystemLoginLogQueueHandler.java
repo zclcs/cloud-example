@@ -2,7 +2,6 @@ package com.zclcs.platform.system.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import com.zclcs.platform.system.service.LoginLogService;
@@ -41,7 +40,7 @@ public class SystemLoginLogQueueHandler {
     }
 
     @RabbitHandler
-    @RabbitListener(queues = RabbitConstant.SYSTEM_LOGIN_LOG_QUEUE)
+    @RabbitListener(queues = "${my.rabbit.mq.system-login-log-queue}")
     public void directHandlerManualAck(MessageStruct messageStruct, Message message, Channel channel) {
         //  如果手动ACK,消息会被监听消费,但是消息在队列中依旧存在,如果 未配置 acknowledge-mode 默认是会在消费完毕后自动ACK掉
         final long deliveryTag = message.getMessageProperties().getDeliveryTag();

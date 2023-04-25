@@ -2,10 +2,10 @@ package com.zclcs.common.logging.starter.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.RabbitConstant;
 import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
 import com.zclcs.common.logging.starter.ao.LogAo;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
+import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -41,6 +41,8 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
 
     private RabbitTemplate rabbitTemplate;
 
+    private MyRabbitMqProperties myRabbitMqProperties;
+
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -49,6 +51,11 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setMyRabbitMqProperties(MyRabbitMqProperties myRabbitMqProperties) {
+        this.myRabbitMqProperties = myRabbitMqProperties;
     }
 
     @Pointcut("execution(* com.zclcs..*.controller..*.*(..)) && @annotation(com.zclcs.common.logging.starter.annotation.ControllerEndpoint)")
@@ -86,7 +93,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
             systemLogAo.setTime(BigDecimal.valueOf(end - start));
-            rabbitTemplate.convertAndSend(RabbitConstant.DIRECT_EXCHANGE, RabbitConstant.SYSTEM_LOG_ROUTE_KEY, MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
+            rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLogQueueBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
         }
         return result;
     }

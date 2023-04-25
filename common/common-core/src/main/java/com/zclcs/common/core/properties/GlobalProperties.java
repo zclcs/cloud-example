@@ -19,5 +19,13 @@ public class GlobalProperties {
      */
     private String redisCachePrefix;
 
+    /**
+     * 默认密码
+     */
     private String defaultPassword;
+
+    /**
+     * nacos命名空间
+     */
+    private String nacosNamespace;
 }
