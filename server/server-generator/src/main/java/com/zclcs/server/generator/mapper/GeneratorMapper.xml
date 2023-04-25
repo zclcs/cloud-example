@@ -22,32 +22,32 @@
         WHERE
         TABLE_SCHEMA = #{schemaName}
         <if test="tableName != null and tableName != ''">
-            AND TABLE_NAME = #{tableName}
+            AND TABLE_NAME like concat('%', #{tableName}, '%')
         </if>
     </select>
 
     <!--查询数据库表下面的列属性-->
     <select id="getColumns" resultType="com.zclcs.common.core.entity.generator.Column">
-        SELECT COLUMN_NAME                        name,
-               CASE
-                   COLUMN_key
-                   WHEN 'PRI' THEN
-                       1
-                   ELSE 0
-                   END                            isKey,
-               CASE
-                   IS_NULLABLE
-                   WHEN 'YES' THEN
-                       1
-                   ELSE 0
-                   END                            isNullable,
-               DATA_TYPE                          type,
-               if(CHARACTER_MAXIMUM_LENGTH, 1, 0) isCharMaxLength,
-               CHARACTER_MAXIMUM_LENGTH           charMaxLength,
-               COLUMN_COMMENT                     remark
+        SELECT COLUMN_NAME name,
+        CASE
+        COLUMN_key
+        WHEN 'PRI' THEN
+        1
+        ELSE 0
+        END isKey,
+        CASE
+        IS_NULLABLE
+        WHEN 'YES' THEN
+        1
+        ELSE 0
+        END isNullable,
+        DATA_TYPE type,
+        if(CHARACTER_MAXIMUM_LENGTH, 1, 0) isCharMaxLength,
+        CHARACTER_MAXIMUM_LENGTH charMaxLength,
+        COLUMN_COMMENT remark
         FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = #{schemaName}
-          AND TABLE_NAME = #{tableName}
+        AND TABLE_NAME = #{tableName}
         <if test="excludeColumns != null and excludeColumns.size() != 0">
             AND COLUMN_NAME not in
             <foreach collection="excludeColumns" open="(" separator="," close=")" item="column">
