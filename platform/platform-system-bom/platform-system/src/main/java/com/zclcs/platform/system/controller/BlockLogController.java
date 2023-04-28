@@ -3,9 +3,9 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.BlockLog;
 import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.vo.BlockLogVo;
@@ -82,7 +82,7 @@ public class BlockLogController {
             @Parameter(name = "blockLogIds", description = "黑名单拦截日志id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteBlockLog(@NotBlank(message = "{required}") @PathVariable String blockLogIds) {
-        List<Long> ids = Arrays.stream(blockLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(blockLogIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blockLogService.deleteBlockLog(ids);
         return RspUtil.message("删除成功");
     }

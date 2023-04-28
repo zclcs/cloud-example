@@ -9,10 +9,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.common.core.constant.Dict;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.TreeUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.RoleMenu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
@@ -86,7 +87,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<MenuTreeVo> trees = new ArrayList<>();
         buildTrees(trees, menus);
 
-        if (StrUtil.equals(menu.getType(), MyConstant.TYPE_BUTTON) || StrUtil.isNotBlank(menu.getMenuName())) {
+        if (StrUtil.equals(menu.getType(), Dict.TYPE_BUTTON) || StrUtil.isNotBlank(menu.getMenuName())) {
             return trees;
         } else {
             return (List<MenuTreeVo>) TreeUtil.build(trees);
@@ -164,12 +165,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     private void setMenu(Menu menu) {
         if (menu.getParentCode() == null) {
-            menu.setParentCode(MyConstant.TOP_PARENT_CODE);
+            menu.setParentCode(CommonCore.TOP_PARENT_CODE);
 
-            menu.setType(MyConstant.TYPE_DIR);
-            menu.setComponent(MyConstant.LAYOUT);
+            menu.setType(Dict.TYPE_DIR);
+            menu.setComponent(CommonCore.LAYOUT);
         }
-        if (MyConstant.TYPE_BUTTON.equals(menu.getType())) {
+        if (Dict.TYPE_BUTTON.equals(menu.getType())) {
             menu.setPath(null);
             menu.setIcon(null);
             menu.setComponent(null);
@@ -196,7 +197,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public void validateMenuCode(String menuCode, Long menuId) {
-        if (MyConstant.TOP_PARENT_CODE.equals(menuCode)) {
+        if (CommonCore.TOP_PARENT_CODE.equals(menuCode)) {
             throw new MyException("菜单编码输入非法值");
         }
         Menu one = this.lambdaQuery().eq(Menu::getMenuCode, menuCode).one();

@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.TreeUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.UserDataPermission;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
@@ -150,7 +150,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             tree.setId(deptVo.getDeptId());
             tree.setCode(deptVo.getDeptCode());
             tree.setParentCode(deptVo.getParentCode());
-            tree.setHarPar(!deptVo.getParentCode().equals(MyConstant.TOP_PARENT_CODE));
+            tree.setHarPar(!deptVo.getParentCode().equals(CommonCore.TOP_PARENT_CODE));
             tree.setLabel(deptVo.getDeptName());
             tree.setOrderNum(deptVo.getOrderNum());
             tree.setDeptName(deptVo.getDeptName());
@@ -170,7 +170,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptCode(String deptCode, Long deptId) {
-        if (MyConstant.TOP_PARENT_CODE.equals(deptCode)) {
+        if (CommonCore.TOP_PARENT_CODE.equals(deptCode)) {
             throw new MyException("部门编码输入非法值");
         }
         Dept one = this.lambdaQuery().eq(Dept::getDeptCode, deptCode).one();

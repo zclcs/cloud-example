@@ -2,8 +2,8 @@ package com.zclcs.platform.auth.support.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.zclcs.common.core.constant.SecurityConstant;
-import com.zclcs.common.security.starter.service.MyUserDetailsService;
+import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.security.service.MyUserDetailsService;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
@@ -66,7 +66,7 @@ public class MyDaoAuthenticationProvider extends AbstractUserDetailsAuthenticati
 
         // app 模式不用校验密码
         String grantType = WebUtil.getHttpServletRequest().getParameter(OAuth2ParameterNames.GRANT_TYPE);
-        if (StrUtil.equals(SecurityConstant.APP, grantType)) {
+        if (StrUtil.equals(Security.APP, grantType)) {
             return;
         }
 

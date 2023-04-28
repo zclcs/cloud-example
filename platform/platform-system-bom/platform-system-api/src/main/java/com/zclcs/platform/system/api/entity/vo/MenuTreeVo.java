@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.api.entity.vo;
 
 
-import com.zclcs.common.core.base.Tree;
-import com.zclcs.common.dict.core.json.annotation.DictText;
+import com.zclcs.common.core.bean.Tree;
+import com.zclcs.common.dict.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -3,7 +3,7 @@ package com.zclcs.common.redis.starter.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.zclcs.common.core.enums.CacheType;
+import com.zclcs.common.redis.starter.enums.CacheType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

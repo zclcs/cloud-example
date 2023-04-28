@@ -1,6 +1,5 @@
 package com.zclcs.common.web.starter.configure;
 
-import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -32,13 +31,17 @@ import java.time.format.DateTimeFormatter;
 @ConditionalOnProperty(value = "my.enable.date.converter", havingValue = "true", matchIfMissing = true)
 public class DateTimeFormatConfiguration implements WebMvcConfigurer {
 
+    private final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private final String NORM_DATE_PATTERN = "yyyy-MM-dd";
+    private final String NORM_TIME_PATTERN = "HH:mm:ss";
+
     @Override
     public void addFormatters(@Nullable FormatterRegistry registry) {
         if (registry != null) {
             DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-            registrar.setDateFormatter(DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN));
-            registrar.setTimeFormatter(DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN));
-            registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN));
+            registrar.setDateFormatter(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN));
+            registrar.setTimeFormatter(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN));
+            registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN));
             registrar.registerFormatters(registry);
         }
     }
@@ -49,14 +52,14 @@ public class DateTimeFormatConfiguration implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         JavaTimeModule module = new JavaTimeModule();
-        module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN)));
-        module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN)));
-        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
+        module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
+        module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
+        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN)));
         return builder -> {
-            builder.simpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN)));
-            builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN)));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
+            builder.simpleDateFormat(NORM_DATETIME_PATTERN);
+            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
+            builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
+            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN)));
             builder.modules(module);
         };
     }

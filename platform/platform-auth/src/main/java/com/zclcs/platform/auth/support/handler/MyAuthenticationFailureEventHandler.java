@@ -2,13 +2,13 @@ package com.zclcs.platform.auth.support.handler;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.common.core.utils.I18nUtil;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.starter.utils.LoginLogUtil;
+import com.zclcs.common.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,7 +58,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         log.error(exception.getMessage(), exception);
         LoginLogAo loginLog = LoginLogUtil.getLoginLog();
         loginLog.setUsername(username);
-        loginLog.setLoginType(DictConstant.LOGIN_LOG_LOGIN_TYPE_02);
+        loginLog.setLoginType(Dict.LOGIN_LOG_LOGIN_TYPE_02);
         // 发送异步日志事件
         loginLog.setCreateBy(username);
         loginLog.setUpdateBy(username);
@@ -86,7 +86,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
 
         // 手机号登录
         String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
-        if (SecurityConstant.APP.equals(grantType)) {
+        if (Security.APP.equals(grantType)) {
             errorMessage = I18nUtil.getSecurityMessage("AbstractUserDetailsAuthenticationProvider.smsBadCredentials");
         }
 

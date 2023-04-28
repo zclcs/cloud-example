@@ -5,10 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.GeneratorConstant;
-import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.constant.ParamsConstant;
+import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.Generator;
+import com.zclcs.common.core.constant.Params;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.BaseUtil;
 import com.zclcs.common.core.utils.FileUtil;
@@ -91,21 +90,21 @@ public class GeneratorServiceImpl implements GeneratorService {
         generatorConfigVo.setClassName(underscoreToCamel);
         generatorConfigVo.setTableComment(remark);
         // 生成代码到临时目录
-        List<Column> columns = this.getColumns(GeneratorConstant.DATABASE_TYPE, generateAo.getDatasource(), name, StrUtil.split(generatorConfigVo.getExcludeColumns(), StrUtil.COMMA));
+        List<Column> columns = this.getColumns(Generator.DATABASE_TYPE, generateAo.getDatasource(), name, StrUtil.split(generatorConfigVo.getExcludeColumns(), StrUtil.COMMA));
         for (Column column : columns) {
             if (column.getIsKey()) {
                 generatorConfigVo.setKeyName(column.getName());
             }
             String columnRemark = column.getRemark();
-            if (StrUtil.contains(columnRemark, MyConstant.DICT_REMARK)) {
+            if (StrUtil.contains(columnRemark, Common.DICT_REMARK)) {
                 column.setHasDict(true);
-                List<String> strings = StrUtil.splitTrim(columnRemark, MyConstant.DICT_REMARK);
+                List<String> strings = StrUtil.splitTrim(columnRemark, Common.DICT_REMARK);
                 column.setRemarkDict(strings.get(strings.size() - 1));
             } else {
                 column.setHasDict(false);
             }
-            column.setIsArray(StrUtil.contains(columnRemark, MyConstant.DICT_ARRAY));
-            column.setIsTree(StrUtil.contains(columnRemark, MyConstant.DICT_TREE));
+            column.setIsArray(StrUtil.contains(columnRemark, Common.DICT_ARRAY));
+            column.setIsTree(StrUtil.contains(columnRemark, Common.DICT_TREE));
         }
         try {
             GeneratorUtil.generateEntityFile(columns, generatorConfigVo);
@@ -117,12 +116,12 @@ public class GeneratorServiceImpl implements GeneratorService {
             GeneratorUtil.generateServiceImplFile(columns, generatorConfigVo);
             GeneratorUtil.generateControllerFile(columns, generatorConfigVo);
             // 打包
-            String zipFile = System.currentTimeMillis() + ParamsConstant.SUFFIX;
-            FileUtil.compress(GeneratorConstant.TEMP_PATH + "src", zipFile);
+            String zipFile = System.currentTimeMillis() + Params.SUFFIX;
+            FileUtil.compress(Generator.TEMP_PATH + "src", zipFile);
             // 下载
-            WebUtil.download(zipFile, name + ParamsConstant.SUFFIX, true, response);
+            WebUtil.download(zipFile, name + Params.SUFFIX, true, response);
             // 删除临时目录
-            FileSystemUtils.deleteRecursively(new File(GeneratorConstant.TEMP_PATH));
+            FileSystemUtils.deleteRecursively(new File(Generator.TEMP_PATH));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -130,16 +129,16 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private void createMenu(GenerateAo generateAo, String className, String tableName) {
         className = StrUtil.lowerFirst(className);
-        String isCreateMenuNew = Optional.ofNullable(generateAo.getIsCreateMenu()).filter(StrUtil::isNotBlank).orElse(DictConstant.YES_NO_0);
-        String isCreateDirNew = Optional.ofNullable(generateAo.getIsCreateDir()).filter(StrUtil::isNotBlank).orElse(DictConstant.YES_NO_0);
-        if (DictConstant.YES_NO_1.equals(isCreateDirNew)) {
+        String isCreateMenuNew = Optional.ofNullable(generateAo.getIsCreateMenu()).filter(StrUtil::isNotBlank).orElse(Dict.YES_NO_0);
+        String isCreateDirNew = Optional.ofNullable(generateAo.getIsCreateDir()).filter(StrUtil::isNotBlank).orElse(Dict.YES_NO_0);
+        if (Dict.YES_NO_1.equals(isCreateDirNew)) {
             MenuAo dir = new MenuAo();
             setDir(dir, generateAo);
             Menu dirMenu = menuService.createMenu(dir);
             MenuAo menu = new MenuAo();
             setMenu(menu, generateAo, tableName, className, dirMenu.getMenuCode());
             addMenuAndButton(menu, className);
-        } else if (DictConstant.YES_NO_1.equals(isCreateMenuNew)) {
+        } else if (Dict.YES_NO_1.equals(isCreateMenuNew)) {
             MenuAo menu = new MenuAo();
             setMenu(menu, generateAo, tableName, className, generateAo.getMenuCode());
             addMenuAndButton(menu, className);
@@ -148,15 +147,15 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private void addMenuAndButton(MenuAo menuAo, String className) {
         Menu parentMenu = menuService.createMenu(menuAo);
-        for (int i = 0; i < ParamsConstant.AUTHS.length; i++) {
-            String auth = ParamsConstant.AUTHS[i];
+        for (int i = 0; i < Params.AUTHS.length; i++) {
+            String auth = Params.AUTHS[i];
             String parentMenuCode = parentMenu.getMenuCode();
             String menuCode = parentMenuCode + StrUtil.UNDERLINE + auth.toUpperCase(Locale.ROOT);
             MenuAo button = new MenuAo();
             button.setMenuCode(menuCode);
-            button.setMenuName(ParamsConstant.BUTTON_TEXT[i]);
+            button.setMenuName(Params.BUTTON_TEXT[i]);
             button.setParentCode(parentMenuCode);
-            button.setType(DictConstant.MENU_TYPE_1);
+            button.setType(Dict.MENU_TYPE_1);
             button.setPerms(className + StrUtil.COLON + auth);
             menuService.createMenu(button);
         }
@@ -166,12 +165,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         String menuCode = StrUtil.removePrefix(StrUtil.replace(generateAo.getDirPath(), StrUtil.SLASH, StrUtil.UNDERLINE), StrUtil.UNDERLINE).toUpperCase(Locale.ROOT);
         dir.setMenuCode(menuCode);
         dir.setMenuName(generateAo.getDirName());
-        dir.setType(DictConstant.MENU_TYPE_2);
-        dir.setIcon(ParamsConstant.DEFAULT_MENU_ICON);
+        dir.setType(Dict.MENU_TYPE_2);
+        dir.setIcon(Params.DEFAULT_MENU_ICON);
         dir.setPath(generateAo.getDirPath());
-        dir.setHideMenu(DictConstant.YES_NO_0);
-        dir.setHideBreadcrumb(DictConstant.YES_NO_0);
-        dir.setHideChildrenInMenu(DictConstant.YES_NO_0);
+        dir.setHideMenu(Dict.YES_NO_0);
+        dir.setHideBreadcrumb(Dict.YES_NO_0);
+        dir.setHideChildrenInMenu(Dict.YES_NO_0);
     }
 
     private void setMenu(MenuAo menuAo, GenerateAo generateAo, String tableName, String className, String parentCode) {
@@ -180,13 +179,13 @@ public class GeneratorServiceImpl implements GeneratorService {
         menuAo.setMenuName(Optional.ofNullable(generateAo.getMenuName()).filter(StrUtil::isNotBlank).orElse(generateAo.getRemark()));
         menuAo.setKeepAliveName(StrUtil.upperFirst(className));
         menuAo.setParentCode(parentCode);
-        menuAo.setType(DictConstant.MENU_TYPE_0);
-        menuAo.setIcon(ParamsConstant.DEFAULT_MENU_ICON);
+        menuAo.setType(Dict.MENU_TYPE_0);
+        menuAo.setIcon(Params.DEFAULT_MENU_ICON);
         menuAo.setPath(Optional.ofNullable(generateAo.getMenuPath()).filter(StrUtil::isNotBlank).orElse(className));
         menuAo.setComponent(generateAo.getMenuComponent());
-        menuAo.setIgnoreKeepAlive(DictConstant.YES_NO_0);
-        menuAo.setHideMenu(DictConstant.YES_NO_0);
-        menuAo.setHideBreadcrumb(DictConstant.YES_NO_0);
-        menuAo.setHideChildrenInMenu(DictConstant.YES_NO_0);
+        menuAo.setIgnoreKeepAlive(Dict.YES_NO_0);
+        menuAo.setHideMenu(Dict.YES_NO_0);
+        menuAo.setHideBreadcrumb(Dict.YES_NO_0);
+        menuAo.setHideChildrenInMenu(Dict.YES_NO_0);
     }
 }

@@ -3,7 +3,7 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.MinioFile;
@@ -96,7 +96,7 @@ public class MinioFileController {
             @Parameter(name = "fileIds", description = "文件id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public void deleteMinioFile(@NotBlank(message = "{required}") @PathVariable String fileIds) {
-        List<String> ids = Arrays.stream(fileIds.split(StringConstant.COMMA)).collect(Collectors.toList());
+        List<String> ids = Arrays.stream(fileIds.split(Strings.COMMA)).collect(Collectors.toList());
         this.minioFileService.deleteMinioFile(ids);
     }
 

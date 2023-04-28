@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.properties.GlobalProperties;
 import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.vo.RedisVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -129,7 +129,7 @@ public class RedisController {
         if (StrUtil.containsAny(keys, BLOOM_FILTER, ROUTE)) {
             throw new MyException("key不能被删除");
         }
-        List<String> keyList = Arrays.stream(keys.split(StringConstant.COMMA)).map(s ->
+        List<String> keyList = Arrays.stream(keys.split(Strings.COMMA)).map(s ->
                 StrUtil.addPrefixIfNot(s, globalProperties.getRedisCachePrefix())).toList();
         redisService.del(keyList);
         return RspUtil.message("删除成功");

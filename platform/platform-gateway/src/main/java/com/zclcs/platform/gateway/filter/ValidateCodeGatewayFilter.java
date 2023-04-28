@@ -5,8 +5,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.RedisCachePrefix;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.common.core.exception.ValidateCodeException;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
@@ -43,7 +43,7 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             boolean isAuthToken = CharSequenceUtil.containsAnyIgnoreCase(request.getURI().getPath(),
-                    SecurityConstant.OAUTH_TOKEN_URL);
+                    Security.OAUTH_TOKEN_URL);
 
             // 不是登录请求，直接向下执行
             if (!isAuthToken) {
@@ -52,7 +52,7 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
 
             // 刷新token，手机号登录（也可以这里进行校验） 直接向下执行
             String grantType = request.getQueryParams().getFirst("grant_type");
-            if (StrUtil.equals(SecurityConstant.REFRESH_TOKEN, grantType)) {
+            if (StrUtil.equals(Security.REFRESH_TOKEN, grantType)) {
                 return chain.filter(exchange);
             }
 
@@ -94,10 +94,10 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
         String randomStr = request.getQueryParams().getFirst("randomStr");
 
         if (StrUtil.isBlank(randomStr)) {
-            randomStr = request.getQueryParams().getFirst(SecurityConstant.SMS_PARAMETER_NAME);
+            randomStr = request.getQueryParams().getFirst(Security.SMS_PARAMETER_NAME);
         }
 
-        String key = RedisCachePrefixConstant.CODE_PREFIX + randomStr;
+        String key = RedisCachePrefix.CODE_PREFIX + randomStr;
 
         Object codeObj = redisService.get(key);
 

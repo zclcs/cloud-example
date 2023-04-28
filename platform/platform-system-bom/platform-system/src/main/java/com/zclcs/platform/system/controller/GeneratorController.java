@@ -3,7 +3,7 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.GeneratorConstant;
+import com.zclcs.common.core.constant.Generator;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.Table;
 import com.zclcs.platform.system.api.entity.ao.GenerateAo;
@@ -56,7 +56,7 @@ public class GeneratorController {
     public BaseRsp<BasePage<Table>> tablesInfo(@Parameter(name = "name", description = "表名") String name,
                                                @Parameter(name = "datasource", description = "库名") String datasource,
                                                BasePageAo request) {
-        BasePage<Table> tables = generatorService.getTables(name, request, GeneratorConstant.DATABASE_TYPE, datasource);
+        BasePage<Table> tables = generatorService.getTables(name, request, Generator.DATABASE_TYPE, datasource);
         return RspUtil.data(tables);
     }
 

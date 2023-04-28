@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.entity.vo;
 
-import com.zclcs.common.core.base.Tree;
+import com.zclcs.common.core.bean.Tree;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

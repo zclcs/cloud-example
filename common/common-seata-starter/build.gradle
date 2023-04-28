@@ -1,6 +1,6 @@
 dependencies {
-//    api("io.seata:seata-spring-boot-starter")
-//    api("com.alibaba.cloud:spring-cloud-starter-alibaba-seata") {
-//        exclude(module: "io.seata:seata-spring-boot-starter")
-//    }
+    api("io.seata:seata-spring-boot-starter")
+    api("com.alibaba.cloud:spring-cloud-starter-alibaba-seata") {
+        exclude(module: "io.seata:seata-spring-boot-starter")
+    }
 }

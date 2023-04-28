@@ -3,9 +3,9 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RouteLog;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import com.zclcs.platform.system.api.entity.vo.RouteLogVo;
@@ -82,7 +82,7 @@ public class RouteLogController {
             @Parameter(name = "routeLogIds", description = "网关转发日志id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteRouteLog(@NotBlank(message = "{required}") @PathVariable String routeLogIds) {
-        List<Long> ids = Arrays.stream(routeLogIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(routeLogIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.routeLogService.deleteRouteLog(ids);
         return RspUtil.message("删除成功");
     }

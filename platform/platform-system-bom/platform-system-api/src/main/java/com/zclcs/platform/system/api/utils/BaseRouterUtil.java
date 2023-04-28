@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.utils;
 
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.platform.system.api.entity.router.VueRouter;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public abstract class BaseRouterUtil {
         List<VueRouter<T>> topRoutes = new ArrayList<>();
         routes.forEach(route -> {
             String parentCode = route.getParentCode();
-            if (parentCode == null || MyConstant.TOP_PARENT_CODE.equals(parentCode)) {
+            if (parentCode == null || CommonCore.TOP_PARENT_CODE.equals(parentCode)) {
                 topRoutes.add(route);
                 return;
             }

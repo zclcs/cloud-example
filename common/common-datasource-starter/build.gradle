@@ -1,8 +1,0 @@
-dependencies {
-    api project(":common:common-core")
-    api project(":common:common-security-starter")
-    api runtimeOnly("com.mysql:mysql-connector-j")
-    api "com.baomidou:mybatis-plus-boot-starter"
-//    api "com.baomidou:dynamic-datasource-spring-boot-starter"
-    api "p6spy:p6spy"
-}

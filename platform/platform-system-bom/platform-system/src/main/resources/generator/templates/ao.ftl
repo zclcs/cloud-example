@@ -1,7 +1,7 @@
 package ${basePackage}.${entityPackage};
 
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.dict.core.json.annotation.DictValid;
+import strategy.validate.com.zclcs.common.core.UpdateStrategy;
+import annotation.json.com.zclcs.common.dict.DictValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

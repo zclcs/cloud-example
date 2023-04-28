@@ -2,10 +2,10 @@ package com.zclcs.platform.auth.support.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.DictConstant;
+import com.zclcs.common.core.constant.Dict;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.starter.utils.LoginLogUtil;
+import com.zclcs.common.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
     public void handle(Authentication authentication) {
         log.info("用户：{} 退出成功", authentication.getPrincipal());
         LoginLogAo loginLog = LoginLogUtil.getLoginLog();
-        loginLog.setLoginType(DictConstant.LOGIN_LOG_LOGIN_TYPE_03);
+        loginLog.setLoginType(Dict.LOGIN_LOG_LOGIN_TYPE_03);
         loginLog.setUsername(authentication.getName());
         // 发送异步日志事件
         loginLog.setCreateBy(authentication.getName());

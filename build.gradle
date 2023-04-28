@@ -47,7 +47,7 @@ plugins {
 
 ext {
     javaVersion = JavaVersion.VERSION_17
-    bom = Set.of(project(":cloud-bom"), project(":common"),
+    bom = Set.of(project(":cloud-bom"), project(":common"), project(":cloud-lib"),
             project(":platform"), project(":platform:platform-system-bom"),
             project(":test"), project(":test:test-test-bom"))
     jibPackage = Set.of(project(":platform:platform-auth"),
@@ -96,7 +96,6 @@ configure(commons) {
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform("com.github.xiaoymin:knife4j-dependencies:$knife4jVersion")
         management platform(project(":cloud-bom"))
-        management platform(project(":common"))
         implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"

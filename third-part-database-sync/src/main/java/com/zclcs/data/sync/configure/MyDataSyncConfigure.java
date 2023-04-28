@@ -2,7 +2,7 @@ package com.zclcs.data.sync.configure;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.properties.GlobalProperties;
 import com.zclcs.data.sync.properties.MyDataSyncProperties;
 import lombok.SneakyThrows;
@@ -37,8 +37,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Copyright (C) 2020 广东腾晖信息科技开发股份有限公司
- * 版权所有
  *
  * @author zclcs
  */
@@ -187,10 +185,10 @@ public class MyDataSyncConfigure {
     private void replaceSql(List<Resource> resources, List<Resource> resourceForPath, String location) throws IOException {
         for (Resource resource : resourceForPath) {
             String sql = FileUtil.readString(resource.getFile(), StandardCharsets.UTF_8);
-            String nacosNamespaceReplace = StrUtil.replace(sql, MyConstant.NACOS_NAMESPACE, globalProperties.getNacosNamespace());
+            String nacosNamespaceReplace = StrUtil.replace(sql, CommonCore.NACOS_NAMESPACE, globalProperties.getNacosNamespace());
             String path = resource.getURI().getPath();
             String parentPath = path.substring(0, path.lastIndexOf(location));
-            String child = location + MyConstant.SQL_TEMP_PATH + resource.getFilename();
+            String child = location + CommonCore.SQL_TEMP_PATH + resource.getFilename();
             File newFile = new File(parentPath, child);
             FileUtil.touch(newFile);
             FileUtil.writeString(nacosNamespaceReplace, newFile, StandardCharsets.UTF_8);

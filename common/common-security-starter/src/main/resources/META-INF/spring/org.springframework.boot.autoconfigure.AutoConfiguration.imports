@@ -1,7 +1,0 @@
-com.zclcs.common.security.starter.service.impl.MyUserDetailsServiceImpl
-com.zclcs.common.security.starter.service.impl.MyAppUserDetailsServiceImpl
-com.zclcs.common.security.starter.service.impl.MyRedisOAuth2AuthorizationServiceImpl
-com.zclcs.common.security.starter.service.impl.MyRedisOAuth2AuthorizationConsentServiceImpl
-com.zclcs.common.security.starter.configuration.MySecurityInnerAspect
-com.zclcs.common.security.starter.configuration.MySecurityMessageSourceConfiguration
-com.zclcs.common.security.starter.service.impl.MyRemoteRegisteredClientRepositoryImpl

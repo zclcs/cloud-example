@@ -3,11 +3,11 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
-import com.zclcs.common.security.starter.annotation.Inner;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import com.zclcs.common.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
 import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;
@@ -113,7 +113,7 @@ public class MenuController {
             @Parameter(name = "menuIds", description = "菜单id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteMenu(@NotBlank(message = "{required}") @PathVariable String menuIds) {
-        List<Long> ids = Arrays.stream(menuIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(menuIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.menuService.deleteMenu(ids);
         return RspUtil.message("删除成功");
     }

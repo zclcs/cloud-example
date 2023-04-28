@@ -10,7 +10,7 @@ import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.utils.AddressUtil;
 import com.zclcs.common.core.utils.RouteEnhanceCacheUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;

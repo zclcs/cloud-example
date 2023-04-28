@@ -3,12 +3,12 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.dict.core.entity.DictItem;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
-import com.zclcs.common.security.starter.annotation.Inner;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import com.zclcs.common.dict.entity.DictItem;
+import com.zclcs.common.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.ao.DictItemAo;
 import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DictItemVo;
@@ -154,7 +154,7 @@ public class DictItemController {
             @Parameter(name = "dictItemIds", description = "字典项id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteDictItem(@NotBlank(message = "{required}") @PathVariable String dictItemIds) {
-        List<Long> ids = Arrays.stream(dictItemIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(dictItemIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.dictItemService.deleteDictItem(ids);
         return RspUtil.message("删除成功");
     }

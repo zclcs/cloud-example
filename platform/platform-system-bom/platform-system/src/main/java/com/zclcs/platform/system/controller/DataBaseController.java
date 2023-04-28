@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.controller;
 
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.GeneratorConstant;
+import com.zclcs.common.core.constant.Generator;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
 import com.zclcs.platform.system.service.DataBaseService;
@@ -40,7 +40,7 @@ public class DataBaseController {
     @PreAuthorize("hasAuthority('dataBase:view')")
     @Operation(summary = "查询schema")
     public BaseRsp<Map<String, List<String>>> datasource() {
-        Map<String, List<String>> schema = dataBaseService.getSchema(GeneratorConstant.DATABASE_TYPE);
+        Map<String, List<String>> schema = dataBaseService.getSchema(Generator.DATABASE_TYPE);
         return RspUtil.data(schema);
     }
 
@@ -51,6 +51,6 @@ public class DataBaseController {
             @Parameter(name = "sql", description = "sql", required = true, in = ParameterIn.QUERY)
     })
     public BaseRsp<DataBaseDataVo> datasource(@NotBlank(message = "{required}") @RequestParam String sql) {
-        return RspUtil.data(dataBaseService.getData(GeneratorConstant.DATABASE_TYPE, sql));
+        return RspUtil.data(dataBaseService.getData(Generator.DATABASE_TYPE, sql));
     }
 }

@@ -3,10 +3,10 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RateLimitRule;
 import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitRuleVo;
@@ -83,7 +83,7 @@ public class RateLimitRuleController {
             @Parameter(name = "rateLimitRuleIds", description = "限流规则id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteRateLimitRule(@NotBlank(message = "{required}") @PathVariable String rateLimitRuleIds) {
-        List<Long> ids = Arrays.stream(rateLimitRuleIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(rateLimitRuleIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.rateLimitRuleService.deleteRateLimitRule(ids);
         return RspUtil.message("删除成功");
     }

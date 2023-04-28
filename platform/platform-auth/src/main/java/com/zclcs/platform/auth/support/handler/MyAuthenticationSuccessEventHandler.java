@@ -2,12 +2,12 @@ package com.zclcs.platform.auth.support.handler;
 
 import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.starter.entity.SecurityUser;
-import com.zclcs.common.security.starter.utils.LoginLogUtil;
+import com.zclcs.common.security.entity.SecurityUser;
+import com.zclcs.common.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,12 +58,12 @@ public class MyAuthenticationSuccessEventHandler implements AuthenticationSucces
         Map<String, Object> map = accessTokenAuthentication.getAdditionalParameters();
         if (MapUtil.isNotEmpty(map)) {
             // 发送异步日志事件
-            SecurityUser userInfo = (SecurityUser) map.get(SecurityConstant.DETAILS_USER);
+            SecurityUser userInfo = (SecurityUser) map.get(Security.DETAILS_USER);
             log.info("用户：{} 登录成功", userInfo.getName());
             SecurityContextHolder.getContext().setAuthentication(accessTokenAuthentication);
             LoginLogAo loginLog = LoginLogUtil.getLoginLog();
             loginLog.setUsername(userInfo.getName());
-            loginLog.setLoginType(DictConstant.LOGIN_LOG_LOGIN_TYPE_01);
+            loginLog.setLoginType(Dict.LOGIN_LOG_LOGIN_TYPE_01);
             // 发送异步日志事件
             loginLog.setCreateBy(userInfo.getName());
             loginLog.setUpdateBy(userInfo.getName());

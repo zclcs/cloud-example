@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.utils.AddressUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.RouteLog;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import com.zclcs.platform.system.api.entity.vo.RouteLogVo;

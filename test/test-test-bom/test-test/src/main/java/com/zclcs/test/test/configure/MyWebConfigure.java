@@ -1,6 +1,6 @@
 package com.zclcs.test.test.configure;
 
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -16,7 +16,7 @@ public class MyWebConfigure {
     /**
      * 注册异步线程池
      */
-    @Bean(MyConstant.ASYNC_POOL)
+    @Bean(CommonCore.ASYNC_POOL)
     public ThreadPoolTaskExecutor asyncThreadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);

@@ -3,11 +3,11 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
-import com.zclcs.common.security.starter.annotation.Inner;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import com.zclcs.common.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
@@ -105,7 +105,7 @@ public class OauthClientDetailsController {
             @Parameter(name = "oauthClientDetailsIds", description = "终端信息id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteOauthClientDetails(@PathVariable String oauthClientDetailsIds) {
-        List<String> ids = Arrays.stream(oauthClientDetailsIds.split(StringConstant.COMMA)).collect(Collectors.toList());
+        List<String> ids = Arrays.stream(oauthClientDetailsIds.split(Strings.COMMA)).collect(Collectors.toList());
         this.oauthClientDetailsService.deleteOauthClientDetails(ids);
         return RspUtil.message("删除成功");
     }

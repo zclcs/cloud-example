@@ -3,10 +3,10 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.GeneratorConfig;
 import com.zclcs.platform.system.api.entity.ao.GeneratorConfigAo;
 import com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo;
@@ -93,7 +93,7 @@ public class GeneratorConfigController {
             @Parameter(name = "ids", description = "代码生成配置id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteGeneratorConfig(@NotBlank(message = "{required}") @PathVariable String ids) {
-        List<Long> idList = Arrays.stream(ids.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> idList = Arrays.stream(ids.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.generatorConfigService.deleteGeneratorConfig(idList);
         return RspUtil.message("删除成功");
     }

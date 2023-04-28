@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.handler;
 
-import com.zclcs.common.feign.starter.sentinel.handler.BaseExceptionHandler;
+import com.zclcs.common.feign.sentinel.handler.BaseExceptionHandler;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

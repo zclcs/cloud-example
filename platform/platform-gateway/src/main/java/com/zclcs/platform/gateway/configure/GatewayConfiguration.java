@@ -1,7 +1,7 @@
 package com.zclcs.platform.gateway.configure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.filter.*;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
@@ -97,7 +97,7 @@ public class GatewayConfiguration {
         return new ImageCodeHandler(redisService, myValidateCodeProperties);
     }
 
-    @Bean(MyConstant.ASYNC_POOL)
+    @Bean(CommonCore.ASYNC_POOL)
     public ThreadPoolTaskExecutor asyncThreadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);

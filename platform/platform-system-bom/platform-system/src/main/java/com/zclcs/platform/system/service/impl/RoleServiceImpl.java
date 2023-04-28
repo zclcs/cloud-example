@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.exception.MyException;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Role;
 import com.zclcs.platform.system.api.entity.RoleMenu;
 import com.zclcs.platform.system.api.entity.UserRole;
@@ -144,7 +144,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public void validateRoleCode(String roleCode, Long roleId) {
-        if (MyConstant.TOP_PARENT_CODE.equals(roleCode)) {
+        if (CommonCore.TOP_PARENT_CODE.equals(roleCode)) {
             throw new MyException("角色编码输入非法值");
         }
         Role one = this.lambdaQuery().eq(Role::getRoleCode, roleCode).one();

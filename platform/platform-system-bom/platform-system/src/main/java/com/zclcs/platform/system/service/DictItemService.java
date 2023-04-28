@@ -3,7 +3,7 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.dict.core.entity.DictItem;
+import com.zclcs.common.dict.entity.DictItem;
 import com.zclcs.platform.system.api.entity.ao.DictItemAo;
 import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DictItemVo;

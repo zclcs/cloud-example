@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.utils.RouteEnhanceCacheUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.RateLimitRule;
 import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;

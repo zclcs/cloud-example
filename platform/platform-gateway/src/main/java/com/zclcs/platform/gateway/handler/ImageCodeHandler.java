@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
-import com.zclcs.common.core.constant.ImageTypeConstant;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.constant.ImageType;
+import com.zclcs.common.core.constant.RedisCachePrefix;
 import com.zclcs.common.core.exception.ValidateCodeException;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
@@ -46,20 +46,20 @@ public class ImageCodeHandler implements HandlerFunction<ServerResponse> {
 
         randomStr.filter(StrUtil::isNotBlank).orElseThrow(() -> new ValidateCodeException("随机值不能为空"));
 
-        randomStr.ifPresent(s -> redisService.set(RedisCachePrefixConstant.CODE_PREFIX + s, result,
+        randomStr.ifPresent(s -> redisService.set(RedisCachePrefix.CODE_PREFIX + s, result,
                 myValidateCodeProperties.getTime()));
 
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         captcha.out(os);
 
-        return ServerResponse.status(HttpStatus.OK).contentType(MediaType.valueOf(StrUtil.equalsIgnoreCase(myValidateCodeProperties.getType(), ImageTypeConstant.GIF) ? MediaType.IMAGE_GIF_VALUE : MediaType.IMAGE_PNG_VALUE))
+        return ServerResponse.status(HttpStatus.OK).contentType(MediaType.valueOf(StrUtil.equalsIgnoreCase(myValidateCodeProperties.getType(), ImageType.GIF) ? MediaType.IMAGE_GIF_VALUE : MediaType.IMAGE_PNG_VALUE))
                 .body(BodyInserters.fromResource(new ByteArrayResource(os.toByteArray())));
     }
 
     private Captcha createCaptcha(MyValidateCodeProperties code) {
         Captcha captcha;
-        if (StrUtil.equalsIgnoreCase(code.getType(), ImageTypeConstant.GIF)) {
+        if (StrUtil.equalsIgnoreCase(code.getType(), ImageType.GIF)) {
             captcha = new GifCaptcha(code.getWidth(), code.getHeight(), code.getLength());
         } else {
             captcha = new SpecCaptcha(code.getWidth(), code.getHeight(), code.getLength());

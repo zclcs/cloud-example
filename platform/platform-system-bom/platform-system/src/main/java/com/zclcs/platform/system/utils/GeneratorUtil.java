@@ -4,9 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.io.Files;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.constant.FieldType;
-import com.zclcs.common.core.constant.GeneratorConstant;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.Generator;
 import com.zclcs.common.core.utils.BaseUtil;
 import com.zclcs.platform.system.api.entity.Column;
 import com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo;
@@ -33,7 +33,7 @@ import java.util.Objects;
 public class GeneratorUtil {
 
     private String getFilePath(GeneratorConfigVo configure, String packagePath, String suffix, boolean serviceInterface) {
-        String filePath = GeneratorConstant.TEMP_PATH + configure.getJavaPath() +
+        String filePath = Generator.TEMP_PATH + configure.getJavaPath() +
                 packageConvertPath(configure.getBasePackage() + "." + packagePath);
         filePath += configure.getClassName() + suffix;
         return filePath;
@@ -44,23 +44,23 @@ public class GeneratorUtil {
     }
 
     public void generateEntityFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.JAVA_FILE_SUFFIX;
+        String suffix = Generator.JAVA_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getEntityPackage(), suffix, false);
-        String templateName = GeneratorConstant.ENTITY_TEMPLATE;
+        String templateName = Generator.ENTITY_TEMPLATE;
         getDao(columns, configure, path, templateName);
     }
 
     public void generateAoFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.AO_FILE_SUFFIX;
+        String suffix = Generator.AO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getAoPackage(), suffix, false);
-        String templateName = GeneratorConstant.AO_TEMPLATE;
+        String templateName = Generator.AO_TEMPLATE;
         getDao(columns, configure, path, templateName);
     }
 
     public void generateVoFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.VO_FILE_SUFFIX;
+        String suffix = Generator.VO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getVoPackage(), suffix, false);
-        String templateName = GeneratorConstant.VO_TEMPLATE;
+        String templateName = Generator.VO_TEMPLATE;
         getDao(columns, configure, path, templateName);
     }
 
@@ -83,41 +83,41 @@ public class GeneratorUtil {
     }
 
     public void generateMapperFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.MAPPER_FILE_SUFFIX;
+        String suffix = Generator.MAPPER_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getMapperPackage(), suffix, false);
-        String templateName = GeneratorConstant.MAPPER_TEMPLATE;
+        String templateName = Generator.MAPPER_TEMPLATE;
         File mapperFile = new File(path);
         generateFileByTemplate(templateName, mapperFile, BeanUtil.beanToMap(configure));
     }
 
     public void generateServiceFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.SERVICE_FILE_SUFFIX;
+        String suffix = Generator.SERVICE_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getServicePackage(), suffix, true);
-        String templateName = GeneratorConstant.SERVICE_TEMPLATE;
+        String templateName = Generator.SERVICE_TEMPLATE;
         File serviceFile = new File(path);
         generateFileByTemplate(templateName, serviceFile, BeanUtil.beanToMap(configure));
     }
 
     public void generateServiceImplFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.SERVICE_IMPL_FILE_SUFFIX;
+        String suffix = Generator.SERVICE_IMPL_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getServiceImplPackage(), suffix, false);
-        String templateName = GeneratorConstant.SERVICE_IMPL_TEMPLATE;
+        String templateName = Generator.SERVICE_IMPL_TEMPLATE;
         File serviceImplFile = new File(path);
         generateFileByTemplate(templateName, serviceImplFile, BeanUtil.beanToMap(configure));
     }
 
     public void generateControllerFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.CONTROLLER_FILE_SUFFIX;
+        String suffix = Generator.CONTROLLER_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getControllerPackage(), suffix, false);
-        String templateName = GeneratorConstant.CONTROLLER_TEMPLATE;
+        String templateName = Generator.CONTROLLER_TEMPLATE;
         File controllerFile = new File(path);
         generateFileByTemplate(templateName, controllerFile, BeanUtil.beanToMap(configure));
     }
 
     public void generateMapperXmlFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
-        String suffix = GeneratorConstant.MAPPER_XML_FILE_SUFFIX;
+        String suffix = Generator.MAPPER_XML_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getMapperXmlPackage(), suffix, false);
-        String templateName = GeneratorConstant.MAPPER_XML_TEMPLATE;
+        String templateName = Generator.MAPPER_XML_TEMPLATE;
         File mapperXmlFile = new File(path);
         Map<String, Object> map = BeanUtil.beanToMap(configure);
         columns.forEach(c -> c.setField(BaseUtil.underscoreToCamel(StringUtils.lowerCase(c.getName()))));
@@ -144,11 +144,11 @@ public class GeneratorUtil {
         String templatePath = Objects.requireNonNull(GeneratorUtil.class.getResource("/generator/templates/")).getPath();
         File file = new File(templatePath);
         if (!file.exists()) {
-            templatePath = System.getProperties().getProperty(MyConstant.JAVA_TEMP_DIR);
+            templatePath = System.getProperties().getProperty(CommonCore.JAVA_TEMP_DIR);
             FileUtil.copy(Objects.requireNonNull(GeneratorUtil.class.getClassLoader().getResource("classpath:generator/templates/" + templateName)).getPath(), templatePath + File.separator + templateName, true);
         }
         configuration.setDirectoryForTemplateLoading(new File(templatePath));
-        configuration.setDefaultEncoding(MyConstant.UTF8);
+        configuration.setDefaultEncoding(CommonCore.UTF8);
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
         return configuration.getTemplate(templateName);
     }

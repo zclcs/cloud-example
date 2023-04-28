@@ -1,5 +1,4 @@
 dependencies {
-    api project(":common:common-core")
     api "org.springframework.boot:spring-boot-starter-web"
     api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 }

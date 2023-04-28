@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.MinioConstant;
+import com.zclcs.common.core.constant.Minio;
 import com.zclcs.common.core.exception.MyException;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.MinioBucket;
 import com.zclcs.platform.system.api.entity.MinioFile;
 import com.zclcs.platform.system.api.entity.ao.MinioBucketAo;
@@ -67,7 +67,7 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
     @Transactional(rollbackFor = Exception.class)
     public MinioBucket createMinioBucket(MinioBucketAo minioBucketAo) {
         validateBucketName(minioBucketAo.getBucketName(), minioBucketAo.getId());
-        String policy = Optional.ofNullable(minioBucketAo.getBucketPolicy()).filter(StrUtil::isNotBlank).orElse(MinioConstant.READ_ONLY);
+        String policy = Optional.ofNullable(minioBucketAo.getBucketPolicy()).filter(StrUtil::isNotBlank).orElse(Minio.READ_ONLY);
         MinioBucket minioBucket = new MinioBucket();
         BeanUtil.copyProperties(minioBucketAo, minioBucket);
         minioBucket.setBucketPolicy(policy);

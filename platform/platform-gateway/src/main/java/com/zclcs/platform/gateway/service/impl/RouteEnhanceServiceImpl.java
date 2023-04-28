@@ -7,8 +7,9 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
-import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.constant.ParamsConstant;
+import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.Params;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
@@ -124,7 +125,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     @SneakyThrows(JsonProcessingException.class)
     @Override
     public void saveRequestLogs(ServerWebExchange exchange) {
-        Long startTime = exchange.getAttribute(MyConstant.START_TIME);
+        Long startTime = exchange.getAttribute(CommonCore.START_TIME);
         if (startTime != null) {
             URI originUri = getGatewayOriginalRequestUrl(exchange);
             // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
@@ -204,8 +205,8 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     private void doBlackListCheck(AtomicBoolean forbid, Set<Object> blackList, URI uri, String requestMethod) {
         for (Object o : blackList) {
             BlackList b = (BlackList) o;
-            if (pathMatcher.match(b.getRequestUri(), uri.getPath()) && ParamsConstant.OPEN.equals(b.getBlackStatus())) {
-                if (ParamsConstant.METHOD_ALL.equalsIgnoreCase(b.getRequestMethod())
+            if (pathMatcher.match(b.getRequestUri(), uri.getPath()) && Dict.OPEN.equals(b.getBlackStatus())) {
+                if (Params.METHOD_ALL.equalsIgnoreCase(b.getRequestMethod())
                         || StrUtil.equalsIgnoreCase(requestMethod, b.getRequestMethod())) {
                     checkTime(forbid, b.getLimitFrom(), b.getLimitTo());
                 }
@@ -218,8 +219,8 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private Mono<Void> doRateLimitCheck(AtomicBoolean limit, RateLimitRule rule, URI uri,
                                         String requestIp, String requestMethod, ServerHttpResponse response) {
-        boolean isRateLimitRuleHit = ParamsConstant.OPEN.equals(rule.getRuleStatus())
-                && (ParamsConstant.METHOD_ALL.equalsIgnoreCase(rule.getRequestMethod())
+        boolean isRateLimitRuleHit = Dict.OPEN.equals(rule.getRuleStatus())
+                && (Params.METHOD_ALL.equalsIgnoreCase(rule.getRequestMethod())
                 || StrUtil.equalsIgnoreCase(requestMethod, rule.getRequestMethod()));
         if (isRateLimitRuleHit) {
             checkTime(limit, rule.getLimitFrom(), rule.getLimitTo());

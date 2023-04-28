@@ -1,6 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
                     exchange.getRequest().getURI().getPath(), exchange.getRequest().getQueryParams());
             log.debug(info);
         }
-        exchange.getAttributes().put(MyConstant.START_TIME, System.currentTimeMillis());
+        exchange.getAttributes().put(CommonCore.START_TIME, System.currentTimeMillis());
         return chain.filter(exchange).then(Mono.fromRunnable(() ->
                 routeEnhanceService.saveRequestLogs(exchange)));
     }

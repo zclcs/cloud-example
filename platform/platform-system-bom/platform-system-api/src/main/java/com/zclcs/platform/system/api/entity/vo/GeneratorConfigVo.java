@@ -3,7 +3,7 @@ package com.zclcs.platform.system.api.entity.vo;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.zclcs.common.core.base.BaseEntity;
-import com.zclcs.common.dict.core.json.annotation.DictText;
+import com.zclcs.common.dict.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -76,12 +76,15 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
     private String excludeColumns;
 
     @Schema(title = "java文件路径，固定值")
+    @Builder.Default
     private String javaPath = "/src/main/java/";
 
     @Schema(title = "配置文件存放路径，固定值")
+    @Builder.Default
     private String resourcesPath = "src/main/resources";
 
     @Schema(title = "文件生成日期")
+    @Builder.Default
     private String date = DateUtil.date().toString(DatePattern.NORM_DATETIME_MS_PATTERN);
 
     @Schema(title = "表名")

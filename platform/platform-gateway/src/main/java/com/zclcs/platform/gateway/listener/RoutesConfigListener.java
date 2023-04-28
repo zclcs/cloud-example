@@ -5,7 +5,7 @@ import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.properties.MyNacosProperties;
 import com.zclcs.common.core.utils.SpringContextHolderUtil;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
@@ -64,7 +64,7 @@ public class RoutesConfigListener {
 
             @Override
             public Executor getExecutor() {
-                return SpringContextHolderUtil.getBean(MyConstant.ASYNC_POOL);
+                return SpringContextHolderUtil.getBean(CommonCore.ASYNC_POOL);
             }
         });
 

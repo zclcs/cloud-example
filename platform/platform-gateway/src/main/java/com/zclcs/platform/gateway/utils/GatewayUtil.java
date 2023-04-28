@@ -3,8 +3,8 @@ package com.zclcs.platform.gateway.utils;
 import cn.hutool.core.codec.Base64;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.exception.MyException;
 import jakarta.validation.constraints.NotNull;
 import lombok.SneakyThrows;
@@ -38,27 +38,27 @@ public class GatewayUtil {
     public String getServerHttpRequestIpAddress(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
         String ip = headers.getFirst("x-forwarded-for");
-        if (ip != null && ip.length() != 0 && !MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
-            if (ip.contains(StringConstant.COMMA)) {
-                ip = ip.split(StringConstant.COMMA)[0];
+        if (ip != null && ip.length() != 0 && !CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+            if (ip.contains(Strings.COMMA)) {
+                ip = ip.split(Strings.COMMA)[0];
             }
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("HTTP_X_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("X-Real-IP");
         }
-        if (ip == null || ip.length() == 0 || MyConstant.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = Objects.requireNonNull(request.getRemoteAddress()).getAddress().getHostAddress();
         }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;

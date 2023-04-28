@@ -7,13 +7,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.common.core.constant.Dict;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.utils.TreeUtil;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.dict.core.entity.DictItem;
-import com.zclcs.common.dict.core.utils.DictCacheUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.dict.entity.DictItem;
+import com.zclcs.common.dict.utils.DictCacheUtil;
 import com.zclcs.platform.system.api.entity.ao.DictItemAo;
 import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DictItemVo;
@@ -202,8 +202,8 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     }
 
     private void setDictItem(DictItem dictItem) {
-        if (dictItem.getType().equals(DictConstant.DICT_TYPE_0)) {
-            dictItem.setParentValue(MyConstant.TOP_PARENT_VALUE);
+        if (dictItem.getType().equals(Dict.DICT_TYPE_0)) {
+            dictItem.setParentValue(CommonCore.TOP_PARENT_CODE);
         }
     }
 

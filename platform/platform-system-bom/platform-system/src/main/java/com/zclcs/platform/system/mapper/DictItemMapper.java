@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.dict.core.entity.DictItem;
+import com.zclcs.common.dict.entity.DictItem;
 import com.zclcs.platform.system.api.entity.vo.DictItemVo;
 import com.zclcs.platform.system.api.entity.vo.DictVo;
 import org.apache.ibatis.annotations.Param;

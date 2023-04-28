@@ -3,10 +3,10 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;
 import com.zclcs.platform.system.api.entity.vo.BlackListVo;
@@ -84,7 +84,7 @@ public class BlackListController {
             @Parameter(name = "blackListIds", description = "黑名单id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) {
-        List<Long> ids = Arrays.stream(blackListIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(blackListIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blackListService.deleteBlackList(ids);
         return RspUtil.message("删除成功");
     }

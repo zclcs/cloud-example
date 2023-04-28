@@ -16,14 +16,14 @@ dependencies {
 //    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
 //    implementation("com.alibaba.csp:sentinel-datasource-nacos")
     implementation(project(":platform:platform-system-bom:platform-system-api")) {
-        exclude(module: ":common:common-dict")
+        exclude(module: ":cloud-lib:common-dict")
     }
-    implementation(project(":common:common-core"))
     implementation(project(":common:common-rabbitmq-starter"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-logging-starter")) {
         exclude(module: "spring-security-core")
     }
+    implementation(project(":cloud-lib:common-core"))
     implementation "org.springframework.cloud:spring-cloud-starter-gateway"
     implementation "com.github.xiaoymin:knife4j-gateway-spring-boot-starter"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"

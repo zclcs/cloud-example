@@ -6,7 +6,7 @@ import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HttpUtil;
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
 import lombok.RequiredArgsConstructor;
@@ -56,13 +56,13 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             // 1. 不是登录请求，直接向下执行
-            if (!StrUtil.containsAnyIgnoreCase(request.getURI().getPath(), SecurityConstant.OAUTH_TOKEN_URL)) {
+            if (!StrUtil.containsAnyIgnoreCase(request.getURI().getPath(), Security.OAUTH_TOKEN_URL)) {
                 return chain.filter(exchange);
             }
 
             // 2. 刷新token类型，直接向下执行
             String grantType = request.getQueryParams().getFirst("grant_type");
-            if (StrUtil.equals(SecurityConstant.REFRESH_TOKEN, grantType)) {
+            if (StrUtil.equals(Security.REFRESH_TOKEN, grantType)) {
                 return chain.filter(exchange);
             }
 

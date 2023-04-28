@@ -2,7 +2,7 @@ package com.zclcs.platform.system.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
-import com.zclcs.common.logging.starter.ao.LogAo;
+import com.zclcs.common.aop.ao.LogAo;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.platform.system.service.LogService;
 import lombok.extern.slf4j.Slf4j;

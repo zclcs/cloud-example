@@ -3,10 +3,10 @@ package com.zclcs.test.test.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.test.test.api.entity.Company;
 import com.zclcs.test.test.api.entity.ao.CompanyAo;
 import com.zclcs.test.test.api.entity.vo.CompanyVo;
@@ -25,7 +25,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,7 +85,7 @@ public class CompanyController {
         @Parameter(name = "companyIds", description = "企业信息id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteCompany(@NotBlank(message = "{required}") @PathVariable String companyIds) {
-        List<Long> ids = Arrays.stream(companyIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(companyIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.companyService.deleteCompany(ids);
         return RspUtil.message("删除成功");
     }

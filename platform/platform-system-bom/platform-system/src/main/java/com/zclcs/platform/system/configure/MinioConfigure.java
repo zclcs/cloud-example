@@ -1,10 +1,8 @@
 package com.zclcs.platform.system.configure;
 
-import com.zclcs.common.core.properties.GlobalProperties;
 import com.zclcs.platform.system.properties.MinioProperties;
 import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  * @author zclcs
  */
 @Configuration
-@EnableConfigurationProperties(GlobalProperties.class)
 @RequiredArgsConstructor
 public class MinioConfigure {
 

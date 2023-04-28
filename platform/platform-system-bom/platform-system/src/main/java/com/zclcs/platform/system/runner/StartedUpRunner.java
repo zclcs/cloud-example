@@ -48,7 +48,7 @@ public class StartedUpRunner implements ApplicationRunner {
 //                String uniqueSqlFill = "dict_name=%s and value=%s";
 //                String uniqueSql = String.format(uniqueSqlFill, getValue(dictItem.getDictName()), getValue(dictItem.getValue()));
 //                String sql = String.format(sqlFill, "system_dict_item", "dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by", values, uniqueSql);
-//                System.out.println(sql);
+//                CommonCore.out.println(sql);
 //            }
 //            List<Menu> menus = menuService.list();
 //            for (Menu menu : menus) {
@@ -70,7 +70,7 @@ public class StartedUpRunner implements ApplicationRunner {
 //                String uniqueSql = String.format(uniqueSqlFill, getValue(menu.getMenuCode()));
 //                String sql = String.format(sqlFill, "system_menu", "menu_code,parent_code,menu_name,keep_alive_name,path,component,redirect,perms," +
 //                        "icon,type,hide_menu,ignore_keep_alive,hide_breadcrumb,hide_children_in_menu,current_active_menu,order_num,create_at,create_by", values, uniqueSql);
-//                System.out.println(sql);
+//                CommonCore.out.println(sql);
 //            }
 //            List<RoleMenu> roleMenus = roleMenuService.list();
 //            for (RoleMenu roleMenu : roleMenus) {
@@ -87,7 +87,7 @@ public class StartedUpRunner implements ApplicationRunner {
 //                String uniqueSqlFill = "role_id=%s and menu_id=%s";
 //                String uniqueSql = String.format(uniqueSqlFill, roleSql, menuSql);
 //                String sql = String.format(sqlFill, "system_role_menu", "role_id,menu_id,create_at,create_by", values, uniqueSql);
-//                System.out.println(sql);
+//                CommonCore.out.println(sql);
 //            }
         }
     }

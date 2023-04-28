@@ -2,9 +2,9 @@ package com.zclcs.platform.auth.config;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.starter.properties.PermitAllUrlProperties;
+import com.zclcs.common.security.properties.PermitAllUrlProperties;
 import com.zclcs.platform.auth.support.CustomeOAuth2AccessTokenGenerator;
 import com.zclcs.platform.auth.support.core.CustomeOAuth2TokenCustomizer;
 import com.zclcs.platform.auth.support.core.FormIdentityLoginConfigurer;
@@ -75,7 +75,7 @@ public class AuthorizationServerConfiguration {
                         oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties)))
                 // 授权码端点个性化confirm页面
                 .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
-                        .consentPage(SecurityConstant.CUSTOM_CONSENT_PAGE_URI)));
+                        .consentPage(Security.CUSTOM_CONSENT_PAGE_URI)));
 
         DefaultSecurityFilterChain securityFilterChain = http.authorizeHttpRequests(authorizeRequests -> {
                     // 自定义接口、端点暴露
@@ -84,7 +84,7 @@ public class AuthorizationServerConfiguration {
                     // redis存储token的实现
                 }).apply(authorizationServerConfigurer.authorizationService(authorizationService)
                         .authorizationServerSettings(
-                                AuthorizationServerSettings.builder().issuer(SecurityConstant.PROJECT_LICENSE).build()))
+                                AuthorizationServerSettings.builder().issuer(Security.PROJECT_LICENSE).build()))
                 // 授权码登录的登录页个性化
                 .and().apply(new FormIdentityLoginConfigurer()).and().build();
 

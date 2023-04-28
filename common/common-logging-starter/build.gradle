@@ -1,7 +1,3 @@
 dependencies {
-    api project(":common:common-rabbitmq-starter")
     api "org.apache.skywalking:apm-toolkit-logback-1.x"
-    api "org.springframework.security:spring-security-core"
-    api "org.springframework.boot:spring-boot-starter-aop"
-    api "org.springframework:spring-web"
 }

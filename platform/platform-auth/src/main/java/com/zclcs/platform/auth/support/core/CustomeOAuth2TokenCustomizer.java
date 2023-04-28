@@ -1,7 +1,7 @@
 package com.zclcs.platform.auth.support.core;
 
-import com.zclcs.common.core.constant.SecurityConstant;
-import com.zclcs.common.security.starter.entity.SecurityUser;
+import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.security.entity.SecurityUser;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsSet;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
@@ -21,16 +21,16 @@ public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth
     @Override
     public void customize(OAuth2TokenClaimsContext context) {
         OAuth2TokenClaimsSet.Builder claims = context.getClaims();
-        claims.claim(SecurityConstant.DETAILS_LICENSE, SecurityConstant.PROJECT_LICENSE);
+        claims.claim(Security.DETAILS_LICENSE, Security.PROJECT_LICENSE);
         String clientId = context.getAuthorizationGrant().getName();
-        claims.claim(SecurityConstant.CLIENT_ID, clientId);
+        claims.claim(Security.CLIENT_ID, clientId);
         // 客户端模式不返回具体用户信息
-        if (SecurityConstant.CLIENT_CREDENTIALS.equals(context.getAuthorizationGrantType().getValue())) {
+        if (Security.CLIENT_CREDENTIALS.equals(context.getAuthorizationGrantType().getValue())) {
             return;
         }
 
         SecurityUser securityUser = (SecurityUser) context.getPrincipal().getPrincipal();
-        claims.claim(SecurityConstant.DETAILS_USER, securityUser);
+        claims.claim(Security.DETAILS_USER, securityUser);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.zclcs.platform.auth.support.sms;
 
-import com.zclcs.common.core.constant.SecurityConstant;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.platform.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,14 +52,14 @@ public class OAuth2ResourceOwnerSmsAuthenticationProvider
     public void checkClient(RegisteredClient registeredClient) {
         assert registeredClient != null;
         if (!registeredClient.getAuthorizationGrantTypes()
-                .contains(new AuthorizationGrantType(SecurityConstant.APP))) {
+                .contains(new AuthorizationGrantType(Security.APP))) {
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
         }
     }
 
     @Override
     public UsernamePasswordAuthenticationToken buildToken(Map<String, Object> reqParameters) {
-        String phone = (String) reqParameters.get(SecurityConstant.SMS_PARAMETER_NAME);
+        String phone = (String) reqParameters.get(Security.SMS_PARAMETER_NAME);
         return new UsernamePasswordAuthenticationToken(phone, null);
     }
 

@@ -1,7 +1,7 @@
 package com.zclcs.platform.auth.support.sms;
 
-import com.zclcs.common.core.constant.SecurityConstant;
-import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
+import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.security.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -29,13 +29,13 @@ public class OAuth2ResourceOwnerSmsAuthenticationConverter
      */
     @Override
     public boolean support(String grantType) {
-        return SecurityConstant.APP.equals(grantType);
+        return Security.APP.equals(grantType);
     }
 
     @Override
     public OAuth2ResourceOwnerSmsAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes,
                                                                 Map additionalParameters) {
-        return new OAuth2ResourceOwnerSmsAuthenticationToken(new AuthorizationGrantType(SecurityConstant.APP),
+        return new OAuth2ResourceOwnerSmsAuthenticationToken(new AuthorizationGrantType(Security.APP),
                 clientPrincipal, requestedScopes, additionalParameters);
     }
 
@@ -48,9 +48,9 @@ public class OAuth2ResourceOwnerSmsAuthenticationConverter
     public void checkParams(HttpServletRequest request) {
         MultiValueMap<String, String> parameters = OAuth2EndpointUtil.getParameters(request);
         // PHONE (REQUIRED)
-        String phone = parameters.getFirst(SecurityConstant.SMS_PARAMETER_NAME);
-        if (!StringUtils.hasText(phone) || parameters.get(SecurityConstant.SMS_PARAMETER_NAME).size() != 1) {
-            OAuth2EndpointUtil.throwError(OAuth2ErrorCodes.INVALID_REQUEST, SecurityConstant.SMS_PARAMETER_NAME,
+        String phone = parameters.getFirst(Security.SMS_PARAMETER_NAME);
+        if (!StringUtils.hasText(phone) || parameters.get(Security.SMS_PARAMETER_NAME).size() != 1) {
+            OAuth2EndpointUtil.throwError(OAuth2ErrorCodes.INVALID_REQUEST, Security.SMS_PARAMETER_NAME,
                     OAuth2EndpointUtil.ACCESS_TOKEN_REQUEST_ERROR_URI);
         }
     }

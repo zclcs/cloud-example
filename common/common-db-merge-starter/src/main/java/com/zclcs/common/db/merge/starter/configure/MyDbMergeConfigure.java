@@ -34,8 +34,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Copyright (C) 2020 广东腾晖信息科技开发股份有限公司
- * 版权所有
  *
  * @author zclcs
  */

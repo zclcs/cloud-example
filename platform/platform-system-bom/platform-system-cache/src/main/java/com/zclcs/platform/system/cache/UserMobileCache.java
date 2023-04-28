@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.cache;
 
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
-import com.zclcs.common.core.enums.CacheType;
+import com.zclcs.common.core.constant.RedisCachePrefix;
+import com.zclcs.common.redis.starter.enums.CacheType;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.fegin.RemoteUserService;
@@ -17,7 +17,7 @@ public class UserMobileCache extends CacheService<String> {
     private RemoteUserService remoteUserService;
 
     public UserMobileCache(RedisService redisService) {
-        super(redisService, RedisCachePrefixConstant.USER_MOBILE, CacheType.CACHE_NULL, null);
+        super(redisService, RedisCachePrefix.USER_MOBILE, CacheType.CACHE_NULL, null);
     }
 
     @Autowired

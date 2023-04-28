@@ -2,7 +2,7 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
 import com.zclcs.platform.system.api.entity.vo.SchemaVo;
@@ -55,14 +55,14 @@ public class DataBaseServiceImpl implements DataBaseService {
     @SneakyThrows
     @Override
     public DataBaseDataVo getData(String dataBaseType, String sql) {
-        if (!StrUtil.containsIgnoreCase(sql, MyConstant.SELECT)) {
+        if (!StrUtil.containsIgnoreCase(sql, CommonCore.SELECT)) {
             throw new MyException("目前只支持查询");
         }
-        if (!StrUtil.containsIgnoreCase(sql, MyConstant.COUNT)) {
-            if (!StrUtil.containsIgnoreCase(sql, MyConstant.LIMIT)) {
+        if (!StrUtil.containsIgnoreCase(sql, CommonCore.COUNT)) {
+            if (!StrUtil.containsIgnoreCase(sql, CommonCore.LIMIT)) {
                 sql += " limit 999";
             } else {
-                int lastIndexOfIgnoreCase = StrUtil.lastIndexOfIgnoreCase(sql, MyConstant.LIMIT);
+                int lastIndexOfIgnoreCase = StrUtil.lastIndexOfIgnoreCase(sql, CommonCore.LIMIT);
                 String sub = StrUtil.sub(sql, lastIndexOfIgnoreCase, sql.length());
                 Pattern p = Pattern.compile("[^0-9]");
                 Matcher m = p.matcher(sub);

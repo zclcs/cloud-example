@@ -1,4 +1,5 @@
 dependencies {
-    api project(":common:common-core")
     api "com.xuxueli:xxl-job-core"
+    api "org.springframework.boot:spring-boot"
+    api "org.springframework.boot:spring-boot-autoconfigure"
 }

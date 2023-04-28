@@ -17,7 +17,7 @@
 package com.zclcs;
 
 import com.zclcs.common.doc.starter.annotation.EnableMyDoc;
-import com.zclcs.common.feign.starter.annotation.EnableMyFeignClients;
+import com.zclcs.common.feign.annotation.EnableMyFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

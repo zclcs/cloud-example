@@ -1,0 +1,11 @@
+dependencies {
+    api project(":cloud-lib:common-core")
+    api project(":common:common-redis-starter")
+    api project(":common:common-web-starter")
+    api project(":platform:platform-system-bom:platform-system-cache")
+    api "cn.hutool:hutool-extra"
+    api "org.springframework:spring-webmvc"
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "org.springframework.security:spring-security-oauth2-jose"
+    api "org.springframework.security:spring-security-oauth2-authorization-server"
+}

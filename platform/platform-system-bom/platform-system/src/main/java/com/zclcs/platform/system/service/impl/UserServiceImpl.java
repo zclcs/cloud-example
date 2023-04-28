@@ -8,13 +8,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.constant.DictConstant;
-import com.zclcs.common.core.constant.MyConstant;
+import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.Security;
 import com.zclcs.common.core.exception.MyException;
 import com.zclcs.common.core.properties.GlobalProperties;
-import com.zclcs.common.datasource.starter.utils.QueryWrapperUtil;
-import com.zclcs.common.security.starter.utils.PasswordUtil;
-import com.zclcs.common.security.starter.utils.SecurityUtil;
+import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.security.utils.PasswordUtil;
+import com.zclcs.common.security.utils.SecurityUtil;
 import com.zclcs.platform.system.api.entity.*;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
 import com.zclcs.platform.system.api.entity.router.RouterMeta;
@@ -113,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (CollectionUtil.isNotEmpty(childDeptId)) {
                 deptList.set(childDeptId);
             } else {
-                deptList.set(CollectionUtil.newArrayList(MyConstant.TOP_PARENT_ID));
+                deptList.set(CollectionUtil.newArrayList(CommonCore.TOP_PARENT_ID));
             }
         });
         QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.dept_id", deptList.get());
@@ -126,7 +127,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<VueRouter<MenuVo>> routes = new ArrayList<>();
         List<Menu> menus = SystemCacheUtil.getMenusByUsername(username);
         List<Menu> userMenus = menus.stream().filter(Objects::nonNull)
-                .filter(menu -> !menu.getType().equals(DictConstant.MENU_TYPE_1))
+                .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
                 .sorted(Comparator.comparing(Menu::getOrderNum)).toList();
         userMenus.forEach(menu -> {
             VueRouter<MenuVo> route = new VueRouter<>();
@@ -140,10 +141,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             route.setMeta(new RouterMeta(
                     menu.getMenuName(),
                     menu.getIcon(),
-                    menu.getHideMenu().equals(MyConstant.YES),
-                    menu.getIgnoreKeepAlive().equals(MyConstant.YES),
-                    menu.getHideBreadcrumb().equals(MyConstant.YES),
-                    menu.getHideChildrenInMenu().equals(MyConstant.YES),
+                    menu.getHideMenu().equals(Dict.YES_NO_1),
+                    menu.getIgnoreKeepAlive().equals(Dict.YES_NO_1),
+                    menu.getHideBreadcrumb().equals(Dict.YES_NO_1),
+                    menu.getHideChildrenInMenu().equals(Dict.YES_NO_1),
                     menu.getCurrentActiveMenu()));
             routes.add(route);
         });
@@ -165,7 +166,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         deleteCache(userAo);
         User user = new User();
         BeanUtil.copyProperties(userAo, user);
-        user.setAvatar(MyConstant.DEFAULT_AVATAR);
+        user.setAvatar(CommonCore.DEFAULT_AVATAR);
         user.setPassword(PasswordUtil.PASSWORD_ENCODER.encode(globalProperties.getDefaultPassword()));
         this.save(user);
         Long userId = userAo.getUserId();
@@ -241,7 +242,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String username, String status) {
-        String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(MyConstant.STATUS_LOCK);
+        String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(Security.STATUS_LOCK);
         String currentUsername = SecurityUtil.getUsername();
         this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
                 .set(User::getStatus, orElse)

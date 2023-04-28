@@ -1,8 +1,8 @@
 package com.zclcs;
 
 import com.zclcs.common.doc.starter.annotation.EnableMyDoc;
-import com.zclcs.common.feign.starter.annotation.EnableMyFeignClients;
-import com.zclcs.common.security.starter.annotation.EnableMyResourceServer;
+import com.zclcs.common.feign.annotation.EnableMyFeignClients;
+import com.zclcs.common.security.annotation.EnableMyResourceServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

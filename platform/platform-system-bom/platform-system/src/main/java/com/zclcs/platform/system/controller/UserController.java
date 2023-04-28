@@ -3,13 +3,13 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.StringConstant;
+import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.logging.starter.annotation.ControllerEndpoint;
-import com.zclcs.common.security.starter.annotation.Inner;
-import com.zclcs.common.security.starter.utils.PasswordUtil;
-import com.zclcs.common.security.starter.utils.SecurityUtil;
+import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import com.zclcs.common.security.annotation.Inner;
+import com.zclcs.common.security.utils.PasswordUtil;
+import com.zclcs.common.security.utils.SecurityUtil;
 import com.zclcs.platform.system.api.entity.User;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
 import com.zclcs.platform.system.api.entity.router.VueRouter;
@@ -165,7 +165,7 @@ public class UserController {
             @Parameter(name = "userIds", description = "用户id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteUser(@NotBlank(message = "{required}") @PathVariable String userIds) {
-        List<Long> ids = Arrays.stream(userIds.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(userIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.userService.deleteUser(ids);
         return RspUtil.message("删除成功");
     }

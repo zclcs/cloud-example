@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.api.fegin;
 
 import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.SecurityConstant;
-import com.zclcs.common.core.constant.ServiceNameConstant;
+import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.core.constant.ServiceName;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author zclcs
  */
-@FeignClient(contextId = "remoteClientDetailsService", value = ServiceNameConstant.PLATFORM_SYSTEM_SERVICE)
+@FeignClient(contextId = "remoteClientDetailsService", value = ServiceName.PLATFORM_SYSTEM_SERVICE)
 public interface RemoteClientDetailsService {
 
     /**
@@ -23,7 +23,7 @@ public interface RemoteClientDetailsService {
      * @param clientId 客户端id
      * @return BaseRsp
      */
-    @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}", headers = SecurityConstant.HEADER_FROM_IN)
+    @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}", headers = Security.HEADER_FROM_IN)
     OauthClientDetails findByClientId(@PathVariable("clientId") String clientId);
 
     /**
@@ -31,7 +31,7 @@ public interface RemoteClientDetailsService {
      *
      * @return BaseRsp
      */
-    @GetMapping(value = "/oauthClientDetails/list", headers = SecurityConstant.HEADER_FROM_IN)
+    @GetMapping(value = "/oauthClientDetails/list", headers = Security.HEADER_FROM_IN)
     BaseRsp<List<OauthClientDetailsVo>> listClientDetails();
 
 }

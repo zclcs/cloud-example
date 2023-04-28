@@ -1,8 +1,6 @@
 package com.zclcs.common.web.starter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.MyConstant;
-import com.zclcs.common.core.utils.FileUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
@@ -30,6 +28,11 @@ public class WebUtil {
     private static final String UNKNOWN = "unknown";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    /**
+     * 允许下载的文件类型，根据需求自己添加（小写）
+     */
+    private static final String VALID_FILE_TYPE = "xlsx, zip";
 
     /**
      * 判断是否为 ajax请求
@@ -155,13 +158,13 @@ public class WebUtil {
             throw new Exception("文件未找到");
         }
 
-        String fileType = FileUtil.getFileType(file);
-        if (!FileUtil.fileTypeIsValid(fileType)) {
+        String fileType = getFileType(file);
+        if (!fileTypeIsValid(fileType)) {
             throw new Exception("暂不支持该类型文件下载");
         }
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8));
         response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-        response.setCharacterEncoding(MyConstant.UTF8);
+        response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
         try (InputStream inputStream = Files.newInputStream(file.toPath()); OutputStream os = response.getOutputStream()) {
             byte[] b = new byte[2048];
             int length;
@@ -173,5 +176,33 @@ public class WebUtil {
                 FileSystemUtils.deleteRecursively(file);
             }
         }
+    }
+
+    /**
+     * 获取文件类型
+     *
+     * @param file 文件
+     * @return 文件类型
+     * @throws Exception Exception
+     */
+    public String getFileType(File file) throws Exception {
+        Optional.ofNullable(file).orElseThrow(NullPointerException::new);
+        if (file.isDirectory()) {
+            throw new Exception("file不是文件");
+        }
+        String fileName = file.getName();
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+    
+    /**
+     * 校验文件类型是否是允许下载的类型
+     * （出于安全考虑）
+     *
+     * @param fileType fileType
+     * @return Boolean
+     */
+    public Boolean fileTypeIsValid(String fileType) {
+        Optional.ofNullable(fileType).orElseThrow(NullPointerException::new);
+        return VALID_FILE_TYPE.contains(fileType);
     }
 }

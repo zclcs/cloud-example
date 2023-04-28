@@ -8,13 +8,13 @@ import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
 import com.zclcs.common.core.base.BaseRsp;
 import com.zclcs.common.core.constant.OAuth2ErrorCodesExpand;
-import com.zclcs.common.core.constant.RedisCachePrefixConstant;
+import com.zclcs.common.core.constant.RedisCachePrefix;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.core.utils.SpringContextHolderUtil;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.starter.annotation.Inner;
-import com.zclcs.common.security.starter.exception.OAuthClientException;
-import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
+import com.zclcs.common.security.annotation.Inner;
+import com.zclcs.common.security.exception.OAuthClientException;
+import com.zclcs.common.security.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.handler.MyAuthenticationFailureEventHandler;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.vo.TokenVo;
@@ -210,7 +210,7 @@ public class MyTokenEndpoint {
     @Operation(summary = "查询token（分页）")
     public BaseRsp<BasePage<TokenVo>> tokenList(@ParameterObject @Validated BasePageAo basePageAo) {
         // 根据分页参数获取对应数据
-        String key = String.format("%s::*", RedisCachePrefixConstant.PROJECT_OAUTH_ACCESS);
+        String key = String.format("%s::*", RedisCachePrefix.PROJECT_OAUTH_ACCESS);
         int pageSize = basePageAo.getPageSize();
         int pageNum = basePageAo.getPageNum();
         Set<String> keys = redisTemplateJava.keys(key);

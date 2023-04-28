@@ -1,0 +1,7 @@
+dependencies {
+    api project(":cloud-lib:common-security")
+    api runtimeOnly("com.mysql:mysql-connector-j")
+    api "com.baomidou:mybatis-plus-boot-starter"
+//    api "com.baomidou:dynamic-datasource-spring-boot-starter"
+    api "p6spy:p6spy"
+}

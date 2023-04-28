@@ -1,6 +1,6 @@
 package com.zclcs.platform.auth.support.base;
 
-import com.zclcs.common.security.starter.utils.OAuth2EndpointUtil;
+import com.zclcs.common.security.utils.OAuth2EndpointUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

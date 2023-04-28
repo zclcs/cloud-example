@@ -3,7 +3,7 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.logging.starter.ao.LogAo;
+import com.zclcs.common.aop.ao.LogAo;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 

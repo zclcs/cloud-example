@@ -1,8 +1,8 @@
 package ${basePackage}.${servicePackage};
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
+import base.com.zclcs.common.core.BasePage;
+import base.com.zclcs.common.core.BasePageAo;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${aoPackage}.${className}Ao;
 import ${basePackage}.${voPackage}.${className}Vo;

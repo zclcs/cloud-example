@@ -18,8 +18,10 @@ dependencies {
     implementation(project(":common:common-logging-starter"))
     implementation(project(":common:common-rabbitmq-starter"))
     implementation(project(":common:common-redis-starter"))
-    implementation(project(":common:common-security-starter"))
-    implementation(project(":common:common-fegin-starter"))
+    implementation(project(":cloud-lib:common-security"))
+    implementation(project(":cloud-lib:common-fegin"))
+    implementation(project(":cloud-lib:common-core"))
+    implementation(project(":cloud-lib:common-aop"))
 //    implementation(project(":common:common-seata-starter"))
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"

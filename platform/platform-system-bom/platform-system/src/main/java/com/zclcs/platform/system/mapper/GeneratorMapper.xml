@@ -23,7 +23,7 @@
         WHERE
         TABLE_SCHEMA = #{schemaName}
         <if test="tableName != null and tableName != ''">
-            AND TABLE_NAME = #{tableName}
+            AND TABLE_NAME like concat('%', #{tableName}, '%')
         </if>
     </select>
 

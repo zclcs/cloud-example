@@ -1,8 +1,8 @@
 package ${basePackage}.${entityPackage};
 
-import com.zclcs.common.core.base.BaseEntity;
-import com.zclcs.common.dict.core.json.annotation.DictText;
-import com.zclcs.common.dict.core.json.annotation.Array;
+import base.com.zclcs.common.core.BaseEntity;
+import annotation.json.com.zclcs.common.dict.DictText;
+import annotation.json.com.zclcs.common.dict.Array;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
