@@ -3,7 +3,7 @@ package ${basePackage}.${mapperPackage};
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import base.com.zclcs.common.core.BasePage;
+import com.zclcs.common.core.base.BasePage;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${voPackage}.${className}Vo;
 import org.apache.ibatis.annotations.Param;

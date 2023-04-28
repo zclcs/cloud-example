@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.zclcs.common.core.base.BasePage;
 import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.constant.Dict;
 import com.zclcs.common.core.constant.Generator;
 import com.zclcs.common.core.constant.Params;
@@ -96,15 +97,15 @@ public class GeneratorServiceImpl implements GeneratorService {
                 generatorConfigVo.setKeyName(column.getName());
             }
             String columnRemark = column.getRemark();
-            if (StrUtil.contains(columnRemark, Common.DICT_REMARK)) {
+            if (StrUtil.contains(columnRemark, CommonCore.DICT_REMARK)) {
                 column.setHasDict(true);
-                List<String> strings = StrUtil.splitTrim(columnRemark, Common.DICT_REMARK);
+                List<String> strings = StrUtil.splitTrim(columnRemark, CommonCore.DICT_REMARK);
                 column.setRemarkDict(strings.get(strings.size() - 1));
             } else {
                 column.setHasDict(false);
             }
-            column.setIsArray(StrUtil.contains(columnRemark, Common.DICT_ARRAY));
-            column.setIsTree(StrUtil.contains(columnRemark, Common.DICT_TREE));
+            column.setIsArray(StrUtil.contains(columnRemark, CommonCore.DICT_ARRAY));
+            column.setIsTree(StrUtil.contains(columnRemark, CommonCore.DICT_TREE));
         }
         try {
             GeneratorUtil.generateEntityFile(columns, generatorConfigVo);

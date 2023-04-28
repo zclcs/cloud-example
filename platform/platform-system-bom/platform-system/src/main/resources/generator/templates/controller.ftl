@@ -1,11 +1,11 @@
 package ${basePackage}.${controllerPackage};
 
-import base.com.zclcs.common.core.BasePage;
-import base.com.zclcs.common.core.BasePageAo;
-import base.com.zclcs.common.core.BaseRsp;
-import constant.com.zclcs.common.core.Strings;
-import utils.com.zclcs.common.core.RspUtil;
-import strategy.validate.com.zclcs.common.core.UpdateStrategy;
+import com.zclcs.common.core.base.BasePage;
+import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.common.core.base.BaseRsp;
+import com.zclcs.common.core.constant.Strings;
+import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.common.core.validate.strategy.UpdateStrategy;
 import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${aoPackage}.${className}Ao;
@@ -20,13 +20,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
