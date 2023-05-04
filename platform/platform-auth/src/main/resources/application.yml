@@ -36,6 +36,7 @@ spring:
       - nacos:jasypt.yaml
       - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
+      - nacos:platform-system-rabbit-mq-queue.yaml
 
   aop:
     proxy-target-class: true

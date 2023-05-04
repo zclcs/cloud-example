@@ -74,7 +74,6 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
             this.setCacheBlackList(black);
             redisService.sSet(key, black);
         });
-        log.info("Cache blacklist into redis >>>");
     }
 
     private QueryWrapper<BlackListVo> getQueryWrapper(BlackListVo blackListVo) {

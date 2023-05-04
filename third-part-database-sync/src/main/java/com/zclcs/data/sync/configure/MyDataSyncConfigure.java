@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.common.core.constant.CommonCore;
 import com.zclcs.common.core.properties.GlobalProperties;
+import com.zclcs.common.core.properties.MyNacosProperties;
 import com.zclcs.data.sync.properties.MyDataSyncProperties;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -47,11 +48,11 @@ public class MyDataSyncConfigure {
 
     private final MyDataSyncProperties myDataSyncProperties;
 
-    private final GlobalProperties globalProperties;
+    private final MyNacosProperties myNacosProperties;
 
-    public MyDataSyncConfigure(MyDataSyncProperties myDataSyncProperties, GlobalProperties globalProperties) {
+    public MyDataSyncConfigure(MyDataSyncProperties myDataSyncProperties, MyNacosProperties myNacosProperties) {
         this.myDataSyncProperties = myDataSyncProperties;
-        this.globalProperties = globalProperties;
+        this.myNacosProperties = myNacosProperties;
     }
 
     @Bean(name = "nacosDataSourceProperties")
@@ -185,7 +186,7 @@ public class MyDataSyncConfigure {
     private void replaceSql(List<Resource> resources, List<Resource> resourceForPath, String location) throws IOException {
         for (Resource resource : resourceForPath) {
             String sql = FileUtil.readString(resource.getFile(), StandardCharsets.UTF_8);
-            String nacosNamespaceReplace = StrUtil.replace(sql, CommonCore.NACOS_NAMESPACE, globalProperties.getNacosNamespace());
+            String nacosNamespaceReplace = StrUtil.replace(sql, CommonCore.NACOS_NAMESPACE, myNacosProperties.getNamespace());
             String path = resource.getURI().getPath();
             String parentPath = path.substring(0, path.lastIndexOf(location));
             String child = location + CommonCore.SQL_TEMP_PATH + resource.getFilename();

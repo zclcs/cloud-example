@@ -71,7 +71,6 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
             this.setCacheRateLimitRule(rateLimitRule);
             redisService.set(key, rateLimitRule);
         });
-        log.info("Cache rate limit rules into redis >>>");
     }
 
     private QueryWrapper<RateLimitRuleVo> getQueryWrapper(RateLimitRuleVo rateLimitRuleVo) {

@@ -34,6 +34,7 @@ spring:
       - nacos:system-dict.yaml
       - nacos:minio.yaml
       - nacos:xxl-job.yaml
+      - nacos:platform-system-rabbit-mq-queue.yaml
 
   aop:
     proxy-target-class: true
@@ -66,4 +67,3 @@ security:
     ignore:
       urls:
         - /v3/api-docs
-

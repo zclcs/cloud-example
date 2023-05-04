@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":common:common-doc-starter"))
     implementation(project(":common:common-web-starter"))
     implementation(project(":common:common-logging-starter"))
-    implementation(project(":common:common-rabbitmq-starter"))
+    implementation(project(":cloud-lib:common-rabbit-mq"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":cloud-lib:common-security"))
     implementation(project(":cloud-lib:common-fegin"))

@@ -1,5 +1,5 @@
 dependencies {
-    api project(":common:common-rabbitmq-starter")
+    api project(":cloud-lib:common-rabbit-mq")
     api project(":cloud-lib:common-core")
     api "cn.hutool:hutool-core"
     api "com.fasterxml.jackson.core:jackson-databind"

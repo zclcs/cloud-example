@@ -3,7 +3,6 @@ rootProject.name = 'cloud-17'
 include 'cloud-bom'
 
 include 'common'
-include 'common:common-rabbitmq-starter'
 include 'common:common-doc-starter'
 include 'common:common-logging-starter'
 include 'common:common-redis-starter'
@@ -19,6 +18,7 @@ include 'cloud-lib:common-fegin'
 include 'cloud-lib:common-aop'
 include 'cloud-lib:common-security'
 include 'cloud-lib:common-mybatis-plus'
+include 'cloud-lib:common-rabbit-mq'
 
 include 'third-part-database-sync'
 

@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":platform:platform-system-bom:platform-system-api")) {
         exclude(module: ":cloud-lib:common-dict")
     }
-    implementation(project(":common:common-rabbitmq-starter"))
+    implementation(project(":cloud-lib:common-rabbit-mq"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-logging-starter")) {
         exclude(module: "spring-security-core")

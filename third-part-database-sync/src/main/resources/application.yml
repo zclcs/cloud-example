@@ -18,5 +18,7 @@ spring:
       username: ${MYSQL_SERVICE_USER:root}
       password: ${MYSQL_SERVICE_PASSWORD:root}
 
-my:
-  nacos-namespace: ${NACOS_NAMESPACE:dev}
+  cloud:
+    nacos:
+      config:
+        namespace: ${NACOS_NAMESPACE:dev}

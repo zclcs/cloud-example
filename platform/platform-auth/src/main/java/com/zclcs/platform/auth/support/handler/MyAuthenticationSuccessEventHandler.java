@@ -3,9 +3,12 @@ package com.zclcs.platform.auth.support.handler;
 import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.RabbitMq;
 import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.core.enums.ExchangeType;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
+import com.zclcs.common.rabbitmq.starter.utils.RabbitKeyUtil;
 import com.zclcs.common.security.entity.SecurityUser;
 import com.zclcs.common.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
@@ -67,7 +70,10 @@ public class MyAuthenticationSuccessEventHandler implements AuthenticationSucces
             // 发送异步日志事件
             loginLog.setCreateBy(userInfo.getName());
             loginLog.setUpdateBy(userInfo.getName());
-            rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLoginLogBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName()),
+                    MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         }
 
         // 输出token

@@ -3,11 +3,14 @@ package com.zclcs.platform.auth.support.handler;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.core.constant.Dict;
+import com.zclcs.common.core.constant.RabbitMq;
 import com.zclcs.common.core.constant.Security;
+import com.zclcs.common.core.enums.ExchangeType;
 import com.zclcs.common.core.utils.I18nUtil;
 import com.zclcs.common.core.utils.RspUtil;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
+import com.zclcs.common.rabbitmq.starter.utils.RabbitKeyUtil;
 import com.zclcs.common.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,7 +65,10 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         // 发送异步日志事件
         loginLog.setCreateBy(username);
         loginLog.setUpdateBy(username);
-        rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLoginLogBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+        rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
+                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
+                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName()),
+                MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         // 写出错误信息
         sendErrorResponse(request, response, exception);
     }

@@ -4,8 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.common.aop.annotation.ControllerEndpoint;
 import com.zclcs.common.aop.ao.LogAo;
+import com.zclcs.common.aop.configure.MyAopAutoConfigure;
+import com.zclcs.common.core.constant.RabbitMq;
+import com.zclcs.common.core.enums.ExchangeType;
 import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
 import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
+import com.zclcs.common.rabbitmq.starter.utils.RabbitKeyUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -93,7 +97,10 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
             systemLogAo.setTime(BigDecimal.valueOf(end - start));
-            rabbitTemplate.convertAndSend(myRabbitMqProperties.getDirectExchange(), myRabbitMqProperties.getSystemLogQueueBinding(), MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
+                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG).getQueueName()),
+                    MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
         }
         return result;
     }
