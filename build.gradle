@@ -29,13 +29,6 @@ buildscript {
         redissonVersion = "3.20.0"
         xxlJobVersion = "2.4.0"
     }
-
-    repositories {
-        mavenLocal()
-        maven { url "https://repo.spring.io/release" }
-        maven { url "https://repo.spring.io/milestone" }
-        mavenCentral()
-    }
 }
 
 plugins {
@@ -73,6 +66,16 @@ configure(commons) {
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/spring" }
+        maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/milestone" }
+        mavenCentral()
     }
 
     configurations {
