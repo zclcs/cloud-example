@@ -6,6 +6,9 @@ import com.zclcs.common.core.constant.Strings;
 import com.zclcs.common.core.enums.ExchangeType;
 import lombok.experimental.UtilityClass;
 
+/**
+ * @author zclcs
+ */
 @UtilityClass
 public class RabbitKeyUtil {
 

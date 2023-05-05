@@ -242,16 +242,15 @@ END;//
 
 
 DROP PROCEDURE IF EXISTS insert_or_update;//
--- 如果数据不存在则新增数据，例如给 system_user 新增或数据username为admin
+-- 如果数据不存在则新增数据，例如给 system_user 新增或数据username为admin 表中要有主键或者唯一索引
 -- call insert_or_update(database(), 'system_user', 'username', '(admin)', 'username=values(username)');//
 CREATE PROCEDURE insert_or_update(IN dbName tinytext,
                                   IN tableName tinytext,
                                   IN columnName text,
-                                  IN columnData text,
-                                  IN unique_sql text)
+                                  IN columnData text)
 BEGIN
     SET @str = concat(
-            ' insert into ',
+            ' REPLACE INTO ',
             dbName,
             '.',
             tableName,
@@ -259,9 +258,7 @@ BEGIN
             columnName,
             ' ) ',
             ' values ',
-            columnData,
-            ' on duplicate key update ',
-            unique_sql
+            columnData
         );
     PREPARE stmt FROM @str;
     EXECUTE stmt;
