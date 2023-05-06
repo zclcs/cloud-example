@@ -1,7 +1,7 @@
 package com.zclcs.platform.gateway.configure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.filter.*;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;

@@ -246,20 +246,31 @@ DROP PROCEDURE IF EXISTS insert_or_update;//
 -- call insert_or_update(database(), 'system_user', 'username', '(admin)', 'username=values(username)');//
 CREATE PROCEDURE insert_or_update(IN dbName tinytext,
                                   IN tableName tinytext,
-                                  IN columnName text,
-                                  IN columnData text)
+                                  IN insertSql varchar(10000),
+                                  IN updateSql varchar(10000))
 BEGIN
-    SET @str = concat(
-            ' REPLACE INTO ',
+    set @updateSql = concat(
+            ' update ',
             dbName,
             '.',
             tableName,
-            ' ( ',
-            columnName,
-            ' ) ',
-            ' values ',
-            columnData
+            ' ',
+            updateSql
         );
-    PREPARE stmt FROM @str;
+    prepare stmt from @updateSql;
     EXECUTE stmt;
+
+    IF ROW_COUNT() = 0 THEN
+        set @insertSql = concat(
+            ' insert into ',
+            dbName,
+            '.',
+            tableName,
+            ' ',
+            insertSql
+            );
+        prepare stmt from @insertSql;
+        EXECUTE stmt;
+    END IF;
+    deallocate prepare stmt;
 END;//

@@ -1,6 +1,6 @@
 package com.zclcs.platform.gateway.properties;
 
-import com.zclcs.common.core.constant.ImageType;
+import com.zclcs.cloud.lib.core.constant.ImageType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

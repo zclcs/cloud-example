@@ -1,6 +1,6 @@
 package com.zclcs.platform.auth.support.password;
 
-import com.zclcs.common.security.utils.OAuth2EndpointUtil;
+import com.zclcs.cloud.lib.security.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;

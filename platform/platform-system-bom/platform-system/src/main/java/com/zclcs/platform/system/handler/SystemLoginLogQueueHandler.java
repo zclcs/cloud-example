@@ -2,7 +2,7 @@ package com.zclcs.platform.system.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
-import com.zclcs.common.rabbitmq.starter.entity.MessageStruct;
+import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import com.zclcs.platform.system.service.LoginLogService;
 import lombok.extern.slf4j.Slf4j;

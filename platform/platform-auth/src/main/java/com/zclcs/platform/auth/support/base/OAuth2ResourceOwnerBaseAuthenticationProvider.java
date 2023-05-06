@@ -1,8 +1,8 @@
 package com.zclcs.platform.auth.support.base;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.zclcs.common.core.constant.OAuth2ErrorCodesExpand;
-import com.zclcs.common.security.exception.ScopeException;
+import com.zclcs.cloud.lib.core.constant.OAuth2ErrorCodesExpand;
+import com.zclcs.cloud.lib.security.exception.ScopeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.support.MessageSourceAccessor;

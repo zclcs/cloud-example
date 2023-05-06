@@ -1,7 +1,7 @@
 package com.zclcs.platform.auth.support.core;
 
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.security.entity.SecurityUser;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.security.entity.SecurityUser;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsSet;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;

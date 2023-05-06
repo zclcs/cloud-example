@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.runner;
 
-import com.zclcs.common.core.utils.BaseUtil;
+import com.zclcs.cloud.lib.core.utils.BaseUtil;
 import com.zclcs.platform.system.service.DictItemService;
 import com.zclcs.platform.system.service.MenuService;
 import com.zclcs.platform.system.service.RoleMenuService;

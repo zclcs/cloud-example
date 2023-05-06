@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.entity.BlockLog;
 import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.vo.BlockLogVo;

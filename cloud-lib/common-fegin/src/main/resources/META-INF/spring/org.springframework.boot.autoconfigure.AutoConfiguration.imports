@@ -1,3 +1,0 @@
-com.zclcs.common.feign.MyFeignAutoConfiguration
-com.zclcs.common.feign.sentinel.SentinelAutoConfiguration
-com.zclcs.common.feign.sentinel.handler.BaseExceptionHandler

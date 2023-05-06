@@ -2,8 +2,8 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.constant.CommonCore;
-import com.zclcs.common.core.exception.MyException;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
 import com.zclcs.platform.system.api.entity.vo.SchemaVo;
 import com.zclcs.platform.system.api.entity.vo.VueColumnVo;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @author zhouc
+ * @author zclcs
  */
 @Slf4j
 @Service

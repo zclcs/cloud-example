@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.dict.entity.DictItem;
-import com.zclcs.common.dict.utils.DictCacheUtil;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

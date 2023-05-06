@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Generator;
-import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Generator;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.Table;
 import com.zclcs.platform.system.api.entity.ao.GenerateAo;
 import com.zclcs.platform.system.service.GeneratorService;

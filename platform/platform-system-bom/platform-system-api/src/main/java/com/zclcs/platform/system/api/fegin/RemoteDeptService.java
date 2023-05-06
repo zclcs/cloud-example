@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.core.constant.ServiceName;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.entity.Dept;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

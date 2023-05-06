@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.entity.ao;
 
-import com.zclcs.common.core.validate.strategy.AddStrategy;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.AddStrategy;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -3,9 +3,9 @@ package com.zclcs.platform.gateway.utils;
 import cn.hutool.core.codec.Base64;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.CommonCore;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.exception.MyException;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.exception.MyException;
 import jakarta.validation.constraints.NotNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * @author zhouc
+ * @author zclcs
  */
 @UtilityClass
 public class GatewayUtil {

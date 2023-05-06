@@ -2,8 +2,8 @@ package com.zclcs.platform.auth.support.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.security.service.MyUserDetailsService;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.security.service.MyUserDetailsService;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;

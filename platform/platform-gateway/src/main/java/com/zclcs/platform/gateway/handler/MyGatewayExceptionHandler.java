@@ -1,7 +1,7 @@
 package com.zclcs.platform.gateway.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.exception.ValidateCodeException;
+import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;

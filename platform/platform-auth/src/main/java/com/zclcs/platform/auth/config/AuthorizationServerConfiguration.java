@@ -2,9 +2,9 @@ package com.zclcs.platform.auth.config;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.rabbitmq.starter.properties.MyRabbitMqProperties;
-import com.zclcs.common.security.properties.PermitAllUrlProperties;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
+import com.zclcs.cloud.lib.security.properties.PermitAllUrlProperties;
 import com.zclcs.platform.auth.support.CustomeOAuth2AccessTokenGenerator;
 import com.zclcs.platform.auth.support.core.CustomeOAuth2TokenCustomizer;
 import com.zclcs.platform.auth.support.core.FormIdentityLoginConfigurer;

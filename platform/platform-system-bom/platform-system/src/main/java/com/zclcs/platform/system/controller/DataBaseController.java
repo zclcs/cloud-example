@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Generator;
-import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Generator;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
 import com.zclcs.platform.system.service.DataBaseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author zhouc
+ * @author zclcs
  */
 @Slf4j
 @Validated

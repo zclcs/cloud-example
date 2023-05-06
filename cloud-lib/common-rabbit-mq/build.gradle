@@ -1,4 +1,0 @@
-dependencies {
-    api project(":cloud-lib:common-core")
-    api "org.springframework.boot:spring-boot-starter-amqp"
-}

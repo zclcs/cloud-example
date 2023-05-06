@@ -3,7 +3,7 @@ package com.zclcs.platform.system.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.zclcs.common.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.platform.system.api.entity.MinioFile;
 import com.zclcs.platform.system.api.entity.vo.MinioFileVo;
 import org.apache.ibatis.annotations.Param;

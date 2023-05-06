@@ -1,6 +1,6 @@
 package com.zclcs.test.test.runner;
 
-import com.zclcs.common.core.utils.BaseUtil;
+import com.zclcs.cloud.lib.core.utils.BaseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;

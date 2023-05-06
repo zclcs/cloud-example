@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zclcs.common.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.platform.system.api.entity.Column;
 import com.zclcs.platform.system.api.entity.Table;
 import org.apache.ibatis.annotations.Param;

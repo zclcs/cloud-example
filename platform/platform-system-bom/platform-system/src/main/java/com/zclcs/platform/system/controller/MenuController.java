@@ -1,13 +1,13 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.aop.annotation.ControllerEndpoint;
-import com.zclcs.common.security.annotation.Inner;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
 import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;

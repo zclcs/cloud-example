@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.configure;
 
-import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

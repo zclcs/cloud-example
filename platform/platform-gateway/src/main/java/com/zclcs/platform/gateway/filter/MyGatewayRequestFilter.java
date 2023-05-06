@@ -1,6 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
-import com.zclcs.common.core.constant.Security;
+import com.zclcs.cloud.lib.core.constant.Security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

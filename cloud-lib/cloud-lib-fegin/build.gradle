@@ -1,0 +1,10 @@
+dependencies {
+    api project(":cloud-lib:cloud-lib-core")
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    api "com.alibaba.csp:sentinel-datasource-nacos"
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "io.github.openfeign:feign-okhttp"
+    api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
+    api "com.github.ben-manes.caffeine:caffeine"
+    api "org.springframework.security:spring-security-core"
+}

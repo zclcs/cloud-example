@@ -1,12 +1,12 @@
 package ${basePackage}.${controllerPackage};
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import base.com.zclcs.cloud.lib.BasePage;
+import base.com.zclcs.cloud.lib.BasePageAo;
+import base.com.zclcs.cloud.lib.BaseRsp;
+import constant.com.zclcs.cloud.lib.Strings;
+import utils.com.zclcs.cloud.lib.RspUtil;
+import strategy.validate.com.zclcs.cloud.lib.UpdateStrategy;
+import annotation.com.zclcs.cloud.lib.ControllerEndpoint;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${aoPackage}.${className}Ao;
 import ${basePackage}.${voPackage}.${className}Vo;

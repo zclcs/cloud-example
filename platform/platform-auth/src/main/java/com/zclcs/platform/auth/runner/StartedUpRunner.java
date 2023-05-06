@@ -1,6 +1,6 @@
 package com.zclcs.platform.auth.runner;
 
-import com.zclcs.common.core.utils.BaseUtil;
+import com.zclcs.cloud.lib.core.utils.BaseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

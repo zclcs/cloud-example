@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.platform.system.api.entity.RateLimitRule;
 import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitRuleVo;

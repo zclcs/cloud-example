@@ -1,0 +1,3 @@
+com.zclcs.cloud.lib.fegin.MyFeignAutoConfiguration
+com.zclcs.cloud.lib.fegin.sentinel.SentinelAutoConfiguration
+com.zclcs.cloud.lib.fegin.sentinel.handler.BaseExceptionHandler

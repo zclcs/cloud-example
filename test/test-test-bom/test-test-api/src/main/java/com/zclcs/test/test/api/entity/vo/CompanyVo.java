@@ -1,8 +1,8 @@
 package com.zclcs.test.test.api.entity.vo;
 
-import com.zclcs.common.core.base.BaseEntity;
-import com.zclcs.common.dict.json.annotation.Array;
-import com.zclcs.common.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.cloud.lib.dict.json.annotation.Array;
+import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

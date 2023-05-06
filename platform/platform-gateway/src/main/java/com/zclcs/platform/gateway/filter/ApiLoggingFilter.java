@@ -1,6 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
-import com.zclcs.common.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

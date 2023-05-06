@@ -2,9 +2,9 @@ package com.zclcs.data.sync.configure;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.core.constant.CommonCore;
-import com.zclcs.common.core.properties.GlobalProperties;
-import com.zclcs.common.core.properties.MyNacosProperties;
+import com.zclcs.cloud.lib.core.constant.CommonCore;
+import com.zclcs.cloud.lib.core.properties.GlobalProperties;
+import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.data.sync.properties.MyDataSyncProperties;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

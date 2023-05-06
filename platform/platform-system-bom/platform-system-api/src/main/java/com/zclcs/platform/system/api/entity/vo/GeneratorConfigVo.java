@@ -2,8 +2,8 @@ package com.zclcs.platform.system.api.entity.vo;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.zclcs.common.core.base.BaseEntity;
-import com.zclcs.common.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

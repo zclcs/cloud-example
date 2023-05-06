@@ -1,8 +1,8 @@
 package com.zclcs.test.test.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.test.test.api.entity.Company;
 import com.zclcs.test.test.api.entity.ao.CompanyAo;
 import com.zclcs.test.test.api.entity.vo.CompanyVo;

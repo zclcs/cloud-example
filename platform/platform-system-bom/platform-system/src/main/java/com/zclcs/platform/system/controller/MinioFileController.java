@@ -1,11 +1,11 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.exception.MyException;
-import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.entity.MinioFile;
 import com.zclcs.platform.system.api.entity.vo.MinioFileVo;
 import com.zclcs.platform.system.service.MinioFileService;

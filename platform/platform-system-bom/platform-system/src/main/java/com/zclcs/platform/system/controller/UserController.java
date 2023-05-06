@@ -1,15 +1,15 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Strings;
-import com.zclcs.common.core.utils.RspUtil;
-import com.zclcs.common.core.validate.strategy.UpdateStrategy;
-import com.zclcs.common.aop.annotation.ControllerEndpoint;
-import com.zclcs.common.security.annotation.Inner;
-import com.zclcs.common.security.utils.PasswordUtil;
-import com.zclcs.common.security.utils.SecurityUtil;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.utils.PasswordUtil;
+import com.zclcs.cloud.lib.security.utils.SecurityUtil;
 import com.zclcs.platform.system.api.entity.User;
 import com.zclcs.platform.system.api.entity.ao.UserAo;
 import com.zclcs.platform.system.api.entity.router.VueRouter;

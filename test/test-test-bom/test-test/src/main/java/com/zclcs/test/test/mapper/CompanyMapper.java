@@ -3,7 +3,7 @@ package com.zclcs.test.test.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.zclcs.common.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.test.test.api.entity.Company;
 import com.zclcs.test.test.api.entity.vo.CompanyVo;
 import org.apache.ibatis.annotations.Param;

@@ -1,7 +1,7 @@
 package com.zclcs.platform.auth.support.sms;
 
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.security.utils.OAuth2EndpointUtil;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.security.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;

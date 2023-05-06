@@ -1,6 +1,6 @@
 package com.zclcs.platform.auth.support.sms;
 
-import com.zclcs.common.core.constant.Security;
+import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.platform.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -2,11 +2,11 @@ package com.zclcs.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zclcs.common.core.base.BasePage;
-import com.zclcs.common.core.base.BasePageAo;
-import com.zclcs.common.core.utils.AddressUtil;
-import com.zclcs.common.aop.ao.LogAo;
-import com.zclcs.common.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.utils.AddressUtil;
+import com.zclcs.cloud.lib.aop.ao.LogAo;
+import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.mapper.LogMapper;

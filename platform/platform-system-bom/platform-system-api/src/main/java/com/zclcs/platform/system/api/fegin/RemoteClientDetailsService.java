@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.constant.Security;
-import com.zclcs.common.core.constant.ServiceName;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
 import org.springframework.cloud.openfeign.FeignClient;

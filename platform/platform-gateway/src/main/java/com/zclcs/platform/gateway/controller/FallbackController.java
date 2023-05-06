@@ -1,7 +1,7 @@
 package com.zclcs.platform.gateway.controller;
 
-import com.zclcs.common.core.base.BaseRsp;
-import com.zclcs.common.core.utils.RspUtil;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
