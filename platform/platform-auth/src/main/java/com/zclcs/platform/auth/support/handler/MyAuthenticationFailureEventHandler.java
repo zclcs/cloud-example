@@ -65,9 +65,10 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         // 发送异步日志事件
         loginLog.setCreateBy(username);
         loginLog.setUpdateBy(username);
-        rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName()),
+        rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
+                                      RabbitKeyUtil.getDirectRouteKey(
+                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
                 MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         // 写出错误信息
         sendErrorResponse(request, response, exception);

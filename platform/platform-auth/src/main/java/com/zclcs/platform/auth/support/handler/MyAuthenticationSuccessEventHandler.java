@@ -70,9 +70,10 @@ public class MyAuthenticationSuccessEventHandler implements AuthenticationSucces
             // 发送异步日志事件
             loginLog.setCreateBy(userInfo.getName());
             loginLog.setUpdateBy(userInfo.getName());
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG).getQueueName()),
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
+                    RabbitKeyUtil.getDirectRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         }
 

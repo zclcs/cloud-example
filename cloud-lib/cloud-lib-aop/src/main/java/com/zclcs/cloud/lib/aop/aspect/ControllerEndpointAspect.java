@@ -96,9 +96,10 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
             systemLogAo.setTime(BigDecimal.valueOf(end - start));
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG).getQueueName()),
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG)),
+                                          RabbitKeyUtil.getDirectRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG)),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
         }
         return result;

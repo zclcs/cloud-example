@@ -154,9 +154,10 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                             .code(String.valueOf(code))
                             .time(executeTime)
                             .build();
-                    rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG).getQueueName()),
+                    rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
+                            RabbitKeyUtil.getDirectRouteKey(
+                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
                             MessageStruct.builder().message(objectMapper.writeValueAsString(routeLog)).build());
                 }
                 // 当前仅记录日志，后续可以添加日志队列，来过滤请求慢的接口
@@ -181,9 +182,10 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_BLOCK_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_BLOCK_LOG).getQueueName()),
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
+                    RabbitKeyUtil.getDirectRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(blockLog)).build());
             log.info("Store blocked request logs >>>");
         }
@@ -203,9 +205,10 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_RATE_LIMIT_LOG).getQueueName(), ExchangeType.DIRECT), RabbitKeyUtil.getRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_RATE_LIMIT_LOG).getQueueName()),
+            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
+                    RabbitKeyUtil.getDirectRouteKey(
+                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
                     MessageStruct.builder().message(objectMapper.writeValueAsString(rateLimitLog)).build());
             log.info("Store rate limit logs >>>");
         }

@@ -66,17 +66,11 @@ public class MyRabbitMqAutoConfigure {
         Map<String, MyRabbitMqProperties.DirectQueue> directQueues = Optional.ofNullable(myRabbitMqProperties.getDirectQueues()).orElse(new HashMap<>());
         for (MyRabbitMqProperties.DirectQueue directQueue : directQueues.values()) {
             String queueName = directQueue.getQueueName();
-            String exchangeName = directQueue.getExchangeName();
-            String routeKey = directQueue.getRouteKey();
+            String exchangeName = RabbitKeyUtil.getDirectExchangeName(directQueue);
+            String routeKey = RabbitKeyUtil.getDirectRouteKey(directQueue);
             String dlxQueueName = directQueue.getDlxQueueName();
-            String dlxExchangeName = directQueue.getDlxExchangeName();
-            String dlxRouteKey = directQueue.getDlxRouteKey();
-            if (directQueue.getNameBaseOnQueueName()) {
-                exchangeName = RabbitKeyUtil.getExchangeName(queueName, ExchangeType.DIRECT);
-                routeKey = RabbitKeyUtil.getRouteKey(queueName);
-                dlxExchangeName = RabbitKeyUtil.getDlxExchangeName(queueName, ExchangeType.DIRECT);
-                dlxRouteKey = RabbitKeyUtil.getDlxRouteKey(queueName);
-            }
+            String dlxExchangeName = RabbitKeyUtil.getDirectDlxExchangeName(directQueue);
+            String dlxRouteKey = RabbitKeyUtil.getDirectDlxRouteKey(directQueue);
             definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx());
         }
 
@@ -93,30 +87,20 @@ public class MyRabbitMqAutoConfigure {
         Map<String, MyRabbitMqProperties.TopicQueue> topicQueues = Optional.ofNullable(myRabbitMqProperties.getTopicQueues()).orElse(new HashMap<>());
         for (MyRabbitMqProperties.TopicQueue topicQueue : topicQueues.values()) {
             String queueName = topicQueue.getQueueName();
-            String exchangeName = topicQueue.getExchangeName();
-            String routeKey = topicQueue.getRouteKey();
+            String exchangeName = RabbitKeyUtil.getTopicExchangeName(topicQueue);
+            String routeKey = RabbitKeyUtil.getTopicRouteKey(topicQueue);
             String dlxQueueName = topicQueue.getDlxQueueName();
-            String dlxExchangeName = topicQueue.getDlxExchangeName();
-            String dlxRouteKey = topicQueue.getDlxRouteKey();
-            if (topicQueue.getNameBaseOnQueueName()) {
-                exchangeName = RabbitKeyUtil.getExchangeName(queueName, ExchangeType.TOPIC);
-                routeKey = RabbitKeyUtil.getRouteKey(queueName);
-                dlxExchangeName = RabbitKeyUtil.getDlxExchangeName(queueName, ExchangeType.TOPIC);
-                dlxRouteKey = RabbitKeyUtil.getDlxRouteKey(queueName);
-            }
+            String dlxExchangeName = RabbitKeyUtil.getTopicDlxExchangeName(topicQueue);
+            String dlxRouteKey = RabbitKeyUtil.getTopicDlxRouteKey(topicQueue);
             definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx());
         }
 
         Map<String, MyRabbitMqProperties.DelayedQueue> delayedQueues = Optional.ofNullable(myRabbitMqProperties.getDelayedQueues()).orElse(new HashMap<>());
         for (MyRabbitMqProperties.DelayedQueue delayedQueue : delayedQueues.values()) {
             String queueName = delayedQueue.getQueueName();
-            String exchangeName = delayedQueue.getExchangeName();
-            String routeKey = delayedQueue.getRouteKey();
-            if (delayedQueue.getNameBaseOnQueueName()) {
-                exchangeName = RabbitKeyUtil.getExchangeName(queueName, ExchangeType.DELAYED);
-                routeKey = RabbitKeyUtil.getRouteKey(queueName);
-            }
-            Queue queue = QueueBuilder.durable(delayedQueue.getQueueName()).build();
+            String exchangeName = RabbitKeyUtil.getDelayedExchangeName(delayedQueue);
+            String routeKey = RabbitKeyUtil.getDelayedRouteKey(delayedQueue);
+            Queue queue = QueueBuilder.durable(queueName).build();
             CustomExchange exchange = new CustomExchange(exchangeName, "x-delayed-message", true, false, delayedArgs());
             Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeKey).noargs();
             amqpAdmin.declareQueue(queue);
