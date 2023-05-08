@@ -28,10 +28,10 @@ call insert_or_update(database(), 'config_info',
                       '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
   `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
   "global-configuration.yaml", "DEFAULT_GROUP",
-  "my:\n  redis-cache-prefix: \'${spring.cloud.nacos.config.namespace}:\\n  default-password: 123456\n",
+  "my:\n  redis-cache-prefix: \'${spring.cloud.nacos.config.namespace}:\'\n  default-password: 123456\n",
   "b02cea7d68ed3e3f33dfab2e3b89c6f9", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "系统参数统一配置", NULL, NULL, "yaml", NULL, "")',
                       'SET `group_id` = "DEFAULT_GROUP",
-  `content` = "my:\n  redis-cache-prefix: \' ${spring.cloud.nacos.config.namespace}:\'\n  default-password: 123456\n",
+  `content` = "my:\n  redis-cache-prefix: \'${spring.cloud.nacos.config.namespace}:\'\n  default-password: 123456\n",
   `md5` = "b02cea7d68ed3e3f33dfab2e3b89c6f9", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
   `c_desc` = "系统参数统一配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
   WHERE `data_id` = "global-configuration.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
