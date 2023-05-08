@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
@@ -71,7 +71,7 @@ public class OauthClientDetailsController {
         return RspUtil.data(oauthClientDetails);
     }
 
-    @GetMapping("/findByClientId/{clientId}")
+    @GetMapping(value = "/findByClientId/{clientId}")
     @Operation(summary = "终端信息查询")
     @Inner
     public OauthClientDetails findByClientId(@PathVariable String clientId) {

@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Dept;
 import com.zclcs.platform.system.api.entity.ao.DeptAo;
@@ -86,7 +86,7 @@ public class DeptController {
         return RspUtil.data(list);
     }
 
-    @GetMapping("/findByDeptId/{deptId}")
+    @GetMapping(value = "/findByDeptId/{deptId}")
     @Operation(summary = "根据部门id查询部门")
     @Inner
     public Dept findByDeptId(@PathVariable Long deptId) {

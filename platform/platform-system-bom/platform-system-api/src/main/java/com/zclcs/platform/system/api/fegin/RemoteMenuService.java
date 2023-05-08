@@ -17,7 +17,7 @@ public interface RemoteMenuService {
      * 根据菜单id查询菜单
      *
      * @param menuId 菜单id
-     * @return BaseRsp
+     * @return {@link Menu}
      */
     @GetMapping(value = "/menu/findByMenuId/{menuId}", headers = Security.HEADER_FROM_IN)
     Menu findByMenuId(@PathVariable Long menuId);

@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.Menu;
 import com.zclcs.platform.system.api.entity.ao.MenuAo;
@@ -77,7 +77,7 @@ public class MenuController {
         return RspUtil.data(systemMenus);
     }
 
-    @GetMapping("/findByMenuId/{menuId}")
+    @GetMapping(value = "/findByMenuId/{menuId}")
     @Operation(summary = "根据菜单id查询菜单")
     @Inner
     public Menu findByMenuId(@PathVariable Long menuId) {

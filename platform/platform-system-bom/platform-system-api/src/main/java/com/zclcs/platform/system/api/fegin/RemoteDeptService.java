@@ -17,7 +17,7 @@ public interface RemoteDeptService {
      * 通过部门id查询部门
      *
      * @param deptId 部门id
-     * @return BaseRsp
+     * @return {@link Dept}
      */
     @GetMapping(value = "/dept/findByDeptId/{deptId}", headers = Security.HEADER_FROM_IN)
     Dept findByDeptId(@PathVariable("deptId") Long deptId);

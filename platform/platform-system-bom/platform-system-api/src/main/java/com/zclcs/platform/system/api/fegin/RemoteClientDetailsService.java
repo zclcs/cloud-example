@@ -21,7 +21,7 @@ public interface RemoteClientDetailsService {
      * 通过clientId 查询客户端信息单个
      *
      * @param clientId 客户端id
-     * @return BaseRsp
+     * @return {@link OauthClientDetails}
      */
     @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}", headers = Security.HEADER_FROM_IN)
     OauthClientDetails findByClientId(@PathVariable("clientId") String clientId);

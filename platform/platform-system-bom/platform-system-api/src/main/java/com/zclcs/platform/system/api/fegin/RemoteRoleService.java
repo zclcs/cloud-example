@@ -17,7 +17,7 @@ public interface RemoteRoleService {
      * 通过角色id查询角色
      *
      * @param roleId 角色id
-     * @return BaseRsp
+     * @return {@link Role}
      */
     @GetMapping(value = "/role/findByRoleId/{roleId}", headers = Security.HEADER_FROM_IN)
     Role findByRoleId(@PathVariable("roleId") Long roleId);
