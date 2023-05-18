@@ -2,10 +2,10 @@ package com.zclcs.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.AddressUtil;
-import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
@@ -61,8 +61,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         QueryWrapper<LogVo> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("sl.create_at");
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.username", logVo.getUsername());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.operation", logVo.getOperation());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.location", logVo.getLocation());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sl.operation", logVo.getOperation());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sl.location", logVo.getLocation());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sl.create_at", logVo.getCreateAtFrom(), logVo.getCreateAtTo());
         return queryWrapper;
     }

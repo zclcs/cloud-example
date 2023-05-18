@@ -13,6 +13,10 @@ public interface RedisCachePrefix {
 
     String RATE_LIMIT_COUNT_KEY_PREFIX = "my:route:rate-limit:count:";
 
+    String NACOS_TOKEN = "nacos";
+
+    String XXL_JOB_COOKIE = "xxl-job";
+
     /**
      * 字典 redis key
      */

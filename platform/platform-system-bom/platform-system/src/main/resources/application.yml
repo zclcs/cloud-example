@@ -1,5 +1,6 @@
 server:
   port: ${PORT_PLATFORM_SYSTEM:8201}
+
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}

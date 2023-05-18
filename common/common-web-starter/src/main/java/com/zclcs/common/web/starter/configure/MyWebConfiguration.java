@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 @AutoConfiguration
 @EnableConfigurationProperties(MyWebProperties.class)
 @ConditionalOnProperty(value = "my.enable.date.converter", havingValue = "true", matchIfMissing = true)
-public class DateTimeFormatConfiguration implements WebMvcConfigurer {
+public class MyWebConfiguration implements WebMvcConfigurer {
 
     private final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     private final String NORM_DATE_PATTERN = "yyyy-MM-dd";

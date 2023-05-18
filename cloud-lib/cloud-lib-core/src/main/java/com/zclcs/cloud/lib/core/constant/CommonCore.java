@@ -95,4 +95,6 @@ public interface CommonCore {
      * 调用成功消息
      */
     String SUCCESS_MSG = "调用成功";
+
+    String HTTP = "http://";
 }

@@ -1,12 +1,12 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.service.LogService;
@@ -14,11 +14,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +40,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/log")
 @RequiredArgsConstructor
 @Tag(name = "用户操作日志")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class LogController {
 
     private final LogService logService;
 
-    @GetMapping
+    @GetMapping("/page")
     @PreAuthorize("hasAnyAuthority('log:view', 'user:detail:view')")
     @Operation(summary = "用户操作日志查询（分页）")
     public BaseRsp<BasePage<LogVo>> findLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated LogVo logVo) {

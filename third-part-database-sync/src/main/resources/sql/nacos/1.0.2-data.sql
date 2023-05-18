@@ -16,11 +16,11 @@ call insert_or_update(database(), 'config_info',
                     '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
   `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
   "tomcat.yaml", "DEFAULT_GROUP",
-  "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n",
-  "7f965ecbf7757ffac5534dc13bc18257", now(), now(), now(), "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "tomcat统一配置", NULL, NULL, "yaml", NULL, "")',
+  "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\' |\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n" ,
+  "2257bf7aa1d66d3c72ef539007315e11", now(), now(), now(), "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "tomcat统一配置", NULL, NULL, "yaml", NULL, "")',
                     'SET `group_id` = "DEFAULT_GROUP",
-  `content` = "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n",
-  `md5` = "7f965ecbf7757ffac5534dc13bc18257", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
+  `content` = "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\' |\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n",
+  `md5` = "2257bf7aa1d66d3c72ef539007315e11", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
   `c_desc` = "tomcat统一配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
   WHERE `data_id` = "tomcat.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
 
@@ -76,11 +76,11 @@ call insert_or_update(database(), 'config_info',
                       '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
     `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
     "rabbitmq.yaml", "DEFAULT_GROUP",
-    "spring:\n  rabbitmq:\n    host: ${RABBIT_MQ_HOST:127.0.0.1}\n    port: ${RABBIT_MQ_PORT:5672}\n    username: ${RABBIT_MQ_USERNAME:root}\n    password: ${RABBIT_MQ_PASSWORD:123456}\n    virtual-host: /\n    # 手动提交消息\n    listener:\n      simple:\n        #消息必须手动确认\n        acknowledge-mode: manual\n        #限制每次发送一条数据。\n        prefetch: 1\n    publisher-returns: true\n    publisher-confirm-type: simple\n",
-    "bf8fa1f591956e99705bf2a7ee5dff76", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "rabbitmq队列统一配置", NULL, NULL, "yaml", NULL, "")',
+    "spring:\n  rabbitmq:\n    host: ${RABBIT_MQ_HOST:127.0.0.1}\n    port: ${RABBIT_MQ_PORT:5672}\n    api-port: ${RABBIT_MQ_API_PORT:15672}\n    username: ${RABBIT_MQ_USERNAME:root}\n    password: ${RABBIT_MQ_PASSWORD:123456}\n    virtual-host: /\n    # 手动提交消息\n    listener:\n      simple:\n        #消息必须手动确认\n        acknowledge-mode: manual\n        #限制每次发送一条数据。\n        prefetch: 1\n    publisher-returns: true\n    publisher-confirm-type: simple\n",
+    "b2d5ec094e4f5b80dcb4f4b33588c9f5", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "rabbitmq队列统一配置", NULL, NULL, "yaml", NULL, "")',
                       'SET `group_id` = "DEFAULT_GROUP",
-    `content` = "spring:\n  rabbitmq:\n    host: ${RABBIT_MQ_HOST:127.0.0.1}\n    port: ${RABBIT_MQ_PORT:5672}\n    username: ${RABBIT_MQ_USERNAME:root}\n    password: ${RABBIT_MQ_PASSWORD:123456}\n    virtual-host: /\n    # 手动提交消息\n    listener:\n      simple:\n        #消息必须手动确认\n        acknowledge-mode: manual\n        #限制每次发送一条数据。\n        prefetch: 1\n    publisher-returns: true\n    publisher-confirm-type: simple\n",
-    `md5` = "bf8fa1f591956e99705bf2a7ee5dff76", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
+    `content` = "spring:\n  rabbitmq:\n    host: ${RABBIT_MQ_HOST:127.0.0.1}\n    port: ${RABBIT_MQ_PORT:5672}\n    api-port: ${RABBIT_MQ_API_PORT:15672}\n    username: ${RABBIT_MQ_USERNAME:root}\n    password: ${RABBIT_MQ_PASSWORD:123456}\n    virtual-host: /\n    # 手动提交消息\n    listener:\n      simple:\n        #消息必须手动确认\n        acknowledge-mode: manual\n        #限制每次发送一条数据。\n        prefetch: 1\n    publisher-returns: true\n    publisher-confirm-type: simple\n",
+    `md5` = "b2d5ec094e4f5b80dcb4f4b33588c9f5", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
     `c_desc` = "rabbitmq队列统一配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
     WHERE `data_id` = "rabbitmq.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
 
@@ -184,11 +184,11 @@ call insert_or_update(database(), 'config_info',
                       '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
   `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
   "xxl-job.yaml", "DEFAULT_GROUP",
-  "my:\n  xxl:\n    job:\n      admin-addresses: http://${XXL_JOB_HOST:127.0.0.1}:${XXL_JOB_PORT:8080}/xxl-job-admin\n      access-token: ${XXL_JOB_TOKEN:12382e1c-fafc-4cc8-bb04-d276fd1ca7de}\n      app-name: ${spring.cloud.nacos.config.namespace}-${spring.application.name}\n      address:\n      ip:\n      port: 0\n      log-path: ./log/${spring.application.name}/xxl-job\n      log-retention-days: 30\n",
-  "debe1e77a510b9df9255b57b8f7bb56b", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "xxl-job分布式定时任务统一配置", NULL, NULL, "yaml", NULL, "")',
+  "my:\n  xxl:\n    job:\n      admin-addresses: http://${XXL_JOB_HOST:127.0.0.1}:${XXL_JOB_PORT:8080}/xxl-job-admin\n      access-token: ${XXL_JOB_TOKEN:12382e1c-fafc-4cc8-bb04-d276fd1ca7de}\n      app-name: ${spring.cloud.nacos.config.namespace}-${spring.application.name}\n      address:\n      ip:\n      port: 0\n      log-path: ./log/${spring.application.name}/xxl-job\n      log-retention-days: 30\n      admin-username: ${XXL_JOB_ADMIN_USERNAME:admin}\n      admin-password: ${XXL_JOB_ADMIN_PASSWORD:123456}\n",
+  "15cfe23e3f1868b2f97a1c31540a47ff", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "xxl-job分布式定时任务统一配置", NULL, NULL, "yaml", NULL, "")',
                       'SET `group_id` = "DEFAULT_GROUP",
-  `content` = "my:\n  xxl:\n    job:\n      admin-addresses: http://${XXL_JOB_HOST:127.0.0.1}:${XXL_JOB_PORT:8080}/xxl-job-admin\n      access-token: ${XXL_JOB_TOKEN:12382e1c-fafc-4cc8-bb04-d276fd1ca7de}\n      app-name: ${spring.cloud.nacos.config.namespace}-${spring.application.name}\n      address:\n      ip:\n      port: 0\n      log-path: ./log/${spring.application.name}/xxl-job\n      log-retention-days: 30\n",
-  `md5` = "debe1e77a510b9df9255b57b8f7bb56b", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
+  `content` = "my:\n  xxl:\n    job:\n      admin-addresses: http://${XXL_JOB_HOST:127.0.0.1}:${XXL_JOB_PORT:8080}/xxl-job-admin\n      access-token: ${XXL_JOB_TOKEN:12382e1c-fafc-4cc8-bb04-d276fd1ca7de}\n      app-name: ${spring.cloud.nacos.config.namespace}-${spring.application.name}\n      address:\n      ip:\n      port: 0\n      log-path: ./log/${spring.application.name}/xxl-job\n      log-retention-days: 30\n      admin-username: ${XXL_JOB_ADMIN_USERNAME:admin}\n      admin-password: ${XXL_JOB_ADMIN_PASSWORD:123456}\n",
+  `md5` = "15cfe23e3f1868b2f97a1c31540a47ff", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
   `c_desc` = "xxl-job分布式定时任务统一配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
   WHERE `data_id` = "xxl-job.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
 

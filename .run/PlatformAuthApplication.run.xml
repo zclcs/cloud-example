@@ -26,6 +26,7 @@
       <env name="XXL_JOB_PORT" value="8080" />
     </envs>
     <module name="cloud-17.platform.platform-auth.main" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.PlatformAuthApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
