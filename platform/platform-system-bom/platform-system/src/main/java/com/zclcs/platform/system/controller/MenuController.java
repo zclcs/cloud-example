@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -27,7 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -82,6 +85,19 @@ public class MenuController {
     @Inner
     public Menu findByMenuId(@PathVariable Long menuId) {
         return this.menuService.lambdaQuery().eq(Menu::getMenuId, menuId).one();
+    }
+
+    @GetMapping(value = "/findByMenuIds/{menuIds}")
+    @Operation(summary = "根据菜单id集合查询菜单集合")
+    @Inner
+    public Map<Long, Menu> findByMenuIds(@PathVariable List<Long> menuIds) {
+        Map<Long, Menu> menuMap = new HashMap<>();
+        List<Menu> list = this.menuService.lambdaQuery().in(Menu::getMenuId, menuIds).list();
+        for (Long menuId : menuIds) {
+            Menu menu = CollectionUtil.findOneByField(list, "menuId", menuId);
+            menuMap.put(menuId, menu);
+        }
+        return menuMap;
     }
 
     @GetMapping("/checkMenuCode")

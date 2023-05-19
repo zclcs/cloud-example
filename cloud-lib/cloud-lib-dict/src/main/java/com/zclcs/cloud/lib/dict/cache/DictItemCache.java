@@ -3,9 +3,7 @@ package com.zclcs.cloud.lib.dict.cache;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.dict.entity.DictItem;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
-import com.zclcs.common.redis.starter.enums.CacheType;
 import com.zclcs.common.redis.starter.service.CacheService;
-import com.zclcs.common.redis.starter.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,8 @@ public class DictItemCache extends CacheService<DictItem> {
 
     private RemoteDictItemService remoteDictItemService;
 
-    public DictItemCache(RedisService redisService) {
-        super(redisService, RedisCachePrefix.DICT_ITEM, CacheType.CACHE_NULL, null);
+    public DictItemCache() {
+        super(RedisCachePrefix.DICT_ITEM);
     }
 
     @Autowired(required = false)

@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.cache;
 
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
-import com.zclcs.common.redis.starter.enums.CacheType;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.Role;
@@ -18,9 +17,7 @@ public class RoleCache extends CacheService<Role> {
     private RemoteRoleService remoteRoleService;
 
     public RoleCache(RedisService redisService) {
-        super(redisService, RedisCachePrefix.ROLE, CacheType.CACHE_USING_BLOOM_FILTER,
-                redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_ROLE));
-        super.init(10000, 0.03);
+        super(RedisCachePrefix.ROLE, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_ROLE), 10000, 0.03);
     }
 
     @Autowired

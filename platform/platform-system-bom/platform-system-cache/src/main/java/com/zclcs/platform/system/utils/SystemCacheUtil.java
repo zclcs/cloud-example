@@ -126,6 +126,10 @@ public class SystemCacheUtil {
         return MENU_CACHE.findCache(menuId);
     }
 
+    public static List<Menu> getMenusByMenuIds(List<Long> menuIds) {
+        return MENU_CACHE.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).toList();
+    }
+
     public static void deleteMenuByMenuId(Long menuId) {
         MENU_CACHE.deleteCache(menuId);
     }
@@ -158,23 +162,11 @@ public class SystemCacheUtil {
     }
 
     public static List<Menu> getMenusByRoleIds(List<Long> roleIds) {
-        List<Menu> menus = new ArrayList<>();
         Set<Long> menuIds = new HashSet<>();
         for (Long roleId : roleIds) {
             menuIds.addAll(SystemCacheUtil.getMenuIdsByRoleId(roleId));
         }
-        for (Long menuId : menuIds) {
-            menus.add(SystemCacheUtil.getMenuByMenuId(menuId));
-        }
-        return menus;
-    }
-
-    public static List<Menu> getMenusByMenuIds(List<Long> menuIds) {
-        List<Menu> menus = new ArrayList<>();
-        for (Long menuId : menuIds) {
-            menus.add(SystemCacheUtil.getMenuByMenuId(menuId));
-        }
-        return menus;
+        return getMenusByMenuIds(menuIds.stream().toList());
     }
 
     public static List<Menu> getMenusByUsername(String username) {

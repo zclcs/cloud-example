@@ -1,9 +1,7 @@
 package com.zclcs.platform.system.cache;
 
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
-import com.zclcs.common.redis.starter.enums.CacheType;
 import com.zclcs.common.redis.starter.service.CacheService;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.User;
 import com.zclcs.platform.system.api.fegin.RemoteUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,8 @@ public class UserCache extends CacheService<User> {
 
     private RemoteUserService remoteUserService;
 
-    public UserCache(RedisService redisService) {
-        super(redisService, RedisCachePrefix.USER, CacheType.CACHE_NULL, null);
+    public UserCache() {
+        super(RedisCachePrefix.USER);
     }
 
     @Autowired
