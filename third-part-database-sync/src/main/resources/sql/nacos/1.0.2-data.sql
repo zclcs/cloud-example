@@ -16,10 +16,10 @@ call insert_or_update(database(), 'config_info',
                     '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
   `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
   "tomcat.yaml", "DEFAULT_GROUP",
-  "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\' |\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n" ,
+  "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\'|\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n" ,
   "2257bf7aa1d66d3c72ef539007315e11", now(), now(), now(), "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "tomcat统一配置", NULL, NULL, "yaml", NULL, "")',
                     'SET `group_id` = "DEFAULT_GROUP",
-  `content` = "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\' |\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n",
+  `content` = "server:\n  tomcat:\n    threads:\n      max: 500\n      min-spare: 20\n    accept-count: 300\n    relaxed-query-chars: [\'|\', \'{\',\'}\',\'[\',\']\']\n    relaxed-path-chars: [\'|\',\'{\',\'}\',\'[\',\']\']\n",
   `md5` = "2257bf7aa1d66d3c72ef539007315e11", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
   `c_desc` = "tomcat统一配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
   WHERE `data_id` = "tomcat.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
