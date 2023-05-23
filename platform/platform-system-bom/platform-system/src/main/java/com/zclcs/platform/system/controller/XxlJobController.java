@@ -21,6 +21,9 @@ import com.zclcs.platform.system.api.entity.ao.XxlJobJobLogAo;
 import com.zclcs.platform.system.api.entity.ao.XxlJobJobLogDetailAo;
 import com.zclcs.platform.system.api.entity.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.HttpCookie;
@@ -153,6 +157,56 @@ public class XxlJobController {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new MyException("请求xxl job jobLogDetail失败");
+        }
+    }
+
+    @GetMapping("/jobInfo/start")
+    @PreAuthorize("hasAuthority('jobInfo:view')")
+    @Operation(summary = "xxlJob 启动任务")
+    @Parameters({
+            @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),
+    })
+    public BaseRsp<String> jobInfoStart(@RequestParam final Integer id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        try (HttpResponse execute = HttpUtil.createGet(getXxlJobEndPoint("/jobinfo/start")).cookie(getHttpCookie()).form(params).execute()) {
+            String body = execute.body();
+            TypeReference<XxlJobBaseResultVo<String>> typeReference = new TypeReference<>() {
+            };
+            XxlJobBaseResultVo<String> xxlJobBaseResultVo = objectMapper.readValue(body, typeReference);
+            if (xxlJobBaseResultVo.success()) {
+                return RspUtil.message(xxlJobBaseResultVo.getMsg());
+            } else {
+                throw new MyException("请求xxl job jobInfo失败 result :" + body);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new MyException("请求xxl job jobInfo失败 result :" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/jobInfo/stop")
+    @PreAuthorize("hasAuthority('jobInfo:view')")
+    @Operation(summary = "xxlJob 停止任务")
+    @Parameters({
+            @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),
+    })
+    public BaseRsp<String> jobInfoStop(@RequestParam final Integer id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        try (HttpResponse execute = HttpUtil.createGet(getXxlJobEndPoint("/jobinfo/stop")).cookie(getHttpCookie()).form(params).execute()) {
+            String body = execute.body();
+            TypeReference<XxlJobBaseResultVo<String>> typeReference = new TypeReference<>() {
+            };
+            XxlJobBaseResultVo<String> xxlJobBaseResultVo = objectMapper.readValue(body, typeReference);
+            if (xxlJobBaseResultVo.success()) {
+                return RspUtil.message(xxlJobBaseResultVo.getMsg());
+            } else {
+                throw new MyException("请求xxl job jobInfo失败 result :" + body);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new MyException("请求xxl job jobInfo失败 result :" + e.getMessage());
         }
     }
 
