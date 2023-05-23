@@ -60,7 +60,7 @@ public class DataBaseServiceImpl implements DataBaseService {
         }
         if (!StrUtil.containsIgnoreCase(sql, CommonCore.COUNT)) {
             if (!StrUtil.containsIgnoreCase(sql, CommonCore.LIMIT)) {
-                sql += " limit 999";
+                sql += " limit 99";
             } else {
                 int lastIndexOfIgnoreCase = StrUtil.lastIndexOfIgnoreCase(sql, CommonCore.LIMIT);
                 String sub = StrUtil.sub(sql, lastIndexOfIgnoreCase, sql.length());
@@ -68,7 +68,7 @@ public class DataBaseServiceImpl implements DataBaseService {
                 Matcher m = p.matcher(sub);
                 String limitNumber = m.replaceAll("").trim();
                 BigDecimal bigDecimal = new BigDecimal(limitNumber);
-                if (bigDecimal.intValue() > 1000) {
+                if (bigDecimal.intValue() > 100) {
                     throw new MyException("仅仅用作开发排查问题，不要查询过多的数据");
                 }
             }
