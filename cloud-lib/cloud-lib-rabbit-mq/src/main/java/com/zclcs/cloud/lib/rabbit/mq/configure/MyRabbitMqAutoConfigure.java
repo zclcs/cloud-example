@@ -1,8 +1,7 @@
 package com.zclcs.cloud.lib.rabbit.mq.configure;
 
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
-import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
+import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -134,7 +133,7 @@ public class MyRabbitMqAutoConfigure {
      * 死信队列设置
      *
      * @param dlxExchangeName 死信队列交换机
-     * @param dlxRoutingKey 死信队列路由key
+     * @param dlxRoutingKey   死信队列路由key
      * @return 队列设置
      */
     private Map<String, Object> dlxArgs(String dlxExchangeName, String dlxRoutingKey) {

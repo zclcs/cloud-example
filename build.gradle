@@ -1,9 +1,9 @@
 buildscript {
     ext {
-        springBootVersion = "3.0.0"
+        springBootVersion = "3.0.2"
         springBootNativeVersion = "0.9.18"
         springCloudVersion = "2022.0.0"
-        springCloudAlibabaVersion = "2022.0.0.0-RC1"
+        springCloudAlibabaVersion = "2022.0.0.0-RC2"
         findbugsVersion = "3.0.2"
         lombokVersion = "1.18.24"
         hutoolVersion = "5.8.11"
@@ -14,10 +14,10 @@ buildscript {
         knife4jVersion = "4.1.0"
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
-        seataVersion = "1.6.1"
+        seataVersion = "1.7.0-native-rc2"
         minioVersion = "8.0.3"
         okhttpVersion = "4.9.0"
-        jibVersion = "3.3.1"
+        jibVersion = "3.3.2"
         authorizationServerVersion = "1.0.0"
         guavaVersion = "31.1-jre"
         easyCaptchaVersion = "1.6.2"
@@ -48,9 +48,7 @@ ext {
             project(":platform:platform-system-bom:platform-system"),
             project(":test:test-test-bom:test-test"),
             project(":third-part-database-sync"))
-    nativePackage = Set.of(project(":platform:platform-auth"),
-            project(":platform:platform-gateway"),
-            project(":platform:platform-system-bom:platform-system"))
+    nativePackage = Set.of(project(":third-part-database-sync"))
     commons = (subprojects - bom)
 }
 
@@ -142,5 +140,17 @@ configure(jibPackage) {
 
 //configure(nativePackage) {
 //    apply plugin: "org.graalvm.buildtools.native"
-//
+//    bootBuildImage {
+//        imageName = "${dockerJibToImage}/${project.name}:native"
+//        docker {
+//            host = "tcp://192.168.33.10:2375"
+//            tlsVerify = false
+//            builderRegistry {
+//                username = "${dockerJibAuthUsername}"
+//                password = "${dockerJibAuthPassword}"
+//                url = "${dockerJibToImage}/${project.name}"
+//                email = "2371219112@qq.com"
+//            }
+//        }
+//    }
 //}
