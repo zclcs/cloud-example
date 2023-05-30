@@ -11,7 +11,7 @@ services:
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
     deploy:
@@ -30,7 +30,7 @@ services:
     volumes:
       - ./log/platform-auth:/log/platform-auth
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_AUTH} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_AUTH} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
     deploy:
@@ -49,7 +49,7 @@ services:
     volumes:
       - ./log/platform-system:/log/platform-system
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
     deploy:
@@ -68,7 +68,7 @@ services:
     volumes:
       - ./log/test-test:/log/test-test
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${PORT_TEST_TEST} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_TEST_TEST} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
     deploy:
@@ -94,7 +94,7 @@ services:
     volumes:
       - ./log/sentinel:/root/logs/csp
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${NACOS_HOST}:${SENTINEL_PORT} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${SENTINEL_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
     deploy:

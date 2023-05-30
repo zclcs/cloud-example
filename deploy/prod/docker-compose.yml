@@ -1,0 +1,301 @@
+version: '3.5'
+# docker network create -d bridge zclcs_net 部署前 创建网络群组
+services:
+  redis:
+    image: redis:6.0.8
+    container_name: ${NACOS_NAMESPACE}-redis
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
+    volumes:
+      - ./redis/data:/data #挂载 Redis数据
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf #挂载 Redis配置
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nacos:
+    image: nacos/nacos-server:v2.2.1
+    container_name: ${NACOS_NAMESPACE}-nacos
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      # TODO 修改JVM调优参数
+      JVM_XMS: 128m   #-Xms default :2g
+      JVM_XMX: 128m   #-Xmx default :2g
+      JVM_XMN: 64m    #-Xmn default :1g
+      JVM_MS: 32m     #-XX:MetaspaceSize default :128m
+      JVM_MMS: 32m    #-XX:MaxMetaspaceSize default :320m
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/init.d/application.properties:/home/nacos/conf/application.properties
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      third-part-database-sync:
+        condition: service_healthy
+  minio:
+    image: minio/minio:RELEASE.2021-06-17T00-10-46Z
+    container_name: ${NACOS_NAMESPACE}-minio
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      #管理后台用户名
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      #管理后台密码，最小8个字符
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      #映射当前目录下的data目录至容器内/data目录
+      - ./minio/data:/data
+      #映射配置目录
+      - ./minio/config:/root/.minio/
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS 'http://${LOCAL_HOST_IP}:${MINIO_PORT}/minio/index.html' || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    command: server /data
+  rabbitmq:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
+    container_name: ${NACOS_NAMESPACE}-rabbitmq
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nginx:
+    image: nginx:1.21.3
+    container_name: ${NACOS_NAMESPACE}-nginx
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    ports:
+      - "9527:9527"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    privileged: true
+    user: root
+    volumes:
+      - ./web:/var/cloud/web
+      - ./nginx/:/etc/nginx/
+    healthcheck:
+      test: [ "CMD", "service", "nginx", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      platform-gateway:
+        condition: service_healthy
+  xxl-job:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/xxl-job:2.4.1-SNAPSHOT
+    container_name: ${NACOS_NAMESPACE}-xxl-job
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    command: sh -c "java -Xms1024m -Xmx1024m -Xmn256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=160m -XX:HeapDumpPath=/data/applogs/xxl-job/java_heapdump.hprof -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:-UseLargePages -cp /app/resources:/app/classes:/app/libs/* com.xxl.job.admin.XxlJobAdminApplication"
+    volumes:
+      - ./xxl-job/log:/data/applogs/xxl-job
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${XXL_JOB_PORT} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      third-part-database-sync:
+        condition: service_healthy
+  third-part-database-sync:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/third-part-database-sync:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-third-part-database-sync
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    command: sh -c "java -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=./log/third-part-database-sync/java_heapdump.hprof -Dcsp.sentinel.app.type=1 -Ddruid.mysql.usePingMethod=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Dnetworkaddress.cache.ttl=10 -XX:MaxRAMPercentage=45 -XX:InitialRAMPercentage=45 -XX:MinHeapFreeRatio=0 -XX:MaxHeapFreeRatio=100 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:MaxGCPauseMillis=50 -XX:-UseBiasedLocking -XX:GuaranteedSafepointInterval=0 -XX:+UseCountedLoopSafepoints -XX:+SafepointTimeout -XX:SafepointTimeoutDelay=1000 -XX:StartFlightRecording=disk=true,maxsize=32m,maxage=3d -XX:FlightRecorderOptions=maxchunksize=32m --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -cp /app/resources:/app/classes:/app/libs/* com.zclcs.ThirdPartDatabaseSyncApplication"
+    volumes:
+      - ./third-part-database-sync/log:/log/third-part-database-sync
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_DATA_SYNC} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          memory: 128M
+    env_file: .env
+  platform-gateway:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-gateway:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-gateway
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    #    ports:
+    #      - "${PORT_PLATFORM_GATEWAY}:${PORT_PLATFORM_GATEWAY}"
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-gateway:/log/platform-gateway
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+  platform-auth:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-auth
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-auth:/log/platform-auth
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_AUTH} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+  platform-system:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-system
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS}"
+    volumes:
+      - ./log/platform-system:/log/platform-system
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+  test-test:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-test-test
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS}"
+    volumes:
+      - ./log/test-test:/log/test-test
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_TEST_TEST} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+  sentinel:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/sentinel:1.8.5
+    container_name: ${NACOS_NAMESPACE}-sentinel
+    networks:
+      - cloud_net
+    restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
+      -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
+      -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 
+      -Ddatasource.provider.nacos.username=${NACOS_USERNAME} -Ddatasource.provider.nacos.password=${NACOS_PASSWORD} -Ddatasource.provider.nacos.namespace=${NACOS_NAMESPACE}
+      -Ddatasource.provider.nacos.group-id=SENTINEL_GROUP"
+    volumes:
+      - ./log/sentinel:/root/logs/csp
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${SENTINEL_PORT} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+
+networks:
+  cloud_net:
+    external: true
+    name: zclcs_net

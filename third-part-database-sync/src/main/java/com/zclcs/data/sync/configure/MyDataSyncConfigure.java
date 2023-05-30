@@ -38,7 +38,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- *
  * @author zclcs
  */
 @Slf4j
@@ -98,9 +97,9 @@ public class MyDataSyncConfigure {
     }
 
     private void createDataBase(DataSourceProperties dataSourceProperties, String character, String collate) {
+        String url = dataSourceProperties.getUrl();
         try {
             Class.forName(dataSourceProperties.getDriverClassName());
-            String url = dataSourceProperties.getUrl();
             String url01 = url.substring(0, url.indexOf("?"));
             String url02 = url01.substring(0, url01.lastIndexOf("/"));
             String datasourceName = url01.substring(url01.lastIndexOf("/") + 1);
@@ -113,7 +112,7 @@ public class MyDataSyncConfigure {
             statement.close();
             connection.close();
         } catch (Exception e) {
-            log.error("创建数据库失败 ：{}", e.getMessage(), e);
+            log.error("创建数据库失败 ：{} url ： {}", e.getMessage(), url, e);
         }
     }
 

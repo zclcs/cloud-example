@@ -20,8 +20,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageStruct implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 392365881428311040L;
 
     private String message;
+    
 }
