@@ -11,10 +11,10 @@ import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +32,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -54,16 +55,14 @@ public class GatewayConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public ErrorWebExceptionHandler errorWebExceptionHandler(ErrorAttributes errorAttributes) {
-        MyGatewayExceptionHandler exceptionHandler = new MyGatewayExceptionHandler(
-                errorAttributes,
-                this.webProperties.getResources(),
-                this.serverProperties.getError(),
-                this.applicationContext);
-        exceptionHandler.setViewResolvers(this.viewResolvers);
-        exceptionHandler.setMessageWriters(this.serverCodecConfigurer.getWriters());
-        exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());
-        return exceptionHandler;
+    public ErrorWebExceptionHandler errorWebExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider,
+                                                             ServerCodecConfigurer serverCodecConfigurer) {
+
+        MyGatewayExceptionHandler jsonExceptionHandler = new MyGatewayExceptionHandler();
+        jsonExceptionHandler.setViewResolvers(viewResolversProvider.getIfAvailable(Collections::emptyList));
+        jsonExceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
+        jsonExceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
+        return jsonExceptionHandler;
     }
 
     @Bean

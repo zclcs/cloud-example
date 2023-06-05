@@ -3,6 +3,7 @@
     <envs>
       <env name="MYSQL_SERVICE_HOST" value="192.168.33.10" />
       <env name="MYSQL_SERVICE_PASSWORD" value="123456" />
+      <env name="spring.profiles.active" value="local" />
     </envs>
     <module name="cloud-17.third-part-database-sync.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.ThirdPartDatabaseSyncApplication" />

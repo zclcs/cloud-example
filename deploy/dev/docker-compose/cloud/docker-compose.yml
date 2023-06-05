@@ -15,7 +15,7 @@ services:
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY}/ping || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
