@@ -4,7 +4,7 @@
     <springProperty scope="context" name="runMode" source="spring.profiles.active"/>
     <property name="log.path" value="log/${springAppName}"/>
     <property name="log.maxHistory" value="15"/>
-    <property name="log.maxFileSize" value="50MB"/>
+    <property name="log.maxFileSize" value="10MB"/>
     <property name="log.colorPattern"
               value="%magenta(%d{yyyy-MM-dd HH:mm:ss}) %highlight([%X{tid}]) %highlight(%-5level) %boldCyan(${springAppName:-}) %yellow(%thread) %green(%logger) %msg%n"/>
     <property name="log.pattern"
