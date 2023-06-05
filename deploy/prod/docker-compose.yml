@@ -84,6 +84,7 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
       RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
     volumes:
@@ -106,6 +107,7 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     privileged: true
     user: root
     volumes:
@@ -126,6 +128,10 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     command: sh -c "java -Xms1024m -Xmx1024m -Xmn256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=160m -XX:HeapDumpPath=/data/applogs/xxl-job/java_heapdump.hprof -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:-UseLargePages -cp /app/resources:/app/classes:/app/libs/* com.xxl.job.admin.XxlJobAdminApplication"
     volumes:
       - ./xxl-job/log:/data/applogs/xxl-job
@@ -144,7 +150,11 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
-    command: sh -c "java -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=./log/third-part-database-sync/java_heapdump.hprof -Dcsp.sentinel.app.type=1 -Ddruid.mysql.usePingMethod=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Dnetworkaddress.cache.ttl=10 -XX:MaxRAMPercentage=45 -XX:InitialRAMPercentage=45 -XX:MinHeapFreeRatio=0 -XX:MaxHeapFreeRatio=100 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:MaxGCPauseMillis=50 -XX:-UseBiasedLocking -XX:GuaranteedSafepointInterval=0 -XX:+UseCountedLoopSafepoints -XX:+SafepointTimeout -XX:SafepointTimeoutDelay=1000 -XX:StartFlightRecording=disk=true,maxsize=32m,maxage=3d -XX:FlightRecorderOptions=maxchunksize=32m --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -cp /app/resources:/app/classes:/app/libs/* com.zclcs.ThirdPartDatabaseSyncApplication"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./third-part-database-sync/log:/log/third-part-database-sync
     healthcheck:
@@ -166,9 +176,13 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     #    ports:
     #      - "${PORT_PLATFORM_GATEWAY}:${PORT_PLATFORM_GATEWAY}"
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS}"
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
     healthcheck:
@@ -193,7 +207,11 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-auth:/log/platform-auth
     healthcheck:
@@ -218,7 +236,11 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-system:/log/platform-system
     healthcheck:
@@ -243,7 +265,11 @@ services:
     networks:
       - cloud_net
     restart: unless-stopped
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/test-test:/log/test-test
     healthcheck:
@@ -271,6 +297,7 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
       PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
       -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
       -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 

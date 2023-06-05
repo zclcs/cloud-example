@@ -1,114 +1,19 @@
-call insert_if_not_exists(database(), 'system_black_list',
-                          'request_uri, request_method, limit_from, limit_to, black_status, create_at, create_by',
-                          '"/actuator/**", "ALL", "00:00:00", "23:59:59", "1", now(), "system"',
-                          'request_uri = "/actuator/**"');//
-
-call insert_if_not_exists(database(), 'system_generator_config',
-                        'server_name, author, base_package, entity_package, ao_package, vo_package, mapper_package, mapper_xml_package,
-                                    service_package, service_impl_package, controller_package, is_trim, trim_value, exclude_columns, create_at, create_by',
-                         '"platform-system", "zclcs", "com.zclcs.platform.system", "api.entity", "api.entity.ao", "api.entity.vo",
-                                    "mapper", "mapper", "service", "service.impl",
-                                    "controller", "1", "system_",
-                                    "version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",
-                                    now(), "system"',
-                          'server_name = "platform-system"');//
-
-call insert_if_not_exists(database(), 'system_generator_config',
-                          'server_name, author, base_package, entity_package, ao_package, vo_package, mapper_package, mapper_xml_package,
-                                      service_package, service_impl_package, controller_package, is_trim, trim_value, exclude_columns, create_at, create_by',
-                          '"test-test", "zclcs", "com.zclcs.test.test", "api.entity", "api.entity.ao", "api.entity.vo",
-                                     "mapper", "mapper", "service", "service.impl",
-                                     "controller", "1", "test_",
-                                     "version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",
-                                     now(), "system"',
-                          'server_name = "test-test"');//
-
-call insert_if_not_exists(database(), 'system_dept',
-                          'dept_code, parent_code, dept_name, order_num, create_at, create_by',
-                          '"DEV", "0", "开发部", "1", now(), "system"',
-                          'dept_code="DEV"');//
-
-call insert_if_not_exists(database(), 'system_oauth_client_details',
-                          'client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove, create_at, create_by',
-                          '"swagger", null, "123456", "server", "password,app,refresh_token,authorization_code,client_credentials", "https://zclcs", null, null, null, null, "true", now(), "system"',
-                          'client_id="swagger"');//
-
-call insert_if_not_exists(database(), 'system_oauth_client_details',
-                          'client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove, create_at, create_by',
-                          '"zclcs", null, "123456", "server", "password,app,refresh_token,authorization_code,client_credentials", "https://zclcs", null, null, null, null, "true", now(), "system"',
-                          'client_id="zclcs"');//
-
-call insert_if_not_exists(database(), 'system_role',
-                          'role_code, role_name, remark, create_at, create_by',
-                          '"ADMIN", "管理员", null, now(), "system"',
-                          'role_code="ADMIN"');//
-
-call insert_if_not_exists(database(), 'system_role',
-                          'role_code, role_name, remark, create_at, create_by',
-                          '"GUEST", "查看", null, now(), "system"',
-                          'role_code="GUEST"');//
-
-call insert_if_not_exists(database(), 'system_role',
-                          'role_code, role_name, remark, create_at, create_by',
-                          '"DEVELOP", "开发", null, now(), "system"',
-                          'role_code="DEVELOP"');//
-
-call insert_if_not_exists(database(), 'system_user',
-                          'username, real_name, password, dept_id, email, mobile, status, gender, avatar, create_at, create_by',
-                          '"admin", "管理员", "$2a$10$LNmOtAAmYxewGYcxdwiYteFUPG1KWHYtgqwvtsEPyRxs70nT1hZF2", (select dept_id from system_dept where dept_code = "DEV"), "2371219112@qq.com", "1788888888", "1", "0", "default.jpg", now(), "system"',
-                          'username="admin"');//
-
-call insert_if_not_exists(database(), 'system_user',
-                          'username, real_name, password, dept_id, status, avatar, create_at, create_by',
-                          '"guest", "访客", "$2a$10$63vb4uvE5bfwvP5BPHVJtObCVop2Tu/8rSW2Dqvm5MYbnBDlCNTBK",
-                          (select dept_id from system_dept where dept_code = "DEV"), "1", "default.jpg", now(), "system"',
-                          'username="guest"');//
-
-call insert_if_not_exists(database(), 'system_user',
-                          'username, real_name, password, dept_id, status, avatar, create_at, create_by',
-                          '"develop", "开发", "$2a$10$63vb4uvE5bfwvP5BPHVJtObCVop2Tu/8rSW2Dqvm5MYbnBDlCNTBK",
-                          (select dept_id from system_dept where dept_code = "DEV"), "1", "default.jpg", now(), "system"',
-                          'username="develop"');//
-
-call insert_if_not_exists(database(), 'system_user_data_permission',
-                          'user_id, dept_id, create_at, create_by',
-                          '(select user_id from system_user where username = "admin"), (select dept_id from system_dept where dept_code = "DEV"), now(), "system"',
-                          'user_id=(select user_id from system_user where username = "admin") and dept_id=(select dept_id from system_dept where dept_code = "DEV")');//
-
-call insert_if_not_exists(database(), 'system_user_role',
-                          'user_id, role_id, create_at, create_by',
-                          '(select user_id from system_user where username = "admin"), (select role_id from system_role where role_code = "ADMIN"), now(), "system"',
-                          'user_id=(select user_id from system_user where username = "admin") and role_id=(select role_id from system_role where role_code = "ADMIN")');//
-
-call insert_if_not_exists(database(), 'system_user_role',
-                          'user_id, role_id, create_at, create_by',
-                          '(select user_id from system_user where username = "guest"), (select role_id from system_role where role_code = "GUEST"), now(), "system"',
-                          'user_id=(select user_id from system_user where username = "guest") and role_id=(select role_id from system_role where role_code = "GUEST")');//
-
-call insert_if_not_exists(database(), 'system_user_role',
-                          'user_id, role_id, create_at, create_by',
-                          '(select user_id from system_user where username = "develop"), (select role_id from system_role where role_code = "DEVELOP"), now(), "system"',
-                          'user_id=(select user_id from system_user where username = "develop") and role_id=(select role_id from system_role where role_code = "DEVELOP")');//
-
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"enable_disable","0","0","关闭","0","1",0,"0",now(),"system"','dict_name="enable_disable" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"enable_disable","0","1","开启","0","1",0,"0",now(),"system"','dict_name="enable_disable" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_dict_item.type","0","0","普通","0","1",0,"0",now(),"system"','dict_name="system_dict_item.type" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_dict_item.type","0","1","层级","0","1",0,"0",now(),"system"','dict_name="system_dict_item.type" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_menu.type","0","0","菜单","0","1",0,"0",now(),"system"','dict_name="system_menu.type" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_menu.type","0","1","按钮","0","1",0,"0",now(),"system"','dict_name="system_menu.type" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_menu.type","0","2","目录","0","1",0,"0",now(),"system"','dict_name="system_menu.type" and value="2"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_user.gender","0","0","男","0","1",0,"0",now(),"system"','dict_name="system_user.gender" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_user.gender","0","1","女","0","1",0,"0",now(),"system"','dict_name="system_user.gender" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_user.gender","0","2","保密","0","1",0,"0",now(),"system"','dict_name="system_user.gender" and value="2"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_user.status","0","0","锁定","0","1",0,"0",now(),"system"','dict_name="system_user.status" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"system_user.status","0","1","有效","0","1",0,"0",now(),"system"','dict_name="system_user.status" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"user_is_tab","0","0","关闭","0","1",0,"0",now(),"system"','dict_name="user_is_tab" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"user_is_tab","0","1","开启","0","1",0,"0",now(),"system"','dict_name="user_is_tab" and value="1"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"yes_no","0","0","否","0","1",0,"0",now(),"system"','dict_name="yes_no" and value="0"');//
-call insert_if_not_exists(database(), 'system_dict_item', 'dict_name,parent_value,value,title,type,whether_system_dict,sorted,is_disabled,create_at,create_by','"yes_no","0","1","是","0","1",0,"0",now(),"system"','dict_name="yes_no" and value="1"');//
-
-
-
+call insert_if_not_exists(database(), 'system_black_list', 'request_uri,request_method,limit_from,limit_to,black_status,create_at,create_by','"/actuator/**","ALL","00:00:00","23:59:59","1",now(),"system"','request_uri="/actuator/**" and request_method="ALL"');//
+call insert_if_not_exists(database(), 'system_generator_config', 'server_name,author,base_package,entity_package,ao_package,vo_package,mapper_package,mapper_xml_package,service_package,service_impl_package,controller_package,is_trim,trim_value,exclude_columns,create_at,create_by','"platform-system","zclcs","com.zclcs.platform.system","api.entity","api.entity.ao","api.entity.vo","mapper","mapper","service","service.impl","controller","1","system_","version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",now(),"system"','server_name="platform-system"');//
+call insert_if_not_exists(database(), 'system_generator_config', 'server_name,author,base_package,entity_package,ao_package,vo_package,mapper_package,mapper_xml_package,service_package,service_impl_package,controller_package,is_trim,trim_value,exclude_columns,create_at,create_by','"test-test","zclcs","com.zclcs.test.test","api.entity","api.entity.ao","api.entity.vo","mapper","mapper","service","service.impl","controller","1","test_","version,tenant_id,create_at,update_at,create_by,update_by,create_name,create_date,update_name,update_date,delete_name,delete_date,deleted",now(),"system"','server_name="test-test"');//
+call insert_if_not_exists(database(), 'system_dept', 'dept_code,parent_code,dept_name,order_num,create_at,create_by','"DEV","0","开发部",1.0,now(),"system"','dept_code="DEV"');//
+call insert_if_not_exists(database(), 'system_oauth_client_details', 'client_id,resource_ids,client_secret,scope,authorized_grant_types,web_server_redirect_uri,authorities,access_token_validity,refresh_token_validity,additional_information,autoapprove,create_at,create_by','"swagger",null,"123456","server","password,app,refresh_token,authorization_code,client_credentials","https://zclcs",null,null,null,null,"true",now(),"system"','client_id="swagger"');//
+call insert_if_not_exists(database(), 'system_oauth_client_details', 'client_id,resource_ids,client_secret,scope,authorized_grant_types,web_server_redirect_uri,authorities,access_token_validity,refresh_token_validity,additional_information,autoapprove,create_at,create_by','"zclcs",null,"123456","server","password,app,refresh_token,authorization_code,client_credentials","https://zclcs",null,null,null,null,"true",now(),"system"','client_id="zclcs"');//
+call insert_if_not_exists(database(), 'system_role', 'role_code,role_name,remark,create_at,create_by','"ADMIN","管理员",null,now(),"system"','role_code="ADMIN"');//
+call insert_if_not_exists(database(), 'system_role', 'role_code,role_name,remark,create_at,create_by','"GUEST","查看",null,now(),"system"','role_code="GUEST"');//
+call insert_if_not_exists(database(), 'system_role', 'role_code,role_name,remark,create_at,create_by','"DEVELOP","开发",null,now(),"system"','role_code="DEVELOP"');//
+call insert_if_not_exists(database(), 'system_user', 'username,real_name,password,dept_id,status,avatar,create_at,create_by','"admin","管理员","$2a$10$LNmOtAAmYxewGYcxdwiYteFUPG1KWHYtgqwvtsEPyRxs70nT1hZF2","1","1","default.jpg",now(),"system"','username="admin"');//
+call insert_if_not_exists(database(), 'system_user', 'username,real_name,password,dept_id,status,avatar,create_at,create_by','"guest","访客","$2a$10$63vb4uvE5bfwvP5BPHVJtObCVop2Tu/8rSW2Dqvm5MYbnBDlCNTBK","1","1","default.jpg",now(),"system"','username="guest"');//
+call insert_if_not_exists(database(), 'system_user', 'username,real_name,password,dept_id,status,avatar,create_at,create_by','"develop","开发","$2a$10$63vb4uvE5bfwvP5BPHVJtObCVop2Tu/8rSW2Dqvm5MYbnBDlCNTBK","1","1","default.jpg",now(),"system"','username="develop"');//
+call insert_if_not_exists(database(), 'system_user_data_permission', 'user_id,dept_id,create_at,create_by','(select user_id from system_user where username = "admin"),(select dept_id from system_dept where dept_code = "DEV"),now(),"system"','user_id=(select user_id from system_user where username = "admin") and dept_id=(select dept_id from system_dept where dept_code = "DEV")');//
+call insert_if_not_exists(database(), 'system_user_role', 'user_id,role_id,create_at,create_by','(select user_id from system_user where username = "admin"),(select role_id from system_role where role_code = "ADMIN"),now(),"system"','user_id=(select user_id from system_user where username = "admin") and role_id=(select role_id from system_role where role_code = "ADMIN")');//
+call insert_if_not_exists(database(), 'system_user_role', 'user_id,role_id,create_at,create_by','(select user_id from system_user where username = "guest"),(select role_id from system_role where role_code = "GUEST"),now(),"system"','user_id=(select user_id from system_user where username = "guest") and role_id=(select role_id from system_role where role_code = "GUEST")');//
+call insert_if_not_exists(database(), 'system_user_role', 'user_id,role_id,create_at,create_by','(select user_id from system_user where username = "develop"),(select role_id from system_role where role_code = "DEVELOP"),now(),"system"','user_id=(select user_id from system_user where username = "develop") and role_id=(select role_id from system_role where role_code = "DEVELOP")');//
 call insert_if_not_exists(database(), 'system_menu', 'menu_code,parent_code,menu_name,keep_alive_name,path,component,redirect,perms,icon,type,hide_menu,ignore_keep_alive,hide_breadcrumb,hide_children_in_menu,current_active_menu,order_num,create_at,create_by','"SYSTEM","0","系统管理",null,"/system","Layout",null,null,"ant-design:setting-outlined","2","0","0","0","0",null,2.0,now(),"system"','menu_code="SYSTEM"');//
 call insert_if_not_exists(database(), 'system_menu', 'menu_code,parent_code,menu_name,keep_alive_name,path,component,redirect,perms,icon,type,hide_menu,ignore_keep_alive,hide_breadcrumb,hide_children_in_menu,current_active_menu,order_num,create_at,create_by','"SYSTEM_USER","SYSTEM","用户管理","AccountManagement","user","/cloud/system/user/index",null,"","ant-design:user-switch-outlined","0","0","0","0","0",null,1.0,now(),"system"','menu_code="SYSTEM_USER"');//
 call insert_if_not_exists(database(), 'system_menu', 'menu_code,parent_code,menu_name,keep_alive_name,path,component,redirect,perms,icon,type,hide_menu,ignore_keep_alive,hide_breadcrumb,hide_children_in_menu,current_active_menu,order_num,create_at,create_by','"SYSTEM_USER_DETAIL","SYSTEM","用户详情页面","AccountDetail","accountDetail/:username","/cloud/system/user/AccountDetail",null,"user:detail:view","ant-design:audit-outlined","0","1","1","0","0",null,2.0,now(),"system"','menu_code="SYSTEM_USER_DETAIL"');//
@@ -393,4 +298,3 @@ call insert_if_not_exists(database(), 'system_role_menu', 'role_id,menu_id,creat
 call insert_if_not_exists(database(), 'system_role_menu', 'role_id,menu_id,create_at,create_by','(select role_id from system_role where role_code = "DEVELOP"),(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ"),now(),"system"','role_id=(select role_id from system_role where role_code = "DEVELOP") and menu_id=(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ")');//
 call insert_if_not_exists(database(), 'system_role_menu', 'role_id,menu_id,create_at,create_by','(select role_id from system_role where role_code = "DEVELOP"),(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ_EXCHANGE"),now(),"system"','role_id=(select role_id from system_role where role_code = "DEVELOP") and menu_id=(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ_EXCHANGE")');//
 call insert_if_not_exists(database(), 'system_role_menu', 'role_id,menu_id,create_at,create_by','(select role_id from system_role where role_code = "DEVELOP"),(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ_QUEUE"),now(),"system"','role_id=(select role_id from system_role where role_code = "DEVELOP") and menu_id=(select menu_id from system_menu where menu_code = "SYSTEM_MONITOR_RABBITMQ_QUEUE")');//
-

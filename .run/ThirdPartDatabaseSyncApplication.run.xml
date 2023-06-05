@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ThirdPartDatabaseSyncApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="MYSQL_SERVICE_HOST" value="192.168.33.10" />
+      <env name="MYSQL_SERVICE_PASSWORD" value="123456" />
+    </envs>
+    <module name="cloud-17.third-part-database-sync.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.ThirdPartDatabaseSyncApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

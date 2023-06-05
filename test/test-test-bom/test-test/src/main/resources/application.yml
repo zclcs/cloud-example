@@ -1,8 +1,6 @@
 server:
   port: ${PORT_TEST_TEST:9101}
 spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: test-test
   cloud:

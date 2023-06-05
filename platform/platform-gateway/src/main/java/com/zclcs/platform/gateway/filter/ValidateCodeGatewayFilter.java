@@ -1,5 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -56,7 +57,10 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
                 return chain.filter(exchange);
             }
 
-            boolean isIgnoreClient = configProperties.getIgnoreClients().contains(GatewayUtil.getClientId(request));
+            boolean isIgnoreClient = true;
+            if (CollectionUtil.isNotEmpty(configProperties.getIgnoreClients())) {
+                isIgnoreClient = configProperties.getIgnoreClients().contains(GatewayUtil.getClientId(request));
+            }
             try {
                 // only oauth and the request not in ignore clients need check code.
                 if (!isIgnoreClient) {

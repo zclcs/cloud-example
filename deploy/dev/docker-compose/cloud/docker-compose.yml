@@ -7,13 +7,18 @@ services:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-gateway:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-gateway
     network_mode: host
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:
@@ -26,13 +31,18 @@ services:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-auth
     network_mode: host
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-auth:/log/platform-auth
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_AUTH} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:
@@ -45,13 +55,18 @@ services:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-system
     network_mode: host
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-system:/log/platform-system
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:
@@ -64,13 +79,18 @@ services:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-test-test
     network_mode: host
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS}"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/test-test:/log/test-test
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_TEST_TEST} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:
@@ -86,6 +106,7 @@ services:
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
       PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
       -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
       -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 
@@ -97,6 +118,7 @@ services:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${SENTINEL_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:

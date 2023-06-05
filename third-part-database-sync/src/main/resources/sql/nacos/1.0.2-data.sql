@@ -159,6 +159,18 @@ call insert_or_update(database(), 'config_info',
 call insert_or_update(database(), 'config_info',
                       '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
   `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
+  "swagger-local.yaml", "DEFAULT_GROUP",
+  "swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true\n",
+  "8982143a6e91f60c840142fc93b154b0", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "开发环境swagger配置", NULL, NULL, "yaml", NULL, "")',
+                      'SET `group_id` = "DEFAULT_GROUP",
+  `content` = "swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true\n",
+  `md5` = "8982143a6e91f60c840142fc93b154b0", `gmt_modified` = now(), `src_user` = NULL, `src_ip` = "127.0.0.1", `app_name` = "",
+  `c_desc` = "本地环境swagger配置", `c_use` = NULL, `effect` = NULL, `type` = "yaml", `c_schema` = NULL, `encrypted_data_key` = ""
+  WHERE `data_id` = "swagger-local.yaml" and `tenant_id` = "{{NACOS_NAMESPACE}}"');//
+
+call insert_or_update(database(), 'config_info',
+                      '(`data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`,
+  `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
   "swagger-dev.yaml", "DEFAULT_GROUP",
   "swagger:\n  enabled: true\n  title: api文档\n  version: 1.0.0\n  description: ${spring.application.name}api文档\n  terms-of-service: xxx.com\n  concat-name: zclcs\n  concat-email: 2371219112@qq.com\n  license: Apache 2.0\n  license-url: https://www.apache.org/licenses/LICENSE-2.0.html\n  gateway-endpoint: http://${GATEWAY_HOST:platform-gateway}:${PORT_GATEWAY:8301}\n  token-url: ${swagger.gateway-endpoint}/auth/oauth2/token?scope=server\n  scope: server\n  base-package: com.zclcs\nknife4j:\n  gateway:\n    enabled: true\n    strategy: discover\n    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组\n    discover:\n      # 指定版本号(Swagger2|OpenAPI3)\n      version: openapi3\n      excluded-services:\n        - platform-gateway\nspringdoc:\n  # 默认是false，需要设置为true\n  default-flat-param-object: true\n",
   "8982143a6e91f60c840142fc93b154b0", now(), now(), NULL, "127.0.0.1", "", "{{NACOS_NAMESPACE}}", "开发环境swagger配置", NULL, NULL, "yaml", NULL, "")',

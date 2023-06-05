@@ -11,6 +11,7 @@ import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.cloud.gateway.support.TimeoutException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,10 +36,12 @@ public class MyGatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
     @Override
     protected Map<String, Object> getErrorAttributes(ServerRequest webRequest, ErrorAttributeOptions options) {
         Throwable error = super.getError(webRequest);
-        log.error(
-                "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
-                webRequest.path(), webRequest.method(), error.getMessage()
-        );
+        if (!"/".equals(webRequest.path()) && !webRequest.method().equals(HttpMethod.GET)) {
+            log.error(
+                    "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
+                    webRequest.path(), webRequest.method(), error.getMessage()
+            );
+        }
         String errorMessage;
         if (error instanceof NotFoundException) {
             String serverId = StrUtil.subAfter(error.getMessage(), "Unable to find instance for ", true);

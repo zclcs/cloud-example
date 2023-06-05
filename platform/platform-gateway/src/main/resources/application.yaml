@@ -4,9 +4,6 @@ server:
 
 spring:
 
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
-
   main:
     allow-bean-definition-overriding: true
 
@@ -49,15 +46,6 @@ spring:
       discovery:
         locator:
           enabled: true
-
-gateway:
-  encode-key: 'eXTqsEKIPRsksJSK'
-  ignore-clients:
-    - swagger
-
-logging:
-  level:
-    com.zclcs: info
 
 # spring security 配置
 security:

@@ -1,5 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
@@ -66,9 +67,11 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
                 return chain.filter(exchange);
             }
 
-            boolean isIgnoreClient = gatewayConfig.getIgnoreClients().contains(GatewayUtil.getClientId(request));
-            if (isIgnoreClient) {
-                return chain.filter(exchange);
+            if (CollectionUtil.isNotEmpty(gatewayConfig.getIgnoreClients())) {
+                boolean isIgnoreClient = gatewayConfig.getIgnoreClients().contains(GatewayUtil.getClientId(request));
+                if (isIgnoreClient) {
+                    return chain.filter(exchange);
+                }
             }
 
             // 3. 前端加密密文解密逻辑

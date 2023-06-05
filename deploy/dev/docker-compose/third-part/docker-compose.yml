@@ -3,7 +3,7 @@ version: '3'
 services:
   mysql:
     image: mysql:5.7.35
-    container_name: mysql-cloud
+    container_name: ${NACOS_NAMESPACE}-mysql
     network_mode: host
     environment:
       # 设置密码
@@ -22,11 +22,11 @@ services:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   redis:
     image: redis:6.0.8
-    container_name: redis-cloud
+    container_name: ${NACOS_NAMESPACE}-redis
     network_mode: host
     environment:
       # 设置时区
@@ -40,11 +40,11 @@ services:
       test: [ "CMD", "redis-cli","ping" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   nacos:
     image: nacos/nacos-server:v2.2.1
-    container_name: nacos-cloud
+    container_name: ${NACOS_NAMESPACE}-nacos
     network_mode: host
     environment:
       # 设置时区
@@ -63,14 +63,14 @@ services:
       test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
     depends_on:
       third-part-database-sync:
         condition: service_healthy
   minio:
     image: minio/minio:RELEASE.2021-06-17T00-10-46Z
-    container_name: minio
+    container_name: ${NACOS_NAMESPACE}-minio
     network_mode: host
     environment:
       # 设置时区
@@ -89,16 +89,17 @@ services:
       test: [ "CMD-SHELL", "curl -sS 'http://${LOCAL_HOST_IP}:${MINIO_PORT}/minio/index.html' || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
     command: server /data
   rabbitmq:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
-    container_name: rabbitmq
+    container_name: ${NACOS_NAMESPACE}-rabbitmq
     network_mode: host
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
       RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
     volumes:
@@ -108,15 +109,16 @@ services:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   nginx:
     image: nginx:1.21.3
-    container_name: nginx-cloud
+    container_name: ${NACOS_NAMESPACE}-nginx
     network_mode: host
     environment:
       # 设置时区
       TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     privileged: true
     user: root
     volumes:
@@ -126,12 +128,16 @@ services:
       test: [ "CMD", "service", "nginx", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   xxl-job:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/xxl-job:2.4.1-SNAPSHOT
-    container_name: xxl-job
+    container_name: ${NACOS_NAMESPACE}-xxl-job
     network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     command: sh -c "java -Xms1024m -Xmx1024m -Xmn256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=160m -XX:HeapDumpPath=/data/applogs/xxl-job/java_heapdump.hprof -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:-UseLargePages -cp /app/resources:/app/classes:/app/libs/* com.xxl.job.admin.XxlJobAdminApplication"
     volumes:
       - ./xxl-job/log:/data/applogs/xxl-job
@@ -139,22 +145,27 @@ services:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${XXL_JOB_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: 3
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
     depends_on:
       third-part-database-sync:
         condition: service_healthy
   third-part-database-sync:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/third-part-database-sync:${CLOUD_DEPOSITORY_TAG}
-    container_name: third-part-database-sync
+    container_name: ${NACOS_NAMESPACE}-third-part-database-sync
     network_mode: host
-    command: sh -c "java -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=./log/data-sync/java_heapdump.hprof -Dcsp.sentinel.app.type=1 -Ddruid.mysql.usePingMethod=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Dnetworkaddress.cache.ttl=10 -XX:MaxRAMPercentage=45 -XX:InitialRAMPercentage=45 -XX:MinHeapFreeRatio=0 -XX:MaxHeapFreeRatio=100 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:MaxGCPauseMillis=50 -XX:-UseBiasedLocking -XX:GuaranteedSafepointInterval=0 -XX:+UseCountedLoopSafepoints -XX:+SafepointTimeout -XX:SafepointTimeoutDelay=1000 -XX:StartFlightRecording=disk=true,maxsize=32m,maxage=3d -XX:FlightRecorderOptions=maxchunksize=32m --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -cp /app/resources:/app/classes:/app/libs/* com.zclcs.ThirdPartDatabaseSyncApplication"
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./third-part-database-sync/log:/log/third-part-database-sync
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_DATA_SYNC} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
     deploy:
       resources:
         limits:

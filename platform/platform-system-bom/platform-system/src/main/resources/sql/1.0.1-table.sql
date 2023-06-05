@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `system_log`
     `create_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '创建人',
     `update_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '编辑人',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `system_log_username` (`username`) USING BTREE
+    INDEX `nk_system_log_username` (`username`) USING BTREE
 ) ENGINE = MyISAM
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `system_login_log`
     `create_by`  varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '创建人',
     `update_by`  varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '编辑人',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `system_login_log_login_time` (`login_time`) USING BTREE
+    INDEX `nk_system_login_log_login_time` (`login_time`) USING BTREE
 ) ENGINE = MyISAM
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
