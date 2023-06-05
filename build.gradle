@@ -28,6 +28,7 @@ buildscript {
         javassistVersion = "3.28.0-GA"
         redissonVersion = "3.20.0"
         xxlJobVersion = "2.4.0"
+        janinoVersion = "3.1.9"
     }
 }
 

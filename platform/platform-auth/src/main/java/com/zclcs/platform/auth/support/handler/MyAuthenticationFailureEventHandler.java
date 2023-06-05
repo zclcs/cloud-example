@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.core.constant.Security;
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
 import com.zclcs.cloud.lib.core.utils.I18nUtil;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
@@ -58,7 +57,6 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         String username = Optional.ofNullable(request.getParameter(OAuth2ParameterNames.USERNAME)).orElse("未填写");
 
         log.info("用户：{} 登录失败，异常：{}", username, exception.getLocalizedMessage());
-        log.error(exception.getMessage(), exception);
         LoginLogAo loginLog = LoginLogUtil.getLoginLog();
         loginLog.setUsername(username);
         loginLog.setLoginType(Dict.LOGIN_LOG_LOGIN_TYPE_02);
@@ -67,7 +65,7 @@ public class MyAuthenticationFailureEventHandler implements AuthenticationFailur
         loginLog.setUpdateBy(username);
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
                         myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
-                                      RabbitKeyUtil.getDirectRouteKey(
+                RabbitKeyUtil.getDirectRouteKey(
                         myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
                 MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
         // 写出错误信息

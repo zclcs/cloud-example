@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="false" scanPeriod="60 seconds" debug="false">
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+    <springProperty scope="context" name="runMode" source="spring.profiles.active"/>
     <property name="log.path" value="log/${springAppName}"/>
     <property name="log.maxHistory" value="15"/>
     <property name="log.maxFileSize" value="50MB"/>
@@ -94,46 +95,55 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-    
-    <appender name="file_client" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/client.log</file>
-        <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
-        <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/client/client.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- 日志文件保留天数 -->
-            <MaxHistory>1</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-        </filter>
-    </appender>
 
-    <appender name="file_sql" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/sql.log</file>
-        <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
-        <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/sql/sql.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- 日志文件保留天数 -->
-            <MaxHistory>1</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-        </filter>
-    </appender>
+    <if condition='!property("runMode").contains("prod")'>
+        <then>
+            <appender name="file_client" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${log.path}/client.log</file>
+                <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
+                <append>true</append>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${log.path}/client/client.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>${log.maxFileSize}</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <!-- 日志文件保留天数 -->
+                    <MaxHistory>1</MaxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${log.pattern}</pattern>
+                </encoder>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>DEBUG</level>
+                </filter>
+            </appender>
+        </then>
+    </if>
+
+
+    <if condition='!property("runMode").contains("prod")'>
+        <then>
+            <appender name="file_sql" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${log.path}/sql.log</file>
+                <!-- 如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。 -->
+                <append>true</append>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${log.path}/sql/sql.%d{yyyy-MM-dd}%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>${log.maxFileSize}</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <!-- 日志文件保留天数 -->
+                    <MaxHistory>1</MaxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${log.pattern}</pattern>
+                </encoder>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>DEBUG</level>
+                </filter>
+            </appender>
+        </then>
+    </if>
 
     <!--屏蔽 nacos包下的warn级别以上的日志 -->
     <logger name="com.alibaba.nacos" level="warn" additivity="false"/>
