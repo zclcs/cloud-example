@@ -4,18 +4,14 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Params;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
-import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
@@ -25,9 +21,7 @@ import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.http.HttpMethod;
@@ -57,8 +51,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     private static final String TOKEN_CHECK_URL = "/auth/oath2/info";
     private final RouteEnhanceCacheService routeEnhanceCacheService;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
-    private final RabbitTemplate rabbitTemplate;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RabbitService rabbitService;
     private final MyRabbitMqProperties myRabbitMqProperties;
 
     @Override
@@ -125,7 +118,6 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         return null;
     }
 
-    @SneakyThrows(JsonProcessingException.class)
     @Override
     public void saveRequestLogs(ServerWebExchange exchange) {
         Long startTime = exchange.getAttribute(CommonCore.START_TIME);
@@ -154,11 +146,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                             .code(String.valueOf(code))
                             .time(executeTime)
                             .build();
-                    rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                            RabbitKeyUtil.getDirectRouteKey(
-                                    myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                            MessageStruct.builder().message(objectMapper.writeValueAsString(routeLog)).build());
+                    rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
                 }
                 // 当前仅记录日志，后续可以添加日志队列，来过滤请求慢的接口
                 if (log.isDebugEnabled()) {
@@ -168,7 +156,6 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         }
     }
 
-    @SneakyThrows(JsonProcessingException.class)
     @Override
     public void saveBlockLogs(ServerWebExchange exchange) {
         URI originUri = getGatewayOriginalRequestUrl(exchange);
@@ -182,16 +169,11 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                    RabbitKeyUtil.getDirectRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                    MessageStruct.builder().message(objectMapper.writeValueAsString(blockLog)).build());
+            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), blockLog);
             log.info("Store blocked request logs >>>");
         }
     }
 
-    @SneakyThrows(JsonProcessingException.class)
     @Override
     public void saveRateLimitLogs(ServerWebExchange exchange) {
         URI originUri = getGatewayOriginalRequestUrl(exchange);
@@ -205,11 +187,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
                     .build();
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                    RabbitKeyUtil.getDirectRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG)),
-                    MessageStruct.builder().message(objectMapper.writeValueAsString(rateLimitLog)).build());
+            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), rateLimitLog);
             log.info("Store rate limit logs >>>");
         }
     }

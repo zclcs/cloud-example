@@ -3,7 +3,6 @@ package com.zclcs.platform.auth.endpoint;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -12,6 +11,7 @@ import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.cloud.lib.security.exception.OAuthClientException;
 import com.zclcs.cloud.lib.security.utils.OAuth2EndpointUtil;
@@ -31,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -75,9 +74,7 @@ public class MyTokenEndpoint {
 
     private final RedisTemplate<String, Object> redisTemplateJava;
 
-    private final ObjectMapper objectMapper;
-
-    private final RabbitTemplate rabbitTemplate;
+    private final RabbitService rabbitService;
 
     private final MyRabbitMqProperties myRabbitMqProperties;
 
@@ -148,7 +145,7 @@ public class MyTokenEndpoint {
     public void checkToken(@RequestParam String token, HttpServletResponse response, HttpServletRequest request) {
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
 
-        AuthenticationFailureHandler authenticationFailureHandler = new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties);
+        AuthenticationFailureHandler authenticationFailureHandler = new MyAuthenticationFailureEventHandler(rabbitService, myRabbitMqProperties);
         if (StrUtil.isBlank(token)) {
             httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
             authenticationFailureHandler.onAuthenticationFailure(request, response,

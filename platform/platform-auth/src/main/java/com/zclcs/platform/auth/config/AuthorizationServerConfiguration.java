@@ -1,9 +1,9 @@
 package com.zclcs.platform.auth.config;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.properties.PermitAllUrlProperties;
 import com.zclcs.platform.auth.support.CustomeOAuth2AccessTokenGenerator;
 import com.zclcs.platform.auth.support.core.CustomeOAuth2TokenCustomizer;
@@ -16,7 +16,6 @@ import com.zclcs.platform.auth.support.password.OAuth2ResourceOwnerPasswordAuthe
 import com.zclcs.platform.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationConverter;
 import com.zclcs.platform.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,9 +48,7 @@ public class AuthorizationServerConfiguration {
 
     private final OAuth2AuthorizationService authorizationService;
 
-    private final ObjectMapper objectMapper;
-
-    private final RabbitTemplate rabbitTemplate;
+    private final RabbitService rabbitService;
 
     private final PermitAllUrlProperties permitAllUrl;
 
@@ -66,13 +63,13 @@ public class AuthorizationServerConfiguration {
                     // 注入自定义的授权认证Converter
                     tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter())
                             // 登录成功处理器
-                            .accessTokenResponseHandler(new MyAuthenticationSuccessEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties))
+                            .accessTokenResponseHandler(new MyAuthenticationSuccessEventHandler(rabbitService, myRabbitMqProperties))
                             // 登录失败处理器
-                            .errorResponseHandler(new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties));
+                            .errorResponseHandler(new MyAuthenticationFailureEventHandler(rabbitService, myRabbitMqProperties));
                     // 个性化客户端认证
                 }).clientAuthentication(oAuth2ClientAuthenticationConfigurer ->
                         // 处理客户端认证异常
-                        oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new MyAuthenticationFailureEventHandler(objectMapper, rabbitTemplate, myRabbitMqProperties)))
+                        oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new MyAuthenticationFailureEventHandler(rabbitService, myRabbitMqProperties)))
                 // 授权码端点个性化confirm页面
                 .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
                         .consentPage(Security.CUSTOM_CONSENT_PAGE_URI)));

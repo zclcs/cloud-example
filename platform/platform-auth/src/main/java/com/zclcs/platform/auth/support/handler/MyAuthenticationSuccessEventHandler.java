@@ -1,14 +1,11 @@
 package com.zclcs.platform.auth.support.handler;
 
 import cn.hutool.core.map.MapUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.core.constant.Security;
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
-import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
-import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.entity.SecurityUser;
 import com.zclcs.cloud.lib.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
@@ -17,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
@@ -41,8 +37,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MyAuthenticationSuccessEventHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper;
-    private final RabbitTemplate rabbitTemplate;
+    private final RabbitService rabbitService;
     private final MyRabbitMqProperties myRabbitMqProperties;
 
     /**
@@ -70,11 +65,7 @@ public class MyAuthenticationSuccessEventHandler implements AuthenticationSucces
             // 发送异步日志事件
             loginLog.setCreateBy(userInfo.getName());
             loginLog.setUpdateBy(userInfo.getName());
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
-                    RabbitKeyUtil.getDirectRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
-                    MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG), loginLog);
         }
 
         // 输出token

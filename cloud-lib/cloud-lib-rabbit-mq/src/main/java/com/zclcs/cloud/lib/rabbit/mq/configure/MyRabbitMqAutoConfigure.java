@@ -56,7 +56,7 @@ public class MyRabbitMqAutoConfigure {
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) ->
                 log.info("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
         rabbitTemplate.setReturnsCallback((returned) ->
-                log.info("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", returned.getExchange(), returned.getRoutingKey(), returned.getReplyCode(), returned.getReplyText(), returned.getMessage()));
+                log.error("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", returned.getExchange(), returned.getRoutingKey(), returned.getReplyCode(), returned.getReplyText(), returned.getMessage()));
         return rabbitTemplate;
     }
 
@@ -70,7 +70,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = directQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getDirectDlxExchangeName(directQueue);
             String dlxRouteKey = RabbitKeyUtil.getDirectDlxRouteKey(directQueue);
-            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx());
+            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx(), directQueue.getTtl());
         }
 
         Map<String, MyRabbitMqProperties.FanoutQueue> fanoutQueues = Optional.ofNullable(myRabbitMqProperties.getFanoutQueues()).orElse(new HashMap<>());
@@ -91,7 +91,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = topicQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getTopicDlxExchangeName(topicQueue);
             String dlxRouteKey = RabbitKeyUtil.getTopicDlxRouteKey(topicQueue);
-            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx());
+            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx(), topicQueue.getTtl());
         }
 
         Map<String, MyRabbitMqProperties.DelayedQueue> delayedQueues = Optional.ofNullable(myRabbitMqProperties.getDelayedQueues()).orElse(new HashMap<>());
@@ -108,8 +108,14 @@ public class MyRabbitMqAutoConfigure {
         }
     }
 
-    private void definition(String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx) {
-        Queue queue = QueueBuilder.durable(queueName).build();
+    private void definition(String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl) {
+        QueueBuilder durable = QueueBuilder.durable(queueName);
+        Queue queue;
+        if (ttl != 0) {
+            queue = durable.ttl(ttl).build();
+        } else {
+            queue = durable.build();
+        }
         Exchange exchange = ExchangeBuilder.directExchange(exchangeName).build();
         amqpAdmin.declareQueue(queue);
         amqpAdmin.declareExchange(exchange);
@@ -142,8 +148,6 @@ public class MyRabbitMqAutoConfigure {
         map.put("x-dead-letter-exchange", dlxExchangeName);
         // 绑定该队列到死信路由key
         map.put("x-dead-letter-routing-key", dlxRoutingKey);
-        // 队列设置消息过期时间秒
-        map.put("x-message-ttl", 7 * 24 * 60 * 60);
         return map;
     }
 

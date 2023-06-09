@@ -5,17 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
-import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
-import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.security.core.Authentication;
@@ -42,13 +39,13 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
 
     private ObjectMapper objectMapper;
 
-    private RabbitTemplate rabbitTemplate;
+    private RabbitService rabbitService;
 
     private MyRabbitMqProperties myRabbitMqProperties;
 
     @Autowired
-    public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    public void setRabbitService(RabbitService rabbitService) {
+        this.rabbitService = rabbitService;
     }
 
     @Autowired
@@ -96,11 +93,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             systemLogAo.setOperation(operation);
             systemLogAo.setUsername(username);
             systemLogAo.setTime(BigDecimal.valueOf(end - start));
-            rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG)),
-                                          RabbitKeyUtil.getDirectRouteKey(
-                            myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG)),
-                    MessageStruct.builder().message(objectMapper.writeValueAsString(systemLogAo)).build());
+            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG), systemLogAo);
         }
         return result;
     }

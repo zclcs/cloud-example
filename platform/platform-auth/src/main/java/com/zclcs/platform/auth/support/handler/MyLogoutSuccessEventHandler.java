@@ -1,18 +1,12 @@
 package com.zclcs.platform.auth.support.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
-import com.zclcs.cloud.lib.core.enums.ExchangeType;
-import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
-import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
+import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.utils.LoginLogUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
@@ -29,18 +23,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSuccessEvent> {
 
-    private ObjectMapper objectMapper;
-    private RabbitTemplate rabbitTemplate;
+    private RabbitService rabbitService;
     private MyRabbitMqProperties myRabbitMqProperties;
 
     @Autowired
-    public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public void setRabbitService(RabbitService rabbitService) {
+        this.rabbitService = rabbitService;
     }
 
     @Autowired
@@ -63,7 +51,6 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
      *
      * @param authentication 登录对象
      */
-    @SneakyThrows(value = JsonProcessingException.class)
     public void handle(Authentication authentication) {
         log.info("用户：{} 退出成功", authentication.getPrincipal());
         LoginLogAo loginLog = LoginLogUtil.getLoginLog();
@@ -72,11 +59,7 @@ public class MyLogoutSuccessEventHandler implements ApplicationListener<LogoutSu
         // 发送异步日志事件
         loginLog.setCreateBy(authentication.getName());
         loginLog.setUpdateBy(authentication.getName());
-        rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(
-                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
-                RabbitKeyUtil.getDirectRouteKey(
-                        myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG)),
-                MessageStruct.builder().message(objectMapper.writeValueAsString(loginLog)).build());
+        rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOGIN_LOG), loginLog);
     }
 
 }

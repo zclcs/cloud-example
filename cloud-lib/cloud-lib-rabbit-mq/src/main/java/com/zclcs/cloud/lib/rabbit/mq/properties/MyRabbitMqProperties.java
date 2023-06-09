@@ -68,7 +68,7 @@ public class MyRabbitMqProperties {
         /**
          * 是否创建死信队列
          */
-        private Boolean initDlx;
+        private Boolean initDlx = false;
 
         /**
          * 死信队列名称
@@ -84,6 +84,11 @@ public class MyRabbitMqProperties {
          * 死信队列路由key名称
          */
         private String dlxRouteKey;
+
+        /**
+         * 消息过期时间(毫秒)
+         */
+        private Integer ttl = 0;
     }
 
     @Data
@@ -126,7 +131,7 @@ public class MyRabbitMqProperties {
         /**
          * 是否创建死信队列
          */
-        private Boolean initDlx;
+        private Boolean initDlx = false;
 
         /**
          * 死信队列交换机名称
@@ -142,6 +147,11 @@ public class MyRabbitMqProperties {
          * 死信队列路由key名称
          */
         private String dlxRouteKey;
+
+        /**
+         * 消息过期时间(毫秒)
+         */
+        private Integer ttl = 0;
     }
 
     @Data
