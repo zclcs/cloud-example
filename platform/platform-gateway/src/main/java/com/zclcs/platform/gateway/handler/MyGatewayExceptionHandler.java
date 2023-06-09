@@ -89,7 +89,7 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         ServerHttpRequest request = exchange.getRequest();
         log.error(
                 "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
-                request.getPath(), request.getMethod(), error.getMessage(), error
+                request.getPath(), request.getMethod(), error.getMessage()
         );
         String errorMessage;
         if (error instanceof NotFoundException) {
