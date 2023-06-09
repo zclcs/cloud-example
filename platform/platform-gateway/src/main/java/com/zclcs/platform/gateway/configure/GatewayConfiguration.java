@@ -1,9 +1,12 @@
 package com.zclcs.platform.gateway.configure;
 
+import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
+import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.filter.*;
+import com.zclcs.platform.gateway.handler.FlowsHandler;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
 import com.zclcs.platform.gateway.handler.MyGatewayExceptionHandler;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
@@ -16,6 +19,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -58,11 +62,24 @@ public class GatewayConfiguration {
     public ErrorWebExceptionHandler errorWebExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider,
                                                              ServerCodecConfigurer serverCodecConfigurer) {
 
-        MyGatewayExceptionHandler jsonExceptionHandler = new MyGatewayExceptionHandler();
-        jsonExceptionHandler.setViewResolvers(viewResolversProvider.getIfAvailable(Collections::emptyList));
-        jsonExceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
-        jsonExceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
-        return jsonExceptionHandler;
+        MyGatewayExceptionHandler myGatewayExceptionHandler = new MyGatewayExceptionHandler();
+        myGatewayExceptionHandler.setViewResolvers(viewResolversProvider.getIfAvailable(Collections::emptyList));
+        myGatewayExceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
+        myGatewayExceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
+        return myGatewayExceptionHandler;
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider) {
+        // Register the block exception handler for Spring Cloud Gateway.
+        return new SentinelGatewayBlockExceptionHandler(viewResolversProvider.getIfAvailable(Collections::emptyList), serverCodecConfigurer);
+    }
+
+    @Bean
+    @Order(-1)
+    public GlobalFilter sentinelGatewayFilter() {
+        return new SentinelGatewayFilter();
     }
 
     @Bean
@@ -114,9 +131,13 @@ public class GatewayConfiguration {
     @Bean
     public RoutesHandler routesHandler(ObjectMapper objectMapper,
                                        RouteDefinitionWriter routeDefinitionWriter) {
-
         return new RoutesHandler(objectMapper,
                 routeDefinitionWriter);
+    }
+
+    @Bean
+    public FlowsHandler flowsHandler(ObjectMapper objectMapper) {
+        return new FlowsHandler(objectMapper);
     }
 
     @Profile({"dev", "test"})

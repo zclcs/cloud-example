@@ -90,6 +90,7 @@ services:
     volumes:
       - ./rabbitmq/data:/var/lib/rabbitmq
       - ./rabbitmq/conf:/etc/rabbitmq
+      - ./rabbitmq/log:/var/log/rabbitmq
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
@@ -274,39 +275,6 @@ services:
       - ./log/test-test:/log/test-test
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_TEST_TEST} || exit 1" ]
-      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
-      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: ${DOCKER_HEALTHCHECK_RETRIES}
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 1024M
-        reservations:
-          memory: 512M
-    env_file: .env
-    depends_on:
-      nacos:
-        condition: service_healthy
-  sentinel:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/sentinel:1.8.5
-    container_name: ${NACOS_NAMESPACE}-sentinel
-    networks:
-      - cloud_net
-    restart: unless-stopped
-    environment:
-      # 设置时区
-      TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-      PARAM: "-Dserver.port=${SENTINEL_PORT} -Dcsp.sentinel.dashboard.server=${LOCAL_HOST_IP}:${SENTINEL_PORT} -Dproject.name=sentinel-dashboard 
-      -Dsentinel.dashboard.auth.username=${SENTINEL_ADMIN_USERNAME} -Dsentinel.dashboard.auth.password=${SENTINEL_ADMIN_PASSWORD} 
-      -Ddatasource.provider=nacos -Ddatasource.provider.nacos.server-addr=${LOCAL_HOST_IP}:${NACOS_PORT} 
-      -Ddatasource.provider.nacos.username=${NACOS_USERNAME} -Ddatasource.provider.nacos.password=${NACOS_PASSWORD} -Ddatasource.provider.nacos.namespace=${NACOS_NAMESPACE}
-      -Ddatasource.provider.nacos.group-id=SENTINEL_GROUP"
-    volumes:
-      - ./log/sentinel:/root/logs/csp
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${SENTINEL_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}

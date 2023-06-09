@@ -61,7 +61,7 @@ public class RoutesHandler {
     /**
      * 更新所有路由信息
      *
-     * @param configStr
+     * @param configStr 配置字符串
      */
     public void refreshAll(String configStr) {
         // 无效字符串不处理

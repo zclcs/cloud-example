@@ -8,7 +8,7 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
-import com.zclcs.platform.gateway.handler.RoutesHandler;
+import com.zclcs.platform.gateway.handler.FlowsHandler;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ import java.util.concurrent.Executor;
  */
 @Slf4j
 @Component
-public class RoutesConfigListener {
+public class FlowsConfigListener {
 
-    private RoutesHandler routesHandler;
+    private FlowsHandler flowsHandler;
 
     private MyNacosProperties myNacosProperties;
 
@@ -34,27 +34,26 @@ public class RoutesConfigListener {
     }
 
     @Autowired
-    public void setRoutesHandler(RoutesHandler routesHandler) {
-        this.routesHandler = routesHandler;
+    public void setFlowsHandler(FlowsHandler flowsHandler) {
+        this.flowsHandler = flowsHandler;
     }
 
     @PostConstruct
-    public void dynamicRouteByNacosListener() throws NacosException {
-        String dataId = "gateway-routes.json";
+    public void dynamicFlowByNacosListener() throws NacosException {
+        String dataId = "gateway-flow.json";
         String group = myNacosProperties.getGroup();
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, myNacosProperties.getServerAddr());
         properties.put(PropertyKeyConst.NAMESPACE, myNacosProperties.getNamespace());
         properties.put(PropertyKeyConst.USERNAME, myNacosProperties.getUsername());
         properties.put(PropertyKeyConst.PASSWORD, myNacosProperties.getPassword());
-        log.debug("dynamicRouteByNacosListener nacos {}", properties);
+        log.debug("dynamicFlowByNacosListener nacos {}", properties);
         ConfigService configService = NacosFactory.createConfigService(properties);
         // 添加监听，nacos上的配置变更后会执行
         configService.addListener(dataId, group, new Listener() {
             @Override
             public void receiveConfigInfo(String configInfo) {
-                // 解析和处理都交给RouteOperator完成
-                routesHandler.refreshAll(configInfo);
+                flowsHandler.refreshAll(configInfo);
             }
 
             @Override
@@ -67,7 +66,7 @@ public class RoutesConfigListener {
         String initConfig = configService.getConfig(dataId, group, 5000);
 
         // 立即更新
-        routesHandler.refreshAll(initConfig);
+        flowsHandler.refreshAll(initConfig);
     }
 
 }

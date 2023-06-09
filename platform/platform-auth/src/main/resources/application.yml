@@ -28,7 +28,6 @@ spring:
       - nacos:global-configuration.yaml?refresh=true
       - nacos:tomcat.yaml
       - nacos:openfeign.yaml
-      - nacos:sentinel.yaml
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
       - nacos:jasypt.yaml

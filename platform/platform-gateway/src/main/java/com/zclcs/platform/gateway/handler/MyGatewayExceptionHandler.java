@@ -1,8 +1,14 @@
 package com.zclcs.platform.gateway.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityException;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowException;
+import com.alibaba.csp.sentinel.slots.system.SystemBlockException;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -61,8 +67,6 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
 
     /**
      * 参考AbstractErrorWebExceptionHandler
-     *
-     * @param viewResolvers
      */
     public void setViewResolvers(List<ViewResolver> viewResolvers) {
         this.viewResolvers = viewResolvers;
@@ -70,8 +74,6 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
 
     /**
      * 参考AbstractErrorWebExceptionHandler
-     *
-     * @param messageWriters
      */
     public void setMessageWriters(List<HttpMessageWriter<?>> messageWriters) {
         Assert.notNull(messageWriters, "'messageWriters' must not be null");
@@ -79,15 +81,15 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
     }
 
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange, Throwable error) {
+    public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable error) {
         /**
          * 按照异常类型进行处理
          */
-        HttpStatus httpStatus = null;
+        HttpStatus httpStatus;
         ServerHttpRequest request = exchange.getRequest();
         log.error(
                 "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
-                request.getPath(), request.getMethod(), error.getMessage()
+                request.getPath(), request.getMethod(), error.getMessage(), error
         );
         String errorMessage;
         if (error instanceof NotFoundException) {
@@ -98,6 +100,9 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (StrUtil.containsIgnoreCase(error.getMessage(), "connection refused")) {
             errorMessage = "目标服务拒绝连接";
             httpStatus = HttpStatus.NOT_FOUND;
+        } else if (StrUtil.containsIgnoreCase(error.getMessage(), "Response took longer than timeout")) {
+            errorMessage = "接口请求超时";
+            httpStatus = HttpStatus.GATEWAY_TIMEOUT;
         } else if (error instanceof TimeoutException) {
             errorMessage = "访问服务超时";
             httpStatus = HttpStatus.REQUEST_TIMEOUT;
@@ -108,20 +113,24 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (error instanceof ValidateCodeException) {
             errorMessage = error.getMessage();
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-//        else if (error instanceof FlowException) {
-//            errorMessage = "接口限流";
-//        } else if (error instanceof DegradeException) {
-//            errorMessage = "服务降级";
-//        } else if (error instanceof ParamFlowException) {
-//            errorMessage = "热点参数限流";
-//        } else if (error instanceof SystemBlockException) {
-//            errorMessage = "触发系统保护规则";
-//        } else if (error instanceof AuthorityException) {
-//            errorMessage = "授权规则不通过";
-//        }
-        else {
+        } else if (error instanceof FlowException) {
+            errorMessage = "访问频繁";
+            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+        } else if (error instanceof DegradeException) {
+            errorMessage = "服务降级";
+            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+        } else if (error instanceof ParamFlowException) {
+            errorMessage = "访问频繁";
+            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+        } else if (error instanceof SystemBlockException) {
+            errorMessage = "触发系统保护规则";
+            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+        } else if (error instanceof AuthorityException) {
+            errorMessage = "授权规则不通过";
+            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+        } else {
             errorMessage = "网关转发异常";
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         // 封装响应体,此body可修改为自己的jsonBody
         Map<String, Object> result = new HashMap<>(2, 1);
@@ -144,9 +153,6 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
 
     /**
      * 参考DefaultErrorWebExceptionHandler
-     *
-     * @param request
-     * @return
      */
     protected Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
         Map<String, Object> result = exceptionHandlerResult.get();
@@ -157,10 +163,6 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
 
     /**
      * 参考AbstractErrorWebExceptionHandler
-     *
-     * @param exchange
-     * @param response
-     * @return
      */
     private Mono<? extends Void> write(ServerWebExchange exchange,
                                        ServerResponse response) {
@@ -175,69 +177,14 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
     private class ResponseContext implements ServerResponse.Context {
 
         @Override
-        public List<HttpMessageWriter<?>> messageWriters() {
+        public @NotNull List<HttpMessageWriter<?>> messageWriters() {
             return MyGatewayExceptionHandler.this.messageWriters;
         }
 
         @Override
-        public List<ViewResolver> viewResolvers() {
+        public @NotNull List<ViewResolver> viewResolvers() {
             return MyGatewayExceptionHandler.this.viewResolvers;
         }
 
     }
-
-//    /**
-//     * 异常处理，定义返回报文格式
-//     */
-//    @Override
-//    protected Map<String, Object> getErrorAttributes(ServerRequest webRequest, ErrorAttributeOptions options) {
-//        Throwable error = super.getError(webRequest);
-//        log.error(
-//                "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
-//                webRequest.path(), webRequest.method(), error.getMessage()
-//        );
-//        String errorMessage;
-//        if (error instanceof NotFoundException) {
-//            String serverId = StrUtil.subAfter(error.getMessage(), "Unable to find instance for ", true);
-//            serverId = StrUtil.replace(serverId, "\"", StrUtil.EMPTY);
-//            errorMessage = String.format("无法找到%s服务", serverId);
-//        } else if (StrUtil.containsIgnoreCase(error.getMessage(), "connection refused")) {
-//            errorMessage = "目标服务拒绝连接";
-//        } else if (error instanceof TimeoutException) {
-//            errorMessage = "访问服务超时";
-//        } else if (error instanceof ResponseStatusException
-//                && StrUtil.containsIgnoreCase(error.getMessage(), HttpStatus.NOT_FOUND.toString())) {
-//            errorMessage = "未找到该资源";
-//        } else if (error instanceof ValidateCodeException) {
-//            errorMessage = error.getMessage();
-//        }
-////        else if (error instanceof FlowException) {
-////            errorMessage = "接口限流";
-////        } else if (error instanceof DegradeException) {
-////            errorMessage = "服务降级";
-////        } else if (error instanceof ParamFlowException) {
-////            errorMessage = "热点参数限流";
-////        } else if (error instanceof SystemBlockException) {
-////            errorMessage = "触发系统保护规则";
-////        } else if (error instanceof AuthorityException) {
-////            errorMessage = "授权规则不通过";
-////        }
-//        else {
-//            errorMessage = "网关转发异常";
-//        }
-//        Map<String, Object> errorAttributes = new HashMap<>(3);
-//        errorAttributes.put("msg", errorMessage);
-//        return errorAttributes;
-//    }
-//
-//    @Override
-//    @SuppressWarnings("all")
-//    protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-//        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
-//    }
-//
-//    @Override
-//    protected int getHttpStatus(Map<String, Object> errorAttributes) {
-//        return HttpStatus.INTERNAL_SERVER_ERROR.value();
-//    }
 }

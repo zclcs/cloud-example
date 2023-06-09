@@ -39,5 +39,6 @@ dependencies {
         api "org.redisson:redisson-spring-boot-starter:$redissonVersion"
         api "com.xuxueli:xxl-job-core:$xxlJobVersion"
         api "org.codehaus.janino:janino:$janinoVersion"
+        api "com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:$sentinelVersion"
     }
 }

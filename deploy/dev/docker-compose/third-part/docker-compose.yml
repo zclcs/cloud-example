@@ -105,6 +105,7 @@ services:
     volumes:
       - ./rabbitmq/data:/var/lib/rabbitmq
       - ./rabbitmq/conf:/etc/rabbitmq
+      - ./rabbitmq/log:/var/log/rabbitmq
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
