@@ -48,7 +48,7 @@ public class MyRabbitMqProperties {
         /**
          * 创建交换机、路由key的名称是否根据队列名称来
          */
-        private Boolean nameBaseOnQueueName;
+        private Boolean nameBaseOnQueueName = false;
 
         /**
          * 直通队列名称
@@ -111,7 +111,7 @@ public class MyRabbitMqProperties {
         /**
          * 创建交换机、路由key的名称是否根据队列名称来
          */
-        private Boolean nameBaseOnQueueName;
+        private Boolean nameBaseOnQueueName = false;
 
         /**
          * 主题队列名称
@@ -160,7 +160,7 @@ public class MyRabbitMqProperties {
         /**
          * 创建交换机、路由key的名称是否根据队列名称来
          */
-        private Boolean nameBaseOnQueueName;
+        private Boolean nameBaseOnQueueName = false;
 
         /**
          * 延迟队列交换机名称

@@ -47,7 +47,7 @@ public class RabbitKeyUtil {
 
     public String getTopicExchangeName(MyRabbitMqProperties.TopicQueue topicQueue) {
         if (topicQueue.getNameBaseOnQueueName()) {
-            return getExchangeName(topicQueue.getQueueName(), ExchangeType.FANOUT);
+            return getExchangeName(topicQueue.getQueueName(), ExchangeType.TOPIC);
         } else {
             return topicQueue.getExchangeName();
         }
@@ -63,7 +63,7 @@ public class RabbitKeyUtil {
 
     public String getTopicDlxExchangeName(MyRabbitMqProperties.TopicQueue topicQueue) {
         if (topicQueue.getNameBaseOnQueueName()) {
-            return getDlxExchangeName(topicQueue.getQueueName(), ExchangeType.FANOUT);
+            return getDlxExchangeName(topicQueue.getQueueName(), ExchangeType.DIRECT);
         } else {
             return topicQueue.getDlxExchangeName();
         }

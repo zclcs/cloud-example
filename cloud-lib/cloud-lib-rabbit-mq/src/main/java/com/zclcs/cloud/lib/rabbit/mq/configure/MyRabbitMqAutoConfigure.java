@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.rabbit.mq.configure;
 
+import com.zclcs.cloud.lib.core.enums.ExchangeType;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = directQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getDirectDlxExchangeName(directQueue);
             String dlxRouteKey = RabbitKeyUtil.getDirectDlxRouteKey(directQueue);
-            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx(), directQueue.getTtl());
+            definition(ExchangeType.DIRECT, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx(), directQueue.getTtl());
         }
 
         Map<String, MyRabbitMqProperties.FanoutQueue> fanoutQueues = Optional.ofNullable(myRabbitMqProperties.getFanoutQueues()).orElse(new HashMap<>());
@@ -91,7 +92,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = topicQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getTopicDlxExchangeName(topicQueue);
             String dlxRouteKey = RabbitKeyUtil.getTopicDlxRouteKey(topicQueue);
-            definition(queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx(), topicQueue.getTtl());
+            definition(ExchangeType.TOPIC, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx(), topicQueue.getTtl());
         }
 
         Map<String, MyRabbitMqProperties.DelayedQueue> delayedQueues = Optional.ofNullable(myRabbitMqProperties.getDelayedQueues()).orElse(new HashMap<>());
@@ -108,19 +109,11 @@ public class MyRabbitMqAutoConfigure {
         }
     }
 
-    private void definition(String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl) {
+    private void definition(ExchangeType exchangeType, String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl) {
         QueueBuilder durable = QueueBuilder.durable(queueName);
-        Queue queue;
         if (ttl != 0) {
-            queue = durable.ttl(ttl).build();
-        } else {
-            queue = durable.build();
+            durable.ttl(ttl);
         }
-        Exchange exchange = ExchangeBuilder.directExchange(exchangeName).build();
-        amqpAdmin.declareQueue(queue);
-        amqpAdmin.declareExchange(exchange);
-        BindingBuilder.GenericArgumentsConfigurer with = BindingBuilder.bind(queue).to(exchange).with(routeKey);
-        Binding normal;
         if (initDlx) {
             Queue dlxQueue = QueueBuilder.durable(dlxQueueName).build();
             Exchange dlxExchange = ExchangeBuilder.directExchange(dlxExchangeName).build();
@@ -128,10 +121,19 @@ public class MyRabbitMqAutoConfigure {
             amqpAdmin.declareQueue(dlxQueue);
             amqpAdmin.declareExchange(dlxExchange);
             amqpAdmin.declareBinding(dlx);
-            normal = with.and(dlxArgs(dlxExchangeName, dlxRouteKey));
-        } else {
-            normal = with.noargs();
+            durable.deadLetterExchange(dlxExchangeName);
+            durable.deadLetterRoutingKey(dlxRouteKey);
         }
+        Exchange exchange;
+        if (exchangeType.getSubPrefix().equals(ExchangeType.DIRECT.getSubPrefix())) {
+            exchange = ExchangeBuilder.directExchange(exchangeName).build();
+        } else {
+            exchange = ExchangeBuilder.topicExchange(exchangeName).build();
+        }
+        amqpAdmin.declareExchange(exchange);
+        Queue queue = durable.build();
+        amqpAdmin.declareQueue(queue);
+        Binding normal = BindingBuilder.bind(queue).to(exchange).with(routeKey).noargs();
         amqpAdmin.declareBinding(normal);
     }
 
