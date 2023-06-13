@@ -31,7 +31,7 @@ public class NacosConfigVo {
     private Long pagesAvailable;
 
     @Schema(description = "数据")
-    private List<Config> pageItems;
+    private List<ConfigVo> pageItems;
 
     @Data
     @AllArgsConstructor
@@ -39,8 +39,8 @@ public class NacosConfigVo {
     @Builder
     @EqualsAndHashCode(callSuper = false)
     @Accessors(chain = true)
-    @Schema(title = "Config对象", description = "NacosConfig")
-    public static class Config {
+    @Schema(title = "ConfigVo对象", description = "NacosConfig")
+    public static class ConfigVo {
         @Schema(description = "id")
         private Long id;
         @Schema(description = "dataId")
@@ -59,5 +59,51 @@ public class NacosConfigVo {
         private String appName;
         @Schema(description = "type")
         private String type;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @EqualsAndHashCode(callSuper = false)
+    @Accessors(chain = true)
+    @Schema(title = "ConfigDetailVo对象", description = "NacosConfig")
+    public static class ConfigDetailVo {
+        @Schema(description = "id")
+        private Long id;
+        @Schema(description = "dataId")
+        private String dataId;
+        @Schema(description = "group")
+        private String group;
+        @Schema(description = "内容")
+        private String content;
+        @Schema(description = "md5")
+        private String md5;
+        @Schema(description = "encryptedDataKey")
+        private String encryptedDataKey;
+        @Schema(description = "tenant")
+        private String tenant;
+        @Schema(description = "appName")
+        private String appName;
+        @Schema(description = "type")
+        private String type;
+        @Schema(description = "创建时间")
+        private Long createTime;
+        @Schema(description = "修改时间")
+        private Long modifyTime;
+        @Schema(description = "创建用户")
+        private String createUser;
+        @Schema(description = "创建IP")
+        private String createIp;
+        @Schema(description = "desc")
+        private String desc;
+        @Schema(description = "use")
+        private String use;
+        @Schema(description = "effect")
+        private String effect;
+        @Schema(description = "schema")
+        private String schema;
+        @Schema(description = "configTags")
+        private String configTags;
     }
 }

@@ -97,4 +97,6 @@ public interface CommonCore {
     String SUCCESS_MSG = "调用成功";
 
     String HTTP = "http://";
+
+    String BOOLEAN_TRUE = "true";
 }

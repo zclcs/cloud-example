@@ -137,7 +137,7 @@ call insert_or_update(database(), 'config_info',
     `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (
     'gateway-flow.json', 'DEFAULT_GROUP',
     '[\n    {\n        \"resource\": \"platform-system\",\n        \"resourceMode\": 0,\n        \"grade\": 1,\n        \"count\": 100,\n        \"intervalSec\": 1,\n        \"controlBehavior\": 0,\n        \"burst\": 0,\n        \"maxQueueingTimeoutMs\": 500\n    }\n]',
-    '8e1b025eefc38e554825c2c2117da4d1', now(), now(), NULL, '127.0.0.1', '', '{{NACOS_NAMESPACE}}', '网关限流配置', NULL, NULL, 'yaml', NULL, '')",
+    '8e1b025eefc38e554825c2c2117da4d1', now(), now(), NULL, '127.0.0.1', '', '{{NACOS_NAMESPACE}}', '网关限流配置', NULL, NULL, 'json', NULL, '')",
                       "SET `group_id` = 'DEFAULT_GROUP',
     `content` = '[\n    {\n        \"resource\": \"platform-system\",\n        \"resourceMode\": 0,\n        \"grade\": 1,\n        \"count\": 100,\n        \"intervalSec\": 1,\n        \"controlBehavior\": 0,\n        \"burst\": 0,\n        \"maxQueueingTimeoutMs\": 500\n    }\n]',
     `md5` = '8e1b025eefc38e554825c2c2117da4d1', `gmt_modified` = now(), `src_user` = NULL, `src_ip` = '127.0.0.1', `app_name` = '',
