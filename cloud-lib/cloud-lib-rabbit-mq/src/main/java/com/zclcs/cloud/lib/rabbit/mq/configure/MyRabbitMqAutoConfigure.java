@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.rabbit.mq.configure;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.enums.ExchangeType;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
@@ -55,7 +56,7 @@ public class MyRabbitMqAutoConfigure {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) ->
-                log.info("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
+                log.debug("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
         rabbitTemplate.setReturnsCallback((returned) ->
                 log.error("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", returned.getExchange(), returned.getRoutingKey(), returned.getReplyCode(), returned.getReplyText(), returned.getMessage()));
         return rabbitTemplate;
@@ -71,7 +72,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = directQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getDirectDlxExchangeName(directQueue);
             String dlxRouteKey = RabbitKeyUtil.getDirectDlxRouteKey(directQueue);
-            definition(ExchangeType.DIRECT, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx(), directQueue.getTtl());
+            definition(ExchangeType.DIRECT, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, directQueue.getInitDlx(), directQueue.getTtl(), null);
         }
 
         Map<String, MyRabbitMqProperties.FanoutQueue> fanoutQueues = Optional.ofNullable(myRabbitMqProperties.getFanoutQueues()).orElse(new HashMap<>());
@@ -92,7 +93,7 @@ public class MyRabbitMqAutoConfigure {
             String dlxQueueName = topicQueue.getDlxQueueName();
             String dlxExchangeName = RabbitKeyUtil.getTopicDlxExchangeName(topicQueue);
             String dlxRouteKey = RabbitKeyUtil.getTopicDlxRouteKey(topicQueue);
-            definition(ExchangeType.TOPIC, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx(), topicQueue.getTtl());
+            definition(ExchangeType.TOPIC, queueName, exchangeName, routeKey, dlxQueueName, dlxExchangeName, dlxRouteKey, topicQueue.getInitDlx(), topicQueue.getTtl(), topicQueue.getDistribution());
         }
 
         Map<String, MyRabbitMqProperties.DelayedQueue> delayedQueues = Optional.ofNullable(myRabbitMqProperties.getDelayedQueues()).orElse(new HashMap<>());
@@ -109,7 +110,7 @@ public class MyRabbitMqAutoConfigure {
         }
     }
 
-    private void definition(ExchangeType exchangeType, String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl) {
+    private void definition(ExchangeType exchangeType, String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl, Map<String, MyRabbitMqProperties.TopicQueue> distributionTopicQueues) {
         QueueBuilder durable = QueueBuilder.durable(queueName);
         if (ttl != 0) {
             durable.ttl(ttl);
@@ -135,22 +136,15 @@ public class MyRabbitMqAutoConfigure {
         amqpAdmin.declareQueue(queue);
         Binding normal = BindingBuilder.bind(queue).to(exchange).with(routeKey).noargs();
         amqpAdmin.declareBinding(normal);
-    }
-
-    /**
-     * 死信队列设置
-     *
-     * @param dlxExchangeName 死信队列交换机
-     * @param dlxRoutingKey   死信队列路由key
-     * @return 队列设置
-     */
-    private Map<String, Object> dlxArgs(String dlxExchangeName, String dlxRoutingKey) {
-        Map<String, Object> map = new HashMap<>();
-        // 绑定该队列到死信交换机
-        map.put("x-dead-letter-exchange", dlxExchangeName);
-        // 绑定该队列到死信路由key
-        map.put("x-dead-letter-routing-key", dlxRoutingKey);
-        return map;
+        if (exchangeType.getSubPrefix().equals(ExchangeType.TOPIC.getSubPrefix()) && CollectionUtil.isNotEmpty(distributionTopicQueues)) {
+            for (MyRabbitMqProperties.TopicQueue distributionTopic : distributionTopicQueues.values()) {
+                String distributionQueueName = distributionTopic.getQueueName();
+                String distributionDlxQueueName = distributionTopic.getDlxQueueName();
+                String distributionDlxExchangeName = RabbitKeyUtil.getTopicDlxExchangeName(distributionTopic);
+                String distributionDlxRouteKey = RabbitKeyUtil.getTopicDlxRouteKey(distributionTopic);
+                definition(ExchangeType.TOPIC, distributionQueueName, exchangeName, routeKey, distributionDlxQueueName, distributionDlxExchangeName, distributionDlxRouteKey, distributionTopic.getInitDlx(), distributionTopic.getTtl(), distributionTopic.getDistribution());
+            }
+        }
     }
 
     /**

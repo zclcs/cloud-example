@@ -152,6 +152,11 @@ public class MyRabbitMqProperties {
          * 消息过期时间(毫秒)
          */
         private Integer ttl = 0;
+
+        /**
+         * 需要分发的队列集合
+         */
+        private Map<String, TopicQueue> distribution;
     }
 
     @Data
