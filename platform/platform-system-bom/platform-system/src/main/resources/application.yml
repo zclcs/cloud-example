@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: platform-system
+
   cloud:
     nacos:
       config:
@@ -18,6 +19,7 @@ spring:
         group: DEFAULT_GROUP
         username: ${spring.cloud.nacos.config.username}
         password: ${spring.cloud.nacos.config.password}
+
   config:
     import:
       - nacos:global-configuration.yaml?refresh=true
@@ -50,6 +52,12 @@ spring:
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
 mybatis-plus:
   type-aliases-package: com.zclcs.platform.system.api.entity
   mapper-locations: classpath:com/zclcs/platform/system/biz/mapper/*.xml
@@ -65,3 +73,4 @@ security:
     ignore:
       urls:
         - /v3/api-docs
+        - /actuator/dynamic-tp
