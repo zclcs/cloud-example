@@ -20,3 +20,10 @@ spring:
     nacos:
       config:
         namespace: ${NACOS_NAMESPACE:dev}
+
+my:
+  third:
+    part:
+      db:
+        merge:
+          enable: true

@@ -113,21 +113,6 @@ public class GatewayConfiguration {
         return new ImageCodeHandler(redisService, myValidateCodeProperties);
     }
 
-    @Bean(CommonCore.ASYNC_POOL)
-    public ThreadPoolTaskExecutor asyncThreadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(20);
-        executor.setQueueCapacity(100);
-        executor.setKeepAliveSeconds(30);
-        executor.setThreadNamePrefix("My-Gateway-Async-Thread");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(60);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.initialize();
-        return executor;
-    }
-
     @Bean
     public RoutesHandler routesHandler(ObjectMapper objectMapper,
                                        RouteDefinitionWriter routeDefinitionWriter) {
@@ -152,6 +137,21 @@ public class GatewayConfiguration {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean(CommonCore.ASYNC_POOL)
+    public ThreadPoolTaskExecutor asyncThreadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(100);
+        executor.setKeepAliveSeconds(30);
+        executor.setThreadNamePrefix("My-Gateway-Async-Thread");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.initialize();
+        return executor;
     }
 
 }

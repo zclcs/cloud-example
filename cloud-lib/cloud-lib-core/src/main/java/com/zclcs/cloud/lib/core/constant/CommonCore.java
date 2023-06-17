@@ -73,6 +73,11 @@ public interface CommonCore {
     String ASYNC_POOL = "MyAsyncThreadPool";
 
     /**
+     * 异步线程池名称
+     */
+    String NACOS_CONFIG = "MyNacosConfigThreadPool";
+
+    /**
      * 注释中的字典信息
      */
     String DICT_REMARK = "@@";
@@ -86,10 +91,6 @@ public interface CommonCore {
      * 字典是否是array
      */
     String DICT_TREE = "tree";
-
-    String NACOS_NAMESPACE = "{{NACOS_NAMESPACE}}";
-
-    String SQL_TEMP_PATH = "/sql_tmp/";
 
     /**
      * 调用成功消息

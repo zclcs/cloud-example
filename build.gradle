@@ -50,7 +50,8 @@ ext {
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"),
             project(":test:test-test-bom:test-test"),
-            project(":third-part-database-sync"))
+            project(":third-part-database-sync"),
+            project(":third-part-config-sync"))
     nativePackage = Set.of(project(":third-part-database-sync"))
     commons = (subprojects - bom)
 }
@@ -100,7 +101,7 @@ configure(commons) {
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform("com.github.xiaoymin:knife4j-dependencies:$knife4jVersion")
         management platform(project(":cloud-bom"))
-        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
+//        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"

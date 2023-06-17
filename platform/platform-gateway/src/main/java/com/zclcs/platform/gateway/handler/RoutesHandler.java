@@ -47,11 +47,11 @@ public class RoutesHandler {
      * @param routeDefinitions 路由定义
      */
     private void add(List<RouteDefinition> routeDefinitions) {
-
         try {
             routeDefinitions.forEach(routeDefinition -> {
                 routeDefinitionWriter.save(Mono.just(routeDefinition)).subscribe();
                 ROUTE_LIST.add(routeDefinition.getId());
+                log.debug("路由已刷新 {}", routeDefinition.getId());
             });
         } catch (Exception exception) {
             log.error("add route is error", exception);

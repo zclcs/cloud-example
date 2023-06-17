@@ -1,4 +1,4 @@
-SET NAMES utf8;//
+SET NAMES utf8;
 
 CREATE TABLE IF NOT EXISTS `config_info`
 (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `config_info`
     UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`, `group_id`, `tenant_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='config_info';//
+  COLLATE = utf8_bin COMMENT ='config_info';
 
 CREATE TABLE IF NOT EXISTS `config_info_aggr`
 (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `config_info_aggr`
     UNIQUE KEY `uk_configinfoaggr_datagrouptenantdatum` (`data_id`, `group_id`, `tenant_id`, `datum_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='增加租户字段';//
+  COLLATE = utf8_bin COMMENT ='增加租户字段';
 
 CREATE TABLE IF NOT EXISTS `config_info_beta`
 (
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `config_info_beta`
     UNIQUE KEY `uk_configinfobeta_datagrouptenant` (`data_id`, `group_id`, `tenant_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='config_info_beta';//
+  COLLATE = utf8_bin COMMENT ='config_info_beta';
 
 CREATE TABLE IF NOT EXISTS `config_info_tag`
 (
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `config_info_tag`
     UNIQUE KEY `uk_configinfotag_datagrouptenanttag` (`data_id`, `group_id`, `tenant_id`, `tag_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='config_info_tag';//
+  COLLATE = utf8_bin COMMENT ='config_info_tag';
 
 CREATE TABLE IF NOT EXISTS `config_tags_relation`
 (
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `config_tags_relation`
     KEY `idx_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='config_tag_relation';//
+  COLLATE = utf8_bin COMMENT ='config_tag_relation';
 
 CREATE TABLE IF NOT EXISTS `group_capacity`
 (
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `group_capacity`
     UNIQUE KEY `uk_group_id` (`group_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='集群、各Group容量信息表';//
+  COLLATE = utf8_bin COMMENT ='集群、各Group容量信息表';
 
 CREATE TABLE IF NOT EXISTS `his_config_info`
 (
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `his_config_info`
     KEY `idx_did` (`data_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='多租户改造';//
+  COLLATE = utf8_bin COMMENT ='多租户改造';
 
 CREATE TABLE IF NOT EXISTS `tenant_capacity`
 (
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `tenant_capacity`
     UNIQUE KEY `uk_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='租户容量信息表';//
+  COLLATE = utf8_bin COMMENT ='租户容量信息表';
 
 CREATE TABLE IF NOT EXISTS `tenant_info`
 (
@@ -173,21 +173,21 @@ CREATE TABLE IF NOT EXISTS `tenant_info`
     KEY `idx_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
-  COLLATE = utf8_bin COMMENT ='tenant_info';//
+  COLLATE = utf8_bin COMMENT ='tenant_info';
 
 CREATE TABLE IF NOT EXISTS `users`
 (
     `username` varchar(50)  NOT NULL PRIMARY KEY,
     `password` varchar(500) NOT NULL,
     `enabled`  boolean      NOT NULL
-);//
+);
 
 CREATE TABLE IF NOT EXISTS `roles`
 (
     `username` varchar(50) NOT NULL,
     `role`     varchar(50) NOT NULL,
     UNIQUE INDEX `idx_user_role` (`username` ASC, `role` ASC) USING BTREE
-);//
+);
 
 CREATE TABLE IF NOT EXISTS `permissions`
 (
@@ -195,4 +195,4 @@ CREATE TABLE IF NOT EXISTS `permissions`
     `resource` varchar(255) NOT NULL,
     `action`   varchar(8)   NOT NULL,
     UNIQUE INDEX `uk_role_permission` (`role`, `resource`, `action`) USING BTREE
-);//
+);

@@ -1,1 +1,2 @@
-com.zclcs.common.db.merge.starter.configure.MyDbMergeConfigure
+com.zclcs.common.db.merge.starter.configure.MyDbMergeAutoConfigure
+com.zclcs.common.db.merge.starter.configure.MyThirdPartDbMergeAutoConfigure

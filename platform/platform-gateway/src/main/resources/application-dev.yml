@@ -2,7 +2,3 @@ gateway:
   encode-key: 'eXTqsEKIPRsksJSK'
   ignore-clients:
     - swagger
-
-logging:
-  level:
-    com.zclcs: debug

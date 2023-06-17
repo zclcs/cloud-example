@@ -1,6 +1,2 @@
 gateway:
   encode-key: 'eXTqsEKIPRsksJSK'
-
-logging:
-  level:
-    com.zclcs: info

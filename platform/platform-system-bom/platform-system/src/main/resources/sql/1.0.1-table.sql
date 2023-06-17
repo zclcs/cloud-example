@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `system_black_list`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '黑名单表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_block_log`
 (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `system_block_log`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '黑名单拦截日志表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_dept`
 (
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `system_dept`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '部门表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_dict_item`
 (
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `system_dict_item`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '字典项'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_log`
 (
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `system_log`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户操作日志表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_login_log`
 (
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `system_login_log`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '登录日志表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_menu`
 (
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `system_menu`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_oauth_client_details`
 (
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `system_oauth_client_details`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '终端信息表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_rate_limit_log`
 (
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `system_rate_limit_log`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '限流拦截日志表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_rate_limit_rule`
 (
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `system_rate_limit_rule`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '限流规则表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_role`
 (
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `system_role`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '角色表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_role_menu`
 (
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `system_role_menu`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '角色菜单关联表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_route_log`
 (
@@ -305,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `system_route_log`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '网关转发日志表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_user`
 (
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `system_user`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_user_data_permission`
 (
@@ -352,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `system_user_data_permission`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户数据权限关联表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_user_role`
 (
@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `system_user_role`
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色关联表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_minio_bucket`
 (
@@ -388,7 +388,7 @@ CREATE TABLE IF NOT EXISTS `system_minio_bucket`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci
   COMMENT = 'minio桶'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_minio_file`
 (
@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `system_minio_file`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci
   COMMENT = 'minio文件'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_generator_config`
 (
@@ -441,4 +441,4 @@ CREATE TABLE IF NOT EXISTS `system_generator_config`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成配置表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;

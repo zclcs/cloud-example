@@ -1,4 +1,4 @@
-SET NAMES utf8mb4;//
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_info`
 (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_info`
     `trigger_next_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '下次调度时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_log`
 (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_log`
     KEY `I_trigger_time` (`trigger_time`),
     KEY `I_handle_code` (`handle_code`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_log_report`
 (
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_log_report`
     PRIMARY KEY (`id`),
     UNIQUE KEY `i_trigger_day` (`trigger_day`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_logglue`
 (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_logglue`
     `update_time` datetime    DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_registry`
 (
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_registry`
     PRIMARY KEY (`id`),
     KEY `i_g_k_v` (`registry_group`, `registry_key`, `registry_value`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_group`
 (
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_group`
     `update_time`  datetime             DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_user`
 (
@@ -113,11 +113,11 @@ CREATE TABLE IF NOT EXISTS `xxl_job_user`
     PRIMARY KEY (`id`),
     UNIQUE KEY `i_username` (`username`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xxl_job_lock`
 (
     `lock_name` varchar(50) NOT NULL COMMENT '锁名称',
     PRIMARY KEY (`lock_name`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;//
+  DEFAULT CHARSET = utf8mb4;

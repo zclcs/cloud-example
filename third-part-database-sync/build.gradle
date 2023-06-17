@@ -4,19 +4,9 @@ bootJar {
     mainClass = "com.zclcs.ThirdPartDatabaseSyncApplication"
 }
 
-processResources {
-    copy {
-        from("../shared-resources/sql/1.0.0-procedure.sql")
-        into("/src/main/resources/sql/nacos")
-    }
-    copy {
-        from("../shared-resources/sql/1.0.0-procedure.sql")
-        into("/src/main/resources/sql/xxl-job")
-    }
-}
-
 dependencies {
     implementation project(":cloud-lib:cloud-lib-core")
+    implementation(project(":common:common-db-merge-starter"))
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation runtimeOnly("com.mysql:mysql-connector-j")
     implementation "org.springframework.boot:spring-boot-starter-web"

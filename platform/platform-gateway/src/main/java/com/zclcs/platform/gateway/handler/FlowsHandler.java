@@ -30,6 +30,9 @@ public class FlowsHandler {
     private void add(Set<GatewayFlowRule> rules) {
         try {
             GatewayRuleManager.loadRules(rules);
+            for (GatewayFlowRule gatewayFlowRule : rules) {
+                log.debug("网关限流配置已刷新 {}", objectMapper.writeValueAsBytes(gatewayFlowRule));
+            }
         } catch (Exception exception) {
             log.error("add flow has error", exception);
         }
@@ -57,6 +60,7 @@ public class FlowsHandler {
                 if (!validRule) {
                     throw new MyException("valid flow rule error");
                 }
+                log.debug("获取到的网关限流配置 {}", objectMapper.writeValueAsBytes(gatewayFlowRule));
             }
         } catch (Exception e) {
             log.error("get flow from nacos string error", e);

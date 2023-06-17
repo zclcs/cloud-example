@@ -30,6 +30,7 @@ spring:
       - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
       - nacos:minio.yaml
+      - nacos:db-merge.yaml
 
   aop:
     proxy-target-class: true

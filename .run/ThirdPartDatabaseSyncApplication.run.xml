@@ -1,8 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ThirdPartDatabaseSyncApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
-      <env name="MYSQL_SERVICE_HOST" value="192.168.33.10" />
-      <env name="MYSQL_SERVICE_PASSWORD" value="123456" />
+      <env name="DATASOURCE_HOST" value="192.168.33.10" />
+      <env name="DATASOURCE_PASSWORD" value="123456" />
+      <env name="NACOS_HOST" value="192.168.33.10" />
+      <env name="NACOS_NAMESPACE" value="dev" />
+      <env name="NACOS_PASSWORD" value="nacos" />
+      <env name="NACOS_PORT" value="8848" />
+      <env name="NACOS_USERNAME" value="nacos" />
       <env name="spring.profiles.active" value="local" />
     </envs>
     <module name="cloud-17.third-part-database-sync.main" />

@@ -15,7 +15,7 @@ dependencies {
     implementation(project(":platform:platform-system-bom:platform-system-cache"))
     implementation(project(":common:common-doc-starter"))
     implementation(project(":common:common-web-starter"))
-    implementation(project(":common:common-logging-starter"))
+    implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":cloud-lib:cloud-lib-security"))

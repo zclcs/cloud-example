@@ -13,7 +13,7 @@ public class P6spySqlFormatConfigure implements MessageFormattingStrategy {
     @Override
     public String formatMessage(int connectionId, String now, long elapsed, String category,
                                 String prepared, String sql, String url) {
-        return StringUtils.isNotBlank(sql) ? " 耗时：" + elapsed + " ms " + now +
+        return StringUtils.isNotBlank(sql) ? " 耗时：" + elapsed + " ms " + now + " " + category +
                 "\n SQL 语句：" + sql.replaceAll("[\\s]+", " ") + "\n" : "";
     }
 }

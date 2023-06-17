@@ -20,8 +20,10 @@ include 'cloud-lib:cloud-lib-aop'
 include 'cloud-lib:cloud-lib-security'
 include 'cloud-lib:cloud-lib-mybatis-plus'
 include 'cloud-lib:cloud-lib-rabbit-mq'
+include 'cloud-lib:cloud-lib-logging'
 
 include 'third-part-database-sync'
+include 'third-part-config-sync'
 
 include 'platform'
 include 'platform:platform-auth'

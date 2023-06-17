@@ -1,0 +1,12 @@
+apply plugin: "org.springframework.boot"
+
+bootJar {
+    mainClass = "com.zclcs.ThirdPartConfigSyncApplication"
+}
+
+dependencies {
+    implementation project(":cloud-lib:cloud-lib-core")
+    api "cn.hutool:hutool-http"
+    api "cn.hutool:hutool-json"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+}

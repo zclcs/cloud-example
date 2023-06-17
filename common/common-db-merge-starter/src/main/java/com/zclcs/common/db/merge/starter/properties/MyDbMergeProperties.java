@@ -11,15 +11,12 @@ public class MyDbMergeProperties {
     /**
      * 是否开启数据库脚本合并功能
      */
-    private Boolean enable = true;
+    private Boolean enable = false;
+
     /**
      * sql脚本
      */
     private String sql = "sql/";
-    /**
-     * 脚本分隔符
-     */
-    private String delimiter = "//";
 
     public Boolean getEnable() {
         return enable;
@@ -37,20 +34,11 @@ public class MyDbMergeProperties {
         this.sql = sql;
     }
 
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
     @Override
     public String toString() {
         return "MyDbMergeProperties{" +
                 "enable=" + enable +
                 ", sql='" + sql + '\'' +
-                ", delimiter='" + delimiter + '\'' +
                 '}';
     }
 }

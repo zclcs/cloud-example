@@ -117,6 +117,7 @@ public class NacosController {
     public BaseRsp<String> findNacosConfigDetail(@RequestBody @Validated(UpdateStrategy.class) NacosConfigVo.ConfigDetailVo configDetailVo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = BeanUtil.beanToMap(configDetailVo, false, false);
+        params.put("modifyTime", System.currentTimeMillis());
         try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint(String.format("/nacos/v1/cs/configs?accessToken=%s&username=%s", nacosToken, myNacosProperties.getUsername()))).form(params).execute()) {
             String body = execute.body();
             if (body.equals(CommonCore.BOOLEAN_TRUE)) {

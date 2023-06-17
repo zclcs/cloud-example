@@ -1,6 +1,2 @@
 platform-system:
   generate-sql: false
-
-logging:
-  level:
-    com.zclcs: debug

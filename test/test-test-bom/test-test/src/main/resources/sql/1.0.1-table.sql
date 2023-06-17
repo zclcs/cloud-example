@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `test_child_project`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '工程信息表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `test_company`
 (
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `test_company`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '企业信息表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `test_project`
 (
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `test_project`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '项目信息表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `test_project_company`
 (
@@ -152,4 +152,4 @@ CREATE TABLE IF NOT EXISTS `test_project_company`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '项目参建单位信息数据表'
-  ROW_FORMAT = DYNAMIC;//
+  ROW_FORMAT = DYNAMIC;

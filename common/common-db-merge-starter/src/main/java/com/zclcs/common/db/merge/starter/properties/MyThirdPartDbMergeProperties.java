@@ -1,29 +1,27 @@
-package com.zclcs.data.sync.properties;
+package com.zclcs.common.db.merge.starter.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author zclcs
  */
-@ConfigurationProperties(prefix = "my.data.sync")
-public class MyDataSyncProperties {
+@ConfigurationProperties(prefix = "my.third.part.db.merge")
+public class MyThirdPartDbMergeProperties {
 
     /**
      * 是否开启数据库脚本合并功能
      */
-    private Boolean enable = true;
+    private Boolean enable = false;
+
     /**
      * nacos脚本
      */
     private String nacosSql = "sql/nacos";
+
     /**
      * xxlJob脚本
      */
     private String xxlJobSql = "sql/xxl-job";
-    /**
-     * 脚本分隔符
-     */
-    private String delimiter = "//";
 
     public Boolean getEnable() {
         return enable;
@@ -49,21 +47,12 @@ public class MyDataSyncProperties {
         this.xxlJobSql = xxlJobSql;
     }
 
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
     @Override
     public String toString() {
-        return "MyDataSyncProperties{" +
+        return "MyDbMergeProperties{" +
                 "enable=" + enable +
                 ", nacosSql='" + nacosSql + '\'' +
                 ", xxlJobSql='" + xxlJobSql + '\'' +
-                ", delimiter='" + delimiter + '\'' +
                 '}';
     }
 }
