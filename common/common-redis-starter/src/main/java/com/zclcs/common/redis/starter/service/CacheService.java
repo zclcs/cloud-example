@@ -327,13 +327,10 @@ public abstract class CacheService<T> {
                         return result;
                     }
                     T cacheWithRedis = findCacheWithRedis(key);
-                    log.debug("Receive Data From Redis With Key {}", redisKey);
                     cache.put(redisKey, cacheWithRedis);
-                    log.debug("Load Data To Memory With Key {}", redisKey);
                     return cacheWithRedis;
                 }
             }
-            log.debug("Receive Data From Memory With Key {}", redisKey);
             return result;
         } else {
             return findCacheWithRedis(key);
