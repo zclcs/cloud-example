@@ -3,4 +3,5 @@ dependencies {
     api "org.redisson:redisson-spring-boot-starter"
     api "org.apache.commons:commons-pool2"
     api "cn.hutool:hutool-core"
+    api "com.github.ben-manes.caffeine:caffeine"
 }

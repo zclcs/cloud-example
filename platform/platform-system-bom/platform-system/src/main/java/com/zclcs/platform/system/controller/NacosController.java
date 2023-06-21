@@ -145,7 +145,7 @@ public class NacosController {
         params.put("groupNameParam", myNacosProperties.getGroup());
         params.put("accessToken", nacosToken);
         params.put("namespaceId", myNacosProperties.getNamespace());
-        try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint("/nacos/v1/ns/catalog/services")).form(params).execute()) {
+        try (HttpResponse execute = HttpUtil.createGet(getNacosEndPoint("/nacos/v1/ns/catalog/services")).form(params).execute()) {
             String body = execute.body();
             NacosServiceVo nacosServiceVo = objectMapper.readValue(body, NacosServiceVo.class);
             BasePage<NacosServiceVo.Service> nacosServiceBasePage = new BasePage<>();

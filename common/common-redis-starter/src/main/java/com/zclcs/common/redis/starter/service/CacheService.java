@@ -3,6 +3,8 @@ package com.zclcs.common.redis.starter.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zclcs.common.redis.starter.enums.CacheType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +12,9 @@ import org.redisson.api.RBloomFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author zclcs
@@ -19,11 +23,53 @@ import java.util.*;
 @Slf4j
 public abstract class CacheService<T> {
 
+    /**
+     * 存储前缀
+     */
     final String redisPrefix;
-    final CacheType cacheType;
+    /**
+     * 未hit到数据库数据时的存储类型
+     */
+    CacheType cacheType = CacheType.CACHE_NULL;
+    /**
+     * redis服务类
+     */
     RedisService redisService;
+    /**
+     * 布隆过滤器
+     */
     RBloomFilter<String> rBloomFilter;
-    long timeOut;
+    /**
+     * 缓存过期时间
+     */
+    long timeOut = 2L * 24L * 60L * 60L;
+    /**
+     * 是否启用缓存-内存
+     */
+    boolean withCache = true;
+    /**
+     * 缓存最大容量
+     */
+    int maximumSize = 500;
+    /**
+     * 缓存初始化容量
+     */
+    int initialCapacity = 50;
+    /**
+     * 有效期时长
+     */
+    Duration duration = Duration.ofSeconds(30);
+    /**
+     * 在有效期内同一个字典值未命中指定次数  将快速返回，不再重复请求获取数据字典信息。
+     * 例如：一个 userType 类型 值为 2 的字典，在 30 秒内超过 50 次找不到字典文本，那么在本次 30 秒的周期内将不再继续请求字典信息，而是直接返回一个 null 值。
+     * 特别是在使用 Redis 存储数据字典信息时，频繁未命中数据将会频繁进行网络IO，因此可能会增加单个接口返回数据的耗时（数据量大转换次数多时）
+     */
+    int missNum = 50;
+    /**
+     * 字典值缓存
+     */
+    Cache<String, T> cache;
+    Cache<String, AtomicInteger> missCache;
 
     /**
      * 构造方法
@@ -34,26 +80,142 @@ public abstract class CacheService<T> {
      */
     public CacheService(String redisPrefix) {
         this.redisPrefix = redisPrefix;
-        this.cacheType = CacheType.CACHE_NULL;
-        this.timeOut = 2L * 24L * 60L * 60L;
+        cache = buildCache(maximumSize, initialCapacity, duration);
+        missCache = buildCache(maximumSize, initialCapacity, duration);
     }
 
+    /**
+     * 构造方法
+     * 缓存类型: 缓存null对象
+     * 过期时间: 2天
+     *
+     * @param redisPrefix 缓存前缀
+     * @param withCache   是否使用内存缓存
+     */
+    public CacheService(String redisPrefix, boolean withCache) {
+        this.redisPrefix = redisPrefix;
+        this.withCache = withCache;
+        if (withCache) {
+            cache = buildCache(maximumSize, initialCapacity, duration);
+            missCache = buildCache(maximumSize, initialCapacity, duration);
+        }
+    }
+
+    /**
+     * 构造方法
+     * 缓存类型: 缓存null对象
+     * 过期时间: 2天
+     *
+     * @param redisPrefix 缓存前缀
+     * @param timeOut     过期时间
+     */
     public CacheService(String redisPrefix, long timeOut) {
         this(redisPrefix);
         this.timeOut = timeOut;
     }
 
-    public CacheService(String redisPrefix, RBloomFilter<String> rBloomFilter, long expectedInsertions, double falseProbability) {
-        this.redisPrefix = redisPrefix;
+    /**
+     * 构造方法
+     * 缓存类型: 缓存null对象
+     * 过期时间: 2天
+     *
+     * @param redisPrefix 缓存前缀
+     * @param withCache   是否使用内存缓存
+     * @param timeOut     过期时间
+     */
+    public CacheService(String redisPrefix, boolean withCache, long timeOut) {
+        this(redisPrefix, withCache);
+        this.timeOut = timeOut;
+    }
+
+    /**
+     * 构造方法
+     * 缓存类型: 使用布隆过滤器
+     *
+     * @param redisPrefix        缓存前缀
+     * @param rBloomFilter       布隆过滤器
+     * @param expectedInsertions 预期数量
+     * @param falseProbability   预期错误概率
+     */
+    public CacheService(String redisPrefix,
+                        RBloomFilter<String> rBloomFilter,
+                        long expectedInsertions,
+                        double falseProbability) {
+        this(redisPrefix);
         this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
         this.rBloomFilter = rBloomFilter;
         this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
-        this.timeOut = 2L * 24L * 60L * 60L;
     }
 
-    public CacheService(String redisPrefix, RBloomFilter<String> rBloomFilter, long timeOut, long expectedInsertions, double falseProbability) {
+    /**
+     * 构造方法
+     * 缓存类型: 使用布隆过滤器
+     *
+     * @param redisPrefix        缓存前缀
+     * @param withCache          是否使用内存缓存
+     * @param rBloomFilter       布隆过滤器
+     * @param expectedInsertions 预期数量
+     * @param falseProbability   预期错误概率
+     */
+    public CacheService(String redisPrefix,
+                        boolean withCache,
+                        RBloomFilter<String> rBloomFilter,
+                        long expectedInsertions,
+                        double falseProbability) {
+        this(redisPrefix, withCache);
+        this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
+        this.rBloomFilter = rBloomFilter;
+        this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
+    }
+
+    /**
+     * 构造方法
+     * 缓存类型: 使用布隆过滤器
+     *
+     * @param redisPrefix        缓存前缀
+     * @param rBloomFilter       布隆过滤器
+     * @param expectedInsertions 预期数量
+     * @param falseProbability   预期错误概率
+     * @param timeOut            过期时间
+     */
+    public CacheService(String redisPrefix,
+                        RBloomFilter<String> rBloomFilter,
+                        long expectedInsertions,
+                        double falseProbability,
+                        long timeOut) {
         this(redisPrefix, rBloomFilter, expectedInsertions, falseProbability);
         this.timeOut = timeOut;
+    }
+
+
+    /**
+     * 构造方法
+     * 缓存类型: 使用布隆过滤器
+     *
+     * @param redisPrefix        缓存前缀
+     * @param withCache          是否使用内存缓存
+     * @param rBloomFilter       布隆过滤器
+     * @param expectedInsertions 预期数量
+     * @param falseProbability   预期错误概率
+     * @param timeOut            过期时间
+     */
+    public CacheService(String redisPrefix,
+                        boolean withCache,
+                        RBloomFilter<String> rBloomFilter,
+                        long expectedInsertions,
+                        double falseProbability,
+                        long timeOut) {
+        this(redisPrefix, withCache, rBloomFilter, expectedInsertions, falseProbability);
+        this.timeOut = timeOut;
+    }
+
+    private <K1, V1> Cache<K1, V1> buildCache(int maximumSize, int initialCapacity, Duration duration) {
+        final Caffeine<Object, Object> builder = Caffeine.newBuilder();
+        builder
+                .maximumSize(maximumSize)
+                .initialCapacity(initialCapacity)
+                .expireAfterWrite(duration);
+        return builder.build();
     }
 
     @Autowired
@@ -155,6 +317,30 @@ public abstract class CacheService<T> {
      * @return 缓存对象
      */
     public T findCache(Object... key) {
+        if (withCache) {
+            String redisKey = String.format(redisPrefix, key);
+            T result = cache.getIfPresent(redisKey);
+            if (result == null) {
+                synchronized (this) {
+                    result = cache.getIfPresent(redisKey);
+                    if (result != null) {
+                        return result;
+                    }
+                    T cacheWithRedis = findCacheWithRedis(key);
+                    log.debug("Receive Data From Redis With Key {}", redisKey);
+                    cache.put(redisKey, cacheWithRedis);
+                    log.debug("Load Data To Memory With Key {}", redisKey);
+                    return cacheWithRedis;
+                }
+            }
+            log.debug("Receive Data From Memory With Key {}", redisKey);
+            return result;
+        } else {
+            return findCacheWithRedis(key);
+        }
+    }
+
+    private T findCacheWithRedis(Object... key) {
         String redisKey = String.format(redisPrefix, key);
         if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
             if (rBloomFilter.contains(redisKey)) {
