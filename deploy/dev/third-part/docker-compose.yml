@@ -1,29 +1,28 @@
 version: '3'
-# docker network create -d bridge cloud_net 部署前 创建网络群组
 services:
-  mysql:
-    image: mysql:5.7.35
-    container_name: ${NACOS_NAMESPACE}-mysql
-    network_mode: host
-    environment:
-      # 设置密码
-      MYSQL_ROOT_PASSWORD: ${DATASOURCE_PASSWORD}
-      # 设置时区
-      TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-    volumes:
-      #挂载 MySQL数据
-      - ./mysql/data:/var/lib/mysql
-      #挂载 MySQL日志
-      - ./mysql/log:/var/log/mysql
-      #挂载 MySQL配置文件
-      - ./mysql/conf:/etc/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
-      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: ${DOCKER_HEALTHCHECK_RETRIES}
-    env_file: .env
+  #  mysql:
+  #    image: mysql:5.7.35
+  #    container_name: ${NACOS_NAMESPACE}-mysql
+  #    network_mode: host
+  #    environment:
+  #      # 设置密码
+  #      MYSQL_ROOT_PASSWORD: ${DATASOURCE_PASSWORD}
+  #      # 设置时区
+  #      TZ: Asia/Shanghai
+  #      LANG: en_US.UTF-8
+  #    volumes:
+  #      #挂载 MySQL数据
+  #      - ./mysql/data:/var/lib/mysql
+  #      #挂载 MySQL日志
+  #      - ./mysql/log:/var/log/mysql
+  #      #挂载 MySQL配置文件
+  #      - ./mysql/conf:/etc/mysql
+  #    healthcheck:
+  #      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+  #      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+  #      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+  #      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+  #    env_file: .env
   redis:
     image: redis:6.0.8
     container_name: ${NACOS_NAMESPACE}-redis
@@ -175,9 +174,9 @@ services:
         reservations:
           memory: 128M
     env_file: .env
-    depends_on:
-      mysql:
-        condition: service_healthy
+  #    depends_on:
+  #      mysql:
+  #        condition: service_healthy
   third-part-config-sync:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/third-part-config-sync:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-third-part-config-sync

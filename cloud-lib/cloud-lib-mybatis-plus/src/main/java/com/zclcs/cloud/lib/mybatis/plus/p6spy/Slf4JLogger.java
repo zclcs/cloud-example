@@ -10,7 +10,7 @@ public class Slf4JLogger extends FormattedLogger {
     private Logger log;
 
     public Slf4JLogger() {
-        log = LoggerFactory.getLogger("p6spy");
+        log = LoggerFactory.getLogger("com.p6spy");
     }
 
     @Override

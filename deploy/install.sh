@@ -38,7 +38,7 @@ update_system(){ # {{{
 } # }}}
 
 install_common(){ # {{{
-    software_list=(yum-utils epel-release nagios nc perf bind-utils ShellCheck nfs-utils samba-client iputils trafshow)
+    software_list=(yum-utils epel-release nagios nc perf bind-utils ShellCheck nfs-utils samba-client iputils trafshow wget)
     for software in ${software_list[@]}
     do
         yum -y install ${software}
