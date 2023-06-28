@@ -1,7 +1,9 @@
 package com.zclcs.platform.system.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -9,7 +11,6 @@ import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.vo.RedisVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,12 +60,13 @@ public class RedisController {
         int pageNum = basePageAo.getPageNum();
         Set<String> keys = redisService.keys(key);
         List<String> pages = null;
-        if (keys != null) {
-            pages = keys.stream().skip((long) (pageNum - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(keys)) {
+            pages = new ArrayList<>(keys);
+            pages = pages.stream().sorted().skip((long) (pageNum - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
         }
         BasePage<RedisVo> basePage = new BasePage<>(pageNum, pageSize);
         List<RedisVo> redisVos = null;
-        if (pages != null) {
+        if (CollectionUtil.isNotEmpty(pages)) {
             redisVos = new ArrayList<>();
             for (String page : pages) {
                 RedisVo vo = new RedisVo();

@@ -5,7 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author 数据同步服务
+ * @author zclcs
+ * 数据同步服务
  */
 @SpringBootApplication
 public class ThirdPartDatabaseSyncApplication {
