@@ -55,7 +55,7 @@ public class DataBaseServiceImpl implements DataBaseService {
     @SneakyThrows
     @Override
     public DataBaseDataVo getData(String dataBaseType, String sql) {
-        if (!StrUtil.containsIgnoreCase(sql, CommonCore.SELECT)) {
+        if (!sql.matches("^(?i)(\\s*)(select)(\\s+)(((?!(insert|delete|update)).)+)$")) {
             throw new MyException("目前只支持查询");
         }
         if (!StrUtil.containsIgnoreCase(sql, CommonCore.COUNT)) {
