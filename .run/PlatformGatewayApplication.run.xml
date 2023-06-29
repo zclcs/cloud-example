@@ -26,6 +26,7 @@
       <env name="XXL_JOB_TOKEN" value="12382e1c-fafc-4cc8-bb04-d276fd1ca7de" />
     </envs>
     <module name="cloud-17.platform.platform-gateway.main" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.PlatformGatewayApplication" />
     <method v="2">
       <option name="Make" enabled="true" />

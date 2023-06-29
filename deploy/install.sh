@@ -197,7 +197,7 @@ bind-address                       = 0.0.0.0
 read_only                          = OFF
 transaction_isolation              = READ-COMMITTED
 open_files_limit                   = 65535
-max_connections        = 2000
+max_connections                    = 2000
 expire_logs_days                   = 10
 default-time_zone                  = '+8:00'
 ####### CACHES AND LIMITS #########
@@ -219,12 +219,12 @@ query_cache_size                   = 0
 query_cache_type                   = 0
 
 sort_buffer_size                   = 1M
-join_buffer_size        = 1M
-sort_buffer_size        = 1M
-read_rnd_buffer_size        = 2M
+join_buffer_size                   = 1M
+sort_buffer_size                   = 1M
+read_rnd_buffer_size               = 2M
 
-innodb_io_capacity            = 1000
-innodb_io_capacity_max       = 2000
+innodb_io_capacity                 = 1000
+innodb_io_capacity_max             = 2000
 
 max_allowed_packet                 = 1024M
 slave_max_allowed_packet           = 1024M

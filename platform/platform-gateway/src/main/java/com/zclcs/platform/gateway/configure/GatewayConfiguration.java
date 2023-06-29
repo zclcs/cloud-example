@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.filter.*;
-import com.zclcs.platform.gateway.handler.FlowsHandler;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
 import com.zclcs.platform.gateway.handler.MyGatewayExceptionHandler;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
@@ -118,11 +117,6 @@ public class GatewayConfiguration {
                                        RouteDefinitionWriter routeDefinitionWriter) {
         return new RoutesHandler(objectMapper,
                 routeDefinitionWriter);
-    }
-
-    @Bean
-    public FlowsHandler flowsHandler(ObjectMapper objectMapper) {
-        return new FlowsHandler(objectMapper);
     }
 
     @Profile({"dev", "test"})

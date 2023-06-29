@@ -37,8 +37,11 @@ spring:
 
     gateway:
       httpclient:
-        connect-timeout: 10000
+        connect-timeout: 200
         response-timeout: 10s
+        pool:
+          max-idle-time: 10s
+          eviction-interval: 30s
       loadbalancer:
         use404: true
       default-filters:
@@ -46,6 +49,50 @@ spring:
       discovery:
         locator:
           enabled: true
+
+    sentinel:
+      scg:
+        fallback:
+          response-body: "服务器忙"
+          mode: response
+      eager: false
+      filter:
+        enabled: false
+      datasource:
+        # 网关api分组
+        gw-api-group:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            namespace: ${spring.cloud.nacos.config.namespace}
+            groupId: ${spring.cloud.nacos.config.group}
+            username: ${spring.cloud.nacos.config.username}
+            password: ${spring.cloud.nacos.config.password}
+            dataId: ${spring.application.name}-api-group.json
+            data-type: json
+            rule-type: gw-api-group
+        # 网关流控规则
+        gw-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            namespace: ${spring.cloud.nacos.config.namespace}
+            groupId: ${spring.cloud.nacos.config.group}
+            username: ${spring.cloud.nacos.config.username}
+            password: ${spring.cloud.nacos.config.password}
+            dataId: ${spring.application.name}-flow-rule.json
+            data-type: json
+            rule-type: gw-flow
+        # 降级规则
+        degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            namespace: ${spring.cloud.nacos.config.namespace}
+            groupId: ${spring.cloud.nacos.config.group}
+            username: ${spring.cloud.nacos.config.username}
+            password: ${spring.cloud.nacos.config.password}
+            dataId: ${spring.application.name}-degrade-rule.json
+            data-type: json
+            rule-type: degrade
+
 
 # spring security 配置
 security:

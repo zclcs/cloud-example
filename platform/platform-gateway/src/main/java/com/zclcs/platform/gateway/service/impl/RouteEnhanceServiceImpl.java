@@ -71,13 +71,13 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
                 doBlackListCheck(forbid, blackList, originUri, requestMethod);
 
-                log.info("Blacklist verification completed - {}", stopwatch.stop());
+                log.debug("Blacklist verification completed - {}", stopwatch.stop());
                 if (forbid.get()) {
                     return GatewayUtil.makeWebFluxResponse(response, MediaType.APPLICATION_JSON_VALUE,
                             HttpStatus.NOT_ACCEPTABLE, RspUtil.message("黑名单限制，禁止访问"));
                 }
             } else {
-                log.info("Request IP not obtained, no blacklist check - {}", stopwatch.stop());
+                log.debug("Request IP not obtained, no blacklist check - {}", stopwatch.stop());
             }
         } catch (Exception e) {
             log.warn("Blacklist verification failed : {} - {}", e.getMessage(), stopwatch.stop());
@@ -104,13 +104,13 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                 if (o != null) {
                     RateLimitRule rule = (RateLimitRule) o;
                     Mono<Void> result = doRateLimitCheck(limit, rule, originUri, requestIp, requestMethod, response);
-                    log.info("Rate limit verification completed - {}", stopwatch.stop());
+                    log.debug("Rate limit verification completed - {}", stopwatch.stop());
                     if (result != null) {
                         return result;
                     }
                 }
             } else {
-                log.info("Request IP not obtained, no rate limit filter - {}", stopwatch.stop());
+                log.debug("Request IP not obtained, no rate limit filter - {}", stopwatch.stop());
             }
         } catch (Exception e) {
             log.warn("Current limit failure : {} - {}", e.getMessage(), stopwatch.stop());
