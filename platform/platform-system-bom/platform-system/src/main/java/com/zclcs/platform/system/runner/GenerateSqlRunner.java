@@ -321,12 +321,13 @@ public class GenerateSqlRunner implements ApplicationRunner {
 
     private void writeSql(String sql, String fileName) {
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
-        String finalPath = applicationHome.getDir().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\" + StrUtil.replace(myDbMergeProperties.getSql(), "/", "\\") + fileName;
-        ;
+        String finalPath = applicationHome.getDir().getParentFile().getParentFile()
+                .getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\"
+                + StrUtil.replace(myDbMergeProperties.getSql(), "/", "\\") + fileName;
         FileUtil.touch(finalPath);
         FileUtil.writeString(sql, finalPath, StandardCharsets.UTF_8);
     }
-
+ 
     private Object getValue(Object value) {
         if (value == null) {
             return "null";
