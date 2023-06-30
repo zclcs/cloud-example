@@ -5,6 +5,7 @@ bootJar {
 }
 
 dependencies {
+    implementation project(":common:common-logging-starter")
     implementation project(":cloud-lib:cloud-lib-core")
     api "cn.hutool:hutool-http"
     api "cn.hutool:hutool-json"

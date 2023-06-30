@@ -1,7 +1,7 @@
 apply plugin: "org.springframework.boot"
 
 bootJar {
-    mainClass = "com.zclcs.GatewayApplication"
+    mainClass = "com.zclcs.PlatformGatewayApplication"
 }
 
 processResources {

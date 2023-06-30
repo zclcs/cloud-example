@@ -1,4 +1,3 @@
 dependencies {
-    api "org.apache.skywalking:apm-toolkit-logback-1.x"
-    api "org.codehaus.janino:janino"
+    api "org.springframework.boot:spring-boot-starter-logging"
 }

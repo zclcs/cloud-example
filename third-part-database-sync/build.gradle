@@ -5,10 +5,10 @@ bootJar {
 }
 
 dependencies {
+    implementation project(":common:common-logging-starter")
     implementation project(":cloud-lib:cloud-lib-core")
     implementation(project(":common:common-db-merge-starter"))
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation runtimeOnly("com.mysql:mysql-connector-j")
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.apache.skywalking:apm-toolkit-logback-1.x"
 }

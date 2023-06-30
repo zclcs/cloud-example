@@ -1,5 +1,5 @@
 dependencies {
     api project(":cloud-lib:cloud-lib-core")
-    api "org.springframework.boot:spring-boot-starter-logging"
+    api project(":common:common-logging-starter")
     api "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 }
