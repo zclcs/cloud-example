@@ -14,13 +14,10 @@ import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -49,11 +46,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableConfigurationProperties({GatewayConfigProperties.class, MyValidateCodeProperties.class})
 @RequiredArgsConstructor
 public class GatewayConfiguration {
-
-    private final ServerProperties serverProperties;
-    private final ApplicationContext applicationContext;
-    private final WebProperties webProperties;
-    private final List<ViewResolver> viewResolvers;
+    
     private final ServerCodecConfigurer serverCodecConfigurer;
 
     @Bean

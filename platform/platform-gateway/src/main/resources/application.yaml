@@ -51,10 +51,6 @@ spring:
           enabled: true
 
     sentinel:
-      scg:
-        fallback:
-          response-body: "服务器忙"
-          mode: response
       eager: false
       filter:
         enabled: false
