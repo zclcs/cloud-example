@@ -8,6 +8,7 @@
                mb.bucket_name,
                mf.file_name,
                mf.original_file_name,
+               mf.content_type,
                mf.file_path,
                mf.create_at,
                mf.update_at

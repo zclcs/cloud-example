@@ -44,22 +44,19 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
     @Override
     public BasePage<MinioBucketVo> findMinioBucketPage(BasePageAo basePageAo, MinioBucketVo minioBucketVo) {
         BasePage<MinioBucketVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioBucketVo);
+        QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioBucketVo> findMinioBucketList(MinioBucketVo minioBucketVo) {
-        QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioBucketVo);
+        QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioBucketVo findMinioBucket(MinioBucketVo minioBucketVo) {
-        QueryWrapper<MinioBucketVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioBucketVo);
+        QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 

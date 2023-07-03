@@ -45,22 +45,19 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     @Override
     public BasePage<MinioFileVo> findMinioFilePage(BasePageAo basePageAo, MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioFileVo);
+        QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
         return this.baseMapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioFileVo> findMinioFileList(MinioFileVo minioFileVo) {
-        QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioFileVo);
+        QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
         return this.baseMapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioFileVo findMinioFile(MinioFileVo minioFileVo) {
-        QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
-        getQueryWrapper(minioFileVo);
+        QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
@@ -90,6 +87,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
         }
         MinioFile minioFile = new MinioFile();
         BeanUtil.copyProperties(fileUploadVo, minioFile);
+        minioFile.setContentType(multipartFile.getContentType());
         minioFile.setBucketId(bucketId);
         this.save(minioFile);
         return minioFile;
@@ -113,6 +111,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     private QueryWrapper<MinioFileVo> getQueryWrapper(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotBlank(queryWrapper, "mf.id", minioFileVo.getId());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "mf.original_file_name", minioFileVo.getOriginalFileName());
         queryWrapper.orderByDesc("mf.create_at");
         return queryWrapper;
     }

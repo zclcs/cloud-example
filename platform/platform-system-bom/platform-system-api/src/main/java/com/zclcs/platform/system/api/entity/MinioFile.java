@@ -59,4 +59,10 @@ public class MinioFile extends BaseEntity implements Serializable {
     @TableField("file_path")
     private String filePath;
 
+    /**
+     * 内容类型
+     */
+    @TableField("content_type")
+    private String contentType;
+
 }

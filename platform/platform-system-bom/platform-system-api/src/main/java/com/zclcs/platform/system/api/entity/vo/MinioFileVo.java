@@ -44,5 +44,8 @@ public class MinioFileVo extends BaseEntity implements Serializable {
     @Schema(title = "文件路径")
     private String filePath;
 
+    @Schema(title = "内容类型")
+    private String contentType;
+
 
 }
