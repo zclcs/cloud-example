@@ -46,7 +46,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableConfigurationProperties({GatewayConfigProperties.class, MyValidateCodeProperties.class})
 @RequiredArgsConstructor
 public class GatewayConfiguration {
-    
+
     private final ServerCodecConfigurer serverCodecConfigurer;
 
     @Bean

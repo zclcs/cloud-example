@@ -7,6 +7,7 @@
                sbl.block_ip,
                sbl.request_uri,
                sbl.request_method,
+               sbl.request_time,
                sbl.location,
                sbl.create_at,
                sbl.update_at

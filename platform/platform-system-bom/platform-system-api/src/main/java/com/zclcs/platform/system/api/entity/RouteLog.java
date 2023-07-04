@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 网关转发日志 Entity
@@ -58,6 +59,12 @@ public class RouteLog extends BaseEntity implements Serializable {
      */
     @TableField("request_method")
     private String requestMethod;
+
+    /**
+     * 请求时间
+     */
+    @TableField("request_time")
+    private LocalDateTime requestTime;
 
     /**
      * 目标服务

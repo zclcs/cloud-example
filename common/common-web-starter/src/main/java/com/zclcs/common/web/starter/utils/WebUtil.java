@@ -27,6 +27,8 @@ public class WebUtil {
 
     private static final String UNKNOWN = "unknown";
 
+    private static final String COMMA = ",";
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
@@ -130,7 +132,7 @@ public class WebUtil {
      */
     public static String getHttpServletRequestIpAddress() {
         HttpServletRequest request = getHttpServletRequest();
-        String ip = request.getHeader("x-forwarded-for");
+        String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
@@ -140,7 +142,11 @@ public class WebUtil {
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        String s = "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        if (s.contains(COMMA)) {
+            return s.split(COMMA)[0];
+        }
+        return s;
     }
 
     /**
@@ -193,7 +199,7 @@ public class WebUtil {
         String fileName = file.getName();
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
-    
+
     /**
      * 校验文件类型是否是允许下载的类型
      * （出于安全考虑）

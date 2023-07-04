@@ -8,6 +8,7 @@
                srl.request_uri,
                srl.target_uri,
                srl.request_method,
+               srl.request_time,
                srl.target_server,
                srl.location,
                srl.create_at,

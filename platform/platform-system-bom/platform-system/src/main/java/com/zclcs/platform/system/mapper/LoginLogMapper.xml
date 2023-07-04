@@ -3,7 +3,14 @@
 <mapper namespace="com.zclcs.platform.system.mapper.LoginLogMapper">
 
     <sql id="baseSql">
-        select sll.id, sll.username, sll.login_time, sll.location, sll.ip, sll.`system`, sll.browser
+        select sll.id,
+               sll.username,
+               sll.login_time,
+               sll.login_type,
+               sll.location,
+               sll.ip,
+               sll.`system`,
+               sll.browser
         from system_login_log sll
             ${ew.customSqlSegment}
     </sql>

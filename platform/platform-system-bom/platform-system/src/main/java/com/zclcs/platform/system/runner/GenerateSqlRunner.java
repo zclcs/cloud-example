@@ -55,9 +55,9 @@ public class GenerateSqlRunner implements ApplicationRunner {
                     getUserRoleSql() +
                     getMenuSql() +
                     getRoleMenuSql();
-            writeSql(systemSql, "1.0.2-data-system.sql");
+            writeSql(systemSql, "1.0.3-data-system.sql");
             String dictItemSql = getDictItemSql();
-            writeSql(dictItemSql, "1.0.3-data-dict_item.sql");
+            writeSql(dictItemSql, "1.0.4-data-dict_item.sql");
         }
     }
 
@@ -68,7 +68,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(blackList.getRequestUri())
                     , getValue(blackList.getRequestMethod()), getValue(blackList.getLimitFrom())
@@ -90,7 +90,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(generatorConfig.getServerName())
                     , getValue(generatorConfig.getAuthor()), getValue(generatorConfig.getBasePackage())
@@ -118,7 +118,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(dept.getDeptCode())
                     , getValue(dept.getParentCode()), getValue(dept.getDeptName())
@@ -139,7 +139,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(oauthClientDetails.getClientId())
                     , getValue(oauthClientDetails.getResourceIds()), getValue(oauthClientDetails.getClientSecret())
@@ -165,7 +165,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(role.getRoleCode())
                     , getValue(role.getRoleName()), getValue(role.getRemark()),
@@ -186,7 +186,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(user.getUsername())
                     , getValue(user.getRealName()), getValue(user.getPassword())
@@ -208,7 +208,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s";
             User user = userService.getById(userDataPermission.getUserId());
             Dept dept = deptService.getById(userDataPermission.getDeptId());
@@ -231,7 +231,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s";
             User user = userService.getById(userRole.getUserId());
             Role role = roleService.getById(userRole.getRoleId());
@@ -254,7 +254,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(dictItem.getDictName())
                     , getValue(dictItem.getParentValue()), getValue(dictItem.getValue())
@@ -277,7 +277,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(menu.getMenuCode())
                     , getValue(menu.getParentCode()), getValue(menu.getMenuName())
@@ -304,7 +304,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
-                    "'%s');//";
+                    "'%s');";
             String valuesFill = "%s,%s,%s,%s";
             Role role = roleService.getById(roleMenu.getRoleId());
             Menu menu = menuService.getById(roleMenu.getMenuId());
@@ -327,7 +327,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
         FileUtil.touch(finalPath);
         FileUtil.writeString(sql, finalPath, StandardCharsets.UTF_8);
     }
- 
+
     private Object getValue(Object value) {
         if (value == null) {
             return "null";

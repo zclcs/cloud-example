@@ -1,7 +1,6 @@
 dependencies {
     api "cn.hutool:hutool-core"
     api "cn.hutool:hutool-crypto"
-    api "org.lionsoul:ip2region"
     api "org.springframework:spring-context"
     api "jakarta.servlet:jakarta.servlet-api"
     api "com.fasterxml.jackson.core:jackson-databind"

@@ -11,9 +11,9 @@ import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.dict.entity.DictItem;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
+import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.entity.ao.DictItemAo;
 import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.entity.vo.DictItemVo;
@@ -111,7 +111,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
 
     private QueryWrapper<DictItemVo> getDictItemQueryWrapper(DictItemVo dictItemVo) {
         QueryWrapper<DictItemVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.dict_name", dictItemVo.getDictName());
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.dict_name", dictItemVo.getDictName());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.value", dictItemVo.getValue());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.parent_value", dictItemVo.getParentValue());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.title", dictItemVo.getTitle());

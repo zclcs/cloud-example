@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.entity.BlockLog;
 import com.zclcs.platform.system.api.entity.ao.BlockLogAo;
 import com.zclcs.platform.system.api.entity.vo.BlockLogVo;
@@ -32,6 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> implements BlockLogService {
+
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<BlockLogVo> findBlockLogPage(BasePageAo basePageAo, BlockLogVo blockLogVo) {
@@ -63,8 +65,8 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
         QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.create_at", blockLogVo.getCreateTimeFrom(), blockLogVo.getCreateTimeTo());
-        queryWrapper.orderByDesc("sbl.create_at");
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.request_time", blockLogVo.getRequestTimeFrom(), blockLogVo.getRequestTimeTo());
+        queryWrapper.orderByDesc("sbl.request_time");
         return queryWrapper;
     }
 
@@ -86,7 +88,7 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
 
     private void setBlockLog(BlockLog blockLog) {
         if (StrUtil.isNotBlank(blockLog.getBlockIp())) {
-            blockLog.setLocation(AddressUtil.getCityInfo(blockLog.getBlockIp()));
+            blockLog.setLocation(ip2regionSearcher.getAddress(blockLog.getBlockIp()));
         }
     }
 }

@@ -54,6 +54,12 @@ public class RateLimitLog extends BaseEntity implements Serializable {
     private String requestMethod;
 
     /**
+     * 拦截时间
+     */
+    @TableField("request_time")
+    private String requestTime;
+
+    /**
      * IP对应地址
      */
     @TableField("location")

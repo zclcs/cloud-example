@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 网关转发日志 Ao
@@ -51,6 +52,10 @@ public class RouteLogAo implements Serializable {
     @Size(max = 20, message = "{noMoreThan}")
     @Schema(description = "目标服务")
     private String targetServer;
+
+    @NotNull(message = "{required}")
+    @Schema(description = "请求时间", requiredMode = Schema.RequiredMode.REQUIRED)
+    private LocalDateTime requestTime;
 
     @Size(max = 10, message = "{noMoreThan}")
     @Schema(description = "响应code")

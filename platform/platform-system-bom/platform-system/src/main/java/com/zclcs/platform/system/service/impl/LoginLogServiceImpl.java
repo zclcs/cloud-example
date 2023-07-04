@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.entity.LoginLog;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import com.zclcs.platform.system.api.entity.vo.LoginLogVo;
@@ -30,6 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements LoginLogService {
+
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<LoginLogVo> findLoginLogPage(BasePageAo basePageAo, LoginLogVo loginLogVo) {
@@ -58,7 +61,12 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     private QueryWrapper<LoginLogVo> getQueryWrapper(LoginLogVo loginLogVo) {
         QueryWrapper<LoginLogVo> queryWrapper = new QueryWrapper<>();
+        QueryWrapperUtil.likeNotBlank(queryWrapper, "sll.ip", loginLogVo.getIp());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
+        QueryWrapperUtil.eqNotBlank(queryWrapper, "sll.login_type", loginLogVo.getLoginType());
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper,
+                "sll.login_time", loginLogVo.getLoginTimeFrom(), loginLogVo.getLoginTimeTo());
+        queryWrapper.orderByDesc("sll.login_time");
         return queryWrapper;
     }
 
@@ -67,6 +75,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
     public void createLoginLog(LoginLogAo loginLogAo) {
         LoginLog loginLog = new LoginLog();
         BeanUtil.copyProperties(loginLogAo, loginLog);
+        loginLog.setLocation(ip2regionSearcher.getAddress(loginLogAo.getIp()));
         this.save(loginLog);
     }
 

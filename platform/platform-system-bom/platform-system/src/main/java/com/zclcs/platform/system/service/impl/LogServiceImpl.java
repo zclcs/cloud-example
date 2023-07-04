@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.entity.Log;
 import com.zclcs.platform.system.api.entity.vo.LogVo;
 import com.zclcs.platform.system.mapper.LogMapper;
@@ -31,6 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
+
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<LogVo> findLogPage(BasePageAo basePageAo, LogVo logVo) {
@@ -78,7 +80,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         log.setOperation(logAo.getOperation());
         log.setMethod(logAo.getClassName() + "." + logAo.getMethodName() + "()");
         log.setParams(Optional.ofNullable(logAo.getParams()).orElse(""));
-        log.setLocation(AddressUtil.getCityInfo(ip));
+        log.setLocation(ip2regionSearcher.getAddress(ip));
         this.save(log);
     }
 

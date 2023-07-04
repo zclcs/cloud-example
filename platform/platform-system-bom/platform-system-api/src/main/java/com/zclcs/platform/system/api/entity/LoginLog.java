@@ -73,7 +73,7 @@ public class LoginLog extends BaseEntity implements Serializable {
     private String browser;
 
     /**
-     * 登录类型 01 成功 02 失败 03 登出
+     * 登录类型 @@system_login_log.type
      */
     @TableField("login_type")
     private String loginType;

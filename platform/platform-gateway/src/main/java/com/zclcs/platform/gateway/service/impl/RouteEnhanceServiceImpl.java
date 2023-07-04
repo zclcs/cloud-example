@@ -35,6 +35,9 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -137,12 +140,15 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                 if (url != null && route != null) {
                     HttpMethod httpMethod = request.getMethod();
                     String requestMethod = httpMethod.name();
+                    ZoneId zoneId = ZoneId.systemDefault();
+                    LocalDateTime requestTime = Instant.ofEpochMilli(startTime).atZone(zoneId).toLocalDateTime();
                     RouteLogAo routeLog = RouteLogAo.builder()
                             .routeIp(requestIp)
                             .requestUri(originUri.getPath())
                             .targetServer(route.getId())
                             .targetUri(url.getPath())
                             .requestMethod(requestMethod)
+                            .requestTime(requestTime)
                             .code(String.valueOf(code))
                             .time(executeTime)
                             .build();
@@ -168,6 +174,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .blockIp(requestIp)
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
+                    .requestTime(LocalDateTime.now())
                     .build();
             rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), blockLog);
             log.info("Store blocked request logs >>>");
@@ -186,6 +193,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .rateLimitLogIp(requestIp)
                     .requestMethod(requestMethod)
                     .requestUri(originUri.getPath())
+                    .requestTime(LocalDateTime.now())
                     .build();
             rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), rateLimitLog);
             log.info("Store rate limit logs >>>");

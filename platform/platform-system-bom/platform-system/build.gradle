@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-db-merge-starter"))
     implementation(project(":common:common-xxl-job-starter"))
+    implementation(project(":common:common-ip2region-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":cloud-lib:cloud-lib-mybatis-plus"))

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 限流拦截日志 Vo
@@ -42,11 +43,14 @@ public class RateLimitLogVo extends BaseEntity implements Serializable {
     @Schema(description = "IP对应地址")
     private String location;
 
-    @Schema(description = "创建时间起")
-    private LocalDate createTimeFrom;
+    @Schema(description = "拦截时间")
+    private LocalDateTime requestTime;
 
-    @Schema(description = "创建时间起终")
-    private LocalDate createTimeTo;
+    @Schema(description = "拦截时间起")
+    private LocalDate requestTimeFrom;
+
+    @Schema(description = "拦截时间起终")
+    private LocalDate requestTimeTo;
 
 
 }

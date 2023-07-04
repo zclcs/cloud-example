@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.entity.RateLimitLog;
 import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.entity.vo.RateLimitLogVo;
@@ -32,6 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, RateLimitLog> implements RateLimitLogService {
+
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<RateLimitLogVo> findRateLimitLogPage(BasePageAo basePageAo, RateLimitLogVo rateLimitLogVo) {
@@ -63,8 +65,8 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.rate_limit_log_ip", rateLimitLogVo.getRateLimitLogIp());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_uri", rateLimitLogVo.getRequestUri());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_method", rateLimitLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srll.create_at", rateLimitLogVo.getCreateTimeFrom(), rateLimitLogVo.getCreateTimeTo());
-        queryWrapper.orderByDesc("srll.create_at");
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srll.request_time", rateLimitLogVo.getRequestTimeFrom(), rateLimitLogVo.getRequestTimeTo());
+        queryWrapper.orderByDesc("srll.request_time");
         return queryWrapper;
     }
 
@@ -86,7 +88,7 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
 
     private void setRateLimitLog(RateLimitLog rateLimitLog) {
         if (StrUtil.isNotBlank(rateLimitLog.getRateLimitLogIp())) {
-            rateLimitLog.setLocation(AddressUtil.getCityInfo(rateLimitLog.getRateLimitLogIp()));
+            rateLimitLog.setLocation(ip2regionSearcher.getAddress(rateLimitLog.getRateLimitLogIp()));
         }
     }
 }

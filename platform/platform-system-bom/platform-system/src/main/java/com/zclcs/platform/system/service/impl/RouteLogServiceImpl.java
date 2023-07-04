@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.entity.RouteLog;
 import com.zclcs.platform.system.api.entity.ao.RouteLogAo;
 import com.zclcs.platform.system.api.entity.vo.RouteLogVo;
@@ -32,6 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService {
+
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<RouteLogVo> findRouteLogPage(BasePageAo basePageAo, RouteLogVo routeLogVo) {
@@ -63,8 +65,8 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.route_ip", routeLogVo.getRouteIp());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.target_server", routeLogVo.getTargetServer());
         QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.request_method", routeLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srl.create_at", routeLogVo.getCreateTimeFrom(), routeLogVo.getCreateTimeTo());
-        queryWrapper.orderByDesc("srl.create_at");
+        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srl.request_time", routeLogVo.getRequestTimeFrom(), routeLogVo.getRequestTimeTo());
+        queryWrapper.orderByDesc("srl.request_time");
         return queryWrapper;
     }
 
@@ -86,7 +88,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
 
     private void setRouteLog(RouteLog routeLog) {
         if (StrUtil.isNotBlank(routeLog.getRouteIp())) {
-            routeLog.setLocation(AddressUtil.getCityInfo(routeLog.getRouteIp()));
+            routeLog.setLocation(ip2regionSearcher.getAddress(routeLog.getRouteIp()));
         }
     }
 }

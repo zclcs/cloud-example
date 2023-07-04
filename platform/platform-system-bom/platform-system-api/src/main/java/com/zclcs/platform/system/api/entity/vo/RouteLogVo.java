@@ -46,6 +46,15 @@ public class RouteLogVo extends BaseEntity implements Serializable {
     @Schema(description = "目标服务")
     private String targetServer;
 
+    @Schema(description = "请求时间")
+    private LocalDateTime requestTime;
+
+    @Schema(description = "请求时间起")
+    private LocalDate requestTimeFrom;
+
+    @Schema(description = "请求时间起终")
+    private LocalDate requestTimeTo;
+
     @Schema(description = "响应code")
     private String code;
 
@@ -54,15 +63,6 @@ public class RouteLogVo extends BaseEntity implements Serializable {
 
     @Schema(description = "ip对应地址")
     private String location;
-
-    @Schema(description = "创建时间")
-    private LocalDateTime createAt;
-
-    @Schema(description = "创建时间起")
-    private LocalDate createTimeFrom;
-
-    @Schema(description = "创建时间起终")
-    private LocalDate createTimeTo;
 
 
 }

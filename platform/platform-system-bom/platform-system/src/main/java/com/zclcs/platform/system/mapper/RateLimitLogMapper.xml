@@ -7,6 +7,7 @@
                srll.rate_limit_log_ip,
                srll.request_uri,
                srll.request_method,
+               srll.request_time,
                srll.location,
                srll.create_at,
                srll.update_at

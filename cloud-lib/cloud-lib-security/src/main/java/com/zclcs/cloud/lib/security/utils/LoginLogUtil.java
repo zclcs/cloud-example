@@ -18,7 +18,6 @@ package com.zclcs.cloud.lib.security.utils;
 
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +48,6 @@ public class LoginLogUtil {
         loginLog.setUsername(getUsername());
         loginLog.setLoginTime(LocalDateTime.now());
         String httpServletRequestIpAddress = WebUtil.getHttpServletRequestIpAddress();
-        loginLog.setLocation(AddressUtil.getCityInfo(httpServletRequestIpAddress));
         loginLog.setIp(httpServletRequestIpAddress);
         String userAgent = httpServletRequest.getHeader(HttpHeaders.USER_AGENT);
         UserAgent ua = UserAgentUtil.parse(userAgent);

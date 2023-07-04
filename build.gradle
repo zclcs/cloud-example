@@ -9,7 +9,6 @@ buildscript {
         findbugsVersion = "3.0.2"
         lombokVersion = "1.18.24"
         hutoolVersion = "5.8.11"
-        ip2regionVersion = "1.7.2"
         mybatisPlusVersion = "3.5.3.1"
         dynamicDatasourceVersion = "3.6.0"
         p6spyVersion = "3.9.1"

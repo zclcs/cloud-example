@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 限流拦截日志 Ao
@@ -43,6 +44,10 @@ public class RateLimitLogAo implements Serializable {
     @Size(max = 200, message = "{noMoreThan}")
     @Schema(description = "被拦截请求方法")
     private String requestMethod;
+
+    @NotNull(message = "{required}")
+    @Schema(description = "拦截时间", requiredMode = Schema.RequiredMode.REQUIRED)
+    private LocalDateTime requestTime;
 
     @Size(max = 200, message = "{noMoreThan}")
     @Schema(description = "IP对应地址")

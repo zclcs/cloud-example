@@ -1,12 +1,14 @@
 package com.zclcs.platform.system.api.entity.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -36,6 +38,12 @@ public class LoginLogVo extends BaseEntity implements Serializable {
     @Schema(description = "登录时间")
     private LocalDateTime loginTime;
 
+    @Schema(description = "登录时间起")
+    private LocalDate loginTimeFrom;
+
+    @Schema(description = "登录时间止")
+    private LocalDate loginTimeTo;
+
     @Schema(description = "登录地点")
     private String location;
 
@@ -48,7 +56,8 @@ public class LoginLogVo extends BaseEntity implements Serializable {
     @Schema(description = "浏览器")
     private String browser;
 
-    @Schema(description = "登录类型 01 成功 02 失败 03 登出")
+    @Schema(description = "登录类型")
+    @DictText(value = "system_login_log.type")
     private String loginType;
 
 

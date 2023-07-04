@@ -15,7 +15,6 @@ dependencies {
         api "cn.hutool:hutool-crypto:$hutoolVersion"
         api "cn.hutool:hutool-extra:$hutoolVersion"
         api "cn.hutool:hutool-http:$hutoolVersion"
-        api "org.lionsoul:ip2region:$ip2regionVersion"
         api "com.baomidou:mybatis-plus-boot-starter:$mybatisPlusVersion"
         api "com.baomidou:mybatis-plus-extension:$mybatisPlusVersion"
         api "com.baomidou:mybatis-plus-annotation:$mybatisPlusVersion"

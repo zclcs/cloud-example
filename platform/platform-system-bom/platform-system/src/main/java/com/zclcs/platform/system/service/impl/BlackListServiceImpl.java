@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.utils.AddressUtil;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.entity.BlackList;
 import com.zclcs.platform.system.api.entity.ao.BlackListAo;
@@ -38,6 +38,7 @@ import java.util.List;
 public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList> implements BlackListService {
 
     private final RedisService redisService;
+    private final Ip2regionSearcher ip2regionSearcher;
 
     @Override
     public BasePage<BlackListVo> findBlackListPage(BasePageAo basePageAo, BlackListVo blackListVo) {
@@ -147,7 +148,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     private void setBlackList(BlackList blackList) {
         if (StrUtil.isNotBlank(blackList.getBlackIp())) {
-            blackList.setLocation(AddressUtil.getCityInfo(blackList.getBlackIp()));
+            blackList.setLocation(ip2regionSearcher.getAddress(blackList.getBlackIp()));
         } else {
             blackList.setLocation(null);
         }
