@@ -75,7 +75,7 @@ public class XxlJobController {
         params.put("jobDesc", xxlJobJobInfoAo.getJobDesc());
         params.put("executorHandler", xxlJobJobInfoAo.getExecutorHandler());
         params.put("author", xxlJobJobInfoAo.getAuthor());
-        params.put("start", basePageAo.getPageNum() - 1);
+        params.put("start", (basePageAo.getPageNum() - 1) * basePageAo.getPageSize());
         params.put("length", basePageAo.getPageSize());
         try (HttpResponse execute = HttpUtil.createGet(getXxlJobEndPoint("/jobinfo/pageList")).cookie(getHttpCookie()).form(params).execute()) {
             String body = execute.body();
