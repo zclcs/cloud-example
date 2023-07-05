@@ -106,7 +106,7 @@ public class XxlJobController {
                 + " - " +
                 Optional.ofNullable(xxlJobJobLogAo.getFilterTimeTo()).filter(StrUtil::isNotBlank)
                         .orElse(DateUtil.endOfDay(date).toString(DatePattern.NORM_DATETIME_FORMAT)));
-        params.put("start", basePageAo.getPageNum() - 1);
+        params.put("start", (basePageAo.getPageNum() - 1) * basePageAo.getPageSize());
         params.put("length", basePageAo.getPageSize());
         try (HttpResponse execute = HttpUtil.createGet(getXxlJobEndPoint("/joblog/pageList")).cookie(getHttpCookie()).form(params).execute()) {
             String body = execute.body();
