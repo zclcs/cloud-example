@@ -241,7 +241,7 @@ general_log                        = 0
 log_queries_not_using_indexes      = ON
 log_slow_admin_statements          = ON
 log_warnings                       = 2
-long_query_time                    = 1  #1秒慢日志
+long_query_time                    = 3  #3秒慢日志
 slow_query_log                     = ON
 
 ############# REPLICATION #############
@@ -249,6 +249,7 @@ slow_query_log                     = ON
 server_id                          = 3310125  #ip+3位数字
 binlog_checksum                    = CRC32
 binlog_format                      = ROW
+binlog_row_image                   = FULL
 binlog_rows_query_log_events       = ON
 
 enforce_gtid_consistency           = ON
