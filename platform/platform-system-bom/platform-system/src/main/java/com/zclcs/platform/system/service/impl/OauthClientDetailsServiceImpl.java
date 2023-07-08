@@ -10,11 +10,11 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.security.utils.PasswordUtil;
-import com.zclcs.platform.system.api.entity.Menu;
-import com.zclcs.platform.system.api.entity.OauthClientDetails;
-import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
-import com.zclcs.platform.system.api.entity.vo.MenuVo;
-import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
+import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 import com.zclcs.platform.system.mapper.OauthClientDetailsMapper;
 import com.zclcs.platform.system.service.MenuService;
 import com.zclcs.platform.system.service.OauthClientDetailsService;
@@ -124,7 +124,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     }
 
     private void setAuthorities(List<Long> menuIds, OauthClientDetails oauthClientDetails) {
-        String permissions = SystemCacheUtil.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).map(Menu::getPerms).collect(Collectors.joining(StrUtil.COMMA));
+        String permissions = SystemCacheUtil.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms).collect(Collectors.joining(StrUtil.COMMA));
         oauthClientDetails.setAuthorities(permissions);
     }
 

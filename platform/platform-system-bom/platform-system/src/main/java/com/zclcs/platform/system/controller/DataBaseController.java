@@ -3,7 +3,7 @@ package com.zclcs.platform.system.controller;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Generator;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
+import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
 import com.zclcs.platform.system.service.DataBaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

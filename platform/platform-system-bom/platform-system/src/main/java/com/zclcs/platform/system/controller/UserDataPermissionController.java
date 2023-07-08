@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.controller;
 
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.UserDataPermission;
+import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.service.UserDataPermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

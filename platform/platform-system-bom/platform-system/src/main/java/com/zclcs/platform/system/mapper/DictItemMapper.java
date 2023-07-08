@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.zclcs.cloud.lib.core.base.BasePage;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
-import com.zclcs.platform.system.api.entity.vo.DictItemVo;
-import com.zclcs.platform.system.api.entity.vo.DictVo;
+import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
+import com.zclcs.platform.system.api.bean.vo.DictItemVo;
+import com.zclcs.platform.system.api.bean.vo.DictVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

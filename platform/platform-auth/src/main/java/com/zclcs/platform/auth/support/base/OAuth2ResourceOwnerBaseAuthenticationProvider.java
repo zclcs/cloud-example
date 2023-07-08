@@ -245,7 +245,7 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
         }
         if (authenticationException instanceof DisabledException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_DISABLE,
-                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"),
+                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disable"),
                     ""));
         }
         if (authenticationException instanceof AccountExpiredException) {

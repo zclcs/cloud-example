@@ -3,10 +3,10 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.Menu;
-import com.zclcs.platform.system.api.entity.ao.MenuAo;
-import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;
-import com.zclcs.platform.system.api.entity.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.entity.Menu;
+import com.zclcs.platform.system.api.bean.ao.MenuAo;
+import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
 
 import java.util.List;
 

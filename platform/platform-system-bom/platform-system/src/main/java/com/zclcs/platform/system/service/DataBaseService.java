@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.zclcs.platform.system.api.entity.vo.DataBaseDataVo;
+import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
 
 import java.util.List;
 import java.util.Map;

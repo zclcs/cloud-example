@@ -16,12 +16,16 @@ import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.security.utils.PasswordUtil;
 import com.zclcs.cloud.lib.security.utils.SecurityUtil;
-import com.zclcs.platform.system.api.entity.*;
-import com.zclcs.platform.system.api.entity.ao.UserAo;
-import com.zclcs.platform.system.api.entity.router.RouterMeta;
-import com.zclcs.platform.system.api.entity.router.VueRouter;
-import com.zclcs.platform.system.api.entity.vo.MenuVo;
-import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.bean.ao.UserAo;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
+import com.zclcs.platform.system.api.bean.entity.User;
+import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
+import com.zclcs.platform.system.api.bean.entity.UserRole;
+import com.zclcs.platform.system.api.bean.router.RouterMeta;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.api.utils.BaseRouterUtil;
 import com.zclcs.platform.system.mapper.UserMapper;
 import com.zclcs.platform.system.service.DeptService;
@@ -62,10 +66,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BasePage<UserVo> pageVo = this.baseMapper.findPageVo(basePage, queryWrapper);
         pageVo.getList().forEach(vo -> {
             Long userId = vo.getUserId();
-            List<Role> roles = SystemCacheUtil.getRolesByUserId(userId);
+            List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userId);
             if (CollectionUtil.isNotEmpty(roles)) {
-                vo.setRoleIds(roles.stream().map(Role::getRoleId).toList());
-                List<String> roleNames = roles.stream().map(Role::getRoleName).toList();
+                vo.setRoleIds(roles.stream().map(RoleCacheBean::getRoleId).toList());
+                List<String> roleNames = roles.stream().map(RoleCacheBean::getRoleName).toList();
                 vo.setRoleNames(roleNames);
                 vo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
             }
@@ -125,10 +129,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<VueRouter<MenuVo>> findUserRouters(String username) {
         List<VueRouter<MenuVo>> routes = new ArrayList<>();
-        List<Menu> menus = SystemCacheUtil.getMenusByUsername(username);
-        List<Menu> userMenus = menus.stream().filter(Objects::nonNull)
+        List<MenuCacheBean> menus = SystemCacheUtil.getMenusByUsername(username);
+        List<MenuCacheBean> userMenus = menus.stream().filter(Objects::nonNull)
                 .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
-                .sorted(Comparator.comparing(Menu::getOrderNum)).toList();
+                .sorted(Comparator.comparing(MenuCacheBean::getOrderNum)).toList();
         userMenus.forEach(menu -> {
             VueRouter<MenuVo> route = new VueRouter<>();
             route.setId(menu.getMenuId());
@@ -141,10 +145,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             route.setMeta(new RouterMeta(
                     menu.getMenuName(),
                     menu.getIcon(),
-                    menu.getHideMenu().equals(Dict.YES_NO_1),
-                    menu.getIgnoreKeepAlive().equals(Dict.YES_NO_1),
-                    menu.getHideBreadcrumb().equals(Dict.YES_NO_1),
-                    menu.getHideChildrenInMenu().equals(Dict.YES_NO_1),
+                    Dict.YES_NO_1.equals(menu.getHideMenu()),
+                    Dict.YES_NO_1.equals(menu.getIgnoreKeepAlive()),
+                    Dict.YES_NO_1.equals(menu.getHideBreadcrumb()),
+                    Dict.YES_NO_1.equals(menu.getHideChildrenInMenu()),
                     menu.getCurrentActiveMenu()));
             routes.add(route);
         });
@@ -153,8 +157,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<String> findUserPermissions(String username) {
-        List<Menu> menus = SystemCacheUtil.getMenusByUsername(username);
-        return menus.stream().filter(Objects::nonNull).map(Menu::getPerms)
+        List<MenuCacheBean> menus = SystemCacheUtil.getMenusByUsername(username);
+        return menus.stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
                 .filter(StrUtil::isNotBlank).toList();
     }
 

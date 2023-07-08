@@ -7,13 +7,13 @@
         from system_minio_bucket mb
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioBucketVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioBucketVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioBucketVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioBucketVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioBucketVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioBucketVo">
         <include refid="baseSql"/>
     </select>
 </mapper>

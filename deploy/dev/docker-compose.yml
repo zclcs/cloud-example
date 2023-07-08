@@ -1,0 +1,319 @@
+version: '3'
+services:
+  mysql:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/mysql:5.7.35
+    container_name: ${NACOS_NAMESPACE}-mysql
+    network_mode: host
+    environment:
+      # 设置密码
+      MYSQL_ROOT_PASSWORD: ${DATASOURCE_PASSWORD}
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    volumes:
+      #挂载 MySQL数据
+      - ./mysql/data:/var/lib/mysql
+      #挂载 MySQL日志
+      #      - ./mysql/log:/var/log/mysql
+      #挂载 MySQL配置文件
+      - ./mysql/conf:/etc/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  redis:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/redis:6.0.8
+    container_name: ${NACOS_NAMESPACE}-redis
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
+    volumes:
+      - ./redis/data:/data #挂载 Redis数据
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf #挂载 Redis配置
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nacos:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nacos-server:v2.2.1
+    container_name: ${NACOS_NAMESPACE}-nacos
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      # TODO 修改JVM调优参数
+      JVM_XMS: 128m   #-Xms default :2g
+      JVM_XMX: 128m   #-Xmx default :2g
+      JVM_XMN: 64m    #-Xmn default :1g
+      JVM_MS: 32m     #-XX:MetaspaceSize default :128m
+      JVM_MMS: 32m    #-XX:MaxMetaspaceSize default :320m
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/init.d/application.properties:/home/nacos/conf/application.properties
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      third-part-database-sync:
+        condition: service_healthy
+  minio:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/minio:RELEASE.2021-06-17T00-10-46Z
+    container_name: ${NACOS_NAMESPACE}-minio
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      #管理后台用户名
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      #管理后台密码，最小8个字符
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      #映射当前目录下的data目录至容器内/data目录
+      - ./minio/data:/data
+      #映射配置目录
+      - ./minio/config:/root/.minio/
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS 'http://${LOCAL_HOST_IP}:${MINIO_PORT}/minio/index.html' || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    command: server /data
+  rabbitmq:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/rabbitmq:3.9.13-management
+    container_name: ${NACOS_NAMESPACE}-rabbitmq
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+    #      - ./rabbitmq/log:/var/log/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+  nginx:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nginx:1.21.3
+    container_name: ${NACOS_NAMESPACE}-nginx
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    privileged: true
+    user: root
+    volumes:
+      - ./web:/var/cloud/web
+      - ./nginx/conf/:/etc/nginx/
+    healthcheck:
+      test: [ "CMD", "service", "nginx", "status" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      platform-gateway:
+        condition: service_healthy
+  xxl-job:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/xxl-job:2.4.1-SNAPSHOT
+    container_name: ${NACOS_NAMESPACE}-xxl-job
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java -Xms1024m -Xmx1024m -Xmn256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=160m -XX:HeapDumpPath=/data/applogs/xxl-job/java_heapdump.hprof -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:-UseLargePages -cp /app/resources:/app/classes:/app/libs/* com.xxl.job.admin.XxlJobAdminApplication"
+    volumes:
+      - ./xxl-job/log:/data/applogs/xxl-job
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${XXL_JOB_PORT} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    env_file: .env
+    depends_on:
+      third-part-database-sync:
+        condition: service_healthy
+  third-part-database-sync:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/third-part-database-sync:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-third-part-database-sync
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./third-part-database-sync/log:/log/third-part-database-sync
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_DATA_SYNC} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+  third-part-config-sync:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/third-part-config-sync:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-third-part-config-sync
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_CONFIG_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_CONFIG_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./third-part-config-sync/log:/log/third-part-config-sync
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_CONFIG_SYNC} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+  platform-gateway:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-gateway:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-gateway
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./log/platform-gateway:/log/platform-gateway
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY}/ping || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  platform-auth:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-auth
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./log/platform-auth:/log/platform-auth
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_AUTH} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  platform-system:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-platform-system
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./log/platform-system:/log/platform-system
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_SYSTEM} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  test-test:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
+    container_name: ${NACOS_NAMESPACE}-test-test
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    volumes:
+      - ./log/test-test:/log/test-test
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_TEST_TEST} || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.zclcs.cloud.lib.core.base.BasePage;
-import com.zclcs.platform.system.api.entity.UserRole;
-import com.zclcs.platform.system.api.entity.vo.UserRoleVo;
+import com.zclcs.platform.system.api.bean.entity.UserRole;
+import com.zclcs.platform.system.api.bean.vo.UserRoleVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

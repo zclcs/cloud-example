@@ -28,13 +28,13 @@
               from system_user su) tb
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.UserVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.UserVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.UserVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.UserVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.UserVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.UserVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">

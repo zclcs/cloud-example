@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.security.service.impl;
 
 import com.zclcs.cloud.lib.security.service.MyUserDetailsService;
-import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

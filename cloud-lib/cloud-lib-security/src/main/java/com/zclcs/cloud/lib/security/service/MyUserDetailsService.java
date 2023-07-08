@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.security.entity.SecurityUser;
-import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.bean.vo.UserVo;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

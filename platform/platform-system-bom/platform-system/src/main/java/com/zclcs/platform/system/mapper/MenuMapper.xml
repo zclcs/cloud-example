@@ -32,13 +32,13 @@
               from system_menu sm) tb
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.MenuVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.MenuVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.MenuVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.MenuVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.MenuVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.MenuVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">

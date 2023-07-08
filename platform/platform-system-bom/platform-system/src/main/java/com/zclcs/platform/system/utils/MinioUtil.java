@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.utils;
 
-import com.zclcs.platform.system.api.entity.vo.FileUploadVo;
+import com.zclcs.platform.system.api.bean.vo.FileUploadVo;
 import com.zclcs.platform.system.properties.MinioProperties;
 import io.minio.*;
 import io.minio.errors.*;

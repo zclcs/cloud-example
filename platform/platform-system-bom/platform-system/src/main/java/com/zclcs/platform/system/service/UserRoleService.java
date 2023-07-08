@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.platform.system.api.entity.UserRole;
+import com.zclcs.platform.system.api.bean.entity.UserRole;
 
 /**
  * 用户角色关联 Service接口

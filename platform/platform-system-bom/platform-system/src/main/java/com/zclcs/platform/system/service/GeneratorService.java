@@ -2,9 +2,9 @@ package com.zclcs.platform.system.service;
 
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.Column;
-import com.zclcs.platform.system.api.entity.Table;
-import com.zclcs.platform.system.api.entity.ao.GenerateAo;
+import com.zclcs.platform.system.api.bean.entity.Column;
+import com.zclcs.platform.system.api.bean.entity.Table;
+import com.zclcs.platform.system.api.bean.ao.GenerateAo;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;

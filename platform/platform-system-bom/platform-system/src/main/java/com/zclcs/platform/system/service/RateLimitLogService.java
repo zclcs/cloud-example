@@ -3,9 +3,9 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.RateLimitLog;
-import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
-import com.zclcs.platform.system.api.entity.vo.RateLimitLogVo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
+import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
+import com.zclcs.platform.system.api.bean.vo.RateLimitLogVo;
 
 import java.util.List;
 

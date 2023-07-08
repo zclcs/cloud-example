@@ -9,10 +9,11 @@ import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.Menu;
-import com.zclcs.platform.system.api.entity.ao.MenuAo;
-import com.zclcs.platform.system.api.entity.vo.MenuTreeVo;
-import com.zclcs.platform.system.api.entity.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.ao.MenuAo;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.entity.Menu;
+import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -83,19 +84,21 @@ public class MenuController {
     @GetMapping(value = "/findByMenuId/{menuId}")
     @Operation(summary = "根据菜单id查询菜单")
     @Inner
-    public Menu findByMenuId(@PathVariable Long menuId) {
-        return this.menuService.lambdaQuery().eq(Menu::getMenuId, menuId).one();
+    public MenuCacheBean findByMenuId(@PathVariable Long menuId) {
+        return MenuCacheBean.convertToMenuCacheBean(this.menuService.lambdaQuery().eq(Menu::getMenuId, menuId).one());
     }
 
     @GetMapping(value = "/findByMenuIds/{menuIds}")
     @Operation(summary = "根据菜单id集合查询菜单集合")
     @Inner
-    public Map<Long, Menu> findByMenuIds(@PathVariable List<Long> menuIds) {
-        Map<Long, Menu> menuMap = new HashMap<>();
+    public Map<Long, MenuCacheBean> findByMenuIds(@PathVariable List<Long> menuIds) {
+        Map<Long, MenuCacheBean> menuMap = new HashMap<>();
         List<Menu> list = this.menuService.lambdaQuery().in(Menu::getMenuId, menuIds).list();
-        for (Long menuId : menuIds) {
-            Menu menu = CollectionUtil.findOneByField(list, "menuId", menuId);
-            menuMap.put(menuId, menu);
+        if (CollectionUtil.isNotEmpty(list)) {
+            for (Long menuId : menuIds) {
+                Menu menu = CollectionUtil.findOneByField(list, "menuId", menuId);
+                menuMap.put(menuId, MenuCacheBean.convertToMenuCacheBean(menu));
+            }
         }
         return menuMap;
     }

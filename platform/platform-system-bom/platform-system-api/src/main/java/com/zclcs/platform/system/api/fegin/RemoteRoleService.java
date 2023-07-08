@@ -2,7 +2,7 @@ package com.zclcs.platform.system.api.fegin;
 
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
-import com.zclcs.platform.system.api.entity.Role;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +17,9 @@ public interface RemoteRoleService {
      * 通过角色id查询角色
      *
      * @param roleId 角色id
-     * @return {@link Role}
+     * @return {@link RoleCacheBean}
      */
     @GetMapping(value = "/role/findByRoleId/{roleId}", headers = Security.HEADER_FROM_IN)
-    Role findByRoleId(@PathVariable("roleId") Long roleId);
+    RoleCacheBean findByRoleId(@PathVariable("roleId") Long roleId);
 
 }

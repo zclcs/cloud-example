@@ -1,18 +1,19 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.ao.DictItemAo;
-import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
-import com.zclcs.platform.system.api.entity.vo.DictItemVo;
-import com.zclcs.platform.system.api.entity.vo.DictVo;
+import com.zclcs.platform.system.api.bean.ao.DictItemAo;
+import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
+import com.zclcs.platform.system.api.bean.vo.DictItemVo;
+import com.zclcs.platform.system.api.bean.vo.DictVo;
 import com.zclcs.platform.system.service.DictItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -73,22 +74,29 @@ public class DictItemController {
     @GetMapping("/findByDictName/{dictName}")
     @Operation(summary = "根据字典唯一值查询所有字典项")
     @Inner
-    public List<DictItem> findByDictName(@PathVariable String dictName) {
-        return this.dictItemService.lambdaQuery().eq(DictItem::getDictName, dictName).list();
+    public List<DictItemCacheBean> findByDictName(@PathVariable String dictName) {
+        return DictItemCacheBean.convertToDictItemCacheBeanList(this.dictItemService.lambdaQuery()
+                .eq(DictItem::getDictName, dictName).list());
     }
 
     @GetMapping("/findByDictNameAndValue/{dictName}/{value}")
     @Operation(summary = "根据字典唯一值、字典项唯一值查询字典项")
     @Inner
-    public DictItem findByDictNameAndValue(@PathVariable String dictName, @PathVariable String value) {
-        return this.dictItemService.lambdaQuery().eq(DictItem::getDictName, dictName).eq(DictItem::getValue, value).one();
+    public DictItemCacheBean findByDictNameAndValue(@PathVariable String dictName, @PathVariable String value) {
+        return DictItemCacheBean.convertToDictItemCacheBean(this.dictItemService.lambdaQuery()
+                .eq(DictItem::getDictName, dictName)
+                .eq(DictItem::getValue, value)
+                .orderByAsc(DictItem::getSorted).one());
     }
 
     @GetMapping("/findByDictNameAndParentValue/{dictName}/{parentValue}")
     @Operation(summary = "根据字典唯一值、父级字典项唯一值查询所有子级字典项")
     @Inner
-    public List<DictItem> findByDictNameAndParentValue(@PathVariable String dictName, @PathVariable String parentValue) {
-        return this.dictItemService.lambdaQuery().eq(DictItem::getDictName, dictName).eq(DictItem::getParentValue, parentValue).list();
+    public List<DictItemCacheBean> findByDictNameAndParentValue(@PathVariable String dictName, @PathVariable String parentValue) {
+        return DictItemCacheBean.convertToDictItemCacheBeanList(this.dictItemService.lambdaQuery()
+                .eq(DictItem::getDictName, dictName)
+                .eq(DictItem::getParentValue, parentValue)
+                .orderByAsc(DictItem::getSorted).list());
     }
 
     @GetMapping("/tree")

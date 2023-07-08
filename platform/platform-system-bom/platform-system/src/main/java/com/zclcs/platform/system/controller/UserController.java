@@ -1,20 +1,21 @@
 package com.zclcs.platform.system.controller;
 
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.cloud.lib.security.utils.PasswordUtil;
 import com.zclcs.cloud.lib.security.utils.SecurityUtil;
-import com.zclcs.platform.system.api.entity.User;
-import com.zclcs.platform.system.api.entity.ao.UserAo;
-import com.zclcs.platform.system.api.entity.router.VueRouter;
-import com.zclcs.platform.system.api.entity.vo.MenuVo;
-import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.bean.ao.UserAo;
+import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
+import com.zclcs.platform.system.api.bean.entity.User;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,8 +81,8 @@ public class UserController {
     @GetMapping("/findByUsername/{username}")
     @Operation(summary = "根据用户名查询用户信息")
     @Inner
-    public User findByUsername(@PathVariable String username) {
-        return userService.lambdaQuery().eq(User::getUsername, username).one();
+    public UserCacheBean findByUsername(@PathVariable String username) {
+        return UserCacheBean.convertToUserCacheBean(userService.lambdaQuery().eq(User::getUsername, username).one());
     }
 
     @GetMapping("/findByMobile/{mobile}")

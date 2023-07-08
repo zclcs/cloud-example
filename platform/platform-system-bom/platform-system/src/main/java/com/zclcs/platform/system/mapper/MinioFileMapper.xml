@@ -16,13 +16,13 @@
                  inner join system_minio_bucket mb on mf.bucket_id = mb.id
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioFileVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioFileVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioFileVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioFileVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.MinioFileVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.MinioFileVo">
         <include refid="baseSql"/>
     </select>
 </mapper>

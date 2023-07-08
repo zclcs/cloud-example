@@ -4,7 +4,7 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Security;
-import com.zclcs.platform.system.api.entity.OauthClientDetails;
+import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
 import com.zclcs.platform.system.api.fegin.RemoteClientDetailsService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +74,7 @@ public class MyRemoteRegisteredClientRepositoryImpl implements RegisteredClientR
      */
     @Override
     public RegisteredClient findByClientId(String clientId) {
-        OauthClientDetails oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
+        OauthClientDetailsCacheBean oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
         if (oauthClientDetailsCache == null || StrUtil.isBlank(oauthClientDetailsCache.getClientId())) {
             throw new OAuth2AuthorizationCodeRequestAuthenticationException(
                     new OAuth2Error("客户端查询异常，请检查数据库链接"), null);

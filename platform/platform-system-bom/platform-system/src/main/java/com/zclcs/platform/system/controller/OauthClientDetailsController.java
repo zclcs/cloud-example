@@ -8,9 +8,10 @@ import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.OauthClientDetails;
-import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
-import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
+import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
+import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
+import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
+import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 import com.zclcs.platform.system.service.OauthClientDetailsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -74,8 +75,8 @@ public class OauthClientDetailsController {
     @GetMapping(value = "/findByClientId/{clientId}")
     @Operation(summary = "终端信息查询")
     @Inner
-    public OauthClientDetails findByClientId(@PathVariable String clientId) {
-        return oauthClientDetailsService.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).one();
+    public OauthClientDetailsCacheBean findByClientId(@PathVariable String clientId) {
+        return OauthClientDetailsCacheBean.convertToOauthClientDetailsCacheBean(oauthClientDetailsService.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).one());
     }
 
     @GetMapping("/checkClientId")

@@ -3,7 +3,7 @@ package com.zclcs.platform.system.cache;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.system.api.entity.Role;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
 import com.zclcs.platform.system.api.fegin.RemoteRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author zclcs
  */
 @Service
-public class RoleCache extends CacheService<Role> {
+public class RoleCache extends CacheService<RoleCacheBean> {
 
     private RemoteRoleService remoteRoleService;
 
@@ -26,7 +26,7 @@ public class RoleCache extends CacheService<Role> {
     }
 
     @Override
-    protected Role findByKey(Object... key) {
+    protected RoleCacheBean findByKey(Object... key) {
         return remoteRoleService.findByRoleId((Long) key[0]);
     }
 }

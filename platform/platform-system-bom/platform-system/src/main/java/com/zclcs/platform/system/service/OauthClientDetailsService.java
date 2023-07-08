@@ -3,9 +3,9 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.OauthClientDetails;
-import com.zclcs.platform.system.api.entity.ao.OauthClientDetailsAo;
-import com.zclcs.platform.system.api.entity.vo.OauthClientDetailsVo;
+import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
+import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
+import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 
 import java.util.List;
 

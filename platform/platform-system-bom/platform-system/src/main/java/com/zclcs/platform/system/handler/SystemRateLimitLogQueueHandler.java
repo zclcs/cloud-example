@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
-import com.zclcs.platform.system.api.entity.ao.RateLimitLogAo;
+import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.service.RateLimitLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

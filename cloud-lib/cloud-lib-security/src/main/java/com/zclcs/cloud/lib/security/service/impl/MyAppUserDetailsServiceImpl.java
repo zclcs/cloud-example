@@ -3,7 +3,7 @@ package com.zclcs.cloud.lib.security.service.impl;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.security.entity.SecurityUser;
 import com.zclcs.cloud.lib.security.service.MyUserDetailsService;
-import com.zclcs.platform.system.api.entity.vo.UserVo;
+import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.api.fegin.RemoteUserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;

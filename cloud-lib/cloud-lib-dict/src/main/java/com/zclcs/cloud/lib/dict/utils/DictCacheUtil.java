@@ -1,6 +1,6 @@
 package com.zclcs.cloud.lib.dict.utils;
 
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.cache.DictCache;
 import com.zclcs.cloud.lib.dict.cache.DictChildrenCache;
 import com.zclcs.cloud.lib.dict.cache.DictItemCache;
@@ -22,7 +22,7 @@ public class DictCacheUtil {
     private DictItemCache dictItemCache;
     private DictChildrenCache dictChildrenCache;
 
-    public static List<DictItem> getDictByDictName(String dictName) {
+    public static List<DictItemCacheBean> getDictByDictName(String dictName) {
         return DICT_CACHE.findCache(dictName);
     }
 
@@ -34,7 +34,7 @@ public class DictCacheUtil {
         DICT_CACHE.deleteCache(dictNames);
     }
 
-    public static DictItem getDictItemByDictNameAndValue(String dictName, String value) {
+    public static DictItemCacheBean getDictItemByDictNameAndValue(String dictName, String value) {
         return DICT_ITEM_CACHE.findCache(dictName, value);
     }
 
@@ -46,7 +46,7 @@ public class DictCacheUtil {
         DICT_ITEM_CACHE.deleteCache(keys);
     }
 
-    public static List<DictItem> getDictByDictNameAndParentValue(String dictName, String parentValue) {
+    public static List<DictItemCacheBean> getDictByDictNameAndParentValue(String dictName, String parentValue) {
         return DICT_CHILDREN_CACHE.findCache(dictName, parentValue);
     }
 

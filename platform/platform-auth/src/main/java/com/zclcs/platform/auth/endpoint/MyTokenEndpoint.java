@@ -16,8 +16,8 @@ import com.zclcs.cloud.lib.security.annotation.Inner;
 import com.zclcs.cloud.lib.security.exception.OAuthClientException;
 import com.zclcs.cloud.lib.security.utils.OAuth2EndpointUtil;
 import com.zclcs.platform.auth.support.handler.MyAuthenticationFailureEventHandler;
-import com.zclcs.platform.system.api.entity.OauthClientDetails;
-import com.zclcs.platform.system.api.entity.vo.TokenVo;
+import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
+import com.zclcs.platform.system.api.bean.vo.TokenVo;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -99,8 +99,8 @@ public class MyTokenEndpoint {
                                 @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId,
                                 @RequestParam(OAuth2ParameterNames.SCOPE) String scope,
                                 @RequestParam(OAuth2ParameterNames.STATE) String state) {
-        OauthClientDetails oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
-        Optional.ofNullable(oauthClientDetailsCache).map(OauthClientDetails::getClientId).filter(StrUtil::isNotBlank)
+        OauthClientDetailsCacheBean oauthClientDetailsCache = SystemCacheUtil.getOauthClientDetailsCache(clientId);
+        Optional.ofNullable(oauthClientDetailsCache).map(OauthClientDetailsCacheBean::getClientId).filter(StrUtil::isNotBlank)
                 .orElseThrow(() -> new OAuthClientException("clientId 不合法"));
 
         Set<String> authorizedScopes = StringUtils.commaDelimitedListToSet(oauthClientDetailsCache.getScope());

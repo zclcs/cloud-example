@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.enums.DictEnum;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.json.annotation.Array;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import com.zclcs.cloud.lib.dict.json.annotation.DictTypeKeyHandler;
@@ -259,9 +259,9 @@ public class DictTextJsonSerializerDefault extends JsonSerializer<Object> {
             final List<String> values = new LinkedList<>();
             String value = dictValue;
             do {
-                DictItem dictItem = DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, value);
-                if (dictItem != null) {
-                    values.add(0, dictItem.getTitle());
+                DictItemCacheBean dictItemCacheBean = DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, value);
+                if (dictItemCacheBean != null) {
+                    values.add(0, dictItemCacheBean.getTitle());
                 }
                 value = DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, value).getParentValue();
             } while (value != null && !CommonCore.TOP_PARENT_CODE.equals(value));

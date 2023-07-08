@@ -2,9 +2,9 @@ package com.zclcs.platform.system.runner;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.common.db.merge.starter.properties.MyDbMergeProperties;
-import com.zclcs.platform.system.api.entity.*;
+import com.zclcs.platform.system.api.bean.entity.*;
 import com.zclcs.platform.system.properties.PlatformSystemProperties;
 import com.zclcs.platform.system.service.*;
 import lombok.RequiredArgsConstructor;

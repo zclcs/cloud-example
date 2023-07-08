@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zclcs.platform.system.api.entity.UserDataPermission;
+import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.mapper.UserDataPermissionMapper;
 import com.zclcs.platform.system.service.UserDataPermissionService;
 import lombok.RequiredArgsConstructor;

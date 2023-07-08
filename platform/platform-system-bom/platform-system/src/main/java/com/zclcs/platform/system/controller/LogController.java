@@ -8,7 +8,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.vo.LogVo;
+import com.zclcs.platform.system.api.bean.vo.LogVo;
 import com.zclcs.platform.system.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

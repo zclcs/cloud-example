@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.platform.system.api.entity.UserDataPermission;
+import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 
 /**
  * 用户数据权限关联 Service接口

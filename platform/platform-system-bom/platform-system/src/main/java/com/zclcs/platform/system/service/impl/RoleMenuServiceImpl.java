@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zclcs.platform.system.api.entity.RoleMenu;
+import com.zclcs.platform.system.api.bean.entity.RoleMenu;
 import com.zclcs.platform.system.mapper.RoleMenuMapper;
 import com.zclcs.platform.system.service.RoleMenuService;
 import lombok.RequiredArgsConstructor;

@@ -8,10 +8,11 @@ import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.Dept;
-import com.zclcs.platform.system.api.entity.ao.DeptAo;
-import com.zclcs.platform.system.api.entity.vo.DeptTreeVo;
-import com.zclcs.platform.system.api.entity.vo.DeptVo;
+import com.zclcs.platform.system.api.bean.ao.DeptAo;
+import com.zclcs.platform.system.api.bean.cache.DeptCacheBean;
+import com.zclcs.platform.system.api.bean.entity.Dept;
+import com.zclcs.platform.system.api.bean.vo.DeptTreeVo;
+import com.zclcs.platform.system.api.bean.vo.DeptVo;
 import com.zclcs.platform.system.service.DeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -89,8 +90,8 @@ public class DeptController {
     @GetMapping(value = "/findByDeptId/{deptId}")
     @Operation(summary = "根据部门id查询部门")
     @Inner
-    public Dept findByDeptId(@PathVariable Long deptId) {
-        return this.deptService.lambdaQuery().eq(Dept::getDeptId, deptId).one();
+    public DeptCacheBean findByDeptId(@PathVariable Long deptId) {
+        return DeptCacheBean.convertToDeptCacheBean(this.deptService.lambdaQuery().eq(Dept::getDeptId, deptId).one());
     }
 
     @GetMapping("/checkDeptName")

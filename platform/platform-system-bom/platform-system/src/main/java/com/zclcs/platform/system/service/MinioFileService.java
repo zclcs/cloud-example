@@ -3,8 +3,8 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.MinioFile;
-import com.zclcs.platform.system.api.entity.vo.MinioFileVo;
+import com.zclcs.platform.system.api.bean.entity.MinioFile;
+import com.zclcs.platform.system.api.bean.vo.MinioFileVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

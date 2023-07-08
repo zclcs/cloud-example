@@ -65,7 +65,7 @@ data_volume: /zclcs/harbor/data
 #     maxthreads: 100
 #   # set disable to true when you want to disable registry redirect
 #   redirect:
-#     disabled: false
+#     disable: false
 
 # Trivy configuration
 #
@@ -119,7 +119,7 @@ notification:
 
 chart:
   # Change the value of absolute_url to enabled can enable absolute url in chart
-  absolute_url: disabled
+  absolute_url: disable
 
 # Log configurations
 log:
@@ -262,7 +262,7 @@ upload_purging:
 # manifest pulling.
 # NOTICE
 # If you are deploying Harbor in HA mode, make sure that all the harbor
-# instances have the same behaviour, all with caching enabled or disabled,
+# instances have the same behaviour, all with caching enabled or disable,
 # otherwise it can lead to potential data inconsistency.
 cache:
   # not enabled by default

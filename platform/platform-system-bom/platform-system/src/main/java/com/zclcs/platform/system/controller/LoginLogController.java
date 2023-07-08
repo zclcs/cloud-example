@@ -6,7 +6,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.entity.vo.LoginLogVo;
+import com.zclcs.platform.system.api.bean.vo.LoginLogVo;
 import com.zclcs.platform.system.service.LoginLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

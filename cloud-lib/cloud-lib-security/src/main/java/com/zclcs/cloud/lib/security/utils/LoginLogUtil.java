@@ -19,7 +19,7 @@ package com.zclcs.cloud.lib.security.utils;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.zclcs.common.web.starter.utils.WebUtil;
-import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;

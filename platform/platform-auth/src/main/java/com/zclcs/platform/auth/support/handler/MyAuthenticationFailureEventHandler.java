@@ -9,7 +9,7 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.utils.LoginLogUtil;
-import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

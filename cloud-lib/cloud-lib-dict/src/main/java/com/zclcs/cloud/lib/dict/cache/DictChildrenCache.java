@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.dict.cache;
 
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
 import com.zclcs.common.redis.starter.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author zclcs
  */
 @Service
-public class DictChildrenCache extends CacheService<List<DictItem>> {
+public class DictChildrenCache extends CacheService<List<DictItemCacheBean>> {
 
     private RemoteDictItemService remoteDictItemService;
 
@@ -28,7 +28,7 @@ public class DictChildrenCache extends CacheService<List<DictItem>> {
 
 
     @Override
-    protected List<DictItem> findByKey(Object... key) {
+    protected List<DictItemCacheBean> findByKey(Object... key) {
         return remoteDictItemService.findByDictNameAndParentValue((String) key[0], (String) key[1]);
     }
 

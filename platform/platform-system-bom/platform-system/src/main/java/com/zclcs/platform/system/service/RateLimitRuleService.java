@@ -3,9 +3,9 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.RateLimitRule;
-import com.zclcs.platform.system.api.entity.ao.RateLimitRuleAo;
-import com.zclcs.platform.system.api.entity.vo.RateLimitRuleVo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
+import com.zclcs.platform.system.api.bean.ao.RateLimitRuleAo;
+import com.zclcs.platform.system.api.bean.vo.RateLimitRuleVo;
 
 import java.util.List;
 

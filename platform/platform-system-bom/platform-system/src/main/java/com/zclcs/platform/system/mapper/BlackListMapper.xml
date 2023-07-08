@@ -21,13 +21,13 @@
         from system_black_list sbl
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.BlackListVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.BlackListVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.BlackListVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.BlackListVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.BlackListVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.BlackListVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">

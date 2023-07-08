@@ -9,7 +9,7 @@
     </select>
 
     <!--查询数据库下面的表-->
-    <select id="getTables" resultType="com.zclcs.platform.system.api.entity.Table" parameterType="string">
+    <select id="getTables" resultType="com.zclcs.platform.system.api.bean.entity.Table" parameterType="string">
         SELECT
         CREATE_TIME create_at,
         UPDATE_TIME update_at,
@@ -28,7 +28,7 @@
     </select>
 
     <!--查询数据库表下面的列属性-->
-    <select id="getColumns" resultType="com.zclcs.platform.system.api.entity.Column">
+    <select id="getColumns" resultType="com.zclcs.platform.system.api.bean.entity.Column">
         SELECT COLUMN_NAME name,
         CASE
         COLUMN_key

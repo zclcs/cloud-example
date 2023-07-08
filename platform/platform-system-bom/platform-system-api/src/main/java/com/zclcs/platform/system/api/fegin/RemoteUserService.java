@@ -2,7 +2,7 @@ package com.zclcs.platform.system.api.fegin;
 
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
-import com.zclcs.platform.system.api.entity.User;
+import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +17,10 @@ public interface RemoteUserService {
      * 通过用户名查询用户
      *
      * @param username 用户名
-     * @return BaseRsp
+     * @return {@link UserCacheBean}
      */
     @GetMapping(value = "/user/findByUsername/{username}", headers = Security.HEADER_FROM_IN)
-    User findByUsername(@PathVariable("username") String username);
+    UserCacheBean findByUsername(@PathVariable("username") String username);
 
     /**
      * 通过手机号查询用户名

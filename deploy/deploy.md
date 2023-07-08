@@ -9,6 +9,7 @@
 
 > - 搜索[centos镜像](https://app.vagrantup.com/boxes/search)
 > - 创建vagrant_vm目录
+> - vagrant plugin install vagrant-disksize
 > - 进入vagrant_vm目录，执行`vagrant init centos/7`（来自镜像网站）命令
 > - 修改目录下的配置
 
@@ -152,13 +153,43 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 > - 进入本项目目录执行maven命令(如果harbor账号密码不是默认记得改，地址及端口也是一样)
     ：`jib -DsendCredentialsOverHttp=true`
 
-## 部署第三方依赖：redis、nacos、nginx、rabbitmq
+## 部署第三方依赖：minio、mysql、nacos、nginx、rabbitmq、redis
+
+# 若无minio基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/minio 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/minio:RELEASE.2021-06-17T00-10-46Z .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/minio:RELEASE.2021-06-17T00-10-46Z`
+
+# 若无mysql基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/mysql 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/mysql:5.7.35 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/mysql:5.7.35`
+
+# 若无nacos基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/nacos 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/nacos-server:v2.2.1 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/nacos-server:v2.2.1`
+
+# 若无nginx基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/nginx 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/nginx:1.21.3 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/nginx:1.21.3`
 
 # 若无rabbitmq基础镜像先创建基础镜像
 
-> - 复制项目 /cloud/third-part/rabbitmq 下的内容，上传至服务器
+> - 复制项目 /deploy/dev/rabbitmq 下的内容，上传至服务器
 > - 执行docker build -t 192.168.33.10:3000/library/rabbitmq:3.9.13-management .
 > - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/rabbitmq:3.9.13-management`
+
+# 若无redis基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/redis 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/redis:6.0.8 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/redis:6.0.8`
 
 # 若无xxl-job基础镜像先创建基础镜像
 

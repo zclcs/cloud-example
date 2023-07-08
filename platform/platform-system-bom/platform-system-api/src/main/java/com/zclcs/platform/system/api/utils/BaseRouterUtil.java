@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.utils;
 
 import com.zclcs.cloud.lib.core.constant.CommonCore;
-import com.zclcs.platform.system.api.entity.router.VueRouter;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
 
 import java.util.ArrayList;
 import java.util.List;

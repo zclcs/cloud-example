@@ -5,7 +5,7 @@ import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.security.utils.LoginLogUtil;
-import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

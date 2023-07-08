@@ -37,25 +37,25 @@
               group by sdi.dict_name) tb
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.DictItemVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.DictItemVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.DictItemVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.DictItemVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">
         <include refid="baseCountSql"/>
     </select>
-    <select id="findPageDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+    <select id="findPageDictVo" resultType="com.zclcs.platform.system.api.bean.vo.DictVo">
         <include refid="baseDictSql"/>
     </select>
-    <select id="findListDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+    <select id="findListDictVo" resultType="com.zclcs.platform.system.api.bean.vo.DictVo">
         <include refid="baseDictSql"/>
     </select>
-    <select id="findOneDictVo" resultType="com.zclcs.platform.system.api.entity.vo.DictVo">
+    <select id="findOneDictVo" resultType="com.zclcs.platform.system.api.bean.vo.DictVo">
         <include refid="baseDictSql"/>
     </select>
     <select id="countDictVo" resultType="java.lang.Integer">

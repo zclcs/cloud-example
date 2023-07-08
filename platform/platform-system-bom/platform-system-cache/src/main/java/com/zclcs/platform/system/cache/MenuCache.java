@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.system.api.entity.Menu;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.fegin.RemoteMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author zclcs
  */
 @Service
-public class MenuCache extends CacheService<Menu> {
+public class MenuCache extends CacheService<MenuCacheBean> {
 
     private RemoteMenuService remoteMenuService;
 
@@ -31,12 +31,12 @@ public class MenuCache extends CacheService<Menu> {
     }
 
     @Override
-    protected Menu findByKey(Object... key) {
+    protected MenuCacheBean findByKey(Object... key) {
         return remoteMenuService.findByMenuId((Long) key[0]);
     }
 
-    public List<Menu> getMenusByMenuIds(List<Long> menuIds) {
-        List<Menu> cacheMenu = new ArrayList<>();
+    public List<MenuCacheBean> getMenusByMenuIds(List<Long> menuIds) {
+        List<MenuCacheBean> cacheMenu = new ArrayList<>();
         List<Long> needCacheMenuId = new ArrayList<>();
         List<Long> alreadyCacheMenuId = new ArrayList<>();
         for (Long menuId : menuIds) {
@@ -47,8 +47,8 @@ public class MenuCache extends CacheService<Menu> {
             }
         }
         if (CollectionUtil.isNotEmpty(needCacheMenuId)) {
-            Map<Long, Menu> byMenuIds = remoteMenuService.findByMenuIds(needCacheMenuId);
-            for (Map.Entry<Long, Menu> longMenuEntry : byMenuIds.entrySet()) {
+            Map<Long, MenuCacheBean> byMenuIds = remoteMenuService.findByMenuIds(needCacheMenuId);
+            for (Map.Entry<Long, MenuCacheBean> longMenuEntry : byMenuIds.entrySet()) {
                 cacheMenu.add(cacheKey(longMenuEntry.getValue(), longMenuEntry.getKey()));
             }
         }

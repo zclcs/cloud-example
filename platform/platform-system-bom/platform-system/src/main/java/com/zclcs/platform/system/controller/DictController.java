@@ -3,7 +3,7 @@ package com.zclcs.platform.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,8 +44,8 @@ public class DictController {
             @Parameter(name = "parentCode", description = "子级字典项", required = false, in = ParameterIn.QUERY),
     })
     @GetMapping(value = "/dictQuery")
-    public BaseRsp<List<DictItem>> dictTypeQuery(@RequestParam(required = true) final String dictName,
-                                                 @RequestParam(required = false) final String parentCode) {
+    public BaseRsp<List<DictItemCacheBean>> dictTypeQuery(@RequestParam(required = true) final String dictName,
+                                                          @RequestParam(required = false) final String parentCode) {
         if (StrUtil.isNotBlank(parentCode)) {
             return RspUtil.data(DictCacheUtil.getDictByDictNameAndParentValue(dictName, parentCode));
         }

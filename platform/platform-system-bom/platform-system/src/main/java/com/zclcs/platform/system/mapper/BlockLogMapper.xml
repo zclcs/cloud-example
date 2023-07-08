@@ -19,13 +19,13 @@
         from system_block_log sbl
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.BlockLogVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.BlockLogVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.BlockLogVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.BlockLogVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.BlockLogVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.BlockLogVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">

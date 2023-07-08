@@ -22,13 +22,13 @@
         from system_generator_config gc
             ${ew.customSqlSegment}
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo">
+    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo">
+    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo">
+    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo">
         <include refid="baseSql"/>
     </select>
 

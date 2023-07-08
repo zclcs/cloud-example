@@ -8,9 +8,10 @@ import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.platform.system.api.entity.Role;
-import com.zclcs.platform.system.api.entity.ao.RoleAo;
-import com.zclcs.platform.system.api.entity.vo.RoleVo;
+import com.zclcs.platform.system.api.bean.ao.RoleAo;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
+import com.zclcs.platform.system.api.bean.entity.Role;
+import com.zclcs.platform.system.api.bean.vo.RoleVo;
 import com.zclcs.platform.system.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,8 +72,8 @@ public class RoleController {
     @GetMapping(value = "/findByRoleId/{roleId}")
     @Operation(summary = "根据角色id查询角色")
     @Inner
-    public Role findByRoleId(@PathVariable Long roleId) {
-        return this.roleService.lambdaQuery().eq(Role::getRoleId, roleId).one();
+    public RoleCacheBean findByRoleId(@PathVariable Long roleId) {
+        return RoleCacheBean.convertToRoleCacheBean(this.roleService.lambdaQuery().eq(Role::getRoleId, roleId).one());
     }
 
     @GetMapping("/options")

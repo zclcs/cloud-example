@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zclcs.platform.system.api.entity.RoleMenu;
+import com.zclcs.platform.system.api.bean.entity.RoleMenu;
 
 /**
  * 角色菜单关联 Service接口

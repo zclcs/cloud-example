@@ -3,9 +3,9 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.LoginLog;
-import com.zclcs.platform.system.api.entity.ao.LoginLogAo;
-import com.zclcs.platform.system.api.entity.vo.LoginLogVo;
+import com.zclcs.platform.system.api.bean.entity.LoginLog;
+import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.vo.LoginLogVo;
 
 import java.util.List;
 

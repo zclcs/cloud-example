@@ -3,9 +3,9 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.entity.GeneratorConfig;
-import com.zclcs.platform.system.api.entity.ao.GeneratorConfigAo;
-import com.zclcs.platform.system.api.entity.vo.GeneratorConfigVo;
+import com.zclcs.platform.system.api.bean.entity.GeneratorConfig;
+import com.zclcs.platform.system.api.bean.ao.GeneratorConfigAo;
+import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 
 import java.util.List;
 

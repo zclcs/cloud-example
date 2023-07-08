@@ -3,11 +3,11 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.dict.entity.DictItem;
-import com.zclcs.platform.system.api.entity.ao.DictItemAo;
-import com.zclcs.platform.system.api.entity.vo.DictItemTreeVo;
-import com.zclcs.platform.system.api.entity.vo.DictItemVo;
-import com.zclcs.platform.system.api.entity.vo.DictVo;
+import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
+import com.zclcs.platform.system.api.bean.ao.DictItemAo;
+import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
+import com.zclcs.platform.system.api.bean.vo.DictItemVo;
+import com.zclcs.platform.system.api.bean.vo.DictVo;
 
 import java.util.List;
 
