@@ -188,8 +188,8 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # 若无redis基础镜像先创建基础镜像
 
 > - 复制项目 /deploy/dev/redis 下的内容，上传至服务器
-> - 执行docker build -t 192.168.33.10:3000/library/redis:6.0.8 .
-> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/redis:6.0.8`
+> - 执行docker build -t 192.168.33.10:3000/library/redis:7.0.5 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/redis:7.0.5`
 
 # 若无xxl-job基础镜像先创建基础镜像
 

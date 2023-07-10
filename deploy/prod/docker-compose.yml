@@ -27,7 +27,7 @@ services:
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   redis:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/redis:6.0.8
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/redis:7.0.5
     container_name: ${NACOS_NAMESPACE}-redis
     networks:
       - cloud_net
@@ -40,7 +40,8 @@ services:
       - /bin/bash
       - -c
       - |
-        echo 1000 > /proc/sys/net/core/somaxconn    # 关键命令
+        echo 1 > /proc/sys/vm/overcommit_memory
+        echo 1000 > /proc/sys/net/core/somaxconn
         redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
     volumes:
       - ./redis/data:/data #挂载 Redis数据
@@ -261,7 +262,7 @@ services:
           memory: 512M
     env_file: .env
     depends_on:
-      nacos:
+      third-part-config-sync:
         condition: service_healthy
   platform-auth:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
@@ -289,7 +290,7 @@ services:
           memory: 512M
     env_file: .env
     depends_on:
-      nacos:
+      third-part-config-sync:
         condition: service_healthy
   platform-system:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
@@ -317,7 +318,7 @@ services:
           memory: 512M
     env_file: .env
     depends_on:
-      nacos:
+      third-part-config-sync:
         condition: service_healthy
   test-test:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
@@ -345,7 +346,7 @@ services:
           memory: 512M
     env_file: .env
     depends_on:
-      nacos:
+      third-part-config-sync:
         condition: service_healthy
 
 networks:
