@@ -9,7 +9,7 @@
 
 > - 搜索[centos镜像](https://app.vagrantup.com/boxes/search)
 > - 创建vagrant_vm目录
-> - vagrant plugin install vagrant-disksize
+> - 环境变量添加 VAGRANT_EXPERIMENTAL=disks
 > - 进入vagrant_vm目录，执行`vagrant init centos/7`（来自镜像网站）命令
 > - 修改目录下的配置
 

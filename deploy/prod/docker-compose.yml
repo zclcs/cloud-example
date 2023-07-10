@@ -36,7 +36,12 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo 1000 > /proc/sys/net/core/somaxconn    # 关键命令
+        redis-server /etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --appendonly no
     volumes:
       - ./redis/data:/data #挂载 Redis数据
       - ./redis/conf/redis.conf:/etc/redis/redis.conf #挂载 Redis配置
@@ -45,6 +50,8 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    privileged: true
+    user: root
     env_file: .env
   nacos:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nacos-server:v2.2.1
@@ -256,8 +263,6 @@ services:
     depends_on:
       nacos:
         condition: service_healthy
-      redis:
-        condition: service_healthy
   platform-auth:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-auth
@@ -285,8 +290,6 @@ services:
     env_file: .env
     depends_on:
       nacos:
-        condition: service_healthy
-      redis:
         condition: service_healthy
   platform-system:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
@@ -316,8 +319,6 @@ services:
     depends_on:
       nacos:
         condition: service_healthy
-      redis:
-        condition: service_healthy
   test-test:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-test-test
@@ -345,8 +346,6 @@ services:
     env_file: .env
     depends_on:
       nacos:
-        condition: service_healthy
-      redis:
         condition: service_healthy
 
 networks:

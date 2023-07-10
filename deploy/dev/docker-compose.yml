@@ -24,6 +24,7 @@ services:
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
   redis:
+    # https://www.cnblogs.com/lovling/p/12532549.html redis启动告警解决
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/redis:6.0.8
     container_name: ${NACOS_NAMESPACE}-redis
     network_mode: host
@@ -40,6 +41,8 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    privileged: true
+    user: root
     env_file: .env
   nacos:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nacos-server:v2.2.1
@@ -231,8 +234,6 @@ services:
     depends_on:
       nacos:
         condition: service_healthy
-      redis:
-        condition: service_healthy
   platform-auth:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-auth
@@ -258,8 +259,6 @@ services:
     env_file: .env
     depends_on:
       nacos:
-        condition: service_healthy
-      redis:
         condition: service_healthy
   platform-system:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
@@ -287,8 +286,6 @@ services:
     depends_on:
       nacos:
         condition: service_healthy
-      redis:
-        condition: service_healthy
   test-test:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test-test:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-test-test
@@ -314,6 +311,4 @@ services:
     env_file: .env
     depends_on:
       nacos:
-        condition: service_healthy
-      redis:
         condition: service_healthy
