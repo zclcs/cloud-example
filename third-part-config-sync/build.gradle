@@ -4,6 +4,13 @@ bootJar {
     mainClass = "com.zclcs.ThirdPartConfigSyncApplication"
 }
 
+processResources {
+    copy {
+        from("../shared-resources")
+        into("/src/main/resources")
+    }
+}
+
 dependencies {
     implementation project(":common:common-logging-starter")
     implementation project(":cloud-lib:cloud-lib-core")

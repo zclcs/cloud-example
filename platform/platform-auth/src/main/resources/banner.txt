@@ -7,4 +7,4 @@
  ██████░░█████  ███░░█████  ██████
 ░░░░░░  ░░░░░  ░░░  ░░░░░  ░░░░░░
   spring-boot    ${spring-boot.version}
-  http port      ${server.port}
+  http-port      ${server.port}
