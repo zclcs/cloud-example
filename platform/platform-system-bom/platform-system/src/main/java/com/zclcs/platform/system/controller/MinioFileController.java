@@ -159,7 +159,7 @@ public class MinioFileController {
             //设置header
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Accept-Ranges", "bytes");
-            httpHeaders.add("Content-Length", bytes.length + "");
+            httpHeaders.add("Content-Length", String.valueOf(bytes.length));
             httpHeaders.add("Content-disposition", "attachment; filename=" + minioFile.getFileName());
             httpHeaders.add("Content-Type", "text/plain;charset=utf-8");
             responseEntity = new ResponseEntity<>(bytes, httpHeaders, HttpStatus.CREATED);

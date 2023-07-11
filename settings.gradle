@@ -12,6 +12,7 @@ include 'common:common-db-merge-starter'
 include 'common:common-xxl-job-starter'
 include 'common:common-dynamic-tp-starter'
 include 'common:common-ip2region-starter'
+include 'common:common-jackson-starter'
 
 include 'cloud-lib'
 include 'cloud-lib:cloud-lib-core'

@@ -1,26 +1,18 @@
 package com.zclcs.common.web.starter.configure;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zclcs.common.web.starter.properties.MyWebProperties;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -46,21 +38,18 @@ public class MyWebConfiguration implements WebMvcConfigurer {
         }
     }
 
-    /**
-     * 统一配置
-     */
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        JavaTimeModule module = new JavaTimeModule();
-        module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
-        module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
-        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN)));
-        return builder -> {
-            builder.simpleDateFormat(NORM_DATETIME_PATTERN);
-            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
-            builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN)));
-            builder.modules(module);
-        };
+    @ControllerAdvice
+    public static class ControllerStringParamTrimConfig {
+
+        /**
+         * url和form表单中的参数trim
+         */
+        @InitBinder
+        public void initBinder(WebDataBinder binder) {
+            // 构造方法中 boolean 参数含义为如果是空白字符串,是否转换为null
+            // 即如果为true,那么 " " 会被转换为 null,否者为 ""
+            StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(false);
+            binder.registerCustomEditor(String.class, stringTrimmerEditor);
+        }
     }
 }

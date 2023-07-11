@@ -21,6 +21,7 @@ dependencies {
     }
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":common:common-redis-starter"))
+    implementation(project(":common:common-jackson-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-core"))
     implementation "org.springframework.cloud:spring-cloud-starter-gateway"
