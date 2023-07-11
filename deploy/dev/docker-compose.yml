@@ -128,17 +128,19 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    privileged: true
-    user: root
     volumes:
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/templates:/etc/nginx/templates
+      #      - ./nginx/log:/var/log/nginx
       - ./web:/var/cloud/web
-      - ./nginx/conf/:/etc/nginx/
     healthcheck:
       test: [ "CMD", "service", "nginx", "status" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
     env_file: .env
+    privileged: true
+    user: root
     depends_on:
       platform-gateway:
         condition: service_healthy

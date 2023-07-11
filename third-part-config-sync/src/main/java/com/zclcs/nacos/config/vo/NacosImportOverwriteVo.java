@@ -13,8 +13,8 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosImportVo", description = "nacos")
-public class NacosImportVo {
+@Schema(title = "NacosImportOverwriteVo", description = "nacos")
+public class NacosImportOverwriteVo {
 
     @Schema(description = "成功数量")
     private Integer succCount;
