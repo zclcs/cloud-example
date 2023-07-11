@@ -88,6 +88,7 @@ spring:
             dataId: ${spring.application.name}-degrade-rule.json
             data-type: json
             rule-type: degrade
+        # 系统规则 需要sentinel-dash
         system:
           nacos:
             server-addr: ${spring.cloud.nacos.config.server-addr}

@@ -1,7 +1,5 @@
 package com.zclcs.platform.gateway.configure;
 
-import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,18 +58,18 @@ public class GatewayConfiguration {
         return myGatewayExceptionHandler;
     }
 
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider) {
-        // Register the block exception handler for Spring Cloud Gateway.
-        return new SentinelGatewayBlockExceptionHandler(viewResolversProvider.getIfAvailable(Collections::emptyList), serverCodecConfigurer);
-    }
+//    @Bean
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider) {
+//        // Register the block exception handler for Spring Cloud Gateway.
+//        return new SentinelGatewayBlockExceptionHandler(viewResolversProvider.getIfAvailable(Collections::emptyList), serverCodecConfigurer);
+//    }
 
-    @Bean
-    @Order(-1)
-    public GlobalFilter sentinelGatewayFilter() {
-        return new SentinelGatewayFilter();
-    }
+//    @Bean
+//    @Order(-1)
+//    public GlobalFilter sentinelGatewayFilter() {
+//        return new SentinelGatewayFilter();
+//    }
 
     @Bean
     public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties) {
