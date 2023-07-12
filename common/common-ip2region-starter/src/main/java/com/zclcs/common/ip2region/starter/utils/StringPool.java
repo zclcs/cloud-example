@@ -19,7 +19,7 @@ package com.zclcs.common.ip2region.starter.utils;
 /**
  * 静态 String 池
  *
- * @author L.cm
+ * @author zclcs
  */
 public interface StringPool {
     // @formatter:off

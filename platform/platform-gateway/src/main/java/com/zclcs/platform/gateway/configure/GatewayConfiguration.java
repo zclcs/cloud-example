@@ -36,15 +36,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 网关配置
  *
- * @author L.cm
+ * @author zclcs
  */
 @EnableAsync
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({GatewayConfigProperties.class, MyValidateCodeProperties.class})
 @RequiredArgsConstructor
 public class GatewayConfiguration {
-
-    private final ServerCodecConfigurer serverCodecConfigurer;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
