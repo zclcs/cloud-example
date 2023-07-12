@@ -227,6 +227,7 @@ services:
     command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
+    #      - ./log/platform-gateway/sentinel:/root/logs/csp/
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_GATEWAY}/ping || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}

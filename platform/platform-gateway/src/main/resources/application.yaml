@@ -88,17 +88,17 @@ spring:
             dataId: ${spring.application.name}-degrade-rule.json
             data-type: json
             rule-type: degrade
-        # 系统规则 暂时不生效待修复
-        system:
-          nacos:
-            server-addr: ${spring.cloud.nacos.config.server-addr}
-            namespace: ${spring.cloud.nacos.config.namespace}
-            groupId: ${spring.cloud.nacos.config.group}
-            username: ${spring.cloud.nacos.config.username}
-            password: ${spring.cloud.nacos.config.password}
-            dataId: ${spring.application.name}-system-rule.json
-            data-type: json
-            rule-type: system
+        # 系统规则 有bug暂时不生效待修复
+#        system:
+#          nacos:
+#            server-addr: ${spring.cloud.nacos.config.server-addr}
+#            namespace: ${spring.cloud.nacos.config.namespace}
+#            groupId: ${spring.cloud.nacos.config.group}
+#            username: ${spring.cloud.nacos.config.username}
+#            password: ${spring.cloud.nacos.config.password}
+#            dataId: ${spring.application.name}-system-rule.json
+#            data-type: json
+#            rule-type: system
 
 # spring security 配置
 security:

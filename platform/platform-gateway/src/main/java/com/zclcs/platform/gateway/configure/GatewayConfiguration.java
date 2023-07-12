@@ -3,13 +3,13 @@ package com.zclcs.platform.gateway.configure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.gateway.filter.*;
+import com.zclcs.platform.gateway.filter.PasswordDecoderFilter;
+import com.zclcs.platform.gateway.filter.ValidateCodeGatewayFilter;
 import com.zclcs.platform.gateway.handler.ImageCodeHandler;
 import com.zclcs.platform.gateway.handler.MyGatewayExceptionHandler;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
-import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -58,37 +58,9 @@ public class GatewayConfiguration {
         return myGatewayExceptionHandler;
     }
 
-//    @Bean
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider) {
-//        // Register the block exception handler for Spring Cloud Gateway.
-//        return new SentinelGatewayBlockExceptionHandler(viewResolversProvider.getIfAvailable(Collections::emptyList), serverCodecConfigurer);
-//    }
-
-//    @Bean
-//    @Order(-1)
-//    public GlobalFilter sentinelGatewayFilter() {
-//        return new SentinelGatewayFilter();
-//    }
-
     @Bean
     public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties) {
         return new PasswordDecoderFilter(configProperties);
-    }
-
-    @Bean
-    public MyGatewayRequestFilter myGatewayRequestFilter() {
-        return new MyGatewayRequestFilter();
-    }
-
-    @Bean
-    public ApiLoggingFilter apiLoggingFilter(RouteEnhanceService routeEnhanceService) {
-        return new ApiLoggingFilter(routeEnhanceService);
-    }
-
-    @Bean
-    public RequestRateLimiterFilter requestRateLimiterFilter(RouteEnhanceService routeEnhanceService) {
-        return new RequestRateLimiterFilter(routeEnhanceService);
     }
 
     @Bean

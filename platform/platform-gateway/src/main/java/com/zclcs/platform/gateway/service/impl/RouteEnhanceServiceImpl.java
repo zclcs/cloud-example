@@ -15,11 +15,11 @@ import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
-import com.zclcs.platform.system.api.bean.entity.BlackList;
-import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
+import com.zclcs.platform.system.api.bean.entity.BlackList;
+import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.Route;
@@ -154,7 +154,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                             .build();
                     rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
                 }
-                // 当前仅记录日志，后续可以添加日志队列，来过滤请求慢的接口
+                // 记录日志
                 if (log.isDebugEnabled()) {
                     log.debug("来自IP地址：{}的请求接口：{}，响应状态码：{}，请求耗时：{}ms", requestIp, originUri.getPath(), code, executeTime);
                 }
