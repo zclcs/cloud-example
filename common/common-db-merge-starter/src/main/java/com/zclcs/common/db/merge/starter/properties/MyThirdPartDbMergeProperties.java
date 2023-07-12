@@ -16,12 +16,12 @@ public class MyThirdPartDbMergeProperties {
     /**
      * nacos脚本
      */
-    private String nacosSql = "sql/nacos";
+    private String nacosSql = "sql/nacos/";
 
     /**
      * xxlJob脚本
      */
-    private String xxlJobSql = "sql/xxl-job";
+    private String xxlJobSql = "sql/xxl-job/";
 
     public Boolean getEnable() {
         return enable;

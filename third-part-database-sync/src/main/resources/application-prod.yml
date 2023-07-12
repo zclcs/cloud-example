@@ -17,3 +17,6 @@ logging:
     org.redisson: info
     reactor.netty: info
     com.rabbitmq: info
+
+third-part-database-sync:
+  generate-sql: false
