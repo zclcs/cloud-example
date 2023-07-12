@@ -51,7 +51,7 @@ spring:
           enabled: true
 
     sentinel:
-      eager: false
+      eager: true
       filter:
         enabled: false
       datasource:
@@ -88,7 +88,7 @@ spring:
             dataId: ${spring.application.name}-degrade-rule.json
             data-type: json
             rule-type: degrade
-        # 系统规则 需要sentinel-dash
+        # 系统规则 暂时不生效待修复
         system:
           nacos:
             server-addr: ${spring.cloud.nacos.config.server-addr}

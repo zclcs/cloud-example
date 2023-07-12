@@ -68,7 +68,7 @@ services:
       - ./nacos/standalone-logs/:/home/nacos/logs
       - ./nacos/init.d/application.properties:/home/nacos/conf/application.properties
     healthcheck:
-      test: [ "CMD", "nc", "-vz", "${LOCAL_HOST_IP}", "${NACOS_SERVER_PORT}" ]
+      test: [ "CMD", "nc", "-vz", "${NACOS_HOST}", "${NACOS_SERVER_PORT}" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
@@ -94,7 +94,7 @@ services:
       #映射配置目录
       - ./minio/config:/root/.minio/
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS 'http://${LOCAL_HOST_IP}:${MINIO_PORT}/minio/index.html' || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS 'http://${MINIO_HOST}:${MINIO_PORT}/minio/index.html' || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
@@ -156,7 +156,7 @@ services:
     volumes:
       - ./xxl-job/log:/data/applogs/xxl-job
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${XXL_JOB_PORT} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${XXL_JOB_HOST}:${XXL_JOB_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
