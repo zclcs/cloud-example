@@ -87,10 +87,6 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
          */
         HttpStatus httpStatus;
         ServerHttpRequest request = exchange.getRequest();
-        log.error(
-                "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
-                request.getPath(), request.getMethod(), error.getMessage()
-        );
         String errorMessage;
         if (error instanceof NotFoundException) {
             String serverId = StrUtil.subAfter(error.getMessage(), "Unable to find instance for ", true);
@@ -131,6 +127,12 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else {
             errorMessage = "网关转发异常";
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        if (httpStatus.equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            log.error(
+                    "请求发生异常，请求URI：{}，请求方法：{}，异常信息：{}",
+                    request.getPath(), request.getMethod(), error.getMessage()
+            );
         }
         // 封装响应体,此body可修改为自己的jsonBody
         Map<String, Object> result = new HashMap<>(2, 1);

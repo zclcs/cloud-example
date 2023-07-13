@@ -1,7 +1,6 @@
 package com.zclcs.common.redis.starter.configure;
 
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.lang.Nullable;
 
@@ -15,20 +14,20 @@ public class MyStringRedisSerializer implements RedisSerializer<String> {
     /**
      * 字典表缓存前缀
      */
-    private final MyLettuceRedisProperties properties;
+    private final String redisCachePrefix;
 
-    public MyStringRedisSerializer(MyLettuceRedisProperties properties) {
-        this.properties = properties;
+    public MyStringRedisSerializer(String redisCachePrefix) {
+        this.redisCachePrefix = redisCachePrefix;
     }
 
     @Override
     public String deserialize(@Nullable byte[] bytes) {
-        return (bytes == null ? null : StrUtil.addPrefixIfNot(new String(bytes, StandardCharsets.UTF_8), properties.getRedisCachePrefix()));
+        return (bytes == null ? null : StrUtil.addPrefixIfNot(new String(bytes, StandardCharsets.UTF_8), redisCachePrefix));
     }
 
     @Override
     public byte[] serialize(@Nullable String string) {
-        return (string == null ? null : StrUtil.addPrefixIfNot(string, properties.getRedisCachePrefix()).getBytes(StandardCharsets.UTF_8));
+        return (string == null ? null : StrUtil.addPrefixIfNot(string, redisCachePrefix).getBytes(StandardCharsets.UTF_8));
     }
 
 }

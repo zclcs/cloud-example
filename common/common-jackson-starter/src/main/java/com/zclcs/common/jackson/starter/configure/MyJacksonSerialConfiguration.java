@@ -12,7 +12,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 
@@ -26,6 +28,8 @@ import java.time.format.DateTimeFormatter;
  * @author zclcs
  */
 @AutoConfiguration
+@RequiredArgsConstructor
+@ConditionalOnProperty(value = "my.jackson.enable", havingValue = "true", matchIfMissing = true)
 public class MyJacksonSerialConfiguration {
 
     private final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";

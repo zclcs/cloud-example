@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.controller;
+package com.zclcs.platform.maintenance.controller;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
@@ -56,13 +56,18 @@ public class XxlJobController {
 
     private final RedisService redisService;
 
-    private final MyXxlJobProperties myXxlJobProperties;
+    private MyXxlJobProperties myXxlJobProperties;
 
     private ObjectMapper objectMapper;
 
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setMyXxlJobProperties(MyXxlJobProperties myXxlJobProperties) {
+        this.myXxlJobProperties = myXxlJobProperties;
     }
 
     @GetMapping("/jobInfos")

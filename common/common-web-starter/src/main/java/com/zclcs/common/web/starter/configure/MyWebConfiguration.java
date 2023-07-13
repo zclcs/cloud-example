@@ -1,10 +1,9 @@
 package com.zclcs.common.web.starter.configure;
 
-import com.zclcs.common.web.starter.properties.MyWebProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.lang.Nullable;
@@ -19,13 +18,13 @@ import java.time.format.DateTimeFormatter;
  * @author zclcs
  */
 @AutoConfiguration
-@EnableConfigurationProperties(MyWebProperties.class)
-@ConditionalOnProperty(value = "my.enable.date.converter", havingValue = "true", matchIfMissing = true)
+@RequiredArgsConstructor
+@ConditionalOnProperty(value = "my.web.enable.date.converter", havingValue = "true", matchIfMissing = true)
 public class MyWebConfiguration implements WebMvcConfigurer {
 
-    private final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    private final String NORM_DATE_PATTERN = "yyyy-MM-dd";
-    private final String NORM_TIME_PATTERN = "HH:mm:ss";
+    public static final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String NORM_DATE_PATTERN = "yyyy-MM-dd";
+    public static final String NORM_TIME_PATTERN = "HH:mm:ss";
 
     @Override
     public void addFormatters(@Nullable FormatterRegistry registry) {

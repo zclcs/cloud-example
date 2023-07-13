@@ -1,14 +1,14 @@
-package com.zclcs.platform.system.service.impl;
+package com.zclcs.platform.maintenance.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.platform.maintenance.mapper.DataBaseMapper;
+import com.zclcs.platform.maintenance.service.DataBaseService;
 import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
 import com.zclcs.platform.system.api.bean.vo.SchemaVo;
 import com.zclcs.platform.system.api.bean.vo.VueColumnVo;
-import com.zclcs.platform.system.mapper.DataBaseMapper;
-import com.zclcs.platform.system.service.DataBaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.mapper;
+package com.zclcs.platform.maintenance.mapper;
 
 import com.zclcs.platform.system.api.bean.vo.SchemaVo;
 import org.apache.ibatis.annotations.Param;

@@ -2,6 +2,7 @@ package com.zclcs.common.db.merge.starter.configure;
 
 import com.zclcs.common.db.merge.starter.properties.MyThirdPartDbMergeProperties;
 import com.zclcs.common.db.merge.starter.utils.DbMergeUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +10,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 
@@ -22,17 +22,13 @@ import java.sql.SQLException;
  */
 @Slf4j
 @AutoConfiguration
-@EnableConfigurationProperties({MyThirdPartDbMergeProperties.class})
+@RequiredArgsConstructor
 @ConditionalOnProperty(value = "my.third.part.db.merge.enable", havingValue = "true", matchIfMissing = false)
 public class MyThirdPartDbMergeAutoConfigure {
 
     private final MyThirdPartDbMergeProperties myThirdPartDbMergeProperties;
     @Value("${spring.cloud.nacos.config.namespace}")
     private String namespace;
-
-    public MyThirdPartDbMergeAutoConfigure(MyThirdPartDbMergeProperties myThirdPartDbMergeProperties) {
-        this.myThirdPartDbMergeProperties = myThirdPartDbMergeProperties;
-    }
 
     @Bean(name = "nacosDataSourceProperties")
     @ConfigurationProperties(prefix = "spring.datasource.nacos")

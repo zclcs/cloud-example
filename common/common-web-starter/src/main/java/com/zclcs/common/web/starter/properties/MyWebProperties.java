@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @author zclcs
  */
 @Component
-@ConfigurationProperties(prefix = "my")
+@ConfigurationProperties(prefix = "my.web")
 public class MyWebProperties {
 
     private Boolean enableDateConverter = true;

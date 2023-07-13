@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.controller;
+package com.zclcs.platform.maintenance.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;

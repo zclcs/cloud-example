@@ -1,7 +1,6 @@
 package com.zclcs.common.redis.starter.configure;
 
 import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
-import lombok.RequiredArgsConstructor;
 import org.redisson.api.NameMapper;
 import org.redisson.config.Config;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
@@ -9,14 +8,20 @@ import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 /**
  * @author zclcs
  */
-@RequiredArgsConstructor
 public class MyRedissonAutoConfigurationCustomizer implements RedissonAutoConfigurationCustomizer {
 
-    private final MyLettuceRedisProperties properties;
+    /**
+     * 字典表缓存前缀
+     */
+    private final MyLettuceRedisProperties myLettuceRedisProperties;
+
+    public MyRedissonAutoConfigurationCustomizer(MyLettuceRedisProperties myLettuceRedisProperties) {
+        this.myLettuceRedisProperties = myLettuceRedisProperties;
+    }
 
     @Override
     public void customize(Config cfg) {
-        NameMapper nameMapper = new MyNameMapper(properties);
+        NameMapper nameMapper = new MyNameMapper(myLettuceRedisProperties.getRedisCachePrefix());
         if (cfg.isClusterConfig()) {
             cfg.useClusterServers().setNameMapper(nameMapper);
         } else if (cfg.isSentinelConfig()) {

@@ -1,10 +1,12 @@
 package com.zclcs.common.redis.starter.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zclcs
  */
+@Component
 @ConfigurationProperties(prefix = "my")
 public class MyLettuceRedisProperties {
 

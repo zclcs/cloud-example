@@ -48,6 +48,7 @@ ext {
     jibPackage = Set.of(project(":platform:platform-auth"),
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"),
+            project(":platform:platform-maintenance"),
             project(":test:test-test-bom:test-test"),
             project(":third-part-database-sync"),
             project(":third-part-config-sync"))

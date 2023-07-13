@@ -15,10 +15,10 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
@@ -37,15 +37,11 @@ import java.time.LocalTime;
  * @author zclcs
  */
 @AutoConfiguration
-@EnableConfigurationProperties(MyLettuceRedisProperties.class)
+@RequiredArgsConstructor
 @ConditionalOnProperty(value = "my.lettuce.redis.enable", havingValue = "true", matchIfMissing = true)
 public class MyLettuceRedisAutoConfigure {
 
-    private final MyLettuceRedisProperties properties;
-
-    public MyLettuceRedisAutoConfigure(MyLettuceRedisProperties properties) {
-        this.properties = properties;
-    }
+    private final MyLettuceRedisProperties myLettuceRedisProperties;
 
     @Bean(name = "redisTemplate")
     @ConditionalOnClass(RedisOperations.class)
@@ -68,7 +64,7 @@ public class MyLettuceRedisAutoConfigure {
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DatePattern.NORM_TIME_FORMATTER));
         mapper.registerModule(javaTimeModule);
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer(mapper);
-        MyStringRedisSerializer myStringRedisSerializer = new MyStringRedisSerializer(properties);
+        MyStringRedisSerializer myStringRedisSerializer = new MyStringRedisSerializer(myLettuceRedisProperties.getRedisCachePrefix());
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
         template.setKeySerializer(myStringRedisSerializer);
@@ -86,7 +82,7 @@ public class MyLettuceRedisAutoConfigure {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
-        MyStringRedisSerializer myStringRedisSerializer = new MyStringRedisSerializer(properties);
+        MyStringRedisSerializer myStringRedisSerializer = new MyStringRedisSerializer(myLettuceRedisProperties.getRedisCachePrefix());
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
         template.setKeySerializer(myStringRedisSerializer);
@@ -100,6 +96,6 @@ public class MyLettuceRedisAutoConfigure {
 
     @Bean
     public MyRedissonAutoConfigurationCustomizer redissonAutoConfigurationCustomizer() {
-        return new MyRedissonAutoConfigurationCustomizer(properties);
+        return new MyRedissonAutoConfigurationCustomizer(myLettuceRedisProperties);
     }
 }

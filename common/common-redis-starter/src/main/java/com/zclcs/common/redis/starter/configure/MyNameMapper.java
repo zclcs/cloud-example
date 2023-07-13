@@ -1,7 +1,6 @@
 package com.zclcs.common.redis.starter.configure;
 
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
 import org.redisson.api.NameMapper;
 
 /**
@@ -12,19 +11,19 @@ public class MyNameMapper implements NameMapper {
     /**
      * 字典表缓存前缀
      */
-    private final MyLettuceRedisProperties properties;
+    private final String redisCachePrefix;
 
-    public MyNameMapper(MyLettuceRedisProperties properties) {
-        this.properties = properties;
+    public MyNameMapper(String redisCachePrefix) {
+        this.redisCachePrefix = redisCachePrefix;
     }
 
     @Override
     public String map(String name) {
-        return (name == null ? null : StrUtil.addPrefixIfNot(name, properties.getRedisCachePrefix()));
+        return (name == null ? null : StrUtil.addPrefixIfNot(name, redisCachePrefix));
     }
 
     @Override
     public String unmap(String name) {
-        return (name == null ? null : StrUtil.addPrefixIfNot(name, properties.getRedisCachePrefix()));
+        return (name == null ? null : StrUtil.addPrefixIfNot(name, redisCachePrefix));
     }
 }

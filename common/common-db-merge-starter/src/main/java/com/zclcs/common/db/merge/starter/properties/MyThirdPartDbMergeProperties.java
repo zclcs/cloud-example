@@ -1,10 +1,12 @@
 package com.zclcs.common.db.merge.starter.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zclcs
  */
+@Component
 @ConfigurationProperties(prefix = "my.third.part.db.merge")
 public class MyThirdPartDbMergeProperties {
 
