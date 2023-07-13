@@ -1,7 +1,5 @@
-package com.zclcs.platform.system.api.bean.vo;
+package com.zclcs.common.minio.starter.bean.vo;
 
-import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,24 +17,43 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "FileUploadVo", description = "文件")
-public class FileUploadVo extends BaseEntity implements Serializable {
+public class FileUploadVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(title = "文件名称")
+    /**
+     * 文件名称
+     */
     private String fileName;
 
-    @Schema(title = "原文件名称")
+    /**
+     * 桶名称
+     */
+    private String bucketName;
+
+    /**
+     * 生成的文件名称
+     */
+    private String genFileName;
+
+    /**
+     * 原文件名称
+     */
     private String originalFileName;
 
-    @Schema(title = "文件路径")
+    /**
+     * 文件路径
+     */
     private String filePath;
 
-    @Schema(title = "http 地址")
+    /**
+     * http 地址
+     */
     private String urlHttp;
 
-    @Schema(title = "域名 地址")
+    /**
+     * 域名 地址
+     */
     private String urlDomain;
 }

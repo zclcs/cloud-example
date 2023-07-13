@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":common:common-db-merge-starter"))
     implementation(project(":common:common-xxl-job-starter"))
     implementation(project(":common:common-ip2region-starter"))
+    implementation(project(":common:common-minio-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":cloud-lib:cloud-lib-mybatis-plus"))
@@ -32,7 +33,5 @@ dependencies {
 //    implementation(project(":common:common-seata-starter"))
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
-    implementation "io.minio:minio"
-    implementation "com.squareup.okhttp3:okhttp"
     implementation "org.freemarker:freemarker"
 }

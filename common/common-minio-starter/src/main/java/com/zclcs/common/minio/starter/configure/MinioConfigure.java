@@ -1,15 +1,15 @@
-package com.zclcs.platform.system.configure;
+package com.zclcs.common.minio.starter.configure;
 
-import com.zclcs.platform.system.properties.MinioProperties;
+import com.zclcs.common.minio.starter.properties.MinioProperties;
 import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author zclcs
  */
-@Configuration
+@AutoConfiguration
 @RequiredArgsConstructor
 public class MinioConfigure {
 

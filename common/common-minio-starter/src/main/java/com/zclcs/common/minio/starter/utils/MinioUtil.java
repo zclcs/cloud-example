@@ -1,12 +1,12 @@
-package com.zclcs.platform.system.utils;
+package com.zclcs.common.minio.starter.utils;
 
-import com.zclcs.platform.system.api.bean.vo.FileUploadVo;
-import com.zclcs.platform.system.properties.MinioProperties;
+import cn.hutool.core.date.DatePattern;
+import com.zclcs.common.minio.starter.bean.vo.FileUploadVo;
+import com.zclcs.common.minio.starter.properties.MinioProperties;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.Bucket;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -23,7 +22,6 @@ import java.util.Random;
 /**
  * @author zclcs
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MinioUtil {
@@ -87,10 +85,9 @@ public class MinioUtil {
         String originalFilename = file.getOriginalFilename();
         //新的文件名 = 存储桶文件名_时间戳.后缀名
         assert originalFilename != null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String fileName = bucketName + "_" +
-                System.currentTimeMillis() + "_" + format.format(new Date()) + "_" + new Random().nextInt(1000) +
+        String genFileName = System.currentTimeMillis() + "_" + LocalDate.now().format(DatePattern.NORM_DATE_FORMATTER) + "_" + new Random().nextInt(1000) +
                 originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileName = bucketName + "_" + genFileName;
         //开始上传
         client.putObject(
                 PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(
@@ -100,8 +97,7 @@ public class MinioUtil {
         String filePath = "/" + bucketName + "/" + fileName;
         String url = minioProperties.getEndpoint() + filePath;
         String urlHost = minioProperties.getDomainName() + filePath;
-        log.info("上传文件成功url ：[{}], urlHost ：[{}]", url, urlHost);
-        return new FileUploadVo(fileName, originalFilename, filePath, url, urlHost);
+        return new FileUploadVo(fileName, bucketName, genFileName, originalFilename, filePath, url, urlHost);
     }
 
     /**

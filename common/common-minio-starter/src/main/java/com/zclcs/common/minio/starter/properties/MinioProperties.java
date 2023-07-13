@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.properties;
+package com.zclcs.common.minio.starter.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,5 +43,5 @@ public class MinioProperties {
      * 域名
      */
     private String domainName;
-    
+
 }

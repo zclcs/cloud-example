@@ -1,0 +1,9 @@
+dependencies {
+    api "io.minio:minio"
+    api "com.squareup.okhttp3:okhttp"
+    api "org.springframework.boot:spring-boot"
+    api "org.springframework.boot:spring-boot-autoconfigure"
+    api "org.springframework.cloud:spring-cloud-context"
+    api "cn.hutool:hutool-core"
+    api "org.springframework:spring-web"
+}
