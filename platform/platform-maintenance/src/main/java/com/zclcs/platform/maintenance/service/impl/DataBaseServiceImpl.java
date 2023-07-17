@@ -4,7 +4,8 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.MyException;
-import com.zclcs.platform.maintenance.mapper.DataBaseMapper;
+import com.zclcs.platform.maintenance.mapper.DataBaseVoMapper;
+import com.zclcs.platform.maintenance.mapper.SchemaVoMapper;
 import com.zclcs.platform.maintenance.service.DataBaseService;
 import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
 import com.zclcs.platform.system.api.bean.vo.SchemaVo;
@@ -12,9 +13,9 @@ import com.zclcs.platform.system.api.bean.vo.VueColumnVo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -33,16 +34,26 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DataBaseServiceImpl implements DataBaseService {
 
-    private final DataBaseMapper dataBaseMapper;
+    private final DataBaseVoMapper dataBaseVoMapper;
+    private final SchemaVoMapper schemaVoMapper;
+    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
-    private final DataSource dataSource;
+    @Autowired
+    public void setXxlJobDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Override
     public Map<String, List<String>> getSchema(String dataBaseType) {
-        List<SchemaVo> schema = dataBaseMapper.getSchema(dataBaseType);
+        List<SchemaVo> schema = jdbcTemplate.query("SELECT concat(t.TABLE_SCHEMA, '.', t.TABLE_NAME) table_schema, c.COLUMN_NAME column_name" +
+                "        FROM information_schema.TABLES t" +
+                "                 inner join information_schema.COLUMNS c" +
+                "                            on t.TABLE_SCHEMA = c.TABLE_SCHEMA and t.TABLE_NAME = c.TABLE_NAME" +
+                "        where t.TABLE_SCHEMA not in ('information_schema', 'mysql', 'sys', 'performance_schema')", schemaVoMapper);
         List<List<SchemaVo>> tableSchema = CollectionUtil.groupByField(schema, "tableSchema");
         LinkedHashMap<String, List<String>> stringListLinkedHashMap = new LinkedHashMap<>();
         for (List<SchemaVo> schemaVos : tableSchema) {

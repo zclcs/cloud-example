@@ -13,43 +13,21 @@ spring:
         group: DEFAULT_GROUP
         username: ${NACOS_USERNAME:nacos}
         password: ${NACOS_PASSWORD:nacos}
-      discovery:
-        server-addr: ${spring.cloud.nacos.config.server-addr}
-        namespace: ${spring.cloud.nacos.config.namespace}
-        group: DEFAULT_GROUP
-        username: ${spring.cloud.nacos.config.username}
-        password: ${spring.cloud.nacos.config.password}
 
   config:
     import:
-      - nacos:global-configuration.yaml?refresh=true
-      - nacos:tomcat.yaml
-      - nacos:openfeign.yaml
       - nacos:hikari.yaml
+      - nacos:openfeign.yaml
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
-      - nacos:mybatis-plus.yaml
-      - nacos:jasypt.yaml
       - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
-      - nacos:minio.yaml
       - nacos:xxl-job.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
-      - nacos:db-merge.yaml
-
-  aop:
-    proxy-target-class: true
-
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-
-  freemarker:
-    check-template-location: false
 
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
-    url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_maintenance?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
+    url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_ROOT_USERNAME:root}
     password: ${DATASOURCE_ROOT_PASSWORD:123456}
 
@@ -58,10 +36,6 @@ management:
     web:
       exposure:
         include: '*'
-
-mybatis-plus:
-  type-aliases-package: com.zclcs.platform.maintenance.api.entity
-  mapper-locations: classpath:com/zclcs/platform/maintenance/mapper/*.xml
 
 # spring security 配置
 security:
