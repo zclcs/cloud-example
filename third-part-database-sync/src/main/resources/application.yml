@@ -1,6 +1,8 @@
 server:
   port: ${PORT_DATA_SYNC:7101}
 spring:
+  profiles:
+    active: ${RUN_MODE:local}
   application:
     name: third-part-database-sync
 
@@ -15,6 +17,12 @@ spring:
       url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_xxl_job?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
       username: ${DATASOURCE_USERNAME:root}
       password: ${DATASOURCE_PASSWORD:root}
+    hikari:
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-test-query: select 1
 
   cloud:
     nacos:

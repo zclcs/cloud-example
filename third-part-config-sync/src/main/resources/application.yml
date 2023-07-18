@@ -1,6 +1,8 @@
 server:
   port: ${PORT_CONFIG_SYNC:7102}
 spring:
+  profiles:
+    active: ${RUN_MODE:local}
   application:
     name: third-part-config-sync
 

@@ -15,8 +15,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
@@ -26,17 +26,17 @@ import java.util.List;
  * @author zclcs
  */
 @Slf4j
-@Component
+@Configuration
 @RequiredArgsConstructor
 public class GenerateSqlRunner implements ApplicationRunner {
 
     private final ConfigurableApplicationContext context;
     private final XxlJobInfoMapper xxlJobInfoMapper;
-    private DataSource xxlJobDataSource;
-    private JdbcTemplate jdbcTemplate;
     private final MyThirdPartDbMergeProperties myThirdPartDbMergeProperties;
     private final ThirdPartDatabaseSyncProperties thirdPartDatabaseSyncProperties;
     private final MyNacosProperties myNacosProperties;
+    private DataSource xxlJobDataSource;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     public void setXxlJobDataSource(DataSource xxlJobDataSource) {

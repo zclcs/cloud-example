@@ -1,17 +1,13 @@
 package com.zclcs.cloud.lib.core.properties;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
  * @author zclcs
  */
-@Data
 @Component
 @ConfigurationProperties(prefix = "my")
-@RefreshScope
 public class GlobalProperties {
 
     /**
@@ -23,4 +19,28 @@ public class GlobalProperties {
      * 默认密码
      */
     private String defaultPassword;
+
+    public String getRedisCachePrefix() {
+        return redisCachePrefix;
+    }
+
+    public void setRedisCachePrefix(String redisCachePrefix) {
+        this.redisCachePrefix = redisCachePrefix;
+    }
+
+    public String getDefaultPassword() {
+        return defaultPassword;
+    }
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "GlobalProperties{" +
+                "redisCachePrefix='" + redisCachePrefix + '\'' +
+                ", defaultPassword='" + defaultPassword + '\'' +
+                '}';
+    }
 }

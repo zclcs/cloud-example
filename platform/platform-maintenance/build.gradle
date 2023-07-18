@@ -21,7 +21,6 @@ dependencies {
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-xxl-job-starter"))
     implementation(project(":common:common-logging-starter"))
-    implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-security"))
     implementation(project(":cloud-lib:cloud-lib-fegin"))
     implementation(project(":cloud-lib:cloud-lib-aop"))
