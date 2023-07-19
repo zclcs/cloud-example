@@ -3,7 +3,8 @@ server:
   port: ${PORT_PLATFORM_AUTH:8101}
 
 spring:
-
+  profiles:
+    active: ${RUN_MODE:local}
   application:
     name: platform-auth
 

@@ -3,10 +3,10 @@ server:
   port: ${PORT_PLATFORM_GATEWAY:8301}
 
 spring:
-
+  profiles:
+    active: ${RUN_MODE:local}
   main:
     allow-bean-definition-overriding: true
-
   application:
     name: platform-gateway
 

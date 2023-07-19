@@ -2,6 +2,8 @@ server:
   port: ${PORT_PLATFORM_MAINTENANCE:8202}
 
 spring:
+  profiles:
+    active: ${RUN_MODE:local}
   application:
     name: platform-maintenance
 

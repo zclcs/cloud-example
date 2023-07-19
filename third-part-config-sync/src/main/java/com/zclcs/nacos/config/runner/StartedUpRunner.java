@@ -20,6 +20,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -43,12 +44,13 @@ public class StartedUpRunner implements ApplicationRunner {
     private final ConfigurableApplicationContext context;
     private final Environment environment;
     private final MyNacosProperties myNacosProperties;
+    private final ResourcePatternResolver resourcePatternResolver;
 
     @Override
     public void run(ApplicationArguments args) throws IOException {
-        List<Resource> overwrite = getResourceForPath("zip/overwrite/");
-        List<Resource> skip = getResourceForPath("zip/skip/");
-        log.info("nacos配置导入开始 总配置数 {} ", overwrite.size() + skip.size());
+        Resource[] overwrite = resourcePatternResolver.getResources("classpath:zip/overwrite/**.zip");
+        Resource[] skip = resourcePatternResolver.getResources("classpath:zip/skip/**.zip");
+        log.info("nacos配置导入开始 总配置数 {} ", overwrite.length + skip.length);
         for (Resource resource : overwrite) {
             importNacos("OVERWRITE", resource);
         }

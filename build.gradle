@@ -142,7 +142,7 @@ configure(jibPackage) {
     }
 }
 
-//configure(nativePackage) {
+//configuration(nativePackage) {
 //    apply plugin: "org.graalvm.buildtools.native"
 //    bootBuildImage {
 //        imageName = "${dockerJibToImage}/${project.name}:native"
