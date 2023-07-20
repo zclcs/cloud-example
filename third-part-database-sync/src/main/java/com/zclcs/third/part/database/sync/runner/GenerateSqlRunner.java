@@ -1,7 +1,6 @@
 package com.zclcs.third.part.database.sync.runner;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.common.db.merge.starter.properties.MyThirdPartDbMergeProperties;
 import com.zclcs.third.part.database.sync.entity.XxlJobInfo;
@@ -117,7 +116,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
         String finalPath = applicationHome.getDir().getParentFile().getParentFile()
                 .getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\"
-                + StrUtil.replace(myThirdPartDbMergeProperties.getXxlJobSql(), "/", "\\") + fileName;
+                + "sql\\xxl-job\\" + fileName;
         FileUtil.touch(finalPath);
         FileUtil.writeString(sql, finalPath, StandardCharsets.UTF_8);
     }

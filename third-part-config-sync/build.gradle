@@ -1,22 +1,19 @@
 apply plugin: "org.springframework.boot"
 apply plugin: "org.graalvm.buildtools.native"
 
-graalvmNative {
-    metadataRepository {
-        enabled = true
-    }
-}
-
 bootBuildImage {
     builder = 'paketobuildpacks/builder:full'
     imageName = "${dockerJibToImage}/${project.name}:native"
     environment['BP_NATIVE_IMAGE'] = 'true'
-    environment['BP_APPEND_JAVA_TOOL_OPTIONS'] = '-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8'
-    environment['BP_INCLUDE_FILES'] = '/*'
-//    environment["HTTPS_PROXY"] = "http://127.0.0.1:49789/"
+    environment['BPE_APPEND_JAVA_TOOL_OPTIONS'] = '-Dfile.encoding=UTF-8'
+    publish = true
     docker {
         host = "tcp://192.168.33.10:2375"
         tlsVerify = false
+        publishRegistry {
+            username = "$dockerJibAuthUsername"
+            password = "${dockerJibAuthPassword}"
+        }
     }
 }
 
@@ -24,18 +21,10 @@ springBoot {
     mainClass = "com.zclcs.ThirdPartConfigSyncApplication"
 }
 
-processResources {
-    copy {
-        from("../shared-resources")
-        into("/src/main/resources")
-    }
-}
-
 dependencies {
     implementation project(":common:common-logging-starter")
     implementation project(":common:common-ip2region-starter")
     implementation project(":cloud-lib:cloud-lib-core")
     implementation "cn.hutool:hutool-http"
-    implementation "cn.hutool:hutool-json"
     implementation "org.springframework.boot:spring-boot-starter-web"
 }

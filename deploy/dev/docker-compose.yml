@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
   mysql:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/mysql:5.7.35
@@ -22,6 +22,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 10s
     env_file: .env
   redis:
     # https://www.cnblogs.com/lovling/p/12532549.html redis启动告警解决
@@ -47,6 +48,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 5s
     privileged: true
     user: root
     env_file: .env
@@ -72,6 +74,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 20s
     env_file: .env
     depends_on:
       third-part-database-sync:
@@ -98,6 +101,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 10s
     env_file: .env
     command: server /data
   rabbitmq:
@@ -119,6 +123,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 10s
     env_file: .env
   nginx:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nginx:1.21.3
@@ -138,6 +143,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 10s
     env_file: .env
     privileged: true
     user: root
@@ -160,6 +166,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     env_file: .env
     depends_on:
       third-part-database-sync:
@@ -180,6 +187,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 20s
     deploy:
       resources:
         limits:
@@ -258,6 +266,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 5s
     deploy:
       resources:
         limits:
@@ -285,6 +294,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -311,6 +321,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -337,6 +348,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -363,6 +375,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -389,6 +402,7 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+      start_period: 30s
     deploy:
       resources:
         limits:

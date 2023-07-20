@@ -4,13 +4,6 @@ bootJar {
     mainClass = "com.zclcs.PlatformGatewayApplication"
 }
 
-processResources {
-    copy {
-        from("../../shared-resources")
-        into("/src/main/resources")
-    }
-}
-
 dependencies {
     implementation('com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway')
     implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel')

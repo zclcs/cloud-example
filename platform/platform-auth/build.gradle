@@ -4,13 +4,6 @@ bootJar {
     mainClass = "com.zclcs.PlatformAuthApplication"
 }
 
-processResources {
-    copy {
-        from("../../shared-resources")
-        into("/src/main/resources")
-    }
-}
-
 dependencies {
     implementation(project(":platform:platform-system-bom:platform-system-cache"))
     implementation(project(":common:common-doc-starter"))

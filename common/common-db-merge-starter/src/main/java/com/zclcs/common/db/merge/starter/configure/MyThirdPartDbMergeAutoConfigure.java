@@ -1,5 +1,6 @@
 package com.zclcs.common.db.merge.starter.configure;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.common.db.merge.starter.properties.MyThirdPartDbMergeProperties;
 import com.zclcs.common.db.merge.starter.utils.DbMergeUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +12,16 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author zclcs
@@ -27,6 +33,7 @@ import java.sql.SQLException;
 public class MyThirdPartDbMergeAutoConfigure {
 
     private final MyThirdPartDbMergeProperties myThirdPartDbMergeProperties;
+    private final ResourcePatternResolver resourcePatternResolver;
     @Value("${spring.cloud.nacos.config.namespace}")
     private String namespace;
 
@@ -59,7 +66,13 @@ public class MyThirdPartDbMergeAutoConfigure {
         final DataSourceInitializer initializer = new DataSourceInitializer();
         // 设置数据源
         initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(myThirdPartDbMergeProperties.getNacosSql(), namespace, true));
+        List<Resource> resources = List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getNacosSql()));
+        DbMergeUtil.replaceSqlScript(resources, namespace);
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getNacosTmpSql())));
+        if (CollectionUtil.isNotEmpty(resourceList)) {
+            resourceList.sort(Comparator.comparing(Resource::getFilename));
+        }
+        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(resourceList));
         return initializer;
     }
 
@@ -70,7 +83,13 @@ public class MyThirdPartDbMergeAutoConfigure {
         final DataSourceInitializer initializer = new DataSourceInitializer();
         // 设置数据源
         initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(myThirdPartDbMergeProperties.getXxlJobSql(), namespace, true));
+        List<Resource> resources = List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobSql()));
+        DbMergeUtil.replaceSqlScript(resources, namespace);
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobTmpSql())));
+        if (CollectionUtil.isNotEmpty(resourceList)) {
+            resourceList.sort(Comparator.comparing(Resource::getFilename));
+        }
+        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(resourceList));
         return initializer;
     }
 }

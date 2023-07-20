@@ -18,8 +18,8 @@ public class MyDbMergeProperties {
     /**
      * sql脚本
      */
-    private String sql = "sql/";
-
+    private String sql = "classpath:sql/**.sql";
+    
     public Boolean getEnable() {
         return enable;
     }

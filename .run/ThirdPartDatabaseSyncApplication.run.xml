@@ -8,7 +8,7 @@
       <env name="NACOS_PASSWORD" value="nacos" />
       <env name="NACOS_PORT" value="8848" />
       <env name="NACOS_USERNAME" value="nacos" />
-      <env name="spring.profiles.active" value="local" />
+      <env name="RUN_MODE" value="local" />
     </envs>
     <module name="cloud-17.third-part-database-sync.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zclcs.ThirdPartDatabaseSyncApplication" />

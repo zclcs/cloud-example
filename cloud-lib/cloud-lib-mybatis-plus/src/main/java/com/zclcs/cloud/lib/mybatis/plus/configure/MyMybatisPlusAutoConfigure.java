@@ -7,11 +7,13 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.zclcs.cloud.lib.mybatis.plus.inteceptor.DataPermissionInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportRuntimeHints;
 
 /**
  * @author zclcs
  */
 @AutoConfiguration
+@ImportRuntimeHints(MyBatisPlusRuntimeHintsRegistrar.class)
 public class MyMybatisPlusAutoConfigure {
 
     @Bean

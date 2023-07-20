@@ -4,16 +4,6 @@ bootJar {
     mainClass = "com.zclcs.PlatformSystemApplication"
 }
 
-processResources {
-    copy {
-        from("../../../shared-resources")
-        into("/src/main/resources")
-    }
-    from("src/main/java") {
-        include "**/*.xml"
-    }
-}
-
 dependencies {
     implementation(project(":common:common-doc-starter"))
     implementation(project(":common:common-web-starter"))

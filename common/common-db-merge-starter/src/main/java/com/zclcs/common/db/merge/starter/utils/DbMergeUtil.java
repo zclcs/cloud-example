@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 @UtilityClass
 @Slf4j
@@ -33,7 +35,7 @@ public class DbMergeUtil {
 
     public static String NACOS_NAMESPACE = "{{NACOS_NAMESPACE}}";
 
-    public static String SQL_TEMP_PATH = "/sql_tmp/";
+    public static String SQL_TEMP_PATH = "sql_tmp/";
 
     public void createDataBase(DataSourceProperties dataSourceProperties, String character, String collate) throws ClassNotFoundException, SQLException {
         String url = dataSourceProperties.getUrl();
@@ -303,13 +305,33 @@ public class DbMergeUtil {
         statement.close();
     }
 
-    public DatabasePopulator databasePopulator(String sqlLocation, String nacosNamespace, boolean replace) throws IOException {
+    public void executeSql(DataSourceProperties dataSourceProperties, Resource[] resources, String nacosNamespace, boolean replace) throws ClassNotFoundException, SQLException, IOException {
+        List<Resource> resourceList = Arrays.stream(resources).filter(Objects::isNull).sorted(Comparator.comparing(Resource::getFilename)).collect(Collectors.toList());
+        String url = dataSourceProperties.getUrl();
+        Class.forName(dataSourceProperties.getDriverClassName());
+        Connection connection = DriverManager.getConnection(url, dataSourceProperties.getUsername(), dataSourceProperties.getPassword());
+        Statement statement = connection.createStatement();
+        for (Resource resource : resourceList) {
+            byte[] bytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
+            String sql = new String(bytes);
+            if (replace) {
+                sql = StrUtil.replace(sql, NACOS_NAMESPACE, nacosNamespace);
+            }
+            List<String> split = StrUtil.split(sql, ";");
+            for (String s : split) {
+                log.debug("Sql : {}", s);
+                statement.executeUpdate(s);
+            }
+        }
+        connection.close();
+        statement.close();
+    }
+
+    public DatabasePopulator databasePopulator(List<Resource> resourceForPath) throws IOException {
         final ResourceDatabasePopulator popular = new ResourceDatabasePopulator();
-        List<Resource> resources = invokeSqlScript(sqlLocation, nacosNamespace, replace);
-        List<Resource> resourceList = resources.stream().distinct().toList();
-        for (Resource re : resourceList) {
+        for (Resource re : resourceForPath) {
             popular.addScript(re);
-            log.info("Execute Sql Location : {}", re.getURL().getPath());
+            log.info("Execute Sql Location : {}", re.getFile().getPath());
         }
         return popular;
     }
@@ -317,46 +339,23 @@ public class DbMergeUtil {
     /**
      * 执行SQL脚本
      */
-    private List<Resource> invokeSqlScript(String sqlLocation, String nacosNamespace, boolean replace) throws IOException {
+    public void replaceSqlScript(List<Resource> resourceForPath, String nacosNamespace) throws IOException {
         log.debug("invoke Sql Script");
-        List<Resource> resources = new ArrayList<>(1000);
-        setSql(resources, sqlLocation, nacosNamespace, replace);
-        if (!resources.isEmpty()) {
-            resources.sort(Comparator.comparing(Resource::getFilename));
-        }
-        return resources;
+        replaceSql(resourceForPath, nacosNamespace);
     }
 
-    /**
-     * 获取脚本
-     *
-     * @param resources      资源
-     * @param sqlLocation    脚本位置
-     * @param nacosNamespace nacos命名空间
-     * @param replace        是否根据nacos命名空间进行替换
-     * @throws IOException
-     */
-    private void setSql(List<Resource> resources, String sqlLocation, String nacosNamespace, boolean replace) throws IOException {
-        List<Resource> resourceForPath = getResourceForPath(sqlLocation);
-        if (replace) {
-            replaceSql(resources, resourceForPath, sqlLocation, nacosNamespace);
-        } else {
-            resources.addAll(resourceForPath);
-        }
-    }
-
-    private void replaceSql(List<Resource> resources, List<Resource> resourceForPath, String location, String nacosNamespace) throws IOException {
+    private void replaceSql(List<Resource> resourceForPath, String nacosNamespace) throws IOException {
         for (Resource resource : resourceForPath) {
-            String sql = FileUtil.readString(resource.getFile(), StandardCharsets.UTF_8);
+            File file = resource.getFile();
+            String sql = FileUtil.readString(file, StandardCharsets.UTF_8);
             String nacosNamespaceReplace = StrUtil.replace(sql, NACOS_NAMESPACE, nacosNamespace);
             String path = resource.getURI().getPath();
-            String parentPath = path.substring(0, path.lastIndexOf(location));
-            String child = location + SQL_TEMP_PATH + resource.getFilename();
-            File newFile = new File(parentPath, child);
+            String filename = resource.getFilename();
+            String parentPath = path.substring(0, path.lastIndexOf(Objects.requireNonNull(filename)));
+            String child = parentPath + SQL_TEMP_PATH;
+            File newFile = new File(child, filename);
             FileUtil.touch(newFile);
             FileUtil.writeString(nacosNamespaceReplace, newFile, StandardCharsets.UTF_8);
-            ClassPathResource classPathResource = new ClassPathResource(child);
-            resources.add(classPathResource);
         }
     }
 

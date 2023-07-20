@@ -24,4 +24,8 @@ public class NacosTokenVo {
 
     @Schema(description = "过期时间(秒)")
     private Long tokenTtl;
+
+    private Boolean globalAdmin;
+
+    private String username;
 }
