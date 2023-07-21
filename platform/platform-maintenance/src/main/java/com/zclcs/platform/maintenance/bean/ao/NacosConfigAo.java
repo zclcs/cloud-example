@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.ao;
+package com.zclcs.platform.maintenance.bean.ao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -19,14 +19,14 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RabbitmqExchangeAo", description = "RabbitmqExchangeAo")
-public class RabbitmqExchangeAo implements Serializable {
+@Schema(title = "NacosConfigAo对象", description = "查询nacos配置")
+public class NacosConfigAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "交换机名称")
-    private String name;
+    @Schema(description = "dataId")
+    private String dataId;
 
 
 }

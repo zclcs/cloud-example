@@ -1,6 +1,6 @@
 package com.zclcs.platform.maintenance.service;
 
-import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
+import com.zclcs.platform.maintenance.bean.vo.DataBaseDataVo;
 
 import java.util.List;
 import java.util.Map;

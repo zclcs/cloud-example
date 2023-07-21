@@ -1,7 +1,10 @@
 buildscript {
     ext {
+        // 3.0.2 3.1.1
         springBootVersion = "3.0.2"
+        // 0.9.18 0.9.23
         springBootNativeVersion = "0.9.18"
+        // 2022.0.0 2022.0.3
         springCloudVersion = "2022.0.0"
         springCloudAlibabaVersion = "2022.0.0.0-RC2"
         seataVersion = "1.7.0-native-rc2"

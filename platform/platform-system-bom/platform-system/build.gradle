@@ -1,7 +1,13 @@
 apply plugin: "org.springframework.boot"
 
-bootJar {
+springBoot {
     mainClass = "com.zclcs.PlatformSystemApplication"
+}
+
+processResources {
+    from("src/main/java") {
+        include "**/*.xml"
+    }
 }
 
 dependencies {

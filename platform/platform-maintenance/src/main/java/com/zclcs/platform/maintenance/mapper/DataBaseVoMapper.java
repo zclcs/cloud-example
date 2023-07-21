@@ -1,7 +1,7 @@
 package com.zclcs.platform.maintenance.mapper;
 
-import com.zclcs.platform.system.api.bean.vo.DataBaseDataVo;
-import com.zclcs.platform.system.api.bean.vo.VueColumnVo;
+import com.zclcs.platform.maintenance.bean.vo.DataBaseDataVo;
+import com.zclcs.platform.maintenance.bean.vo.VueColumnVo;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

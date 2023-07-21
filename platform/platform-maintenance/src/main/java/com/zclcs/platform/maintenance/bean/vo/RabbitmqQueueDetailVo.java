@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.vo;
+package com.zclcs.platform.maintenance.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,8 +19,8 @@ import java.util.Map;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RabbitmqExchangeDetailVo", description = "RabbitmqExchangeDetailVo")
-public class RabbitmqExchangeDetailVo {
+@Schema(title = "RabbitmqQueueDetailVo", description = "RabbitmqQueueDetailVo")
+public class RabbitmqQueueDetailVo {
 
     @Schema(description = "交换机")
     private String source;

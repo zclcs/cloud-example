@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.ao;
+package com.zclcs.platform.maintenance.bean.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -8,10 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 部门 Ao
- *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
  */
 @Data
 @AllArgsConstructor
@@ -19,14 +16,15 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosConfigAo对象", description = "查询nacos配置")
-public class NacosConfigAo implements Serializable {
+@Schema(title = "SchemaVo对象", description = "mysql字段")
+public class SchemaVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "dataId")
-    private String dataId;
+    @Schema(title = "库名+表名")
+    private String tableSchema;
 
-
+    @Schema(title = "字段名称")
+    private String columnName;
 }

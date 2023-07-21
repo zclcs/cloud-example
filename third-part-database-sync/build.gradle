@@ -17,7 +17,7 @@ bootBuildImage {
     }
 }
 
-bootJar {
+springBoot {
     mainClass = "com.zclcs.ThirdPartDatabaseSyncApplication"
 }
 

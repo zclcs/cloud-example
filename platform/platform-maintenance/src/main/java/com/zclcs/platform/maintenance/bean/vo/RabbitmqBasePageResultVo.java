@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.vo;
+package com.zclcs.platform.maintenance.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import io.swagger.v3.oas.annotations.media.Schema;

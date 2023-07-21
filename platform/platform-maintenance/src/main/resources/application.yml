@@ -10,7 +10,7 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        server-addr: ${NACOS_HOST:192.168.33.10}:${NACOS_PORT:8848}
         namespace: ${NACOS_NAMESPACE:dev}
         group: DEFAULT_GROUP
         username: ${NACOS_USERNAME:nacos}
@@ -24,12 +24,17 @@ spring:
 
   config:
     import:
-      - nacos:hikari.yaml
+      - nacos:global-configuration.yaml?refresh=true
+      - nacos:tomcat.yaml
       - nacos:openfeign.yaml
+      - nacos:hikari.yaml
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
+      - nacos:mybatis-plus.yaml
+      - nacos:jasypt.yaml
       - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
+      - nacos:minio.yaml
       - nacos:xxl-job.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
 

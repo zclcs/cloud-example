@@ -12,7 +12,7 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.system.api.bean.vo.RedisVo;
+import com.zclcs.platform.maintenance.bean.vo.RedisVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

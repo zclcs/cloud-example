@@ -1,6 +1,6 @@
 package com.zclcs.platform.maintenance.mapper;
 
-import com.zclcs.platform.system.api.bean.vo.SchemaVo;
+import com.zclcs.platform.maintenance.bean.vo.SchemaVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;

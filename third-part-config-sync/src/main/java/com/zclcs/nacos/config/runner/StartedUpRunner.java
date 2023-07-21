@@ -14,23 +14,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zclcs
@@ -100,89 +92,5 @@ public class StartedUpRunner implements ApplicationRunner {
 
     private String getNacosEndPoint(String resourcePath) {
         return CommonCore.HTTP + myNacosProperties.getServerAddr() + resourcePath;
-    }
-
-    /**
-     * 根据路径加载SQL资源文件
-     *
-     * @param basePath 相对目录
-     * @return resources 集合
-     */
-    private List<Resource> getResourceForPath(String basePath) throws IOException {
-        List<Resource> resources = new ArrayList<>();
-        Enumeration<URL> urlEnumeration = Thread.currentThread().getContextClassLoader().getResources(basePath);
-        while (urlEnumeration.hasMoreElements()) {
-            URL url = urlEnumeration.nextElement();
-            String protocol = url.getProtocol();
-            if ("jar".equalsIgnoreCase(protocol)) {
-                getResourceForJar(basePath, url, resources);
-            } else if ("file".equalsIgnoreCase(protocol)) {
-                getResourceForFile(basePath, resources);
-            }
-        }
-        return resources;
-    }
-
-    /**
-     * 解析jar包中的资源文件
-     *
-     * @param basePath  资源目录相关路径
-     * @param url       jar的URL
-     * @param resources 集合
-     * @throws IOException io错误
-     */
-    private void getResourceForJar(String basePath, URL url, List<Resource> resources) throws IOException {
-        JarURLConnection connection = (JarURLConnection) url.openConnection();
-        if (connection == null) {
-            return;
-        }
-        JarFile jarFile = connection.getJarFile();
-        if (jarFile == null) {
-            return;
-        }
-        Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
-        while (jarEntryEnumeration.hasMoreElements()) {
-            JarEntry entry = jarEntryEnumeration.nextElement();
-            String jarEntryName = entry.getName();
-            if (jarEntryName.startsWith(basePath) && jarEntryName.endsWith("zip")) {
-                ClassPathResource classPathResource = new ClassPathResource(jarEntryName);
-                Resource rs = new UrlResource(classPathResource.getURL());
-                resources.add(rs);
-            }
-        }
-    }
-
-    /**
-     * 解析文件系统中的资源文件
-     *
-     * @param basePath  资源目录相关路径
-     * @param resources 集合
-     * @throws FileNotFoundException 文件未找到
-     */
-    private void getResourceForFile(String basePath, List<Resource> resources) throws FileNotFoundException {
-        File file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + basePath);
-        if (file.exists() && file.isDirectory()) {
-            addResourceLevel1(file, resources);
-        }
-    }
-
-    private void addResourceLevel1(File file, List<Resource> resources) {
-        for (File listFile : Objects.requireNonNull(file.listFiles())) {
-            if (listFile.isDirectory()) {
-                for (File file1 : Objects.requireNonNull(listFile.listFiles())) {
-                    addResourceLevel2(file1, resources);
-                }
-            } else {
-                addResourceLevel2(listFile, resources);
-            }
-        }
-    }
-
-
-    private void addResourceLevel2(File file, List<Resource> resources) {
-        if (file.isFile() && file.getName().endsWith("zip")) {
-            Resource rs = new FileSystemResource(file);
-            resources.add(rs);
-        }
     }
 }

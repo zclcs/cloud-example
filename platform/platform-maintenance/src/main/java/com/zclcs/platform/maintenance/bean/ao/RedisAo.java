@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.ao;
+package com.zclcs.platform.maintenance.bean.ao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

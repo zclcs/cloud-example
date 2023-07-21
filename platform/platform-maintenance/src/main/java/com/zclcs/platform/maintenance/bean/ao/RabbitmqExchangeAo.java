@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.vo;
+package com.zclcs.platform.maintenance.bean.ao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -8,7 +8,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
+ * 部门 Ao
+ *
  * @author zclcs
+ * @date 2023-01-10 10:39:10.151
  */
 @Data
 @AllArgsConstructor
@@ -16,15 +19,14 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "SchemaVo对象", description = "mysql字段")
-public class VueColumnVo implements Serializable {
+@Schema(title = "RabbitmqExchangeAo", description = "RabbitmqExchangeAo")
+public class RabbitmqExchangeAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(title = "表格名")
-    private String title;
+    @Schema(description = "交换机名称")
+    private String name;
 
-    @Schema(title = "表格data映射")
-    private String dataIndex;
+
 }
