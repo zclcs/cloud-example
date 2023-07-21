@@ -17,9 +17,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,10 +54,10 @@ public class StartedUpRunner implements ApplicationRunner {
     private void importNacos(String policy, Resource resource) throws IOException {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
-        File out = new File("tmp.zip");
-        FileCopyUtils.copy(FileCopyUtils.copyToByteArray(resource.getInputStream()), out);
+//        File out = new File("tmp.zip");
+//        FileCopyUtils.copy(FileCopyUtils.copyToByteArray(resource.getInputStream()), out);
         params.put("policy", policy);
-        params.put("file", out);
+        params.put("file", resource.getFile());
         try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint(
                         String.format("/nacos/v1/cs/configs?import=%s&namespace=%s&accessToken=%s&username=%s&tenant=%s",
                                 "true", myNacosProperties.getNamespace(), nacosToken, myNacosProperties.getUsername(), myNacosProperties.getNamespace())))
