@@ -41,5 +41,8 @@ dependencies {
         api "com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:$sentinelVersion"
         api "org.dromara.dynamictp:dynamic-tp-spring-boot-starter-nacos:$dynamicTpVersion"
         api "org.dromara.dynamictp:dynamic-tp-spring-boot-starter-adapter-webserver:$dynamicTpVersion"
+        api "cn.dev33:sa-token-core:$saTokenVersion"
+        api "cn.dev33:sa-token-spring-boot3-starter:$saTokenVersion"
+        api "cn.dev33:sa-token-reactor-spring-boot3-starter:$saTokenVersion"
     }
 }

@@ -1,0 +1,2 @@
+com.zclcs.cloud.lib.sa.token.core.dao.SaTokenDaoImpl
+com.zclcs.cloud.lib.sa.token.core.service.SaPermissionImpl
