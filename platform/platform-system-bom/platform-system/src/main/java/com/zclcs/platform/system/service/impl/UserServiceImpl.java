@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
@@ -14,8 +15,7 @@ import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
-import com.zclcs.cloud.lib.security.utils.PasswordUtil;
-import com.zclcs.cloud.lib.security.utils.SecurityUtil;
+import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
@@ -169,7 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         BeanUtil.copyProperties(userAo, user);
         user.setAvatar(CommonCore.DEFAULT_AVATAR);
-        user.setPassword(PasswordUtil.PASSWORD_ENCODER.encode(globalProperties.getDefaultPassword()));
+        user.setPassword(BCrypt.hashpw(globalProperties.getDefaultPassword()));
         this.save(user);
         Long userId = userAo.getUserId();
         SystemCacheUtil.deleteRoleIdsByUserId(userId);
@@ -235,9 +235,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePassword(String username, String password) {
-        String currentUsername = SecurityUtil.getUsername();
+        String currentUsername = LoginHelper.getUsername();
         this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
-                .set(User::getPassword, PasswordUtil.PASSWORD_ENCODER.encode(password)).update();
+                .set(User::getPassword, BCrypt.hashpw(password)).update();
         SystemCacheUtil.deleteUserCache(username);
     }
 
@@ -245,7 +245,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void updateStatus(String username, String status) {
         String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(Security.STATUS_LOCK);
-        String currentUsername = SecurityUtil.getUsername();
+        String currentUsername = LoginHelper.getUsername();
         this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
                 .set(User::getStatus, orElse)
                 .update();
@@ -256,7 +256,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void resetPassword(List<String> usernames) {
         this.lambdaUpdate().in(User::getUsername, usernames)
-                .set(User::getPassword, PasswordUtil.PASSWORD_ENCODER.encode(globalProperties.getDefaultPassword())).update();
+                .set(User::getPassword, BCrypt.hashpw(globalProperties.getDefaultPassword())).update();
         SystemCacheUtil.deleteUserCaches(usernames.toArray());
     }
 

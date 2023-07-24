@@ -7,6 +7,7 @@ import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
+import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,8 +16,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -72,7 +71,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
         result = point.proceed();
         long end = System.currentTimeMillis();
         if (StrUtil.isNotBlank(operation)) {
-            String username = Optional.ofNullable(getUsername()).orElse("system");
+            String username = Optional.ofNullable(LoginHelper.getUsername()).orElse("system");
             String ip = getHttpServletRequestIpAddress();
 
             String className = point.getTarget().getClass().getName();
@@ -96,14 +95,6 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG), systemLogAo);
         }
         return result;
-    }
-
-    private String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            return null;
-        }
-        return authentication.getName();
     }
 
     private String getHttpServletRequestIpAddress() {

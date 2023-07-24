@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -7,7 +9,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
@@ -24,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class OauthClientDetailsController {
     private final OauthClientDetailsService oauthClientDetailsService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
+    @SaCheckPermission("oauthClientDetails:view")
     @Operation(summary = "终端信息查询（分页）")
     public BaseRsp<BasePage<OauthClientDetailsVo>> findOauthClientDetailsPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         BasePage<OauthClientDetailsVo> page = this.oauthClientDetailsService.findOauthClientDetailsPage(basePageAo, oauthClientDetailsVo);
@@ -57,7 +58,7 @@ public class OauthClientDetailsController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
+    @SaCheckPermission("oauthClientDetails:view")
     @Operation(summary = "终端信息查询（集合）")
     public BaseRsp<List<OauthClientDetailsVo>> findOauthClientDetailsList(@ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         List<OauthClientDetailsVo> list = this.oauthClientDetailsService.findOauthClientDetailsList(oauthClientDetailsVo);
@@ -65,7 +66,7 @@ public class OauthClientDetailsController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('oauthClientDetails:view')")
+    @SaCheckPermission("oauthClientDetails:view")
     @Operation(summary = "终端信息查询（单个）")
     public BaseRsp<OauthClientDetailsVo> findOauthClientDetails(@ParameterObject @Validated OauthClientDetailsVo oauthClientDetailsVo) {
         OauthClientDetailsVo oauthClientDetails = this.oauthClientDetailsService.findOauthClientDetails(oauthClientDetailsVo);
@@ -80,7 +81,7 @@ public class OauthClientDetailsController {
     }
 
     @GetMapping("/checkClientId")
-    @PreAuthorize("hasAnyAuthority('oauthClientDetails:add', 'oauthClientDetails:update')")
+    @SaCheckPermission(value = {"oauthClientDetails:add", "oauthClientDetails:update"}, mode = SaMode.OR)
     @Operation(summary = "检查客户端编号")
     @Parameters({
             @Parameter(name = "clientId", description = "客户端编号", required = true, in = ParameterIn.QUERY)
@@ -91,7 +92,7 @@ public class OauthClientDetailsController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('oauthClientDetails:add')")
+    @SaCheckPermission("oauthClientDetails:add")
     @ControllerEndpoint(operation = "新增终端信息")
     @Operation(summary = "新增终端信息")
     public BaseRsp<OauthClientDetails> addOauthClientDetails(@RequestBody @Validated OauthClientDetailsAo oauthClientDetailsAo) {
@@ -99,7 +100,7 @@ public class OauthClientDetailsController {
     }
 
     @DeleteMapping("/{oauthClientDetailsIds}")
-    @PreAuthorize("hasAuthority('oauthClientDetails:delete')")
+    @SaCheckPermission("oauthClientDetails:delete")
     @ControllerEndpoint(operation = "删除终端信息")
     @Operation(summary = "删除终端信息")
     @Parameters({
@@ -112,7 +113,7 @@ public class OauthClientDetailsController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('oauthClientDetails:update')")
+    @SaCheckPermission("oauthClientDetails:update")
     @ControllerEndpoint(operation = "修改终端信息")
     @Operation(summary = "修改终端信息")
     public BaseRsp<OauthClientDetails> updateOauthClientDetails(@RequestBody @Validated(UpdateStrategy.class) OauthClientDetailsAo oauthClientDetailsAo) {

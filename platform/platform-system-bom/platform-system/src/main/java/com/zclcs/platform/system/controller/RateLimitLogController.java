@@ -1,13 +1,14 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
 import com.zclcs.platform.system.api.bean.vo.RateLimitLogVo;
 import com.zclcs.platform.system.service.RateLimitLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +43,7 @@ public class RateLimitLogController {
     private final RateLimitLogService rateLimitLogService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @SaCheckPermission("rateLimitLog:view")
     @Operation(summary = "限流拦截日志查询（分页）")
     public BaseRsp<BasePage<RateLimitLogVo>> findRateLimitLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> page = this.rateLimitLogService.findRateLimitLogPage(basePageAo, rateLimitLogVo);
@@ -51,7 +51,7 @@ public class RateLimitLogController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @SaCheckPermission("rateLimitLog:view")
     @Operation(summary = "限流拦截日志查询（集合）")
     public BaseRsp<List<RateLimitLogVo>> findRateLimitLogList(@ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         List<RateLimitLogVo> list = this.rateLimitLogService.findRateLimitLogList(rateLimitLogVo);
@@ -59,7 +59,7 @@ public class RateLimitLogController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('rateLimitLog:view')")
+    @SaCheckPermission("rateLimitLog:view")
     @Operation(summary = "限流拦截日志查询（单个）")
     public BaseRsp<RateLimitLogVo> findRateLimitLog(@ParameterObject @Validated RateLimitLogVo rateLimitLogVo) {
         RateLimitLogVo rateLimitLog = this.rateLimitLogService.findRateLimitLog(rateLimitLogVo);
@@ -67,7 +67,7 @@ public class RateLimitLogController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('rateLimitLog:add')")
+    @SaCheckPermission("rateLimitLog:add")
     @ControllerEndpoint(operation = "新增限流拦截日志")
     @Operation(summary = "新增限流拦截日志")
     public BaseRsp<RateLimitLog> addRateLimitLog(@RequestBody @Validated RateLimitLogAo rateLimitLogAo) {
@@ -75,7 +75,7 @@ public class RateLimitLogController {
     }
 
     @DeleteMapping("/{rateLimitLogIds}")
-    @PreAuthorize("hasAuthority('rateLimitLog:delete')")
+    @SaCheckPermission("rateLimitLog:delete")
     @ControllerEndpoint(operation = "删除限流拦截日志")
     @Operation(summary = "删除限流拦截日志")
     @Parameters({

@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
@@ -8,7 +10,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Menu;
@@ -24,7 +26,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('menu:view')")
+    @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（分页）")
     public BaseRsp<BasePage<MenuVo>> findMenuPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MenuVo menuVo) {
         BasePage<MenuVo> page = this.menuService.findMenuPage(basePageAo, menuVo);
@@ -58,7 +59,7 @@ public class MenuController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('menu:view')")
+    @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（集合）")
     public BaseRsp<List<MenuVo>> findMenuList(@ParameterObject @Validated MenuVo menuVo) {
         List<MenuVo> list = this.menuService.findMenuList(menuVo);
@@ -66,7 +67,7 @@ public class MenuController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('menu:view')")
+    @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（单个）")
     public BaseRsp<MenuVo> findMenu(@ParameterObject @Validated MenuVo menuVo) {
         MenuVo menu = this.menuService.findMenu(menuVo);
@@ -74,7 +75,7 @@ public class MenuController {
     }
 
     @GetMapping("/tree")
-    @PreAuthorize("hasAnyAuthority('role:view', 'menu:view', 'oauthClientDetails:view')")
+    @SaCheckPermission(value = {"role:view", "menu:view", "oauthClientDetails:view"}, mode = SaMode.OR)
     @Operation(summary = "菜单树")
     public BaseRsp<List<MenuTreeVo>> menuList(MenuVo menu) {
         List<MenuTreeVo> systemMenus = this.menuService.findMenus(menu);
@@ -104,7 +105,7 @@ public class MenuController {
     }
 
     @GetMapping("/checkMenuCode")
-    @PreAuthorize("hasAnyAuthority('menu:add', 'menu:update')")
+    @SaCheckPermission(value = {"menu:add", "menu:update"}, mode = SaMode.OR)
     @Operation(summary = "检查菜单编码")
     @Parameters({
             @Parameter(name = "menuId", description = "菜单id", required = false, in = ParameterIn.QUERY),
@@ -117,7 +118,7 @@ public class MenuController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('menu:add')")
+    @SaCheckPermission("menu:add")
     @ControllerEndpoint(operation = "新增菜单")
     @Operation(summary = "新增菜单")
     public BaseRsp<Menu> addMenu(@RequestBody @Validated MenuAo menuAo) {
@@ -125,7 +126,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{menuIds}")
-    @PreAuthorize("hasAuthority('menu:delete')")
+    @SaCheckPermission("menu:delete")
     @ControllerEndpoint(operation = "删除菜单")
     @Operation(summary = "删除菜单")
     @Parameters({
@@ -138,7 +139,7 @@ public class MenuController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('menu:update')")
+    @SaCheckPermission("menu:update")
     @ControllerEndpoint(operation = "修改菜单")
     @Operation(summary = "修改菜单")
     public BaseRsp<Menu> updateMenu(@RequestBody @Validated(UpdateStrategy.class) MenuAo menuAo) {

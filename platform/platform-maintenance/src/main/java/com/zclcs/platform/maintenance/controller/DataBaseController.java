@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +36,7 @@ public class DataBaseController {
     private final DataBaseService dataBaseService;
 
     @GetMapping("/schema")
-    @PreAuthorize("hasAuthority('dataBase:view')")
+    @SaCheckPermission("dataBase:view")
     @Operation(summary = "查询schema")
     public BaseRsp<Map<String, List<String>>> datasource() {
         Map<String, List<String>> schema = dataBaseService.getSchema(Generator.DATABASE_TYPE);
@@ -45,7 +44,7 @@ public class DataBaseController {
     }
 
     @GetMapping("/select")
-    @PreAuthorize("hasAuthority('dataBase:view')")
+    @SaCheckPermission("dataBase:view")
     @Operation(summary = "sql查询")
     @Parameters({
             @Parameter(name = "sql", description = "sql", required = true, in = ParameterIn.QUERY)

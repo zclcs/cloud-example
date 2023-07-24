@@ -1,14 +1,15 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.BlackList;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
+import com.zclcs.platform.system.api.bean.entity.BlackList;
 import com.zclcs.platform.system.api.bean.vo.BlackListVo;
 import com.zclcs.platform.system.service.BlackListService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +45,7 @@ public class BlackListController {
     private final BlackListService blackListService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('blackList:view')")
+    @SaCheckPermission("blackList:view")
     @Operation(summary = "黑名单查询（分页）")
     public BaseRsp<BasePage<BlackListVo>> findBlackListPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated BlackListVo blackListVo) {
         BasePage<BlackListVo> page = this.blackListService.findBlackListPage(basePageAo, blackListVo);
@@ -53,7 +53,7 @@ public class BlackListController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('blackList:view')")
+    @SaCheckPermission("blackList:view")
     @Operation(summary = "黑名单查询（集合）")
     public BaseRsp<List<BlackListVo>> findBlackListList(@ParameterObject @Validated BlackListVo blackListVo) {
         List<BlackListVo> list = this.blackListService.findBlackListList(blackListVo);
@@ -61,7 +61,7 @@ public class BlackListController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('blackList:view')")
+    @SaCheckPermission("blackList:view")
     @Operation(summary = "黑名单查询（单个）")
     public BaseRsp<BlackListVo> findBlackList(@ParameterObject @Validated BlackListVo blackListVo) {
         BlackListVo blackList = this.blackListService.findBlackList(blackListVo);
@@ -69,7 +69,7 @@ public class BlackListController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('blackList:add')")
+    @SaCheckPermission("blackList:add")
     @ControllerEndpoint(operation = "新增黑名单")
     @Operation(summary = "新增黑名单")
     public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) {
@@ -77,7 +77,7 @@ public class BlackListController {
     }
 
     @DeleteMapping("/{blackListIds}")
-    @PreAuthorize("hasAuthority('blackList:delete')")
+    @SaCheckPermission("blackList:delete")
     @ControllerEndpoint(operation = "删除黑名单")
     @Operation(summary = "删除黑名单")
     @Parameters({
@@ -90,7 +90,7 @@ public class BlackListController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('blackList:update')")
+    @SaCheckPermission("blackList:update")
     @ControllerEndpoint(operation = "修改黑名单")
     @Operation(summary = "修改黑名单")
     public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated(UpdateStrategy.class) BlackListAo blackListAo) {

@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +51,7 @@ public class RedisController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('redis:view')")
+    @SaCheckPermission("redis:view")
     @Operation(summary = "redis key 查询（分页）")
     public BaseRsp<BasePage<RedisVo>> findRedisPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RedisVo redisVo) {
         String key = globalProperties.getRedisCachePrefix() + Optional.ofNullable(redisVo.getKey()).filter(StrUtil::isNotBlank).orElse("*");
@@ -84,7 +83,7 @@ public class RedisController {
     }
 
     @GetMapping("/one/{key}")
-    @PreAuthorize("hasAuthority('redis:view')")
+    @SaCheckPermission("redis:view")
     @Operation(summary = "redis key 查询（单个）")
     @Parameters({
             @Parameter(name = "key", description = "redis key", required = true, in = ParameterIn.PATH)
@@ -121,7 +120,7 @@ public class RedisController {
     }
 
     @DeleteMapping("/{keys}")
-    @PreAuthorize("hasAuthority('redis:delete')")
+    @SaCheckPermission("redis:delete")
     @ControllerEndpoint(operation = "删除redis值")
     @Operation(summary = "删除redis值")
     @Parameters({

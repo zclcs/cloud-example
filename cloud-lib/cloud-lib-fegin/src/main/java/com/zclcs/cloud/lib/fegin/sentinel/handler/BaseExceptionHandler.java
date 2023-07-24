@@ -12,10 +12,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -36,7 +33,7 @@ import java.util.Set;
  * @date 2020-06-29
  */
 @Slf4j
-@ConditionalOnExpression("!'${security.oauth2.client.clientId}'.isEmpty()")
+//@ConditionalOnExpression("!'${security.oauth2.client.clientId}'.isEmpty()")
 public class BaseExceptionHandler {
 
     /**
@@ -131,15 +128,6 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleFileDownloadException(FileDownloadException e) {
         log.error("FileDownloadException", e);
-    }
-
-    @ExceptionHandler(value = AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public BaseRsp<Object> handleAccessDeniedException(AccessDeniedException accessDeniedException) {
-        String msg = SpringSecurityMessageSource.getAccessor().getMessage("AbstractAccessDecisionManager.accessDenied",
-                accessDeniedException.getMessage());
-        log.warn("拒绝授权异常信息 ex={}", msg);
-        return RspUtil.message("没有权限访问该资源");
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)

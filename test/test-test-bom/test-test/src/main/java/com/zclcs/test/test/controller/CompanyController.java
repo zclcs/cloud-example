@@ -1,12 +1,13 @@
 package com.zclcs.test.test.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.test.test.api.entity.Company;
 import com.zclcs.test.test.api.entity.ao.CompanyAo;
 import com.zclcs.test.test.api.entity.vo.CompanyVo;
@@ -21,7 +22,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +46,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('company:view')")
+    @SaCheckPermission("company:view")
     @Operation(summary = "企业信息查询（分页）")
     public BaseRsp<BasePage<CompanyVo>> findCompanyPage(@Validated BasePageAo basePageAo, @Validated CompanyVo companyVo) {
         BasePage<CompanyVo> page = this.companyService.findCompanyPage(basePageAo, companyVo);
@@ -54,7 +54,7 @@ public class CompanyController {
     }
 
     @GetMapping("list")
-    @PreAuthorize("hasAuthority('company:view')")
+    @SaCheckPermission("company:view")
     @Operation(summary = "企业信息查询（集合）")
     public BaseRsp<List<CompanyVo>> findCompanyList(@Validated CompanyVo companyVo) {
         List<CompanyVo> list = this.companyService.findCompanyList(companyVo);
@@ -62,7 +62,7 @@ public class CompanyController {
     }
 
     @GetMapping("one")
-    @PreAuthorize("hasAuthority('company:view')")
+    @SaCheckPermission("company:view")
     @Operation(summary = "企业信息查询（单个）")
     public BaseRsp<CompanyVo> findCompany(@Validated CompanyVo companyVo) {
         CompanyVo company = this.companyService.findCompany(companyVo);
@@ -70,7 +70,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('company:add')")
+    @SaCheckPermission("company:add")
     @ControllerEndpoint(operation = "新增企业信息")
     @Operation(summary = "新增企业信息")
     public BaseRsp<Company> addCompany(@RequestBody @Validated CompanyAo companyAo) {
@@ -78,11 +78,11 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{companyIds}")
-    @PreAuthorize("hasAuthority('company:delete')")
+    @SaCheckPermission("company:delete")
     @ControllerEndpoint(operation = "删除企业信息")
     @Operation(summary = "删除企业信息")
     @Parameters({
-        @Parameter(name = "companyIds", description = "企业信息id集合(,分隔)", required = true, in = ParameterIn.PATH)
+            @Parameter(name = "companyIds", description = "企业信息id集合(,分隔)", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<String> deleteCompany(@NotBlank(message = "{required}") @PathVariable String companyIds) {
         List<Long> ids = Arrays.stream(companyIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
@@ -91,7 +91,7 @@ public class CompanyController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('company:update')")
+    @SaCheckPermission("company:update")
     @ControllerEndpoint(operation = "修改企业信息")
     @Operation(summary = "修改企业信息")
     public BaseRsp<Company> updateCompany(@RequestBody @Validated(UpdateStrategy.class) CompanyAo companyAo) {

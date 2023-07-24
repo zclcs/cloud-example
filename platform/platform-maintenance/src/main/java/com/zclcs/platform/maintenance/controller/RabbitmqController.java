@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +60,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/exchanges")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 交换机查询")
     public BaseRsp<BasePage<RabbitmqExchangeVo>> findRabbitmqExchangePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RabbitmqExchangeAo rabbitmqExchangeAo) {
         Map<String, Object> params = new HashMap<>();
@@ -95,7 +94,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/exchangeDetail")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 交换机详情查询")
     public BaseRsp<Map<String, String>> findRabbitmqExchangeDetail(@ParameterObject @Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/exchanges/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
@@ -120,7 +119,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/delete/exchange")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 删除交换机")
     public BaseRsp<String> deleteRabbitmqExchange(@ParameterObject @Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/exchanges/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
@@ -140,7 +139,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/queues")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 队列查询")
     public BaseRsp<BasePage<RabbitmqQueueVo>> findRabbitmqQueuePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RabbitmqQueueAo rabbitmqQueueAo) {
         Map<String, Object> params = new HashMap<>();
@@ -178,7 +177,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/queueDetail")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 队列详情查询")
     public BaseRsp<Map<String, String>> findRabbitmqQueueDetail(@ParameterObject @Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
@@ -205,7 +204,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/delete/queue")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 删除队列")
     public BaseRsp<String> deleteRabbitmqQueue(@ParameterObject @Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
@@ -230,7 +229,7 @@ public class RabbitmqController {
     }
 
     @GetMapping("/purge/queue")
-    @PreAuthorize("hasAuthority('rabbitmq:view')")
+    @SaCheckPermission("rabbitmq:view")
     @Operation(summary = "rabbitmq 清空队列")
     public BaseRsp<String> purgeRabbitmqQueue(@ParameterObject @Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +

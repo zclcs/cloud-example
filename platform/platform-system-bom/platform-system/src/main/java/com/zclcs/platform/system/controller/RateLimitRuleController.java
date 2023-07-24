@@ -1,14 +1,15 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.RateLimitRuleAo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import com.zclcs.platform.system.api.bean.vo.RateLimitRuleVo;
 import com.zclcs.platform.system.service.RateLimitRuleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +44,7 @@ public class RateLimitRuleController {
     private final RateLimitRuleService rateLimitRuleService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @SaCheckPermission("rateLimitRule:view")
     @Operation(summary = "限流规则查询（分页）")
     public BaseRsp<BasePage<RateLimitRuleVo>> findRateLimitRulePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         BasePage<RateLimitRuleVo> page = this.rateLimitRuleService.findRateLimitRulePage(basePageAo, rateLimitRuleVo);
@@ -52,7 +52,7 @@ public class RateLimitRuleController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @SaCheckPermission("rateLimitRule:view")
     @Operation(summary = "限流规则查询（集合）")
     public BaseRsp<List<RateLimitRuleVo>> findRateLimitRuleList(@ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         List<RateLimitRuleVo> list = this.rateLimitRuleService.findRateLimitRuleList(rateLimitRuleVo);
@@ -60,7 +60,7 @@ public class RateLimitRuleController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('rateLimitRule:view')")
+    @SaCheckPermission("rateLimitRule:view")
     @Operation(summary = "限流规则查询（单个）")
     public BaseRsp<RateLimitRuleVo> findRateLimitRule(@ParameterObject @Validated RateLimitRuleVo rateLimitRuleVo) {
         RateLimitRuleVo rateLimitRule = this.rateLimitRuleService.findRateLimitRule(rateLimitRuleVo);
@@ -68,7 +68,7 @@ public class RateLimitRuleController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('rateLimitRule:add')")
+    @SaCheckPermission("rateLimitRule:add")
     @ControllerEndpoint(operation = "新增限流规则")
     @Operation(summary = "新增限流规则")
     public BaseRsp<RateLimitRule> addRateLimitRule(@RequestBody @Validated RateLimitRuleAo rateLimitRuleAo) {
@@ -76,7 +76,7 @@ public class RateLimitRuleController {
     }
 
     @DeleteMapping("/{rateLimitRuleIds}")
-    @PreAuthorize("hasAuthority('rateLimitRule:delete')")
+    @SaCheckPermission("rateLimitRule:delete")
     @ControllerEndpoint(operation = "删除限流规则")
     @Operation(summary = "删除限流规则")
     @Parameters({
@@ -89,7 +89,7 @@ public class RateLimitRuleController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('rateLimitRule:update')")
+    @SaCheckPermission("rateLimitRule:update")
     @ControllerEndpoint(operation = "修改限流规则")
     @Operation(summary = "修改限流规则")
     public BaseRsp<RateLimitRule> updateRateLimitRule(@RequestBody @Validated(UpdateStrategy.class) RateLimitRuleAo rateLimitRuleAo) {

@@ -1,15 +1,17 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.AddStrategy;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.MinioBucket;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.MinioBucketAo;
+import com.zclcs.platform.system.api.bean.entity.MinioBucket;
 import com.zclcs.platform.system.api.bean.vo.MinioBucketVo;
 import com.zclcs.platform.system.service.MinioBucketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +23,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class MinioBucketController {
 
     @GetMapping
     @Operation(summary = "桶查询（分页）")
-    @PreAuthorize("hasAuthority('bucket:view')")
+    @SaCheckPermission("bucket:view")
     public BaseRsp<BasePage<MinioBucketVo>> findMinioBucketPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MinioBucketVo minioBucketVo) {
         BasePage<MinioBucketVo> page = this.minioBucketService.findMinioBucketPage(basePageAo, minioBucketVo);
         return RspUtil.data(page);
@@ -54,7 +55,7 @@ public class MinioBucketController {
 
     @GetMapping("/list")
     @Operation(summary = "桶查询（集合）")
-    @PreAuthorize("hasAuthority('bucket:view')")
+    @SaCheckPermission("bucket:view")
     public BaseRsp<List<MinioBucketVo>> findMinioBucketList(@ParameterObject @Validated MinioBucketVo minioBucketVo) {
         List<MinioBucketVo> list = this.minioBucketService.findMinioBucketList(minioBucketVo);
         return RspUtil.data(list);
@@ -62,14 +63,14 @@ public class MinioBucketController {
 
     @GetMapping("/one")
     @Operation(summary = "桶查询（单个）")
-    @PreAuthorize("hasAuthority('bucket:view')")
+    @SaCheckPermission("bucket:view")
     public BaseRsp<MinioBucketVo> findMinioBucket(@ParameterObject @Validated MinioBucketVo minioBucketVo) {
         MinioBucketVo minioBucket = this.minioBucketService.findMinioBucket(minioBucketVo);
         return RspUtil.data(minioBucket);
     }
 
     @GetMapping("/checkBucketName")
-    @PreAuthorize("hasAnyAuthority('bucket:add', 'bucket:update')")
+    @SaCheckPermission(value = {"bucket:add", "bucket:update"}, mode = SaMode.OR)
     @Operation(summary = "检查桶名称")
     @Parameters({
             @Parameter(name = "bucketId", description = "桶id", required = false, in = ParameterIn.QUERY),
@@ -82,7 +83,7 @@ public class MinioBucketController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('bucket:add')")
+    @SaCheckPermission("bucket:add")
     @Operation(summary = "新增桶")
     @ControllerEndpoint(operation = "新增桶")
     public BaseRsp<MinioBucket> addMinioBucket(@RequestBody @Validated(AddStrategy.class) MinioBucketAo minioBucketAo) {
@@ -90,7 +91,7 @@ public class MinioBucketController {
     }
 
     @DeleteMapping("/{bucketIds}")
-    @PreAuthorize("hasAuthority('bucket:delete')")
+    @SaCheckPermission("bucket:delete")
     @ControllerEndpoint(operation = "删除桶")
     @Operation(summary = "删除桶")
     @Parameters({
@@ -103,7 +104,7 @@ public class MinioBucketController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('bucket:update')")
+    @SaCheckPermission("bucket:update")
     @Operation(summary = "修改桶")
     @ControllerEndpoint(operation = "修改桶")
     public BaseRsp<MinioBucket> updateMinioBucket(@RequestBody @Validated(UpdateStrategy.class) MinioBucketAo minioBucketAo) {

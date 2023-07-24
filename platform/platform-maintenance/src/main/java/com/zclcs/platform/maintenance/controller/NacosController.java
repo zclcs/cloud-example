@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +58,7 @@ public class NacosController {
     }
 
     @GetMapping("/configs")
-    @PreAuthorize("hasAuthority('nacos:view')")
+    @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 配置查询")
     public BaseRsp<BasePage<NacosConfigVo.ConfigVo>> findNacosConfigPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
@@ -90,7 +89,7 @@ public class NacosController {
     }
 
     @GetMapping("/config/detail")
-    @PreAuthorize("hasAuthority('nacos:view')")
+    @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 配置详情查询")
     public BaseRsp<NacosConfigVo.ConfigDetailVo> findNacosConfigDetail(@ParameterObject @Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
@@ -112,7 +111,7 @@ public class NacosController {
     }
 
     @PutMapping("/config")
-    @PreAuthorize("hasAuthority('nacos:view')")
+    @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 编辑")
     public BaseRsp<String> findNacosConfigDetail(@RequestBody @Validated(UpdateStrategy.class) NacosConfigVo.ConfigDetailVo configDetailVo) {
         String nacosToken = getNacosToken();
@@ -132,7 +131,7 @@ public class NacosController {
     }
 
     @GetMapping("/services")
-    @PreAuthorize("hasAuthority('nacos:view')")
+    @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 服务列表查询")
     public BaseRsp<BasePage<NacosServiceVo.Service>> findNacosServicePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated NacosServiceAo nacosServiceAo) {
         String nacosToken = getNacosToken();

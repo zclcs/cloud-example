@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -7,7 +9,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Role;
@@ -22,7 +24,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('role:view')")
+    @SaCheckPermission("role:view")
     @Operation(summary = "角色查询（分页）")
     public BaseRsp<BasePage<RoleVo>> findRolePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RoleVo roleVo) {
         BasePage<RoleVo> page = this.roleService.findRolePage(basePageAo, roleVo);
@@ -54,7 +55,7 @@ public class RoleController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('role:view')")
+    @SaCheckPermission("role:view")
     @Operation(summary = "角色查询（集合）")
     public BaseRsp<List<RoleVo>> findRoleList(@ParameterObject @Validated RoleVo roleVo) {
         List<RoleVo> list = this.roleService.findRoleList(roleVo);
@@ -62,7 +63,7 @@ public class RoleController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('role:view')")
+    @SaCheckPermission("role:view")
     @Operation(summary = "角色查询（单个）")
     public BaseRsp<RoleVo> findRole(@ParameterObject @Validated RoleVo roleVo) {
         RoleVo role = this.roleService.findRole(roleVo);
@@ -77,7 +78,7 @@ public class RoleController {
     }
 
     @GetMapping("/options")
-    @PreAuthorize("hasAnyAuthority('user:view', 'role:view')")
+    @SaCheckPermission(value = {"user:view", "role:view"}, mode = SaMode.OR)
     @Operation(summary = "前端下拉框")
     public BaseRsp<List<RoleVo>> roles() {
         List<RoleVo> systemRoleList = roleService.findRoleList(RoleVo.builder().build());
@@ -90,7 +91,7 @@ public class RoleController {
             @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "roleName", description = "角色名", required = true, in = ParameterIn.QUERY)
     })
-    @PreAuthorize("hasAnyAuthority('role:add', 'role:update')")
+    @SaCheckPermission(value = {"role:add", "role:update"}, mode = SaMode.OR)
     public BaseRsp<Object> checkRoleName(@RequestParam(required = false) Long roleId,
                                          @NotBlank(message = "{required}") @RequestParam String roleName) {
         roleService.validateRoleName(roleName, roleId);
@@ -103,7 +104,7 @@ public class RoleController {
             @Parameter(name = "roleId", description = "角色id", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "roleCode", description = "角色编码", required = true, in = ParameterIn.QUERY)
     })
-    @PreAuthorize("hasAnyAuthority('role:add', 'role:update')")
+    @SaCheckPermission(value = {"role:add", "role:update"}, mode = SaMode.OR)
     public BaseRsp<Object> checkRoleCode(@RequestParam(required = false) Long roleId,
                                          @NotBlank(message = "{required}") @RequestParam String roleCode) {
         roleService.validateRoleCode(roleCode, roleId);
@@ -111,7 +112,7 @@ public class RoleController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('role:add')")
+    @SaCheckPermission("role:add")
     @ControllerEndpoint(operation = "新增角色")
     @Operation(summary = "新增角色")
     public BaseRsp<Role> addRole(@RequestBody @Validated RoleAo roleAo) {
@@ -119,7 +120,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{roleIds}")
-    @PreAuthorize("hasAuthority('role:delete')")
+    @SaCheckPermission("role:delete")
     @ControllerEndpoint(operation = "删除角色")
     @Operation(summary = "删除角色")
     @Parameters({
@@ -132,7 +133,7 @@ public class RoleController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('role:update')")
+    @SaCheckPermission("role:update")
     @ControllerEndpoint(operation = "修改角色")
     @Operation(summary = "修改角色")
     public BaseRsp<Role> updateRole(@RequestBody @Validated(UpdateStrategy.class) RoleAo roleAo) {

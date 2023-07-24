@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.mybatis.plus.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.zclcs.cloud.lib.security.utils.SecurityUtil;
+import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "createAt", LocalDateTime.class, LocalDateTime.now());
         Object createBy = metaObject.getValue("createBy");
         if (createBy == null) {
-            this.strictInsertFill(metaObject, "createBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("system"));
+            this.strictInsertFill(metaObject, "createBy", String.class, Optional.ofNullable(LoginHelper.getUsernameWithNull()).orElse("system"));
         }
     }
 
@@ -32,7 +32,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictUpdateFill(metaObject, "updateAt", LocalDateTime.class, LocalDateTime.now());
         Object updateBy = metaObject.getValue("updateBy");
         if (updateBy == null) {
-            this.strictUpdateFill(metaObject, "updateBy", String.class, Optional.ofNullable(SecurityUtil.getUsername()).orElse("system"));
+            this.strictUpdateFill(metaObject, "updateBy", String.class, Optional.ofNullable(LoginHelper.getUsernameWithNull()).orElse("system"));
         }
     }
 }

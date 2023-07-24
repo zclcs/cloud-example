@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +70,7 @@ public class XxlJobController {
     }
 
     @GetMapping("/jobInfos")
-    @PreAuthorize("hasAuthority('jobInfo:view')")
+    @SaCheckPermission("jobInfo:view")
     @Operation(summary = "xxlJob 任务管理")
     public BaseRsp<BasePage<XxlJobJobInfoVo>> findXxlJobJobInfoPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated XxlJobJobInfoAo xxlJobJobInfoAo) {
         Map<String, Object> params = new HashMap<>();
@@ -98,7 +97,7 @@ public class XxlJobController {
     }
 
     @GetMapping("/jobLogs")
-    @PreAuthorize("hasAuthority('jobLog:view')")
+    @SaCheckPermission("jobLog:view")
     @Operation(summary = "xxlJob 日志管理")
     public BaseRsp<BasePage<XxlJobJobLogVo>> findXxlJobJobLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated XxlJobJobLogAo xxlJobJobLogAo) {
         Map<String, Object> params = new HashMap<>();
@@ -141,7 +140,7 @@ public class XxlJobController {
     }
 
     @GetMapping("/jobLogDetail")
-    @PreAuthorize("hasAuthority('jobLog:view')")
+    @SaCheckPermission("jobLog:view")
     @Operation(summary = "xxlJob 查询日志")
     public BaseRsp<XxlJobJobLogDetailVo> findJobLogDetail(@ParameterObject @Validated XxlJobJobLogDetailAo xxlJobJobLogDetailAo) {
         Map<String, Object> params = new HashMap<>();
@@ -166,7 +165,7 @@ public class XxlJobController {
     }
 
     @GetMapping("/jobInfo/start")
-    @PreAuthorize("hasAuthority('jobInfo:view')")
+    @SaCheckPermission("jobInfo:view")
     @Operation(summary = "xxlJob 启动任务")
     @Parameters({
             @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),
@@ -191,7 +190,7 @@ public class XxlJobController {
     }
 
     @GetMapping("/jobInfo/stop")
-    @PreAuthorize("hasAuthority('jobInfo:view')")
+    @SaCheckPermission("jobInfo:view")
     @Operation(summary = "xxlJob 停止任务")
     @Parameters({
             @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),

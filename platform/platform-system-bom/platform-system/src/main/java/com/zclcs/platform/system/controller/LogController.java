@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
@@ -7,7 +9,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.vo.LogVo;
 import com.zclcs.platform.system.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class LogController {
     private final LogService logService;
 
     @GetMapping("/page")
-    @PreAuthorize("hasAnyAuthority('log:view', 'user:detail:view')")
+    @SaCheckPermission(value = {"log:view", "user:detail:view"}, mode = SaMode.OR)
     @Operation(summary = "用户操作日志查询（分页）")
     public BaseRsp<BasePage<LogVo>> findLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated LogVo logVo) {
         BasePage<LogVo> page = this.logService.findLogPage(basePageAo, logVo);
@@ -54,7 +55,7 @@ public class LogController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('log:view')")
+    @SaCheckPermission("log:view")
     @Operation(summary = "用户操作日志查询（集合）")
     public BaseRsp<List<LogVo>> findLogList(@ParameterObject @Validated LogVo logVo) {
         List<LogVo> list = this.logService.findLogList(logVo);
@@ -62,7 +63,7 @@ public class LogController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('log:view')")
+    @SaCheckPermission("log:view")
     @Operation(summary = "用户操作日志查询（单个）")
     public BaseRsp<LogVo> findLog(@ParameterObject @Validated LogVo logVo) {
         LogVo log = this.logService.findLog(logVo);
@@ -77,7 +78,7 @@ public class LogController {
     }
 
     @DeleteMapping("/{logIds}")
-    @PreAuthorize("hasAuthority('log:delete')")
+    @SaCheckPermission("log:delete")
     @ControllerEndpoint(operation = "删除用户操作日志")
     @Operation(summary = "删除用户操作日志")
     @Parameters({

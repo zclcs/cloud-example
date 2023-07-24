@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -28,7 +29,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +59,7 @@ public class MinioFileController {
 
     @GetMapping
     @Operation(summary = "文件查询（分页）")
-    @PreAuthorize("hasAuthority('file:view')")
+    @SaCheckPermission("file:view")
     public BaseRsp<BasePage<MinioFileVo>> findMinioFilePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> page = this.minioFileService.findMinioFilePage(basePageAo, minioFileVo);
         return RspUtil.data(page);
@@ -67,7 +67,7 @@ public class MinioFileController {
 
     @GetMapping("list")
     @Operation(summary = "文件查询（集合）")
-    @PreAuthorize("hasAuthority('file:view')")
+    @SaCheckPermission("file:view")
     public BaseRsp<List<MinioFileVo>> findMinioFileList(@ParameterObject @Validated MinioFileVo minioFileVo) {
         List<MinioFileVo> list = this.minioFileService.findMinioFileList(minioFileVo);
         return RspUtil.data(list);
@@ -75,14 +75,14 @@ public class MinioFileController {
 
     @GetMapping("one")
     @Operation(summary = "文件查询（单个）")
-    @PreAuthorize("hasAuthority('file:view')")
+    @SaCheckPermission("file:view")
     public BaseRsp<MinioFileVo> findMinioFile(@ParameterObject @Validated MinioFileVo minioFileVo) {
         MinioFileVo minioFile = this.minioFileService.findMinioFile(minioFileVo);
         return RspUtil.data(minioFile);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    //@PreAuthorize("hasAuthority('file:add')")
+    //@SaCheckPermission("file:add")
     @Operation(summary = "新增文件")
     public BaseRsp<MinioFile> addMinioFile(@Parameter(name = "file", description = "文件", required = true) @RequestPart(value = "file") MultipartFile file,
                                            @Parameter(name = "bucketName", description = "桶（相当于文件夹）") String bucketName) {
@@ -90,7 +90,7 @@ public class MinioFileController {
     }
 
     @DeleteMapping("/{fileIds}")
-    @PreAuthorize("hasAuthority('file:delete')")
+    @SaCheckPermission("file:delete")
     @Operation(summary = "删除文件")
     @Parameters({
             @Parameter(name = "fileIds", description = "文件id集合(,分隔)", required = true, in = ParameterIn.PATH)
@@ -102,7 +102,7 @@ public class MinioFileController {
 
     @GetMapping("/preViewPicture/{fileId}")
     @Operation(summary = "浏览图片或下载文件", description = "用于权限不是读/写的桶")
-    //@PreAuthorize("hasAuthority('file:view')")
+    //@SaCheckPermission("file:view")
     @Parameters({
             @Parameter(name = "fileId", description = "文件id", required = true, in = ParameterIn.PATH)
     })
@@ -129,7 +129,7 @@ public class MinioFileController {
 
     @GetMapping("/download/{fileId}")
     @Operation(summary = "下载文件", description = "用于权限不是读/写的桶")
-    //@PreAuthorize("hasAuthority('file:download')")
+    //@SaCheckPermission("file:download")
     @Parameters({
             @Parameter(name = "fileId", description = "文件id", required = true, in = ParameterIn.PATH)
     })

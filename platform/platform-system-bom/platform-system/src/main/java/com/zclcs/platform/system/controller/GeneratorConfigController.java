@@ -1,14 +1,15 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.GeneratorConfig;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.GeneratorConfigAo;
+import com.zclcs.platform.system.api.bean.entity.GeneratorConfig;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 import com.zclcs.platform.system.service.GeneratorConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +41,7 @@ public class GeneratorConfigController {
     private final GeneratorConfigService generatorConfigService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('generatorConfig:view')")
+    @SaCheckPermission("generatorConfig:view")
     @Operation(summary = "代码生成配置查询（分页）")
     public BaseRsp<BasePage<GeneratorConfigVo>> findGeneratorConfigPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         BasePage<GeneratorConfigVo> page = this.generatorConfigService.findGeneratorConfigPage(basePageAo, generatorConfigVo);
@@ -49,7 +49,7 @@ public class GeneratorConfigController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('generatorConfig:view')")
+    @SaCheckPermission("generatorConfig:view")
     @Operation(summary = "代码生成配置查询（集合）")
     public BaseRsp<List<GeneratorConfigVo>> findGeneratorConfigList(@ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         List<GeneratorConfigVo> list = this.generatorConfigService.findGeneratorConfigList(generatorConfigVo);
@@ -57,7 +57,7 @@ public class GeneratorConfigController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('generatorConfig:view')")
+    @SaCheckPermission("generatorConfig:view")
     @Operation(summary = "代码生成配置查询（单个）")
     public BaseRsp<GeneratorConfigVo> findGeneratorConfig(@ParameterObject @Validated GeneratorConfigVo generatorConfigVo) {
         GeneratorConfigVo generatorConfig = this.generatorConfigService.findGeneratorConfig(generatorConfigVo);
@@ -65,7 +65,7 @@ public class GeneratorConfigController {
     }
 
     @GetMapping("/checkServerName")
-    @PreAuthorize("hasAuthority('generatorConfig:add')")
+    @SaCheckPermission("generatorConfig:add")
     @Operation(summary = "检查服务名是否重复")
     @Parameters({
             @Parameter(name = "id", description = "id", required = false, in = ParameterIn.QUERY),
@@ -78,7 +78,7 @@ public class GeneratorConfigController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('generatorConfig:add')")
+    @SaCheckPermission("generatorConfig:add")
     @ControllerEndpoint(operation = "新增代码生成配置")
     @Operation(summary = "新增代码生成配置")
     public BaseRsp<GeneratorConfig> addGeneratorConfig(@RequestBody @Validated GeneratorConfigAo generatorConfigAo) {
@@ -86,7 +86,7 @@ public class GeneratorConfigController {
     }
 
     @DeleteMapping("/{ids}")
-    @PreAuthorize("hasAuthority('generatorConfig:delete')")
+    @SaCheckPermission("generatorConfig:delete")
     @ControllerEndpoint(operation = "删除代码生成配置")
     @Operation(summary = "删除代码生成配置")
     @Parameters({
@@ -99,7 +99,7 @@ public class GeneratorConfigController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('generatorConfig:update')")
+    @SaCheckPermission("generatorConfig:update")
     @ControllerEndpoint(operation = "修改代码生成配置")
     @Operation(summary = "修改代码生成配置")
     public BaseRsp<GeneratorConfig> updateGeneratorConfig(@RequestBody @Validated(UpdateStrategy.class) GeneratorConfigAo generatorConfigAo) {

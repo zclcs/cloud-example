@@ -1,13 +1,14 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.BlockLog;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
+import com.zclcs.platform.system.api.bean.entity.BlockLog;
 import com.zclcs.platform.system.api.bean.vo.BlockLogVo;
 import com.zclcs.platform.system.service.BlockLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +43,7 @@ public class BlockLogController {
     private final BlockLogService blockLogService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('blockLog:view')")
+    @SaCheckPermission("blockLog:view")
     @Operation(summary = "黑名单拦截日志查询（分页）")
     public BaseRsp<BasePage<BlockLogVo>> findBlockLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated BlockLogVo blockLogVo) {
         BasePage<BlockLogVo> page = this.blockLogService.findBlockLogPage(basePageAo, blockLogVo);
@@ -51,7 +51,7 @@ public class BlockLogController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('blockLog:view')")
+    @SaCheckPermission("blockLog:view")
     @Operation(summary = "黑名单拦截日志查询（集合）")
     public BaseRsp<List<BlockLogVo>> findBlockLogList(@ParameterObject @Validated BlockLogVo blockLogVo) {
         List<BlockLogVo> list = this.blockLogService.findBlockLogList(blockLogVo);
@@ -59,7 +59,7 @@ public class BlockLogController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('blockLog:view')")
+    @SaCheckPermission("blockLog:view")
     @Operation(summary = "黑名单拦截日志查询（单个）")
     public BaseRsp<BlockLogVo> findBlockLog(@ParameterObject @Validated BlockLogVo blockLogVo) {
         BlockLogVo blockLog = this.blockLogService.findBlockLog(blockLogVo);
@@ -67,7 +67,7 @@ public class BlockLogController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('blockLog:add')")
+    @SaCheckPermission("blockLog:add")
     @ControllerEndpoint(operation = "新增黑名单拦截日志")
     @Operation(summary = "新增黑名单拦截日志")
     public BaseRsp<BlockLog> addBlockLog(@RequestBody @Validated BlockLogAo blockLogAo) {
@@ -75,7 +75,7 @@ public class BlockLogController {
     }
 
     @DeleteMapping("/{blockLogIds}")
-    @PreAuthorize("hasAuthority('blockLog:delete')")
+    @SaCheckPermission("blockLog:delete")
     @ControllerEndpoint(operation = "删除黑名单拦截日志")
     @Operation(summary = "删除黑名单拦截日志")
     @Parameters({

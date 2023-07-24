@@ -1,13 +1,14 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
-import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
+import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
 import com.zclcs.platform.system.service.RouteLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +43,7 @@ public class RouteLogController {
     private final RouteLogService routeLogService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('routeLog:view')")
+    @SaCheckPermission("routeLog:view")
     @Operation(summary = "网关转发日志查询（分页）")
     public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
@@ -51,7 +51,7 @@ public class RouteLogController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('routeLog:view')")
+    @SaCheckPermission("routeLog:view")
     @Operation(summary = "网关转发日志查询（集合）")
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@ParameterObject @Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
@@ -59,7 +59,7 @@ public class RouteLogController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('routeLog:view')")
+    @SaCheckPermission("routeLog:view")
     @Operation(summary = "网关转发日志查询（单个）")
     public BaseRsp<RouteLogVo> findRouteLog(@ParameterObject @Validated RouteLogVo routeLogVo) {
         RouteLogVo routeLog = this.routeLogService.findRouteLog(routeLogVo);
@@ -67,7 +67,7 @@ public class RouteLogController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('routeLog:add')")
+    @SaCheckPermission("routeLog:add")
     @ControllerEndpoint(operation = "新增网关转发日志")
     @Operation(summary = "新增网关转发日志")
     public BaseRsp<RouteLog> addRouteLog(@RequestBody @Validated RouteLogAo routeLogAo) {
@@ -75,7 +75,7 @@ public class RouteLogController {
     }
 
     @DeleteMapping("/{routeLogIds}")
-    @PreAuthorize("hasAuthority('routeLog:delete')")
+    @SaCheckPermission("routeLog:delete")
     @ControllerEndpoint(operation = "删除网关转发日志")
     @Operation(summary = "删除网关转发日志")
     @Parameters({

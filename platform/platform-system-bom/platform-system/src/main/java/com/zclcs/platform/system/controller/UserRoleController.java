@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.controller;
 
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
 import com.zclcs.platform.system.service.UserRoleService;
 import io.swagger.v3.oas.annotations.Operation;

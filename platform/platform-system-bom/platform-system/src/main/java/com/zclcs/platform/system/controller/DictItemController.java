@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -9,7 +11,7 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
 import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.bean.vo.DictItemVo;
@@ -24,7 +26,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class DictItemController {
     private final DictItemService dictItemService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（分页）")
     public BaseRsp<BasePage<DictItemVo>> findDictItemPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated DictItemVo dictItemVo) {
         BasePage<DictItemVo> page = this.dictItemService.findDictItemPage(basePageAo, dictItemVo);
@@ -56,7 +57,7 @@ public class DictItemController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（集合）")
     public BaseRsp<List<DictItemVo>> findDictItemList(@ParameterObject @Validated DictItemVo dictItemVo) {
         List<DictItemVo> list = this.dictItemService.findDictItemList(dictItemVo);
@@ -64,7 +65,7 @@ public class DictItemController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（单个）")
     public BaseRsp<DictItemVo> findDictItem(@ParameterObject @Validated DictItemVo dictItemVo) {
         DictItemVo dictItem = this.dictItemService.findDictItem(dictItemVo);
@@ -100,7 +101,7 @@ public class DictItemController {
     }
 
     @GetMapping("/tree")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典树查询")
     public BaseRsp<List<DictItemTreeVo>> findDictItemTree(@Validated DictItemVo dictItemVo) {
         List<DictItemTreeVo> dictItemTree = this.dictItemService.findDictItemTree(dictItemVo);
@@ -108,7 +109,7 @@ public class DictItemController {
     }
 
     @GetMapping("/dictName")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（分页）")
     public BaseRsp<BasePage<DictVo>> findDictPage(@Validated BasePageAo basePageAo, @Validated DictVo dictVo) {
         BasePage<DictVo> page = this.dictItemService.findDictPage(basePageAo, dictVo);
@@ -116,7 +117,7 @@ public class DictItemController {
     }
 
     @GetMapping("/dictName/list")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（集合）")
     public BaseRsp<List<DictVo>> findDictItemList(@Validated DictVo dictVo) {
         List<DictVo> list = this.dictItemService.findDictList(dictVo);
@@ -124,7 +125,7 @@ public class DictItemController {
     }
 
     @GetMapping("/dictName/one")
-    @PreAuthorize("hasAuthority('dictItem:view')")
+    @SaCheckPermission("dictItem:view")
     @Operation(summary = "字典项查询（单个）")
     public BaseRsp<DictVo> findDictItem(@Validated DictVo dictVo) {
         DictVo dictItem = this.dictItemService.findDict(dictVo);
@@ -132,7 +133,7 @@ public class DictItemController {
     }
 
     @GetMapping("/checkValue")
-    @PreAuthorize("hasAnyAuthority('dictItem:add', 'dictItem:update')")
+    @SaCheckPermission(value = {"dictItem:add", "dictItem:update"}, mode = SaMode.OR)
     @Operation(summary = "检查字典项是否重复")
     @Parameters({
             @Parameter(name = "id", description = "字典项id", required = false, in = ParameterIn.QUERY),
@@ -147,7 +148,7 @@ public class DictItemController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('dictItem:add')")
+    @SaCheckPermission("dictItem:add")
     @ControllerEndpoint(operation = "新增字典项")
     @Operation(summary = "新增字典项")
     public BaseRsp<DictItem> addDictItem(@RequestBody @Validated DictItemAo dictItemAo) {
@@ -155,7 +156,7 @@ public class DictItemController {
     }
 
     @DeleteMapping("/{dictItemIds}")
-    @PreAuthorize("hasAuthority('dictItem:delete')")
+    @SaCheckPermission("dictItem:delete")
     @ControllerEndpoint(operation = "删除字典项")
     @Operation(summary = "删除字典项")
     @Parameters({
@@ -168,7 +169,7 @@ public class DictItemController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('dictItem:update')")
+    @SaCheckPermission("dictItem:update")
     @ControllerEndpoint(operation = "修改字典项")
     @Operation(summary = "修改字典项")
     public BaseRsp<DictItem> updateDictItem(@RequestBody @Validated(UpdateStrategy.class) DictItemAo dictItemAo) {

@@ -1,5 +1,8 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
+import cn.hutool.crypto.digest.BCrypt;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -7,9 +10,8 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
-import com.zclcs.cloud.lib.security.utils.PasswordUtil;
-import com.zclcs.cloud.lib.security.utils.SecurityUtil;
+import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
 import com.zclcs.platform.system.api.bean.entity.User;
@@ -29,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +56,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('user:view')")
+    @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（分页）")
     public BaseRsp<BasePage<UserVo>> findUserPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated UserVo userVo) {
         BasePage<UserVo> page = this.userService.findUserPage(basePageAo, userVo);
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('user:view')")
+    @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（集合）")
     public BaseRsp<List<UserVo>> findUserList(@ParameterObject @Validated UserVo userVo) {
         List<UserVo> list = this.userService.findUserList(userVo);
@@ -71,7 +72,7 @@ public class UserController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('user:view')")
+    @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（单个）")
     public BaseRsp<UserVo> findUser(@ParameterObject @Validated UserVo userVo) {
         UserVo user = this.userService.findUser(userVo);
@@ -95,7 +96,7 @@ public class UserController {
     @GetMapping("/findUserInfo")
     @Operation(summary = "用户信息")
     public BaseRsp<UserVo> findUserInfo() {
-        UserVo userDetail = SystemCacheUtil.getUserByUsername(SecurityUtil.getUsername());
+        UserVo userDetail = SystemCacheUtil.getUserByUsername(LoginHelper.getUsername());
         if (userDetail == null) {
             RspUtil.message("获取当前用户信息失败");
         }
@@ -105,19 +106,19 @@ public class UserController {
     @GetMapping("/permissions")
     @Operation(summary = "权限")
     public BaseRsp<List<String>> findUserPermissions() {
-        List<String> userPermissions = this.userService.findUserPermissions(SecurityUtil.getUsername());
+        List<String> userPermissions = this.userService.findUserPermissions(LoginHelper.getUsername());
         return RspUtil.data(userPermissions);
     }
 
     @GetMapping("/routers")
     @Operation(summary = "用户路由")
     public BaseRsp<List<VueRouter<MenuVo>>> getUserRouters() {
-        List<VueRouter<MenuVo>> userRouters = this.userService.findUserRouters(SecurityUtil.getUsername());
+        List<VueRouter<MenuVo>> userRouters = this.userService.findUserRouters(LoginHelper.getUsername());
         return RspUtil.data(userRouters);
     }
 
     @GetMapping("/options")
-    @PreAuthorize("hasAuthority('user:view')")
+    @SaCheckPermission("user:view")
     @Operation(summary = "下拉树")
     public BaseRsp<List<UserVo>> userList(@ParameterObject @Validated UserVo userVo) {
         List<UserVo> userDetailPage = userService.findUserList(userVo);
@@ -125,7 +126,7 @@ public class UserController {
     }
 
     @GetMapping("/checkUsername")
-    @PreAuthorize("hasAnyAuthority('user:add', 'user:update')")
+    @SaCheckPermission(value = {"user:add", "user:update"}, mode = SaMode.OR)
     @Operation(summary = "检查用户名")
     @Parameters({
             @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
@@ -138,7 +139,7 @@ public class UserController {
     }
 
     @GetMapping("/checkUserMobile")
-    @PreAuthorize("hasAnyAuthority('user:add', 'user:update')")
+    @SaCheckPermission(value = {"user:add", "user:update"}, mode = SaMode.OR)
     @Operation(summary = "检查用户手机号")
     @Parameters({
             @Parameter(name = "userId", description = "用户id", required = false, in = ParameterIn.QUERY),
@@ -151,7 +152,7 @@ public class UserController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('user:add')")
+    @SaCheckPermission("user:add")
     @ControllerEndpoint(operation = "新增用户")
     @Operation(summary = "新增用户")
     public BaseRsp<User> addUser(@RequestBody @Validated UserAo userAo) {
@@ -159,7 +160,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userIds}")
-    @PreAuthorize("hasAuthority('user:delete')")
+    @SaCheckPermission("user:delete")
     @ControllerEndpoint(operation = "删除用户")
     @Operation(summary = "删除用户")
     @Parameters({
@@ -172,7 +173,7 @@ public class UserController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('user:update')")
+    @SaCheckPermission("user:update")
     @ControllerEndpoint(operation = "修改用户")
     @Operation(summary = "修改用户")
     public BaseRsp<User> updateUser(@RequestBody @Validated(UpdateStrategy.class) UserAo userAo) {
@@ -185,9 +186,9 @@ public class UserController {
             @Parameter(name = "password", description = "密码", required = true, in = ParameterIn.PATH)
     })
     public BaseRsp<Boolean> checkMyPassword(@NotBlank(message = "{required}") @PathVariable String password) {
-        String currentUsername = SecurityUtil.getUsername();
-        UserVo user = userService.findByName(currentUsername);
-        return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
+        String currentUsername = LoginHelper.getUsername();
+        UserCacheBean userCache = SystemCacheUtil.getUserCache(currentUsername);
+        return RspUtil.data(userCache != null && !BCrypt.checkpw(password, userCache.getPassword()));
     }
 
     @PutMapping("/updateMinePassword/{password}")
@@ -202,7 +203,7 @@ public class UserController {
     }
 
     @GetMapping("/checkPassword/{username}/{password}")
-    @PreAuthorize("hasAuthority('user:updatePassword')")
+    @SaCheckPermission("user:updatePassword")
     @Operation(summary = "检查用户密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
@@ -210,12 +211,12 @@ public class UserController {
     })
     public BaseRsp<Boolean> checkPassword(@NotBlank(message = "{required}") @PathVariable String username,
                                           @NotBlank(message = "{required}") @PathVariable String password) {
-        UserVo user = userService.findByName(username);
-        return RspUtil.data(user != null && PasswordUtil.PASSWORD_ENCODER.matches(password, user.getPassword()));
+        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
+        return RspUtil.data(userCache != null && !BCrypt.checkpw(password, userCache.getPassword()));
     }
 
     @PutMapping("/updatePassword/{username}/{password}")
-    @PreAuthorize("hasAuthority('user:updatePassword')")
+    @SaCheckPermission("user:updatePassword")
     @Operation(summary = "修改密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.PATH),
@@ -229,7 +230,7 @@ public class UserController {
     }
 
     @PutMapping("/updateUserStatus/{username}")
-    @PreAuthorize("hasAuthority('user:updateStatus')")
+    @SaCheckPermission("user:updateStatus")
     @Operation(summary = "禁用账号")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)
@@ -241,7 +242,7 @@ public class UserController {
     }
 
     @PutMapping("/resetPassword/{username}")
-    @PreAuthorize("hasAuthority('user:resetPassword')")
+    @SaCheckPermission("user:resetPassword")
     @Operation(summary = "重置用户密码")
     @Parameters({
             @Parameter(name = "username", description = "用户名", required = true, in = ParameterIn.QUERY)

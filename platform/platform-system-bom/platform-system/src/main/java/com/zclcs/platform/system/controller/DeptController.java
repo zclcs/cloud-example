@@ -1,5 +1,7 @@
 package com.zclcs.platform.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -7,7 +9,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.annotation.Inner;
+import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.cache.DeptCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Dept;
@@ -24,7 +26,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class DeptController {
     private final DeptService deptService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('dept:view')")
+    @SaCheckPermission("dept:view")
     @Operation(summary = "部门查询（分页）")
     public BaseRsp<BasePage<DeptVo>> findDeptPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated DeptVo deptVo) {
         BasePage<DeptVo> page = this.deptService.findDeptPage(basePageAo, deptVo);
@@ -56,7 +57,7 @@ public class DeptController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('dept:view')")
+    @SaCheckPermission("dept:view")
     @Operation(summary = "部门查询（集合）")
     public BaseRsp<List<DeptVo>> findDeptList(@ParameterObject @Validated DeptVo deptVo) {
         List<DeptVo> list = this.deptService.findDeptList(deptVo);
@@ -64,7 +65,7 @@ public class DeptController {
     }
 
     @GetMapping("/one")
-    @PreAuthorize("hasAuthority('dept:view')")
+    @SaCheckPermission("dept:view")
     @Operation(summary = "部门查询（单个）")
     public BaseRsp<DeptVo> findDept(@ParameterObject @Validated DeptVo deptVo) {
         DeptVo dept = this.deptService.findDept(deptVo);
@@ -72,7 +73,7 @@ public class DeptController {
     }
 
     @GetMapping("/tree")
-    @PreAuthorize("hasAnyAuthority('user:view', 'dept:view')")
+    @SaCheckPermission(value = {"user:view", "dept:view"}, mode = SaMode.OR)
     @Operation(summary = "部门树")
     public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo deptVo) {
         List<DeptTreeVo> list = this.deptService.findDeptTree(deptVo);
@@ -80,7 +81,7 @@ public class DeptController {
     }
 
     @GetMapping("/options")
-    @PreAuthorize("hasAnyAuthority('user:view', 'dept:view')")
+    @SaCheckPermission(value = {"user:view", "dept:view"}, mode = SaMode.OR)
     @Operation(summary = "部门前端下拉框")
     public BaseRsp<List<DeptVo>> deptOptions(@Valid DeptVo deptVo) {
         List<DeptVo> list = this.deptService.findDeptList(deptVo);
@@ -95,7 +96,7 @@ public class DeptController {
     }
 
     @GetMapping("/checkDeptName")
-    @PreAuthorize("hasAnyAuthority('dept:add', 'dept:update')")
+    @SaCheckPermission(value = {"dept:add", "dept:update"}, mode = SaMode.OR)
     @Operation(summary = "检查部门名称")
     @Parameters({
             @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),
@@ -108,7 +109,7 @@ public class DeptController {
     }
 
     @GetMapping("/checkDeptCode")
-    @PreAuthorize("hasAnyAuthority('dept:add', 'dept:update')")
+    @SaCheckPermission(value = {"dept:add", "dept:update"}, mode = SaMode.OR)
     @Operation(summary = "检查部门编码")
     @Parameters({
             @Parameter(name = "deptId", description = "部门id", required = false, in = ParameterIn.QUERY),
@@ -121,7 +122,7 @@ public class DeptController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('dept:add')")
+    @SaCheckPermission("dept:add")
     @ControllerEndpoint(operation = "新增部门")
     @Operation(summary = "新增部门")
     public BaseRsp<Dept> addDept(@RequestBody @Validated DeptAo deptAo) {
@@ -129,7 +130,7 @@ public class DeptController {
     }
 
     @DeleteMapping("/{deptIds}")
-    @PreAuthorize("hasAuthority('dept:delete')")
+    @SaCheckPermission("dept:delete")
     @ControllerEndpoint(operation = "删除部门")
     @Operation(summary = "删除部门")
     @Parameters({
@@ -142,7 +143,7 @@ public class DeptController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('dept:update')")
+    @SaCheckPermission("dept:update")
     @ControllerEndpoint(operation = "修改部门")
     @Operation(summary = "修改部门")
     public BaseRsp<Dept> updateDept(@RequestBody @Validated(UpdateStrategy.class) DeptAo deptAo) {

@@ -3,6 +3,7 @@ package com.zclcs.platform.system.utils;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.platform.system.api.bean.cache.*;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zclcs
@@ -234,6 +236,16 @@ public class SystemCacheUtil {
             return null;
         }
         return getLoginVoByUsername(username);
+    }
+
+    public static String getDeptIdStringByUsername(String username) {
+        UserCacheBean userCacheBean = getUserCache(username);
+        List<Long> deptIdsByUserId = getDeptIdsByUserId(userCacheBean.getUserId());
+        String deptIdString = "";
+        if (CollectionUtil.isNotEmpty(deptIdsByUserId)) {
+            deptIdString = deptIdsByUserId.stream().map(String::valueOf).collect(Collectors.joining(Strings.COMMA));
+        }
+        return deptIdString;
     }
 
     @PostConstruct

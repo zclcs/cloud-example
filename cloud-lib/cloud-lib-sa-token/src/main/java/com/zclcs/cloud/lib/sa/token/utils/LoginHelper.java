@@ -30,8 +30,19 @@ public class LoginHelper {
     /**
      * 获取用户id
      */
-    public static String getUserName() {
+    public static String getUsername() {
         return StpUtil.getLoginIdAsString();
+    }
+
+    /**
+     * 获取用户id
+     */
+    public static String getUsernameWithNull() {
+        try {
+            return StpUtil.getLoginIdAsString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

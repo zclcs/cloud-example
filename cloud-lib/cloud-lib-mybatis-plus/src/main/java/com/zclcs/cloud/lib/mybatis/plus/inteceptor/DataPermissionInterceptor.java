@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.zclcs.cloud.lib.mybatis.plus.annotation.DataPermission;
-import com.zclcs.cloud.lib.security.entity.SecurityUser;
-import com.zclcs.cloud.lib.security.utils.SecurityUtil;
+import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
@@ -21,7 +21,6 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 import java.io.StringReader;
-import java.util.stream.Collectors;
 
 /**
  * @author zclcs
@@ -52,8 +51,9 @@ public class DataPermissionInterceptor implements InnerInterceptor {
             if (StrUtil.isBlank(dataPermission.field())) {
                 return originSql;
             }
-            SecurityUser user = SecurityUtil.getUser();
-            if (user == null) {
+            String username = LoginHelper.getUsernameWithNull();
+            if (username == null) {
+                log.warn("Data Permission Get User is null");
                 return originSql;
             }
             CCJSqlParserManager parserManager = new CCJSqlParserManager();
@@ -62,7 +62,7 @@ public class DataPermissionInterceptor implements InnerInterceptor {
             Table fromItem = (Table) plainSelect.getFromItem();
 
             String selectTableName = fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
-            String deptIdString = user.getDeptIds().stream().map(String::valueOf).collect(Collectors.joining(StrUtil.COMMA));
+            String deptIdString = SystemCacheUtil.getDeptIdStringByUsername(username);
             String dataPermissionSql = String.format("%s.%s in (%s)", selectTableName, dataPermission.field(), StrUtil.blankToDefault(deptIdString, "'WITHOUT PERMISSIONS'"));
 
             if (plainSelect.getWhere() == null) {

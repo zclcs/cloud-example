@@ -5,5 +5,4 @@ dependencies {
     api "io.github.openfeign:feign-okhttp"
     api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     api "com.github.ben-manes.caffeine:caffeine"
-    api "org.springframework.security:spring-security-core"
 }

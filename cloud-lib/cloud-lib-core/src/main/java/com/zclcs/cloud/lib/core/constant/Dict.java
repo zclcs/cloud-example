@@ -93,4 +93,14 @@ public interface Dict {
      */
     String OPEN = "1";
 
+    /**
+     * 用户状态有效
+     */
+    String USER_STATUS_1 = "1";
+
+    /**
+     * 用户状态锁定
+     */
+    String USER_STATUS_0 = "0";
+
 }
