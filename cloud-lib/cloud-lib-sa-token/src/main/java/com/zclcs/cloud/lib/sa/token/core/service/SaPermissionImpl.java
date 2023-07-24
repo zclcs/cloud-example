@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.sa.token.core.service;
 
 import cn.dev33.satoken.stp.StpInterface;
-import cn.hutool.core.collection.CollectionUtil;
+import com.zclcs.platform.system.utils.SystemCacheUtil;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        return CollectionUtil.newArrayList();
+        return SystemCacheUtil.getPermissionsByUsername((String) loginId);
     }
 
     /**
@@ -25,7 +25,7 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        return CollectionUtil.newArrayList();
+        return SystemCacheUtil.getRoleCodesByUsername((String) loginId);
     }
 
 }

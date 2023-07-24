@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.platform.system.api.bean.cache.*;
+import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.cache.*;
 import jakarta.annotation.PostConstruct;
@@ -161,6 +162,12 @@ public class SystemCacheUtil {
         return roles;
     }
 
+    public static List<String> getRoleCodesByUsername(String username) {
+        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
+        List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
+        return roles.stream().map(RoleCacheBean::getRoleCode).toList();
+    }
+
     public static List<MenuCacheBean> getMenusByRoleIds(List<Long> roleIds) {
         Set<Long> menuIds = new HashSet<>();
         for (Long roleId : roleIds) {
@@ -173,6 +180,13 @@ public class SystemCacheUtil {
         UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
         List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
         return SystemCacheUtil.getMenusByRoleIds(roles.stream().map(RoleCacheBean::getRoleId).toList());
+    }
+
+    public static List<String> getPermissionsByUsername(String username) {
+        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
+        List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
+        return SystemCacheUtil.getMenusByUsername(username).stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
+                .filter(StrUtil::isNotBlank).toList();
     }
 
     public static UserVo getUserByUsername(String username) {
@@ -196,12 +210,30 @@ public class SystemCacheUtil {
         return userVo;
     }
 
+    public static LoginVo getLoginVoByUsername(String username) {
+        UserCacheBean userCache = getUserCache(username);
+        if (StrUtil.isBlank(userCache.getUsername())) {
+            return null;
+        }
+        LoginVo loginVo = new LoginVo();
+        BeanUtil.copyProperties(userCache, loginVo);
+        return loginVo;
+    }
+
     public static UserVo getUserByMobile(String mobile) {
         String username = getUsernameByMobile(mobile);
         if (StrUtil.isBlank(username)) {
             return null;
         }
         return getUserByUsername(username);
+    }
+
+    public static LoginVo getLoginVoByMobile(String mobile) {
+        String username = getUsernameByMobile(mobile);
+        if (StrUtil.isBlank(username)) {
+            return null;
+        }
+        return getLoginVoByUsername(username);
     }
 
     @PostConstruct

@@ -157,9 +157,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<String> findUserPermissions(String username) {
-        List<MenuCacheBean> menus = SystemCacheUtil.getMenusByUsername(username);
-        return menus.stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
-                .filter(StrUtil::isNotBlank).toList();
+        return SystemCacheUtil.getPermissionsByUsername(username);
     }
 
     @Override

@@ -52,6 +52,8 @@ public interface RedisCachePrefix {
      */
     String USER = "user:%s";
 
+    String USER_LOGIN = "user:login";
+
     /**
      * 用户-手机号 redis key
      */

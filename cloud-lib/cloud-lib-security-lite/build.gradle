@@ -1,8 +1,9 @@
 dependencies {
     api project(":cloud-lib:cloud-lib-core")
+    api project(":cloud-lib:cloud-lib-sa-token")
+    api project(":cloud-lib:cloud-lib-fegin")
     api project(":common:common-redis-starter")
     api project(":common:common-web-starter")
-    api project(":cloud-lib:cloud-lib-sa-token")
     api "org.springframework.boot:spring-boot-starter-aop"
     api "org.springframework.cloud:spring-cloud-starter-openfeign"
     api "cn.hutool:hutool-extra"

@@ -3,11 +3,10 @@ package com.zclcs.cloud.lib.sa.token.utils;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.zclcs.platform.system.api.bean.vo.UserVo;
+import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
+import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 /**
  * 登录鉴权助手
@@ -22,97 +21,54 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginHelper {
 
-    public static final String JOIN_CODE = ":";
-
-    public static final String LOGIN_USER_KEY = "userVo";
-
     /**
      * 登录系统
      *
-     * @param userVo 登录用户信息
+     * @param loginVo 登录用户信息
      */
-    public static void login(UserVo userVo) {
-        SaHolder.getStorage().set(LOGIN_USER_KEY, userVo);
-        StpUtil.login(userVo.getUserId());
-        setUserVo(userVo);
+    public static void login(LoginVo loginVo) {
+        SaHolder.getStorage().set(RedisCachePrefix.USER_LOGIN, loginVo);
+        StpUtil.login(loginVo.getUsername());
+        setLoginVo(loginVo);
     }
 
     /**
      * 设置用户数据(多级缓存)
      */
-    public static void setUserVo(UserVo userVo) {
-        StpUtil.getTokenSession().set(LOGIN_USER_KEY, userVo);
+    public static void setLoginVo(LoginVo loginVo) {
+        StpUtil.getTokenSession().set(RedisCachePrefix.USER_LOGIN, loginVo);
     }
 
     /**
      * 获取用户(多级缓存)
      */
-    public static UserVo getUserVo() {
-        UserVo userVo = (UserVo) SaHolder.getStorage().get(LOGIN_USER_KEY);
-        if (userVo != null) {
-            return userVo;
+    public static LoginVo getLoginVo() {
+        LoginVo loginVo = (LoginVo) SaHolder.getStorage().get(RedisCachePrefix.USER_LOGIN);
+        if (loginVo != null) {
+            return loginVo;
         }
-        userVo = (UserVo) StpUtil.getTokenSession().get(LOGIN_USER_KEY);
-        SaHolder.getStorage().set(LOGIN_USER_KEY, userVo);
-        return userVo;
+        loginVo = (LoginVo) StpUtil.getTokenSession().get(RedisCachePrefix.USER_LOGIN);
+        SaHolder.getStorage().set(RedisCachePrefix.USER_LOGIN, loginVo);
+        return loginVo;
     }
 
     /**
      * 获取用户
      */
-    public static UserVo getUserVo(String token) {
-        return (UserVo) StpUtil.getTokenSessionByToken(token).get(LOGIN_USER_KEY);
+    public static LoginVo getLoginVo(String token) {
+        return (LoginVo) StpUtil.getTokenSessionByToken(token).get(RedisCachePrefix.USER_LOGIN);
     }
 
     /**
      * 获取用户id
      */
-    public static Long getUserId() {
-        UserVo userVo = getUserVo();
-        if (ObjectUtil.isNull(userVo)) {
+    public static String getUserName() {
+        LoginVo loginVo = getLoginVo();
+        if (ObjectUtil.isNull(loginVo)) {
             String loginId = StpUtil.getLoginIdAsString();
-            String[] strs = StringUtils.split(loginId, JOIN_CODE);
-            // 用户id在总是在最后
-            assert strs != null;
-            String userId = strs[strs.length - 1];
-            if (StrUtil.isBlank(userId)) {
-                throw new RuntimeException("登录用户: LoginId异常 => " + loginId);
-            }
-            return Long.parseLong(userId);
+            return loginId;
         }
-        return userVo.getUserId();
-    }
-
-    /**
-     * 获取部门ID
-     */
-    public static Long getDeptId() {
-        return getUserVo().getDeptId();
-    }
-
-    /**
-     * 获取用户账户
-     */
-    public static String getUsername() {
-        return getUserVo().getUsername();
-    }
-
-    public static String getUsername(String token) {
-        return getUserVo(token).getUsername();
-    }
-
-    /**
-     * 是否为管理员
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    public static boolean isAdmin(Long userId) {
-        return 1L == userId;
-    }
-
-    public static boolean isAdmin() {
-        return isAdmin(getUserId());
+        return loginVo.getUsername();
     }
 
 }
