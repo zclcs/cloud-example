@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.cache;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.platform.system.api.fegin.RemoteUserService;
@@ -27,5 +28,10 @@ public class UserMobileCache extends CacheService<String> {
     @Override
     protected String findByKey(Object... key) {
         return remoteUserService.findByMobile((String) key[0]);
+    }
+
+    @Override
+    protected String serialization(String json) throws JsonProcessingException {
+        return json;
     }
 }

@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.dict.cache;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
@@ -27,6 +28,11 @@ public class DictItemCache extends CacheService<DictItemCacheBean> {
     @Override
     protected DictItemCacheBean findByKey(Object... key) {
         return remoteDictItemService.findByDictNameAndValue((String) key[0], (String) key[1]);
+    }
+
+    @Override
+    protected DictItemCacheBean serialization(String json) throws JsonProcessingException {
+        return super.getObjectMapper().readValue(json, DictItemCacheBean.class);
     }
 
 }

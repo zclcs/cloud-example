@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.cache;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
@@ -28,6 +29,11 @@ public class DeptCache extends CacheService<DeptCacheBean> {
     @Override
     protected DeptCacheBean findByKey(Object... key) {
         return remoteDeptService.findByDeptId((Long) key[0]);
+    }
+
+    @Override
+    protected DeptCacheBean serialization(String json) throws JsonProcessingException {
+        return super.getObjectMapper().readValue(json, DeptCacheBean.class);
     }
 
 }

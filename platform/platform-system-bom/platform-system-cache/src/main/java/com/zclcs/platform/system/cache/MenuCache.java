@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.cache;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
@@ -33,6 +34,11 @@ public class MenuCache extends CacheService<MenuCacheBean> {
     @Override
     protected MenuCacheBean findByKey(Object... key) {
         return remoteMenuService.findByMenuId((Long) key[0]);
+    }
+
+    @Override
+    protected MenuCacheBean serialization(String json) throws JsonProcessingException {
+        return super.getObjectMapper().readValue(json, MenuCacheBean.class);
     }
 
     public List<MenuCacheBean> getMenusByMenuIds(List<Long> menuIds) {

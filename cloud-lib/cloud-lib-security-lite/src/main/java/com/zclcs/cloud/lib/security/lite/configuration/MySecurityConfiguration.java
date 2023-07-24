@@ -47,7 +47,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
     public SaServletFilter getSaServletFilter() {
         return new SaServletFilter()
                 .addInclude("/**")
-                .addExclude("/actuator/**", "/error", "/v3/api-docs")
+//                .addExclude("/actuator/**", "/error", "/v3/api-docs")
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
