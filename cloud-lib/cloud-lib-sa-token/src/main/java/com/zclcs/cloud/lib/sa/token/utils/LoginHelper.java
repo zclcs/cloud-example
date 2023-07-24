@@ -1,9 +1,6 @@
 package com.zclcs.cloud.lib.sa.token.utils;
 
-import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.ObjectUtil;
-import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -27,48 +24,14 @@ public class LoginHelper {
      * @param loginVo 登录用户信息
      */
     public static void login(LoginVo loginVo) {
-        SaHolder.getStorage().set(RedisCachePrefix.USER_LOGIN, loginVo);
         StpUtil.login(loginVo.getUsername());
-        setLoginVo(loginVo);
-    }
-
-    /**
-     * 设置用户数据(多级缓存)
-     */
-    public static void setLoginVo(LoginVo loginVo) {
-        StpUtil.getTokenSession().set(RedisCachePrefix.USER_LOGIN, loginVo);
-    }
-
-    /**
-     * 获取用户(多级缓存)
-     */
-    public static LoginVo getLoginVo() {
-        LoginVo loginVo = (LoginVo) SaHolder.getStorage().get(RedisCachePrefix.USER_LOGIN);
-        if (loginVo != null) {
-            return loginVo;
-        }
-        loginVo = (LoginVo) StpUtil.getTokenSession().get(RedisCachePrefix.USER_LOGIN);
-        SaHolder.getStorage().set(RedisCachePrefix.USER_LOGIN, loginVo);
-        return loginVo;
-    }
-
-    /**
-     * 获取用户
-     */
-    public static LoginVo getLoginVo(String token) {
-        return (LoginVo) StpUtil.getTokenSessionByToken(token).get(RedisCachePrefix.USER_LOGIN);
     }
 
     /**
      * 获取用户id
      */
     public static String getUserName() {
-        LoginVo loginVo = getLoginVo();
-        if (ObjectUtil.isNull(loginVo)) {
-            String loginId = StpUtil.getLoginIdAsString();
-            return loginId;
-        }
-        return loginVo.getUsername();
+        return StpUtil.getLoginIdAsString();
     }
 
 }
