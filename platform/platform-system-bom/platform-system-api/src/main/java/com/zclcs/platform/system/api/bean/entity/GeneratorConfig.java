@@ -5,19 +5,19 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
+ * 代码生成配置 Entity
+ *
  * @author zclcs
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_generator_config")
-@Schema(title = "GeneratorConfig对象", description = "代码生成配置表")
 public class GeneratorConfig extends BaseEntity {
 
     /**

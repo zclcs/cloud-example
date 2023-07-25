@@ -2,13 +2,13 @@ package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.AddStrategy;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -23,23 +23,29 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "MinioBucketAo对象", description = "minio桶")
 public class MinioBucketAo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 桶id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(title = "桶id")
     private Long id;
 
+    /**
+     * 桶名称
+     */
     @Size(max = 50, message = "{noMoreThan}")
     @NotBlank(message = "{required}", groups = AddStrategy.class)
-    @Schema(title = "桶名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String bucketName;
 
+    /**
+     * 桶权限
+     */
     @Size(max = 50, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(title = "桶权限", requiredMode = Schema.RequiredMode.REQUIRED)
     private String bucketPolicy;
 
 

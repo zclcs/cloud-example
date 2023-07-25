@@ -1,5 +1,6 @@
 package com.zclcs.platform.maintenance.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
@@ -25,7 +26,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +60,7 @@ public class NacosController {
     @GetMapping("/configs")
     @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 配置查询")
-    public BaseRsp<BasePage<NacosConfigVo.ConfigVo>> findNacosConfigPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated NacosConfigAo nacosConfigAo) {
+    public BaseRsp<BasePage<NacosConfigVo.ConfigVo>> findNacosConfigPage(@Validated BasePageAo basePageAo, @Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
         params.put("dataId", StrUtil.isNotBlank(nacosConfigAo.getDataId()) ? Strings.ASTERISK + nacosConfigAo.getDataId() + Strings.ASTERISK : "");
@@ -91,7 +91,7 @@ public class NacosController {
     @GetMapping("/config/detail")
     @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 配置详情查询")
-    public BaseRsp<NacosConfigVo.ConfigDetailVo> findNacosConfigDetail(@ParameterObject @Validated NacosConfigAo nacosConfigAo) {
+    public BaseRsp<NacosConfigVo.ConfigDetailVo> findNacosConfigDetail(@Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
         params.put("dataId", nacosConfigAo.getDataId());
@@ -133,7 +133,7 @@ public class NacosController {
     @GetMapping("/services")
     @SaCheckPermission("nacos:view")
     @Operation(summary = "nacos 服务列表查询")
-    public BaseRsp<BasePage<NacosServiceVo.Service>> findNacosServicePage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated NacosServiceAo nacosServiceAo) {
+    public BaseRsp<BasePage<NacosServiceVo.Service>> findNacosServicePage(@Validated BasePageAo basePageAo, @Validated NacosServiceAo nacosServiceAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
         params.put("hasIpCount", "true");

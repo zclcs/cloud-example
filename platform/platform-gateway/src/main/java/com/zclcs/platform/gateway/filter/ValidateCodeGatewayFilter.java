@@ -1,7 +1,5 @@
 package com.zclcs.platform.gateway.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +10,6 @@ import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
-import com.zclcs.platform.gateway.utils.GatewayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -22,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.AntPathMatcher;
 import reactor.core.publisher.Mono;
 
 /**
@@ -43,29 +41,29 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            boolean isAuthToken = CharSequenceUtil.containsAnyIgnoreCase(request.getURI().getPath(),
-                    Security.OAUTH_TOKEN_URL);
 
-            // 不是登录请求，直接向下执行
-            if (!isAuthToken) {
+            if (!configProperties.getIsCheckValidCode()) {
                 return chain.filter(exchange);
             }
 
-            // 刷新token，手机号登录（也可以这里进行校验） 直接向下执行
-            String grantType = request.getQueryParams().getFirst("grant_type");
-            if (StrUtil.equals(Security.REFRESH_TOKEN, grantType)) {
-                return chain.filter(exchange);
-            }
+            configProperties.getNeedCheckValidCodeUrls().add(Security.TOKEN_URL);
 
-            boolean isIgnoreClient = true;
-            if (CollectionUtil.isNotEmpty(configProperties.getIgnoreClients())) {
-                isIgnoreClient = configProperties.getIgnoreClients().contains(GatewayUtil.getClientId(request));
-            }
-            try {
-                // only oauth and the request not in ignore clients need check code.
-                if (!isIgnoreClient) {
-                    checkCode(request);
+            boolean checkUrl = false;
+            for (String needCheckValidCodeUrl : configProperties.getNeedCheckValidCodeUrls()) {
+                AntPathMatcher antPathMatcher = new AntPathMatcher();
+                checkUrl = antPathMatcher.match(needCheckValidCodeUrl, request.getURI().getPath());
+                if (checkUrl) {
+                    break;
                 }
+            }
+
+            // 不是需要验证的请求，直接向下执行
+            if (checkUrl) {
+                return chain.filter(exchange);
+            }
+
+            try {
+                checkCode(request);
             } catch (Exception e) {
                 ServerHttpResponse response = exchange.getResponse();
                 final String errMsg = e.getMessage();

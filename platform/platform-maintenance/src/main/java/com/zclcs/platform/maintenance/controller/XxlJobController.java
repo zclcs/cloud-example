@@ -1,5 +1,6 @@
 package com.zclcs.platform.maintenance.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -27,7 +28,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +72,7 @@ public class XxlJobController {
     @GetMapping("/jobInfos")
     @SaCheckPermission("jobInfo:view")
     @Operation(summary = "xxlJob 任务管理")
-    public BaseRsp<BasePage<XxlJobJobInfoVo>> findXxlJobJobInfoPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated XxlJobJobInfoAo xxlJobJobInfoAo) {
+    public BaseRsp<BasePage<XxlJobJobInfoVo>> findXxlJobJobInfoPage(@Validated BasePageAo basePageAo, @Validated XxlJobJobInfoAo xxlJobJobInfoAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("jobGroup", 0);
         params.put("triggerStatus", Optional.ofNullable(xxlJobJobInfoAo.getTriggerStatus()).orElse(-1));
@@ -99,7 +99,7 @@ public class XxlJobController {
     @GetMapping("/jobLogs")
     @SaCheckPermission("jobLog:view")
     @Operation(summary = "xxlJob 日志管理")
-    public BaseRsp<BasePage<XxlJobJobLogVo>> findXxlJobJobLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated XxlJobJobLogAo xxlJobJobLogAo) {
+    public BaseRsp<BasePage<XxlJobJobLogVo>> findXxlJobJobLogPage(@Validated BasePageAo basePageAo, @Validated XxlJobJobLogAo xxlJobJobLogAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("jobGroup", Optional.ofNullable(xxlJobJobLogAo.getJobGroup()).orElse(0));
         params.put("jobId", Optional.ofNullable(xxlJobJobLogAo.getJobId()).orElse(0));
@@ -142,7 +142,7 @@ public class XxlJobController {
     @GetMapping("/jobLogDetail")
     @SaCheckPermission("jobLog:view")
     @Operation(summary = "xxlJob 查询日志")
-    public BaseRsp<XxlJobJobLogDetailVo> findJobLogDetail(@ParameterObject @Validated XxlJobJobLogDetailAo xxlJobJobLogDetailAo) {
+    public BaseRsp<XxlJobJobLogDetailVo> findJobLogDetail(@Validated XxlJobJobLogDetailAo xxlJobJobLogDetailAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("logId", xxlJobJobLogDetailAo.getLogId());
         params.put("fromLineNum", 1);

@@ -1,7 +1,6 @@
 package com.zclcs.cloud.lib.core.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serial;
@@ -10,35 +9,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 级联树对象
+ *
  * @author zclcs
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(name = "Tree", description = "级联树对象")
 public class Tree<T> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "id")
+    /**
+     * id
+     */
     private Long id;
 
-    @Schema(description = "编码")
+    /**
+     * 编码
+     */
     private String code;
 
-    @Schema(description = "父编码")
+    /**
+     * 父编码
+     */
     private String parentCode;
 
-    @Schema(description = "值")
+    /**
+     * 值
+     */
     private String label;
 
-    @Schema(description = "子级")
+    /**
+     * 子级
+     */
     private List<Tree<T>> children;
 
-    @Schema(description = "是否有父级")
+    /**
+     * 是否有父级
+     */
     private boolean hasParent = false;
 
-    @Schema(description = "是否有子级")
+    /**
+     * 是否有子级
+     */
     private boolean hasChildren = false;
 
     public void initChildren() {

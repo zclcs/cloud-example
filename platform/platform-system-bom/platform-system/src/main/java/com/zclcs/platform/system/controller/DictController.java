@@ -5,11 +5,6 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 系统字典控制器
+ * 字典缓存查询
  *
  * @author zclcs
  * @since 1.4.1
@@ -29,20 +24,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/dict")
 @RequiredArgsConstructor
-@Tag(name = "字典缓存查询")
 public class DictController {
 
     /**
      * 获取字典
+     * 权限: 无权限
      *
-     * @param dictName 字典唯一值
-     * @return 字典
+     * @param dictName   字典唯一值
+     * @param parentCode 字典上级code
+     * @return 字典缓存集合
      */
-    @Operation(summary = "获取字典")
-    @Parameters({
-            @Parameter(name = "dictName", description = "字典唯一值", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "parentCode", description = "子级字典项", required = false, in = ParameterIn.QUERY),
-    })
     @GetMapping(value = "/dictQuery")
     public BaseRsp<List<DictItemCacheBean>> dictTypeQuery(@RequestParam(required = true) final String dictName,
                                                           @RequestParam(required = false) final String parentCode) {
@@ -54,16 +45,12 @@ public class DictController {
 
     /**
      * 获取字典项文本
+     * 权限: 无权限
      *
      * @param dictName 字典唯一值
      * @param value    字典项唯一值
      * @return 字典项文本
      */
-    @Operation(summary = "获取字典项文本")
-    @Parameters({
-            @Parameter(name = "dictName", description = "字典唯一值", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "value", description = "字典项唯一值", required = true, in = ParameterIn.QUERY)
-    })
     @GetMapping(value = "/dictTextQuery")
     public BaseRsp<String> dictTextQuery(@RequestParam String dictName, @RequestParam String value) {
         return RspUtil.data(DictCacheUtil.getDictItemByDictNameAndValue(dictName, value).getTitle());

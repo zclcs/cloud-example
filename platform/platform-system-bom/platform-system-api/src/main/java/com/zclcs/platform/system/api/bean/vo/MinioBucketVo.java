@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -20,19 +19,24 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "MinioBucketVo对象", description = "minio桶")
 public class MinioBucketVo extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(title = "桶id")
+    /**
+     * 桶id
+     */
     private Long id;
 
-    @Schema(title = "桶名称")
+    /**
+     * 桶名称
+     */
     private String bucketName;
 
-    @Schema(title = "桶权限")
+    /**
+     * 桶权限
+     */
     private String bucketPolicy;
 
 

@@ -8,10 +8,7 @@ dependencies {
     implementation('com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway')
     implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel')
     implementation('com.alibaba.csp:sentinel-datasource-nacos')
-//    implementation("com.alibaba.csp:sentinel-spring-cloud-gateway-adapter")
-    implementation(project(":platform:platform-system-bom:platform-system-api")) {
-        exclude(module: ":cloud-lib:common-dict")
-    }
+    implementation(project(":cloud-lib:cloud-lib-sa-token-api"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-jackson-starter"))
@@ -25,4 +22,6 @@ dependencies {
     implementation "com.google.guava:guava"
     implementation "com.github.whvcse:easy-captcha"
     implementation "cn.hutool:hutool-crypto"
+    implementation "cn.hutool:hutool-http"
+    implementation "cn.dev33:sa-token-reactor-spring-boot3-starter"
 }

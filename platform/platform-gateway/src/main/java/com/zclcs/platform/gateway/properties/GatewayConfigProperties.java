@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author zclcs
@@ -22,8 +23,23 @@ public class GatewayConfigProperties {
     private String encodeKey;
 
     /**
-     * 网关不需要校验验证码的客户端
+     * 网关是否需要解密前端密码
      */
-    private List<String> ignoreClients;
+    private Boolean isDecodePassword;
+
+    /**
+     * 网关是否需要校验验证码
+     */
+    private Boolean isCheckValidCode;
+
+    /**
+     * 网关需要校验验证码的路径
+     */
+    private Set<String> needCheckValidCodeUrls;
+
+    /**
+     * 网关白名单
+     */
+    private List<String> ignoreUrls;
 
 }

@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.mybatis.plus.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;

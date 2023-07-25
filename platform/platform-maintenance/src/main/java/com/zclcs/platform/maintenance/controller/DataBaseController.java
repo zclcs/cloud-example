@@ -1,5 +1,6 @@
 package com.zclcs.platform.maintenance.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Generator;
 import com.zclcs.cloud.lib.core.utils.RspUtil;

@@ -1,6 +1,5 @@
 dependencies {
     api(project(":cloud-lib:cloud-lib-core"))
     api(project(":cloud-lib:cloud-lib-dict"))
-    api "org.springframework.cloud:spring-cloud-openfeign-core"
     api "cn.hutool:hutool-http"
 }

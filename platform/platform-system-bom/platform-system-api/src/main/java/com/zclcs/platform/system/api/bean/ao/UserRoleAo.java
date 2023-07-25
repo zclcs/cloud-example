@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -21,18 +20,21 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "UserRoleAo对象", description = "用户角色关联")
 public class UserRoleAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 用户id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "用户id")
     private Long userId;
 
+    /**
+     * 角色id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "角色id")
     private Long roleId;
 
 

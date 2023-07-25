@@ -1,5 +1,6 @@
 package com.zclcs.platform.maintenance.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +53,7 @@ public class RedisController {
     @GetMapping
     @SaCheckPermission("redis:view")
     @Operation(summary = "redis key 查询（分页）")
-    public BaseRsp<BasePage<RedisVo>> findRedisPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated RedisVo redisVo) {
+    public BaseRsp<BasePage<RedisVo>> findRedisPage(@Validated BasePageAo basePageAo, @Validated RedisVo redisVo) {
         String key = globalProperties.getRedisCachePrefix() + Optional.ofNullable(redisVo.getKey()).filter(StrUtil::isNotBlank).orElse("*");
         int pageSize = basePageAo.getPageSize();
         int pageNum = basePageAo.getPageNum();

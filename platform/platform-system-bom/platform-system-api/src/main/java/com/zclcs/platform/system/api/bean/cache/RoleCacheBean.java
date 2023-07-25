@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
 import com.zclcs.platform.system.api.bean.entity.Role;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -10,7 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 角色 Entity
+ * 角色缓存
  *
  * @author zclcs
  * @date 2023-01-10 10:39:28.842
@@ -18,7 +17,6 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "Role对象缓存", description = "角色缓存")
 public class RoleCacheBean implements Serializable {
 
     @Serial

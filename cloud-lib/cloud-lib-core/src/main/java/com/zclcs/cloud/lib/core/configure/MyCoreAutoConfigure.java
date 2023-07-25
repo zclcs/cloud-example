@@ -3,19 +3,13 @@ package com.zclcs.cloud.lib.core.configure;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.cloud.lib.core.properties.RabbitmqApiInfoProperties;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * @author zclcs
  */
 @AutoConfiguration
-@RequiredArgsConstructor
+@EnableConfigurationProperties(value = {MyNacosProperties.class, GlobalProperties.class, RabbitmqApiInfoProperties.class})
 public class MyCoreAutoConfigure {
-
-    private final MyNacosProperties myNacosProperties;
-
-    private final GlobalProperties globalProperties;
-
-    private final RabbitmqApiInfoProperties rabbitmqApiInfoProperties;
 }

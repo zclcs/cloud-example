@@ -1,4 +1,4 @@
-package com.zclcs.cloud.lib.sa.token.utils;
+package com.zclcs.cloud.lib.sa.token.api.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;

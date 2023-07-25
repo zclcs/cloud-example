@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +30,16 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping("/tokenByUsername")
+    @PostMapping("/token/byUsername")
     @Operation(summary = "通过用户名获取token")
-    public BaseRsp<UserTokenVo> tokenByUsername(@ParameterObject @Validated LoginByUsernameAo loginByUsernameAo) {
+    public BaseRsp<UserTokenVo> tokenByUsername(@Validated LoginByUsernameAo loginByUsernameAo) {
         UserTokenVo userTokenVo = loginService.loginByUsername(loginByUsernameAo);
         return RspUtil.data(userTokenVo);
     }
 
-    @PostMapping("/tokenByMobile")
+    @PostMapping("/token/byMobile")
     @Operation(summary = "通过手机号获取token")
-    public BaseRsp<UserTokenVo> tokenByMobile(@ParameterObject @Validated LoginByMobileAo loginByMobileAo) {
+    public BaseRsp<UserTokenVo> tokenByMobile(@Validated LoginByMobileAo loginByMobileAo) {
         UserTokenVo userTokenVo = loginService.loginByMobile(loginByMobileAo.getMobile());
         return RspUtil.data(userTokenVo);
     }

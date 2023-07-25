@@ -31,6 +31,11 @@ public interface Security {
     String OAUTH_TOKEN_URL = "/oauth2/token";
 
     /**
+     * 默认登录URL
+     */
+    String TOKEN_URL = "/login/token";
+
+    /**
      * grant_type
      */
     String REFRESH_TOKEN = "refresh_token";

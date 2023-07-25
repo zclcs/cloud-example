@@ -10,7 +10,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
@@ -29,7 +29,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,7 @@ public class UserController {
     @GetMapping
     @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（分页）")
-    public BaseRsp<BasePage<UserVo>> findUserPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated UserVo userVo) {
+    public BaseRsp<BasePage<UserVo>> findUserPage(@Validated BasePageAo basePageAo, @Validated UserVo userVo) {
         BasePage<UserVo> page = this.userService.findUserPage(basePageAo, userVo);
         return RspUtil.data(page);
     }
@@ -66,7 +65,7 @@ public class UserController {
     @GetMapping("/list")
     @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（集合）")
-    public BaseRsp<List<UserVo>> findUserList(@ParameterObject @Validated UserVo userVo) {
+    public BaseRsp<List<UserVo>> findUserList(@Validated UserVo userVo) {
         List<UserVo> list = this.userService.findUserList(userVo);
         return RspUtil.data(list);
     }
@@ -74,7 +73,7 @@ public class UserController {
     @GetMapping("/one")
     @SaCheckPermission("user:view")
     @Operation(summary = "用户查询（单个）")
-    public BaseRsp<UserVo> findUser(@ParameterObject @Validated UserVo userVo) {
+    public BaseRsp<UserVo> findUser(@Validated UserVo userVo) {
         UserVo user = this.userService.findUser(userVo);
         return RspUtil.data(user);
     }
@@ -120,7 +119,7 @@ public class UserController {
     @GetMapping("/options")
     @SaCheckPermission("user:view")
     @Operation(summary = "下拉树")
-    public BaseRsp<List<UserVo>> userList(@ParameterObject @Validated UserVo userVo) {
+    public BaseRsp<List<UserVo>> userList(@Validated UserVo userVo) {
         List<UserVo> userDetailPage = userService.findUserList(userVo);
         return RspUtil.data(userDetailPage);
     }

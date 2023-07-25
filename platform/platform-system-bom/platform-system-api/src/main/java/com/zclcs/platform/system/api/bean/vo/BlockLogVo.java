@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -22,34 +21,49 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "BlockLogVo对象", description = "黑名单拦截日志")
 public class BlockLogVo extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "拦截日志id")
+    /**
+     * 拦截日志id
+     */
     private Long blockId;
 
-    @Schema(description = "拦截ip")
+    /**
+     * 拦截ip
+     */
     private String blockIp;
 
-    @Schema(description = "被拦截请求URI")
+    /**
+     * 被拦截请求URI
+     */
     private String requestUri;
 
-    @Schema(description = "被拦截请求方法")
+    /**
+     * 被拦截请求方法
+     */
     private String requestMethod;
 
-    @Schema(description = "IP对应地址")
+    /**
+     * IP对应地址
+     */
     private String location;
 
-    @Schema(description = "拦截时间")
+    /**
+     * 拦截时间
+     */
     private LocalDateTime requestTime;
 
-    @Schema(description = "拦截时间起")
+    /**
+     * 拦截时间起
+     */
     private LocalDate requestTimeFrom;
 
-    @Schema(description = "拦截时间起终")
+    /**
+     * 拦截时间起终
+     */
     private LocalDate requestTimeTo;
 
 

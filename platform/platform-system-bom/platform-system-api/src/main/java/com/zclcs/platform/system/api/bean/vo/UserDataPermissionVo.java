@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -20,22 +19,29 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "UserDataPermissionVo对象", description = "用户数据权限关联")
 public class UserDataPermissionVo extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "用户id")
+    /**
+     * 用户id
+     */
     private Long userId;
 
-    @Schema(description = "用户名称")
+    /**
+     * 用户名称
+     */
     private String username;
 
-    @Schema(description = "部门id")
+    /**
+     * 部门id
+     */
     private Long deptId;
 
-    @Schema(description = "部门名称")
+    /**
+     * 部门名称
+     */
     private String deptName;
 
 

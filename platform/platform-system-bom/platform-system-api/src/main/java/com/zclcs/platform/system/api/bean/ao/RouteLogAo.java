@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -23,49 +22,68 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RouteLogAo对象", description = "网关转发日志")
 public class RouteLogAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 网关转发日志id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "网关转发日志id")
     private Long routeId;
 
+    /**
+     * 请求ip
+     */
     @Size(max = 200, message = "{noMoreThan}")
-    @Schema(description = "请求ip")
     private String routeIp;
 
+    /**
+     * 请求uri
+     */
     @Size(max = 500, message = "{noMoreThan}")
-    @Schema(description = "请求uri")
     private String requestUri;
 
+    /**
+     * 目标uri
+     */
     @Size(max = 500, message = "{noMoreThan}")
-    @Schema(description = "目标uri")
     private String targetUri;
 
+    /**
+     * 请求方法
+     */
     @Size(max = 10, message = "{noMoreThan}")
-    @Schema(description = "请求方法")
     private String requestMethod;
 
+    /**
+     * 目标服务
+     */
     @Size(max = 20, message = "{noMoreThan}")
-    @Schema(description = "目标服务")
     private String targetServer;
 
+    /**
+     * 请求时间
+     */
     @NotNull(message = "{required}")
-    @Schema(description = "请求时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime requestTime;
 
+    /**
+     * 响应code
+     */
     @Size(max = 10, message = "{noMoreThan}")
-    @Schema(description = "响应code")
     private String code;
 
-    @Schema(description = "响应时间")
+    /**
+     * 响应时间
+     */
     private Long time;
 
+    /**
+     * ip对应地址
+     */
     @Size(max = 255, message = "{noMoreThan}")
-    @Schema(description = "ip对应地址")
     private String location;
 
 

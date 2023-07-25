@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.MyException;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.platform.system.api.bean.ao.LoginByUsernameAo;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.UserTokenVo;

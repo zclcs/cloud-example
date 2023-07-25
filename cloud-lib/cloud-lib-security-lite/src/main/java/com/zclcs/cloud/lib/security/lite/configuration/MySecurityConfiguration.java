@@ -30,10 +30,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class MySecurityConfiguration implements WebMvcConfigurer {
 
-    private final ObjectMapper objectMapper;
-
-    private final MySecurityProperties mySecurityProperties;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注解拦截器
@@ -44,7 +40,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
      * 校验是否从网关转发
      */
     @Bean
-    public SaServletFilter getSaServletFilter() {
+    public SaServletFilter getSaServletFilter(ObjectMapper objectMapper, MySecurityProperties mySecurityProperties) {
         return new SaServletFilter()
                 .addInclude("/**")
 //                .addExclude("/actuator/**", "/error", "/v3/api-docs")

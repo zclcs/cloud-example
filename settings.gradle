@@ -26,6 +26,7 @@ include 'cloud-lib:cloud-lib-mybatis-plus'
 include 'cloud-lib:cloud-lib-rabbit-mq'
 include 'cloud-lib:cloud-lib-logging'
 include 'cloud-lib:cloud-lib-security-lite'
+include 'cloud-lib:cloud-lib-sa-token-api'
 include 'cloud-lib:cloud-lib-sa-token'
 
 include 'third-part-database-sync'

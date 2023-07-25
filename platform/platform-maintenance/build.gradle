@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":common:common-minio-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
-    implementation(project(":cloud-lib:cloud-lib-security"))
+    implementation(project(":cloud-lib:cloud-lib-security-lite"))
     implementation(project(":cloud-lib:cloud-lib-fegin"))
     implementation(project(":cloud-lib:cloud-lib-aop"))
     implementation(project(":platform:platform-system-bom:platform-system-cache"))

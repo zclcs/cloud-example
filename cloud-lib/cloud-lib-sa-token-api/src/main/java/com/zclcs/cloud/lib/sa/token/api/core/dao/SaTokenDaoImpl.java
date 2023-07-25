@@ -1,4 +1,4 @@
-package com.zclcs.cloud.lib.sa.token.core.dao;
+package com.zclcs.cloud.lib.sa.token.api.core.dao;
 
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.util.SaFoxUtil;

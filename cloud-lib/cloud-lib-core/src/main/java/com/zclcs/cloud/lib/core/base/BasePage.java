@@ -3,7 +3,6 @@ package com.zclcs.cloud.lib.core.base;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serial;
 import java.util.ArrayList;
@@ -12,24 +11,33 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 分页对象
+ *
  * @author zclcs
  */
-@Schema(title = "BasePage", description = "分页对象")
 public class BasePage<T> implements IPage<T> {
 
     @Serial
     private static final long serialVersionUID = 8545996863226528798L;
 
-    @Schema(description = "分页对象记录列表")
+    /**
+     * 分页对象记录列表
+     */
     protected List<T> list;
 
-    @Schema(description = "总条数")
+    /**
+     * 总条数
+     */
     protected long total;
 
-    @Schema(description = "每页显示条数")
+    /**
+     * 每页显示条数
+     */
     protected long pageSize;
 
-    @Schema(description = "当前页")
+    /**
+     * 当前页
+     */
     protected long pageNum;
 
     protected List<OrderItem> orders;

@@ -2,7 +2,6 @@ package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,44 +23,59 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "BlackListAo对象", description = "黑名单")
 public class BlackListAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 黑名单id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "黑名单id")
     private Long blackId;
 
+    /**
+     * 黑名单ip
+     */
     @Size(max = 200, message = "{noMoreThan}")
-    @Schema(description = "黑名单ip")
     private String blackIp;
 
+    /**
+     * 请求uri（支持通配符）
+     */
     @Size(max = 200, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求uri（支持通配符）", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestUri;
 
+    /**
+     * 请求方法，如果为ALL则表示对所有方法生效
+     */
     @Size(max = 10, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
-    @Schema(description = "请求方法，如果为ALL则表示对所有方法生效", requiredMode = Schema.RequiredMode.REQUIRED)
     private String requestMethod;
 
+    /**
+     * 限制时间起
+     */
     @Size(max = 20, message = "{noMoreThan}")
-    @Schema(description = "限制时间起")
     private String limitFrom;
 
+    /**
+     * 限制时间止
+     */
     @Size(max = 20, message = "{noMoreThan}")
-    @Schema(description = "限制时间止")
     private String limitTo;
 
+    /**
+     * ip对应地址
+     */
     @Size(max = 255, message = "{noMoreThan}")
-    @Schema(description = "ip对应地址")
     private String location;
 
+    /**
+     * 黑名单状态 默认 1 @@enable_disable
+     */
     @Size(max = 40, message = "{noMoreThan}")
-    @Schema(description = "黑名单状态 默认 1 @@enable_disable")
     @DictValid(value = "enable_disable", message = "{dict}")
     private String blackStatus;
 

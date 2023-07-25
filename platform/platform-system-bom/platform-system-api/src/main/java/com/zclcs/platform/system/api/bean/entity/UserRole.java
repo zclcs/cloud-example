@@ -3,7 +3,6 @@ package com.zclcs.platform.system.api.bean.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,7 +20,6 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("system_user_role")
-@Schema(title = "UserRole对象", description = "用户角色关联")
 public class UserRole extends BaseEntity implements Serializable {
 
     @Serial

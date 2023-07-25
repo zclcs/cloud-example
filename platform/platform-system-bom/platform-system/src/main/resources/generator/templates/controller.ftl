@@ -50,7 +50,7 @@ private final ${className}Service ${className?uncap_first}Service;
 @Operation(summary = "${tableComment}查询（分页）")
 public BaseRsp
 <BasePage
-<${className}Vo>> find${className}Page(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject
+<${className}Vo>> find${className}Page(@Validated BasePageAo basePageAo, @ParameterObject
     @Validated ${className}Vo ${className?uncap_first}Vo) {
     BasePage
     <${className}Vo> page = this.${className?uncap_first}Service.find${className}
@@ -63,7 +63,7 @@ public BaseRsp
         @Operation(summary = "${tableComment}查询（集合）")
         public BaseRsp
         <List
-        <${className}Vo>> find${className}List(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
+        <${className}Vo>> find${className}List(@Validated ${className}Vo ${className?uncap_first}Vo) {
             List
             <${className}Vo> list = this.${className?uncap_first}Service.find${className}List(${className?uncap_first}
                 Vo);
@@ -74,7 +74,7 @@ public BaseRsp
                 @SaCheckPermission("${className?uncap_first}:view")
                 @Operation(summary = "${tableComment}查询（单个）")
                 public BaseRsp
-                <${className}Vo> find${className}(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo)
+                <${className}Vo> find${className}(@Validated ${className}Vo ${className?uncap_first}Vo)
                     {
                     ${className}Vo ${className?uncap_first} = this.${className?uncap_first}Service.find${className}
                     (${className?uncap_first}Vo);

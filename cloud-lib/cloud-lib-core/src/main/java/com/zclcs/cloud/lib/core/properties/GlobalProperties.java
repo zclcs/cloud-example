@@ -1,12 +1,16 @@
 package com.zclcs.cloud.lib.core.properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@RefreshScope
 @ConfigurationProperties(prefix = "my")
 public class GlobalProperties {
 

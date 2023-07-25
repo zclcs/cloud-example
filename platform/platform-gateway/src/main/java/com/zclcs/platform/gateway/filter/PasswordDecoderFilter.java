@@ -1,6 +1,5 @@
 package com.zclcs.platform.gateway.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
@@ -9,7 +8,6 @@ import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HttpUtil;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
-import com.zclcs.platform.gateway.utils.GatewayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -56,22 +54,15 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            // 1. 不是登录请求，直接向下执行
-            if (!StrUtil.containsAnyIgnoreCase(request.getURI().getPath(), Security.OAUTH_TOKEN_URL)) {
+
+            // 1. 检查需不需要解密密码
+            if (!gatewayConfig.getIsDecodePassword()) {
                 return chain.filter(exchange);
             }
 
-            // 2. 刷新token类型，直接向下执行
-            String grantType = request.getQueryParams().getFirst("grant_type");
-            if (StrUtil.equals(Security.REFRESH_TOKEN, grantType)) {
+            // 2. 不是登录请求，直接向下执行
+            if (!StrUtil.containsAnyIgnoreCase(request.getURI().getPath(), Security.TOKEN_URL)) {
                 return chain.filter(exchange);
-            }
-
-            if (CollectionUtil.isNotEmpty(gatewayConfig.getIgnoreClients())) {
-                boolean isIgnoreClient = gatewayConfig.getIgnoreClients().contains(GatewayUtil.getClientId(request));
-                if (isIgnoreClient) {
-                    return chain.filter(exchange);
-                }
             }
 
             // 3. 前端加密密文解密逻辑

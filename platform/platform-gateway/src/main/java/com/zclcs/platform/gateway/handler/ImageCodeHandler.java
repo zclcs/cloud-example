@@ -9,6 +9,7 @@ import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.MyValidateCodeProperties;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
@@ -36,7 +37,7 @@ public class ImageCodeHandler implements HandlerFunction<ServerResponse> {
     private final MyValidateCodeProperties myValidateCodeProperties;
 
     @Override
-    public Mono<ServerResponse> handle(ServerRequest serverRequest) {
+    public @NotNull Mono<ServerResponse> handle(ServerRequest serverRequest) {
         Captcha captcha = createCaptcha(myValidateCodeProperties);
 
         String result = captcha.text();

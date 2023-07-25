@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -23,34 +22,45 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RateLimitLogAo对象", description = "限流拦截日志")
 public class RateLimitLogAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 限流日志id
+     */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(description = "限流日志id")
     private Long rateLimitLogId;
 
+    /**
+     * 被拦截请求IP
+     */
     @Size(max = 200, message = "{noMoreThan}")
-    @Schema(description = "被拦截请求IP")
     private String rateLimitLogIp;
 
+    /**
+     * 被拦截请求URI
+     */
     @Size(max = 500, message = "{noMoreThan}")
-    @Schema(description = "被拦截请求URI")
     private String requestUri;
 
+    /**
+     * 被拦截请求方法
+     */
     @Size(max = 200, message = "{noMoreThan}")
-    @Schema(description = "被拦截请求方法")
     private String requestMethod;
 
+    /**
+     * 拦截时间
+     */
     @NotNull(message = "{required}")
-    @Schema(description = "拦截时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime requestTime;
 
+    /**
+     * IP对应地址
+     */
     @Size(max = 200, message = "{noMoreThan}")
-    @Schema(description = "IP对应地址")
     private String location;
 
 

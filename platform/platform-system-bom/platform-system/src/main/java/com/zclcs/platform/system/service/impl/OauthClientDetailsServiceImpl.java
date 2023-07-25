@@ -3,13 +3,13 @@ package com.zclcs.platform.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
-import com.zclcs.cloud.lib.security.utils.PasswordUtil;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
@@ -86,7 +86,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
         OauthClientDetails oauthClientDetails = new OauthClientDetails();
         BeanUtil.copyProperties(oauthClientDetailsAo, oauthClientDetails);
         setAuthorities(oauthClientDetailsAo.getMenuIds(), oauthClientDetails);
-        oauthClientDetails.setClientSecret(PasswordUtil.PASSWORD_ENCODER.encode(oauthClientDetails.getClientSecret()));
+        oauthClientDetails.setClientSecret(BCrypt.hashpw(oauthClientDetails.getClientSecret()));
         this.save(oauthClientDetails);
         return oauthClientDetails;
     }

@@ -11,7 +11,6 @@ processResources {
 }
 
 dependencies {
-    implementation(project(":common:common-doc-starter"))
     implementation(project(":common:common-web-starter"))
     implementation(project(":common:common-jackson-starter"))
     implementation(project(":common:common-redis-starter"))

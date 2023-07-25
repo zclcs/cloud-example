@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +52,7 @@ public class MenuController {
     @GetMapping
     @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（分页）")
-    public BaseRsp<BasePage<MenuVo>> findMenuPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated MenuVo menuVo) {
+    public BaseRsp<BasePage<MenuVo>> findMenuPage(@Validated BasePageAo basePageAo, @Validated MenuVo menuVo) {
         BasePage<MenuVo> page = this.menuService.findMenuPage(basePageAo, menuVo);
         return RspUtil.data(page);
     }
@@ -61,7 +60,7 @@ public class MenuController {
     @GetMapping("/list")
     @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（集合）")
-    public BaseRsp<List<MenuVo>> findMenuList(@ParameterObject @Validated MenuVo menuVo) {
+    public BaseRsp<List<MenuVo>> findMenuList(@Validated MenuVo menuVo) {
         List<MenuVo> list = this.menuService.findMenuList(menuVo);
         return RspUtil.data(list);
     }
@@ -69,7 +68,7 @@ public class MenuController {
     @GetMapping("/one")
     @SaCheckPermission("menu:view")
     @Operation(summary = "菜单查询（单个）")
-    public BaseRsp<MenuVo> findMenu(@ParameterObject @Validated MenuVo menuVo) {
+    public BaseRsp<MenuVo> findMenu(@Validated MenuVo menuVo) {
         MenuVo menu = this.menuService.findMenu(menuVo);
         return RspUtil.data(menu);
     }

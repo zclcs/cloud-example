@@ -15,7 +15,7 @@ import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;

@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

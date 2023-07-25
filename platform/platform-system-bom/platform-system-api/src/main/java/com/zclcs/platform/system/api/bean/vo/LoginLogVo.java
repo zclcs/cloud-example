@@ -2,7 +2,6 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -23,40 +22,59 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "LoginLogVo对象", description = "登录日志")
 public class LoginLogVo extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "id")
+    /**
+     * 主键
+     */
     private Long id;
 
-    @Schema(description = "用户名")
+    /**
+     * 用户名
+     */
     private String username;
 
-    @Schema(description = "登录时间")
+    /**
+     * 登录时间
+     */
     private LocalDateTime loginTime;
 
-    @Schema(description = "登录时间起")
+    /**
+     * 登录时间起
+     */
     private LocalDate loginTimeFrom;
 
-    @Schema(description = "登录时间止")
+    /**
+     * 登录时间止
+     */
     private LocalDate loginTimeTo;
 
-    @Schema(description = "登录地点")
+    /**
+     * 登录地点
+     */
     private String location;
 
-    @Schema(description = "ip地址")
+    /**
+     * ip地址
+     */
     private String ip;
 
-    @Schema(description = "操作系统")
+    /**
+     * 操作系统
+     */
     private String system;
 
-    @Schema(description = "浏览器")
+    /**
+     * 浏览器
+     */
     private String browser;
 
-    @Schema(description = "登录类型")
+    /**
+     * 登录类型
+     */
     @DictText(value = "system_login_log.type")
     private String loginType;
 

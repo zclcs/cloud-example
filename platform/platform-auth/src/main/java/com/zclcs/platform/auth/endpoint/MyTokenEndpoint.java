@@ -30,7 +30,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -205,7 +204,7 @@ public class MyTokenEndpoint {
     @Inner
     @GetMapping("/page")
     @Operation(summary = "查询token（分页）")
-    public BaseRsp<BasePage<TokenVo>> tokenList(@ParameterObject @Validated BasePageAo basePageAo) {
+    public BaseRsp<BasePage<TokenVo>> tokenList(@Validated BasePageAo basePageAo) {
         // 根据分页参数获取对应数据
         String key = String.format("%s::*", RedisCachePrefix.PROJECT_OAUTH_ACCESS);
         int pageSize = basePageAo.getPageSize();

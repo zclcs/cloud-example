@@ -18,13 +18,13 @@ import java.util.List;
 @Schema(title = "NacosImportSkipVo", description = "nacos")
 public class NacosImportSkipVo {
 
-    @Schema(description = "成功数量")
+    RedisCachePrefix.USER_LOGIN成功数量")
     private Integer succCount;
 
-    @Schema(description = "跳过配置详情")
+    RedisCachePrefix.USER_LOGIN跳过配置详情")
     private List<SkipData> skipData;
 
-    @Schema(description = "跳过数量")
+    RedisCachePrefix.USER_LOGIN跳过数量")
     private Integer skipCount;
 
     @Data

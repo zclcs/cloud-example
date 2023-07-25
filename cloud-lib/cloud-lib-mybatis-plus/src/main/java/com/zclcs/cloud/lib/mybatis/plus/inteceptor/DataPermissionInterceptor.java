@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.zclcs.cloud.lib.mybatis.plus.annotation.DataPermission;
-import com.zclcs.cloud.lib.sa.token.utils.LoginHelper;
+import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;

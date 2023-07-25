@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +48,7 @@ public class LogController {
     @GetMapping("/page")
     @SaCheckPermission(value = {"log:view", "user:detail:view"}, mode = SaMode.OR)
     @Operation(summary = "用户操作日志查询（分页）")
-    public BaseRsp<BasePage<LogVo>> findLogPage(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated LogVo logVo) {
+    public BaseRsp<BasePage<LogVo>> findLogPage(@Validated BasePageAo basePageAo, @Validated LogVo logVo) {
         BasePage<LogVo> page = this.logService.findLogPage(basePageAo, logVo);
         return RspUtil.data(page);
     }
@@ -57,7 +56,7 @@ public class LogController {
     @GetMapping("/list")
     @SaCheckPermission("log:view")
     @Operation(summary = "用户操作日志查询（集合）")
-    public BaseRsp<List<LogVo>> findLogList(@ParameterObject @Validated LogVo logVo) {
+    public BaseRsp<List<LogVo>> findLogList(@Validated LogVo logVo) {
         List<LogVo> list = this.logService.findLogList(logVo);
         return RspUtil.data(list);
     }
@@ -65,7 +64,7 @@ public class LogController {
     @GetMapping("/one")
     @SaCheckPermission("log:view")
     @Operation(summary = "用户操作日志查询（单个）")
-    public BaseRsp<LogVo> findLog(@ParameterObject @Validated LogVo logVo) {
+    public BaseRsp<LogVo> findLog(@Validated LogVo logVo) {
         LogVo log = this.logService.findLog(logVo);
         return RspUtil.data(log);
     }

@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
 import com.zclcs.platform.system.api.bean.entity.Dept;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -10,7 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 部门 Entity
+ * 部门缓存
  *
  * @author zclcs
  * @date 2023-01-10 10:39:10.151
@@ -18,7 +17,6 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "Dept对象缓存", description = "部门缓存")
 public class DeptCacheBean implements Serializable {
 
     @Serial

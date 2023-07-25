@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalSecurityExceptionHandler {
 
     /**
      * 权限码异常
