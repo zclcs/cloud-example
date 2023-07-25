@@ -29,7 +29,6 @@ spring:
       - nacos:redis.yaml
       - nacos:mybatis-plus.yaml
       - nacos:jasypt.yaml
-      - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:system-dict.yaml
       - nacos:minio.yaml
       - nacos:db-merge.yaml

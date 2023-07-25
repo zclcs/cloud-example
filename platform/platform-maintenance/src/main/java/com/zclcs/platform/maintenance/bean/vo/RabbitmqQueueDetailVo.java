@@ -22,26 +22,47 @@ import java.util.Map;
 @Schema(title = "RabbitmqQueueDetailVo", description = "RabbitmqQueueDetailVo")
 public class RabbitmqQueueDetailVo {
 
+    /**
+     * 服务名
+     */
     @Schema(description = "交换机")
     private String source;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "命名空间")
     private String vhost;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "绑定的队列名称")
     private String destination;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "绑定的队列类型")
     @JsonAlias("destination_type")
     private String destinationType;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "路由key")
     @JsonAlias("routing_key")
     private String routingKey;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "额外参数")
     private Map<String, Object> arguments;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "路由key 需要url解码")
     @JsonAlias("properties_key")
     private String propertiesKey;

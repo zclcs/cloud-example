@@ -16,7 +16,6 @@ spring:
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
       - nacos:jasypt.yaml
-      - nacos:swagger-${spring.profiles.active}.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
       - nacos:sa-token.yaml
 

@@ -33,7 +33,8 @@ public class LoginByUsernameAo implements Serializable {
     private String username;
 
     /**
-     * 密码（需加密）加密方式 aes 模式 CFB 填充 NoPadding 偏移量 密钥字符串 在线生成网址：https://oktools.net/aes
+     * 密码（需加密）加密方式 aes 模式 CFB 填充 NoPadding 偏移量 密钥字符串
+     * 在线生成网址： <a href="https://oktools.net/aes">点击跳转</a>
      */
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")

@@ -28,7 +28,7 @@ public class MySecurityProperties implements InitializingBean {
 
     private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
 
-    private static final String[] DEFAULT_IGNORE_URLS = new String[]{"/actuator/**", "/error", "/v3/api-docs"};
+    private static final String[] DEFAULT_IGNORE_URLS = new String[]{"/actuator/**", "/error"};
 
     @Getter
     @Setter

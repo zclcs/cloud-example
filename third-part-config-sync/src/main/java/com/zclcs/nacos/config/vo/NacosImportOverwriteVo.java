@@ -1,10 +1,11 @@
 package com.zclcs.nacos.config.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
+ * nacos导入返回
+ *
  * @author zclcs
  */
 @Data
@@ -13,12 +14,15 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosImportOverwriteVo", description = "nacos")
 public class NacosImportOverwriteVo {
 
-    @Schema(description = "成功数量")
+    /**
+     * 成功数量
+     */
     private Integer succCount;
 
-    @Schema(description = "失败数量")
+    /**
+     * 失败数量
+     */
     private Integer skipCount;
 }

@@ -1,6 +1,5 @@
 package com.zclcs.nacos.config.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -16,13 +15,16 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosTokenVo对象", description = "nacosToken")
 public class NacosTokenVo {
 
-    @Schema(description = "nacos token")
+    /**
+     * nacos token
+     */
     private String accessToken;
 
-    @Schema(description = "过期时间(秒)")
+    /**
+     * 过期时间(秒)
+     */
     private Long tokenTtl;
 
     private Boolean globalAdmin;

@@ -7,7 +7,6 @@ import com.zclcs.cloud.lib.core.constant.Regexp;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 
 import java.util.regex.Matcher;
@@ -19,7 +18,6 @@ import java.util.regex.Pattern;
  * @author zclcs
  */
 @UtilityClass
-@Slf4j
 public class BaseUtil {
 
     private static final String UNKNOWN = "unknown";

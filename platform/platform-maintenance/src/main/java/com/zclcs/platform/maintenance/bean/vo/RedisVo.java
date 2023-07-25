@@ -19,12 +19,21 @@ import lombok.experimental.Accessors;
 @Schema(title = "RedisVo对象", description = "redis")
 public class RedisVo {
 
+    /**
+     * 服务名
+     */
     @Schema(description = "redis key")
     private String key;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "值")
     private Object value;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "过期时间(秒)")
     private Long ttl;
 }

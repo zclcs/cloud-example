@@ -6,8 +6,6 @@ import com.zclcs.platform.system.api.bean.ao.LoginByMobileAo;
 import com.zclcs.platform.system.api.bean.ao.LoginByUsernameAo;
 import com.zclcs.platform.system.api.bean.vo.UserTokenVo;
 import com.zclcs.platform.system.service.LoginService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 登录 Controller
+ * 登录
  *
  * @author zclcs
  * @date 2023-01-10 10:39:34.182
@@ -25,20 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor
-@Tag(name = "登录")
 public class LoginController {
 
     private final LoginService loginService;
 
+    /**
+     * 通过用户名获取token
+     * 接口调用需加上验证码、password需加密，如何加密见参数说明
+     *
+     * @param loginByUsernameAo {@link LoginByUsernameAo}
+     * @return {@link UserTokenVo}
+     */
     @PostMapping("/token/byUsername")
-    @Operation(summary = "通过用户名获取token")
     public BaseRsp<UserTokenVo> tokenByUsername(@Validated LoginByUsernameAo loginByUsernameAo) {
         UserTokenVo userTokenVo = loginService.loginByUsername(loginByUsernameAo);
         return RspUtil.data(userTokenVo);
     }
 
+    /**
+     * 通过手机号获取token
+     *
+     * @param loginByMobileAo {@link LoginByMobileAo}
+     * @return {@link UserTokenVo}
+     */
     @PostMapping("/token/byMobile")
-    @Operation(summary = "通过手机号获取token")
     public BaseRsp<UserTokenVo> tokenByMobile(@Validated LoginByMobileAo loginByMobileAo) {
         UserTokenVo userTokenVo = loginService.loginByMobile(loginByMobileAo.getMobile());
         return RspUtil.data(userTokenVo);

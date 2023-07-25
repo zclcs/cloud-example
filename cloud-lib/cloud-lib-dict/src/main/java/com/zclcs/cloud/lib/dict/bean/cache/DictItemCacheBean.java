@@ -3,7 +3,6 @@ package com.zclcs.cloud.lib.dict.bean.cache;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 字典项 Entity
+ * 字典项缓存
  *
  * @author zclcs
  * @date 2023-03-06 10:56:41.301
@@ -22,7 +21,6 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "DictItem缓存对象", description = "字典项缓存")
 public class DictItemCacheBean implements Serializable {
 
     @Serial

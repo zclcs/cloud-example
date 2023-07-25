@@ -13,12 +13,6 @@ import com.zclcs.platform.system.api.bean.vo.MinioFileVo;
 import com.zclcs.platform.system.service.MinioFileService;
 import io.minio.StatObjectResponse;
 import io.minio.errors.MinioException;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
@@ -39,7 +33,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 文件 Controller
+ * 文件
  *
  * @author zclcs
  * @date 2021-10-18 10:37:21.262
@@ -48,63 +42,88 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/file")
 @RequiredArgsConstructor
-@Tag(name = "文件")
-@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class MinioFileController {
 
     private final MinioFileService minioFileService;
 
     private final MinioUtil minioUtil;
 
+    /**
+     * 文件查询（分页）
+     * 权限: file:view
+     *
+     * @see MinioFileService#findMinioFilePage(BasePageAo, MinioFileVo)
+     */
     @GetMapping
-    @Operation(summary = "文件查询（分页）")
     @SaCheckPermission("file:view")
     public BaseRsp<BasePage<MinioFileVo>> findMinioFilePage(@Validated BasePageAo basePageAo, @Validated MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> page = this.minioFileService.findMinioFilePage(basePageAo, minioFileVo);
         return RspUtil.data(page);
     }
 
+    /**
+     * 文件查询（集合）
+     * 权限: file:view
+     *
+     * @see MinioFileService#findMinioFileList(MinioFileVo)
+     */
     @GetMapping("list")
-    @Operation(summary = "文件查询（集合）")
     @SaCheckPermission("file:view")
     public BaseRsp<List<MinioFileVo>> findMinioFileList(@Validated MinioFileVo minioFileVo) {
         List<MinioFileVo> list = this.minioFileService.findMinioFileList(minioFileVo);
         return RspUtil.data(list);
     }
 
+    /**
+     * 文件查询（单个）
+     * 权限: file:view
+     *
+     * @see MinioFileService#findMinioFile(MinioFileVo)
+     */
     @GetMapping("one")
-    @Operation(summary = "文件查询（单个）")
     @SaCheckPermission("file:view")
     public BaseRsp<MinioFileVo> findMinioFile(@Validated MinioFileVo minioFileVo) {
         MinioFileVo minioFile = this.minioFileService.findMinioFile(minioFileVo);
         return RspUtil.data(minioFile);
     }
 
+    /**
+     * 新增文件
+     *
+     * @param file       文件
+     * @param bucketName 桶（相当于文件夹）
+     * @return {@link MinioFile}
+     */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //@SaCheckPermission("file:add")
-    @Operation(summary = "新增文件")
-    public BaseRsp<MinioFile> addMinioFile(@Parameter(name = "file", description = "文件", required = true) @RequestPart(value = "file") MultipartFile file,
-                                           @Parameter(name = "bucketName", description = "桶（相当于文件夹）") String bucketName) {
+    public BaseRsp<MinioFile> addMinioFile(@RequestPart(value = "file") MultipartFile file,
+                                           String bucketName) {
         return RspUtil.data(this.minioFileService.createMinioFile(file, bucketName));
     }
 
+    /**
+     * 删除文件
+     * 权限: file:delete
+     *
+     * @param fileIds 文件id集合(,分隔)
+     */
     @DeleteMapping("/{fileIds}")
     @SaCheckPermission("file:delete")
-    @Operation(summary = "删除文件")
-    @Parameters({
-            @Parameter(name = "fileIds", description = "文件id集合(,分隔)", required = true, in = ParameterIn.PATH)
-    })
     public void deleteMinioFile(@NotBlank(message = "{required}") @PathVariable String fileIds) {
         List<String> ids = Arrays.stream(fileIds.split(Strings.COMMA)).collect(Collectors.toList());
         this.minioFileService.deleteMinioFile(ids);
     }
 
+    /**
+     * 浏览图片或下载文件
+     * 用于权限不是读/写的桶
+     *
+     * @param fileId   文件id
+     * @param response 返回
+     * @throws Exception 文件不存在
+     */
     @GetMapping("/preViewPicture/{fileId}")
-    @Operation(summary = "浏览图片或下载文件", description = "用于权限不是读/写的桶")
     //@SaCheckPermission("file:view")
-    @Parameters({
-            @Parameter(name = "fileId", description = "文件id", required = true, in = ParameterIn.PATH)
-    })
     public void preViewPicture(@NotBlank(message = "{required}") @PathVariable("fileId") String fileId, HttpServletResponse response) throws Exception {
         MinioFileVo minioFile = minioFileService.findMinioFile(MinioFileVo.builder().id(fileId).build());
         if (minioFile == null) {
@@ -126,12 +145,17 @@ public class MinioFileController {
         }
     }
 
+    /**
+     * 下载文件
+     * 用于权限不是读/写的桶
+     * 返回的二进制流
+     *
+     * @param fileId 文件id
+     * @return 二进制流
+     * @throws Exception 文件不存在
+     */
     @GetMapping("/download/{fileId}")
-    @Operation(summary = "下载文件", description = "用于权限不是读/写的桶")
     //@SaCheckPermission("file:download")
-    @Parameters({
-            @Parameter(name = "fileId", description = "文件id", required = true, in = ParameterIn.PATH)
-    })
     public ResponseEntity<byte[]> download(@NotBlank(message = "{required}") @PathVariable("fileId") String fileId) throws Exception {
         MinioFileVo minioFile = minioFileService.findMinioFile(MinioFileVo.builder().id(fileId).build());
         if (minioFile == null) {
@@ -144,7 +168,7 @@ public class MinioFileController {
             stream = minioUtil.getObject(minioFile.getBucketName(), minioFile.getFileName());
             if (stream == null) {
                 log.error("文件不存在");
-                throw new RuntimeException("文件不存在");
+                throw new MyException("文件不存在");
             }
             //用于转换byte
             output = new ByteArrayOutputStream();

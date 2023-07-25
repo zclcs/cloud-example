@@ -21,12 +21,21 @@ import java.util.List;
 @Schema(title = "XxlJobBasePageResultVo", description = "XxlJobBasePageResultVo")
 public class XxlJobBasePageResultVo<T> {
 
+    /**
+     * 服务名
+     */
     @Schema(description = "总记录数")
     private Integer recordsTotal;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "过滤后的总记录数")
     private Integer recordsFiltered;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "内容")
     private List<T> data;
 

@@ -22,9 +22,15 @@ public class SchemaVo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 服务名
+     */
     @Schema(title = "库名+表名")
     private String tableSchema;
 
+    /**
+     * 服务名
+     */
     @Schema(title = "字段名称")
     private String columnName;
 }

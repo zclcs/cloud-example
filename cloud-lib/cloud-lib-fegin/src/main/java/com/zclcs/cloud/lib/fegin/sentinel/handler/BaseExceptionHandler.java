@@ -12,6 +12,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -33,7 +34,7 @@ import java.util.Set;
  * @date 2020-06-29
  */
 @Slf4j
-//@ConditionalOnExpression("!'${security.oauth2.client.clientId}'.isEmpty()")
+@Order()
 public class BaseExceptionHandler {
 
     /**

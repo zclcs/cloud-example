@@ -1,12 +1,11 @@
 package com.zclcs.platform.maintenance.bean.ao;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
- * NacosTokenVo
+ * 查询日志 Ao
  *
  * @author zclcs
  * @date 2023-01-10 10:39:49.113
@@ -17,10 +16,11 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "XxlJobJobLogAo", description = "XxlJobJobLogAo")
 public class XxlJobJobLogDetailAo {
 
-    @Schema(description = "日志id", requiredMode = Schema.RequiredMode.REQUIRED)
+    /**
+     * 日志id
+     */
     @NotNull(message = "{required}")
     private Long logId;
 

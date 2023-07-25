@@ -1,10 +1,11 @@
 package com.zclcs.nacos.config.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
+ * nacos 返回结构体
+ *
  * @author zclcs
  */
 @Data
@@ -13,16 +14,21 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosBaseDataVo", description = "nacos")
 public class NacosBaseDataVo<T> {
 
-    @Schema(description = "code")
+    /**
+     * code
+     */
     private Integer code;
 
-    @Schema(description = "返回消息")
+    /**
+     * 返回消息
+     */
     private String message;
 
-    @Schema(description = "返回数据")
+    /**
+     * 返回数据
+     */
     public T data;
 
     public boolean success() {

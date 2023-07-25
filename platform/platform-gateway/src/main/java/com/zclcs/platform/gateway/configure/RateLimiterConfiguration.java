@@ -15,8 +15,7 @@ public class RateLimiterConfiguration {
 
     /**
      * Remote addr key resolver key resolver.
-     *
-     * @link {https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-requestratelimiter-gatewayfilter-factory}
+     * 参阅： <a href="https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-requestratelimiter-gatewayfilter-factory">点击跳转</a>
      */
     @Bean
     public KeyResolver remoteAddrKeyResolver() {

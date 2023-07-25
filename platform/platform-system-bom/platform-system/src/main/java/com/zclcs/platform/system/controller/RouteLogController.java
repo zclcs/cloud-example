@@ -11,11 +11,6 @@ import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
 import com.zclcs.platform.system.service.RouteLogService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 网关转发日志 Controller
+ * 网关转发日志
  *
  * @author zclcs
  * @date 2023-01-10 10:40:09.958
@@ -36,50 +31,72 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/routeLog")
 @RequiredArgsConstructor
-@Tag(name = "网关转发日志")
 public class RouteLogController {
 
     private final RouteLogService routeLogService;
 
+    /**
+     * 网关转发日志查询（分页）
+     * 权限: routeLog:view
+     *
+     * @see RouteLogService#findRouteLogPage(BasePageAo, RouteLogVo)
+     */
     @GetMapping
     @SaCheckPermission("routeLog:view")
-    @Operation(summary = "网关转发日志查询（分页）")
     public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
         return RspUtil.data(page);
     }
 
+    /**
+     * 网关转发日志查询（集合）
+     * 权限: routeLog:view
+     *
+     * @see RouteLogService#findRouteLogList(RouteLogVo)
+     */
     @GetMapping("/list")
     @SaCheckPermission("routeLog:view")
-    @Operation(summary = "网关转发日志查询（集合）")
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
         return RspUtil.data(list);
     }
 
+    /**
+     * 网关转发日志查询（单个）
+     * 权限: routeLog:view
+     *
+     * @see RouteLogService#findRouteLog(RouteLogVo)
+     */
     @GetMapping("/one")
     @SaCheckPermission("routeLog:view")
-    @Operation(summary = "网关转发日志查询（单个）")
     public BaseRsp<RouteLogVo> findRouteLog(@Validated RouteLogVo routeLogVo) {
         RouteLogVo routeLog = this.routeLogService.findRouteLog(routeLogVo);
         return RspUtil.data(routeLog);
     }
 
+    /**
+     * 新增网关转发日志
+     * 权限: routeLog:add
+     *
+     * @see RouteLogService#createRouteLog(RouteLogAo)
+     */
     @PostMapping
     @SaCheckPermission("routeLog:add")
     @ControllerEndpoint(operation = "新增网关转发日志")
-    @Operation(summary = "新增网关转发日志")
     public BaseRsp<RouteLog> addRouteLog(@RequestBody @Validated RouteLogAo routeLogAo) {
         return RspUtil.data(this.routeLogService.createRouteLog(routeLogAo));
     }
 
+    /**
+     * 删除网关转发日志
+     * 权限: routeLog:delete
+     *
+     * @param routeLogIds 网关转发日志id集合(,分隔)
+     * @see RouteLogService#deleteRouteLog(List)
+     */
     @DeleteMapping("/{routeLogIds}")
     @SaCheckPermission("routeLog:delete")
     @ControllerEndpoint(operation = "删除网关转发日志")
-    @Operation(summary = "删除网关转发日志")
-    @Parameters({
-            @Parameter(name = "routeLogIds", description = "网关转发日志id集合(,分隔)", required = true, in = ParameterIn.PATH)
-    })
     public BaseRsp<String> deleteRouteLog(@NotBlank(message = "{required}") @PathVariable String routeLogIds) {
         List<Long> ids = Arrays.stream(routeLogIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.routeLogService.deleteRouteLog(ids);

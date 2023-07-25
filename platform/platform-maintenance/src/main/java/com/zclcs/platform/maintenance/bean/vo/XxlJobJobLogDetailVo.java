@@ -19,15 +19,27 @@ import lombok.experimental.Accessors;
 @Schema(title = "XxlJobJobLogDetailVo", description = "XxlJobJobLogDetailVo")
 public class XxlJobJobLogDetailVo {
 
+    /**
+     * 服务名
+     */
     @Schema(description = "开始行")
     private Integer fromLineNum;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "结束行")
     private Integer toLineNum;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "日志")
     private String logContent;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "是否结束")
     private Boolean end;
 

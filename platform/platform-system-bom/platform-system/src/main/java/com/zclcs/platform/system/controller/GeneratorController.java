@@ -9,9 +9,6 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.GenerateAo;
 import com.zclcs.platform.system.api.bean.entity.Table;
 import com.zclcs.platform.system.service.GeneratorService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 代码生成
+ *
  * @author zclcs
  */
 @Slf4j
@@ -31,14 +30,18 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gen")
-@Tag(name = "代码生成")
 public class GeneratorController {
 
     private final GeneratorService generatorService;
 
+    /**
+     * 查询代码生成数据源
+     * 权限: gen:generate
+     *
+     * @return 数据源
+     */
     @GetMapping("/datasource")
     @SaCheckPermission("gen:generate")
-    @Operation(summary = "查询代码生成数据源")
     public BaseRsp<List<Map<String, String>>> datasource() {
         List<String> databases = generatorService.getDatabases(null);
         List<Map<String, String>> data = new ArrayList<>();
@@ -50,19 +53,32 @@ public class GeneratorController {
         return RspUtil.data(data);
     }
 
+    /**
+     * 查询代码生成表
+     * 权限: gen:generate
+     *
+     * @param name       表名
+     * @param datasource 库名
+     * @param basePageAo 分页参数
+     * @return 表定义
+     */
     @GetMapping("/tables")
     @SaCheckPermission("gen:generate")
-    @Operation(summary = "查询代码生成表")
-    public BaseRsp<BasePage<Table>> tablesInfo(@Parameter(name = "name", description = "表名") String name,
-                                               @Parameter(name = "datasource", description = "库名") String datasource,
-                                               BasePageAo request) {
-        BasePage<Table> tables = generatorService.getTables(name, request, Generator.DATABASE_TYPE, datasource);
+    public BaseRsp<BasePage<Table>> tablesInfo(String name,
+                                               String datasource,
+                                               BasePageAo basePageAo) {
+        BasePage<Table> tables = generatorService.getTables(name, basePageAo, Generator.DATABASE_TYPE, datasource);
         return RspUtil.data(tables);
     }
 
+    /**
+     * 生成代码
+     * 权限: gen:generate:gen
+     *
+     * @see GeneratorService#generate(GenerateAo, HttpServletResponse)
+     */
     @PostMapping
     @SaCheckPermission("gen:generate:gen")
-    @Operation(summary = "生成代码")
     public void generate(@Validated @RequestBody GenerateAo generateAo,
                          HttpServletResponse response) {
         generatorService.generate(generateAo, response);

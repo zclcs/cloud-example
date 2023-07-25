@@ -51,7 +51,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private static final String METHOD_ALL = "ALL";
-    private static final String TOKEN_CHECK_URL = "/auth/oath2/info";
     private final RouteEnhanceCacheService routeEnhanceCacheService;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final RabbitService rabbitService;
@@ -127,37 +126,35 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         if (startTime != null) {
             URI originUri = getGatewayOriginalRequestUrl(exchange);
             // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
-            if (!StrUtil.equalsIgnoreCase(TOKEN_CHECK_URL, originUri.getPath())) {
-                Long executeTime = (System.currentTimeMillis() - startTime);
-                int code = 500;
-                if (exchange.getResponse().getStatusCode() != null) {
-                    code = exchange.getResponse().getStatusCode().value();
-                }
-                URI url = getGatewayRequestUrl(exchange);
-                Route route = getGatewayRoute(exchange);
-                ServerHttpRequest request = exchange.getRequest();
-                String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
-                if (url != null && route != null) {
-                    HttpMethod httpMethod = request.getMethod();
-                    String requestMethod = httpMethod.name();
-                    ZoneId zoneId = ZoneId.systemDefault();
-                    LocalDateTime requestTime = Instant.ofEpochMilli(startTime).atZone(zoneId).toLocalDateTime();
-                    RouteLogAo routeLog = RouteLogAo.builder()
-                            .routeIp(requestIp)
-                            .requestUri(originUri.getPath())
-                            .targetServer(route.getId())
-                            .targetUri(url.getPath())
-                            .requestMethod(requestMethod)
-                            .requestTime(requestTime)
-                            .code(String.valueOf(code))
-                            .time(executeTime)
-                            .build();
-                    rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
-                }
-                // 记录日志
-                if (log.isDebugEnabled()) {
-                    log.debug("来自IP地址：{}的请求接口：{}，响应状态码：{}，请求耗时：{}ms", requestIp, originUri.getPath(), code, executeTime);
-                }
+            Long executeTime = (System.currentTimeMillis() - startTime);
+            int code = 500;
+            if (exchange.getResponse().getStatusCode() != null) {
+                code = exchange.getResponse().getStatusCode().value();
+            }
+            URI url = getGatewayRequestUrl(exchange);
+            Route route = getGatewayRoute(exchange);
+            ServerHttpRequest request = exchange.getRequest();
+            String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
+            if (url != null && route != null) {
+                HttpMethod httpMethod = request.getMethod();
+                String requestMethod = httpMethod.name();
+                ZoneId zoneId = ZoneId.systemDefault();
+                LocalDateTime requestTime = Instant.ofEpochMilli(startTime).atZone(zoneId).toLocalDateTime();
+                RouteLogAo routeLog = RouteLogAo.builder()
+                        .routeIp(requestIp)
+                        .requestUri(originUri.getPath())
+                        .targetServer(route.getId())
+                        .targetUri(url.getPath())
+                        .requestMethod(requestMethod)
+                        .requestTime(requestTime)
+                        .code(String.valueOf(code))
+                        .time(executeTime)
+                        .build();
+                rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
+            }
+            // 记录日志
+            if (log.isDebugEnabled()) {
+                log.debug("来自IP地址：{}的请求接口：{}，响应状态码：{}，请求耗时：{}ms", requestIp, originUri.getPath(), code, executeTime);
             }
         }
     }

@@ -16,12 +16,17 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "NacosTokenVo对象", description = "nacosToken")
 public class NacosTokenVo {
 
+    /**
+     * 服务名
+     */
     @Schema(description = "nacos token")
     private String accessToken;
 
+    /**
+     * 服务名
+     */
     @Schema(description = "过期时间(秒)")
     private Long tokenTtl;
 }
