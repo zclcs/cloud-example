@@ -3,6 +3,7 @@ package com.zclcs.cloud.lib.security.lite.handler;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
+import cn.dev33.satoken.exception.SameTokenInvalidException;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.Tracer;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -55,6 +56,16 @@ public class BaseExceptionHandler {
     public BaseRsp<Object> handleNotRoleException(NotRoleException e) {
         log.error("权限校验异常", e);
         return RspUtil.message("没有访问权限，请联系管理员授权");
+    }
+
+    /**
+     * 认证失败
+     */
+    @ExceptionHandler(SameTokenInvalidException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public BaseRsp<Object> handleSameTokenInvalidException(SameTokenInvalidException e) {
+        log.error("没有访问权限", e);
+        return RspUtil.message("没有访问权限");
     }
 
     /**

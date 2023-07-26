@@ -49,13 +49,14 @@ ext {
     bom = Set.of(project(":cloud-bom"), project(":common"), project(":cloud-lib"),
             project(":platform"), project(":platform:platform-system-bom"),
             project(":test"), project(":test:test-test-bom"))
-    jibPackage = Set.of(project(":platform:platform-auth"),
+    jibPackage = Set.of(
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"),
             project(":platform:platform-maintenance"),
             project(":test:test-test-bom:test-test"),
             project(":third-part-database-sync"),
-            project(":third-part-config-sync"))
+            project(":third-part-config-sync")
+    )
     nativePackage = Set.of(project(":third-part-database-sync"))
     commons = (subprojects - bom)
 }

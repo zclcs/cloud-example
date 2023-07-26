@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.util.AntPathMatcher;
 import reactor.core.publisher.Mono;
 
 /**
@@ -47,19 +46,18 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
                 return chain.filter(exchange);
             }
 
-            boolean checkUrl = true;
+            boolean needValidCode = false;
             if (CollectionUtil.isNotEmpty(configProperties.getNeedCheckValidCodeUrls())) {
                 for (String needCheckValidCodeUrl : configProperties.getNeedCheckValidCodeUrls()) {
-                    AntPathMatcher antPathMatcher = new AntPathMatcher();
-                    checkUrl = antPathMatcher.match(needCheckValidCodeUrl, request.getURI().getPath());
-                    if (!checkUrl) {
+                    if (needCheckValidCodeUrl.equals(request.getURI().getPath())) {
+                        needValidCode = true;
                         break;
                     }
                 }
             }
 
             // 不是需要验证的请求，直接向下执行
-            if (!checkUrl) {
+            if (!needValidCode) {
                 return chain.filter(exchange);
             }
 

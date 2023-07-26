@@ -1,7 +1,0 @@
-gateway:
-  encode-key: 'eXTqsEKIPRsksJSK'
-  need-check-valid-code-urls:
-    - "/login/token/byUsername"
-  ignore-urls:
-    - "/system/login/token/byUsername"
-

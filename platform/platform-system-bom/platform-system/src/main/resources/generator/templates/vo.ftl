@@ -3,7 +3,6 @@ package ${basePackage}.${entityPackage};
 import base.com.zclcs.cloud.lib.BaseEntity;
 import annotation.json.com.zclcs.cloud.lib.Array;
 import annotation.json.com.zclcs.cloud.lib.DictText;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -29,7 +28,6 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "${className}Vo对象", description = "${tableComment}")
 public class ${className}Vo extends BaseEntity implements Serializable {
 
     @Serial
@@ -37,7 +35,9 @@ public class ${className}Vo extends BaseEntity implements Serializable {
 
 <#if columns??>
     <#list columns as column>
-    @Schema(title = "${column.remark}")
+    /**
+     * ${column.remark}
+     */
     <#if column.hasDict = true && column.isArray = true && column.isTree = false>
     @DictText(value = "${column.remarkDict}", array = @Array)
     </#if>

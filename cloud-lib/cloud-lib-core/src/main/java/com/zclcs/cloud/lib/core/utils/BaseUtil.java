@@ -1,10 +1,8 @@
 package com.zclcs.cloud.lib.core.utils;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.Regexp;
-import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.env.Environment;
@@ -82,20 +80,10 @@ public class BaseUtil {
     public void printSystemUpBanner(Environment environment) {
         String applicationName = environment.getProperty("spring.application.name");
         String serverPort = environment.getProperty("server.port");
-        String gatewayHostAddress = environment.getProperty("swagger.gateway-endpoint");
-        String production = environment.getProperty("knife4j.production");
-        String hostAddress = "http://" + NetUtil.getLocalhost().getHostAddress() + ":" + serverPort;
         String banner = "-----------------------------------------\n" +
                 "服务启动成功，时间：" + DateUtil.date() + "\n" +
                 "服务名称：" + applicationName + "\n" +
                 "端口号：" + serverPort + "\n";
-        if (production == null) {
-            if (ServiceName.PLATFORM_GATEWAY_SERVICE.equals(applicationName)) {
-                banner += "knife4jUI：" + hostAddress + "/doc.html" + "\n";
-            } else {
-                banner += "apiDocs：" + gatewayHostAddress + "/" + applicationName + "/v3/api-docs" + "\n";
-            }
-        }
         banner += "-----------------------------------------";
         System.out.println(banner);
     }

@@ -33,12 +33,12 @@ public class GatewayConfigProperties {
     private Boolean isCheckValidCode = true;
 
     /**
-     * 网关需要校验验证码的路径
+     * 网关需要校验验证码的路径 不支持通配符
      */
     private Set<String> needCheckValidCodeUrls;
 
     /**
-     * 网关白名单
+     * 网关白名单 支持通配符
      */
     private List<String> ignoreUrls;
 
