@@ -1,7 +1,7 @@
 package ${basePackage}.${entityPackage};
 
-import strategy.validate.com.zclcs.cloud.lib.UpdateStrategy;
-import annotation.json.com.zclcs.cloud.lib.DictValid;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

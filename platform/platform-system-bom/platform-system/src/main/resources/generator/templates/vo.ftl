@@ -1,8 +1,8 @@
 package ${basePackage}.${entityPackage};
 
-import base.com.zclcs.cloud.lib.BaseEntity;
-import annotation.json.com.zclcs.cloud.lib.Array;
-import annotation.json.com.zclcs.cloud.lib.DictText;
+import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.cloud.lib.dict.json.annotation.Array;
+import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.*;
 import lombok.experimental.Accessors;
 

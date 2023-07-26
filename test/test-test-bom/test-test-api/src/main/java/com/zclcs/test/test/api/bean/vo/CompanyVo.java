@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * 企业信息 Vo
  *
  * @author zclcs
- * @date 2023-04-12 15:15:56.349
+ * @date 2023-07-26 22:12:38.456
  */
 @Data
 @AllArgsConstructor
@@ -43,7 +43,7 @@ public class CompanyVo extends BaseEntity implements Serializable {
     private String companyAttachment;
 
     /**
-     * 企业名称"
+     * 企业名称
      */
     private String companyName;
 
