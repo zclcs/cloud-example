@@ -1,4 +1,4 @@
-package com.zclcs.test.test.api.entity.vo;
+package com.zclcs.test.test.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.Array;

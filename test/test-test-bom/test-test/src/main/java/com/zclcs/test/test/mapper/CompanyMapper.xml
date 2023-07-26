@@ -8,13 +8,13 @@
     <sql id="baseCountSql">
         // TODO 设置统计查询sql
     </sql>
-    <select id="findPageVo" resultType="com.zclcs.test.test.api.entity.vo.CompanyVo">
+    <select id="findPageVo" resultType="com.zclcs.test.test.api.bean.vo.CompanyVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findListVo" resultType="com.zclcs.test.test.api.entity.vo.CompanyVo">
+    <select id="findListVo" resultType="com.zclcs.test.test.api.bean.vo.CompanyVo">
         <include refid="baseSql"/>
     </select>
-    <select id="findOneVo" resultType="com.zclcs.test.test.api.entity.vo.CompanyVo">
+    <select id="findOneVo" resultType="com.zclcs.test.test.api.bean.vo.CompanyVo">
         <include refid="baseSql"/>
     </select>
     <select id="countVo" resultType="java.lang.Integer">

@@ -1,11 +1,12 @@
-package com.zclcs.test.test.api.entity.ao;
+package com.zclcs.test.test.api.bean.entity;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
@@ -13,18 +14,16 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * 企业信息 Ao
+ * 企业信息 Entity
  *
  * @author zclcs
  * @date 2023-04-12 15:15:56.349
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class CompanyAo implements Serializable {
+@TableName("test_company")
+public class Company extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,174 +31,169 @@ public class CompanyAo implements Serializable {
     /**
      * 企业id
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @TableId(value = "company_id", type = IdType.AUTO)
     private Long companyId;
 
     /**
      * 统一社会信用代码或组织机构代码
      */
-    @Size(max = 18, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
+    @TableField("company_code")
     private String companyCode;
 
     /**
      * 营业执照扫描件
      */
-    @Size(max = 64, message = "{noMoreThan}")
+    @TableField("company_attachment")
     private String companyAttachment;
 
     /**
      * 企业名称
      */
-    @Size(max = 200, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
+    @TableField("company_name")
     private String companyName;
 
     /**
      * 企业登记注册类型 @@company_type
      */
-    @DictValid(value = "company_type", message = "{dict}")
-    @Size(max = 3, message = "{noMoreThan}")
+    @TableField("company_type")
     private String companyType;
 
     /**
      * 工商营业执照注册号
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("license_num")
     private String licenseNum;
 
     /**
      * 注册地区编码 array @@area_code
      */
-    @DictValid(value = "area_code", message = "{dict}")
-    @Size(max = 150, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
+    @TableField("area_code")
     private String areaCode;
 
     /**
      * 企业营业地址
      */
-    @Size(max = 200, message = "{noMoreThan}")
+    @TableField("address")
     private String address;
 
     /**
      * 邮政编码
      */
-    @Size(max = 6, message = "{noMoreThan}")
+    @TableField("zip_code")
     private String zipCode;
 
     /**
      * 法定代表人姓名
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("legal_man")
     private String legalMan;
 
     /**
      * 法定代表人电话
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("legal_man_phone")
     private String legalManPhone;
 
     /**
      * 法定代表人职务
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("legal_man_duty")
     private String legalManDuty;
 
     /**
      * 法定代表人职称
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("legal_man_pro_title")
     private String legalManProTitle;
 
     /**
      * 法定代表人证件类型 @@id_card_type
      */
-    @DictValid(value = "id_card_type", message = "{dict}")
-    @Size(max = 2, message = "{noMoreThan}")
+    @TableField("legal_man_id_card_type")
     private String legalManIdCardType;
 
     /**
      * 法定代表人证件号码
      */
-    @Size(max = 30, message = "{noMoreThan}")
+    @TableField("legal_man_id_card_number")
     private String legalManIdCardNumber;
 
     /**
      * 注册资本（单位：分）
      */
-    @Size(max = 20, message = "{noMoreThan}")
+    @TableField("reg_capital")
     private String regCapital;
 
     /**
      * 实收资本（单位：分）
      */
-    @Size(max = 20, message = "{noMoreThan}")
+    @TableField("fact_reg_capital")
     private String factRegCapital;
 
     /**
      * 资本币种 @@currency_type
      */
-    @DictValid(value = "currency_type", message = "{dict}")
-    @Size(max = 40, message = "{noMoreThan}")
+    @TableField("capital_currency_type")
     private String capitalCurrencyType;
 
     /**
      * 注册日期
      */
+    @TableField("register_date")
     private LocalDate registerDate;
 
     /**
      * 成立日期
      */
+    @TableField("establish_date")
     private LocalDate establishDate;
 
     /**
      * 办公电话
      */
-    @Size(max = 20, message = "{noMoreThan}")
+    @TableField("office_phone")
     private String officePhone;
 
     /**
      * 传真号码
      */
-    @Size(max = 20, message = "{noMoreThan}")
+    @TableField("fax_number")
     private String faxNumber;
 
     /**
      * 联系人姓名
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("link_man")
     private String linkMan;
 
     /**
      * 联系人职务
      */
-    @Size(max = 255, message = "{noMoreThan}")
+    @TableField("link_duty")
     private String linkDuty;
 
     /**
      * 联系人电话
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @TableField("link_phone")
     private String linkPhone;
 
     /**
      * 企业邮箱
      */
-    @Size(max = 100, message = "{noMoreThan}")
+    @TableField("email")
     private String email;
 
     /**
      * 企业网址
      */
-    @Size(max = 200, message = "{noMoreThan}")
+    @TableField("web_site")
     private String webSite;
 
     /**
      * 企业备注
      */
-    @Size(max = 200, message = "{noMoreThan}")
+    @TableField("remark")
     private String remark;
 
 

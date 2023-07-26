@@ -3,9 +3,9 @@ package com.zclcs.test.test.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.test.test.api.entity.Company;
-import com.zclcs.test.test.api.entity.ao.CompanyAo;
-import com.zclcs.test.test.api.entity.vo.CompanyVo;
+import com.zclcs.test.test.api.bean.entity.Company;
+import com.zclcs.test.test.api.bean.ao.CompanyAo;
+import com.zclcs.test.test.api.bean.vo.CompanyVo;
 
 import java.util.List;
 
