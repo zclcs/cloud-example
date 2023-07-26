@@ -11,12 +11,13 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 企业信息 Ao
  *
  * @author zclcs
- * @date 2023-07-26 22:12:38.456
+ * @date 2023-07-26 22:21:40.994
  */
 @Data
 @AllArgsConstructor

@@ -1,12 +1,13 @@
 package ${basePackage}.${controllerPackage};
 
-import base.com.zclcs.cloud.lib.BasePage;
-import base.com.zclcs.cloud.lib.BasePageAo;
-import base.com.zclcs.cloud.lib.BaseRsp;
-import constant.com.zclcs.cloud.lib.Strings;
-import utils.com.zclcs.cloud.lib.RspUtil;
-import strategy.validate.com.zclcs.cloud.lib.UpdateStrategy;
-import annotation.com.zclcs.cloud.lib.ControllerEndpoint;
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
+import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.utils.RspUtil;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${aoPackage}.${className}Ao;
 import ${basePackage}.${voPackage}.${className}Vo;
@@ -14,8 +15,6 @@ import ${basePackage}.${servicePackage}.${className}Service;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +44,7 @@ public class ${className}Controller {
      */
     @GetMapping
     @SaCheckPermission("${className?uncap_first}:view")
-    public BaseRsp<BasePage<${className}Vo>> find${className}Page(@ParameterObject @Validated BasePageAo basePageAo, @ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<BasePage<${className}Vo>> find${className}Page(@Validated BasePageAo basePageAo, @Validated ${className}Vo ${className?uncap_first}Vo) {
         BasePage<${className}Vo> page = this.${className?uncap_first}Service.find${className}Page(basePageAo, ${className?uncap_first}Vo);
         return RspUtil.data(page);
     }
@@ -58,7 +57,7 @@ public class ${className}Controller {
      */
     @GetMapping("list")
     @SaCheckPermission("${className?uncap_first}:view")
-    public BaseRsp<List<${className}Vo>> find${className}List(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<List<${className}Vo>> find${className}List(@Validated ${className}Vo ${className?uncap_first}Vo) {
         List<${className}Vo> list = this.${className?uncap_first}Service.find${className}List(${className?uncap_first}Vo);
         return RspUtil.data(list);
     }
@@ -71,7 +70,7 @@ public class ${className}Controller {
      */
     @GetMapping("one")
     @SaCheckPermission("${className?uncap_first}:view")
-    public BaseRsp<${className}Vo> find${className}(@ParameterObject @Validated ${className}Vo ${className?uncap_first}Vo) {
+    public BaseRsp<${className}Vo> find${className}(@Validated ${className}Vo ${className?uncap_first}Vo) {
         ${className}Vo ${className?uncap_first} = this.${className?uncap_first}Service.find${className}(${className?uncap_first}Vo);
         return RspUtil.data(${className?uncap_first});
     }
@@ -100,7 +99,7 @@ public class ${className}Controller {
     @SaCheckPermission("${className?uncap_first}:delete")
     @ControllerEndpoint(operation = "删除${tableComment}")
     public BaseRsp<String> delete${className}(@NotBlank(message = "{required}") @PathVariable String ${className?uncap_first}Ids) {
-        List<Long> ids = Arrays.stream(${className?uncap_first}Ids.split(StringConstant.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+        List<Long> ids = Arrays.stream(${className?uncap_first}Ids.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.${className?uncap_first}Service.delete${className}(ids);
         return RspUtil.message("删除成功");
     }
