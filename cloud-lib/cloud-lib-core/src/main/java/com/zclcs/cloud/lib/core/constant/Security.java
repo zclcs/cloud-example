@@ -33,7 +33,7 @@ public interface Security {
     /**
      * 默认登录URL
      */
-    String TOKEN_URL = "/login/token";
+    String TOKEN_URL = "/login/token/byUsername";
 
     /**
      * grant_type
@@ -93,7 +93,7 @@ public interface Security {
     /**
      * 短信登录 参数名称
      */
-    String SMS_PARAMETER_NAME = "phone";
+    String SMS_PARAMETER_NAME = "mobile";
 
     /**
      * 授权码模式confirm

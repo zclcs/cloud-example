@@ -13,11 +13,11 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.BaseUtil;
 import com.zclcs.cloud.lib.core.utils.FileUtil;
 import com.zclcs.common.web.starter.utils.WebUtil;
+import com.zclcs.platform.system.api.bean.ao.GenerateAo;
+import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.entity.Column;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.entity.Table;
-import com.zclcs.platform.system.api.bean.ao.GenerateAo;
-import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 import com.zclcs.platform.system.mapper.GeneratorMapper;
 import com.zclcs.platform.system.service.GeneratorConfigService;
@@ -81,7 +81,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         String className = name;
         String tableName = name;
-        if (GeneratorConfigVo.TRIM_YES.equals(generatorConfigVo.getIsTrim())) {
+        if (Dict.YES_NO_1.equals(generatorConfigVo.getIsTrim())) {
             tableName = StrUtil.removePrefix(name, generatorConfigVo.getTrimValue());
             className = tableName;
         }

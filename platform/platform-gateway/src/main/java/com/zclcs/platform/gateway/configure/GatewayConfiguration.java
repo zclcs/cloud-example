@@ -57,8 +57,8 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties) {
-        return new PasswordDecoderFilter(configProperties);
+    public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties, ObjectMapper objectMapper) {
+        return new PasswordDecoderFilter(configProperties, objectMapper);
     }
 
     @Bean

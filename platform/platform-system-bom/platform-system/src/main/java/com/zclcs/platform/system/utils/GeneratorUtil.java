@@ -15,11 +15,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -70,7 +70,7 @@ public class GeneratorUtil {
         map.put("hasDate", false);
         map.put("hasBigDecimal", false);
         columns.forEach(c -> {
-            c.setField(BaseUtil.underscoreToCamel(StringUtils.lowerCase(c.getName())));
+            c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT)));
             if (StrUtil.containsAny(c.getType(), FieldType.DATE, FieldType.DATETIME, FieldType.TIMESTAMP)) {
                 map.put("hasDate", true);
             }
@@ -120,7 +120,7 @@ public class GeneratorUtil {
         String templateName = Generator.MAPPER_XML_TEMPLATE;
         File mapperXmlFile = new File(path);
         Map<String, Object> map = BeanUtil.beanToMap(configure);
-        columns.forEach(c -> c.setField(BaseUtil.underscoreToCamel(StringUtils.lowerCase(c.getName()))));
+        columns.forEach(c -> c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT))));
         map.put("columns", columns);
         generateFileByTemplate(templateName, mapperXmlFile, map);
     }

@@ -1,14 +1,13 @@
 package com.zclcs.platform.maintenance.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
 
 /**
- * NacosTokenVo
+ * RabbitmqQueueDetailVo
  *
  * @author zclcs
  * @date 2023-01-10 10:39:49.113
@@ -19,51 +18,43 @@ import java.util.Map;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RabbitmqQueueDetailVo", description = "RabbitmqQueueDetailVo")
 public class RabbitmqQueueDetailVo {
 
     /**
-     * 服务名
+     * 交换机
      */
-    @Schema(description = "交换机")
     private String source;
 
     /**
-     * 服务名
+     * 命名空间
      */
-    @Schema(description = "命名空间")
     private String vhost;
 
     /**
-     * 服务名
+     * 绑定的队列名称
      */
-    @Schema(description = "绑定的队列名称")
     private String destination;
 
     /**
-     * 服务名
+     * 绑定的队列类型
      */
-    @Schema(description = "绑定的队列类型")
     @JsonAlias("destination_type")
     private String destinationType;
 
     /**
-     * 服务名
+     * 路由key
      */
-    @Schema(description = "路由key")
     @JsonAlias("routing_key")
     private String routingKey;
 
     /**
-     * 服务名
+     * 额外参数
      */
-    @Schema(description = "额外参数")
     private Map<String, Object> arguments;
 
     /**
-     * 服务名
+     * 路由key 需要url解码
      */
-    @Schema(description = "路由key 需要url解码")
     @JsonAlias("properties_key")
     private String propertiesKey;
 }

@@ -22,8 +22,6 @@ import com.zclcs.platform.maintenance.bean.ao.NacosServiceAo;
 import com.zclcs.platform.maintenance.bean.vo.NacosConfigVo;
 import com.zclcs.platform.maintenance.bean.vo.NacosServiceVo;
 import com.zclcs.platform.maintenance.bean.vo.NacosTokenVo;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * nacos Controller
+ * nacos控制台
  *
  * @author zclcs
  * @date 2023-01-10 10:39:10.151
@@ -43,7 +41,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/nacos")
 @RequiredArgsConstructor
-@Tag(name = "nacos控制台")
 public class NacosController {
 
     private final RedisService redisService;
@@ -57,9 +54,16 @@ public class NacosController {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * 配置查询
+     * 权限: nacos:view
+     *
+     * @param basePageAo    {@link BasePageAo}
+     * @param nacosConfigAo {@link NacosConfigAo}
+     * @return {@link NacosConfigVo.ConfigVo}
+     */
     @GetMapping("/configs")
     @SaCheckPermission("nacos:view")
-    @Operation(summary = "nacos 配置查询")
     public BaseRsp<BasePage<NacosConfigVo.ConfigVo>> findNacosConfigPage(@Validated BasePageAo basePageAo, @Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
@@ -88,9 +92,15 @@ public class NacosController {
         }
     }
 
+    /**
+     * 配置详情查询
+     * 权限: nacos:view
+     *
+     * @param nacosConfigAo {@link NacosConfigAo}
+     * @return {@link NacosConfigVo.ConfigDetailVo}
+     */
     @GetMapping("/config/detail")
     @SaCheckPermission("nacos:view")
-    @Operation(summary = "nacos 配置详情查询")
     public BaseRsp<NacosConfigVo.ConfigDetailVo> findNacosConfigDetail(@Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();
@@ -110,9 +120,14 @@ public class NacosController {
         }
     }
 
+    /**
+     * 编辑
+     *
+     * @param configDetailVo {@link NacosConfigVo.ConfigDetailVo}
+     * @return 是否成功
+     */
     @PutMapping("/config")
     @SaCheckPermission("nacos:view")
-    @Operation(summary = "nacos 编辑")
     public BaseRsp<String> findNacosConfigDetail(@RequestBody @Validated(UpdateStrategy.class) NacosConfigVo.ConfigDetailVo configDetailVo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = BeanUtil.beanToMap(configDetailVo, false, false);
@@ -130,9 +145,15 @@ public class NacosController {
         }
     }
 
+    /**
+     * 服务列表查询
+     *
+     * @param basePageAo     {@link BasePageAo}
+     * @param nacosServiceAo {@link NacosServiceAo}
+     * @return {@link NacosServiceVo.Service}
+     */
     @GetMapping("/services")
     @SaCheckPermission("nacos:view")
-    @Operation(summary = "nacos 服务列表查询")
     public BaseRsp<BasePage<NacosServiceVo.Service>> findNacosServicePage(@Validated BasePageAo basePageAo, @Validated NacosServiceAo nacosServiceAo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = new HashMap<>();

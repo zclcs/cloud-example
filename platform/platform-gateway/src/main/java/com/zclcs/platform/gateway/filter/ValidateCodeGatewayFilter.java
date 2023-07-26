@@ -1,5 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,19 +47,19 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
                 return chain.filter(exchange);
             }
 
-            configProperties.getNeedCheckValidCodeUrls().add(Security.TOKEN_URL);
-
-            boolean checkUrl = false;
-            for (String needCheckValidCodeUrl : configProperties.getNeedCheckValidCodeUrls()) {
-                AntPathMatcher antPathMatcher = new AntPathMatcher();
-                checkUrl = antPathMatcher.match(needCheckValidCodeUrl, request.getURI().getPath());
-                if (checkUrl) {
-                    break;
+            boolean checkUrl = true;
+            if (CollectionUtil.isNotEmpty(configProperties.getNeedCheckValidCodeUrls())) {
+                for (String needCheckValidCodeUrl : configProperties.getNeedCheckValidCodeUrls()) {
+                    AntPathMatcher antPathMatcher = new AntPathMatcher();
+                    checkUrl = antPathMatcher.match(needCheckValidCodeUrl, request.getURI().getPath());
+                    if (!checkUrl) {
+                        break;
+                    }
                 }
             }
 
             // 不是需要验证的请求，直接向下执行
-            if (checkUrl) {
+            if (!checkUrl) {
                 return chain.filter(exchange);
             }
 

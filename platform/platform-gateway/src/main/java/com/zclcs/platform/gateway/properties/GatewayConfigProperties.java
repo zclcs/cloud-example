@@ -25,12 +25,12 @@ public class GatewayConfigProperties {
     /**
      * 网关是否需要解密前端密码
      */
-    private Boolean isDecodePassword;
+    private Boolean isDecodePassword = true;
 
     /**
      * 网关是否需要校验验证码
      */
-    private Boolean isCheckValidCode;
+    private Boolean isCheckValidCode = true;
 
     /**
      * 网关需要校验验证码的路径

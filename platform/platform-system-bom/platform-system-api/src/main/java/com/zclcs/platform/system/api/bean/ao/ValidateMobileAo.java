@@ -1,5 +1,6 @@
-package com.zclcs.platform.maintenance.bean.vo;
+package com.zclcs.platform.system.api.bean.ao;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -7,9 +8,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * mysql字段
+ * 用户名登录 Ao
  *
  * @author zclcs
+ * @date 2023-01-10 10:39:34.182
  */
 @Data
 @AllArgsConstructor
@@ -17,18 +19,16 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SchemaVo implements Serializable {
+public class ValidateMobileAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 库名+表名
+     * 短信验证码
      */
-    private String tableSchema;
+    @NotBlank(message = "{required}")
+    private String mobile;
 
-    /**
-     * 字段名称
-     */
-    private String columnName;
+
 }

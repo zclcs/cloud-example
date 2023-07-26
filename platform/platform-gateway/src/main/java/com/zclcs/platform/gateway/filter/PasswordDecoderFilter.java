@@ -1,13 +1,14 @@
 package com.zclcs.platform.gateway.filter;
 
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.http.HttpUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
+import com.zclcs.platform.system.api.bean.ao.LoginByUsernameAo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -30,9 +31,7 @@ import reactor.core.publisher.Mono;
 
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -49,6 +48,8 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
     private static final String KEY_ALGORITHM = "AES";
 
     private final GatewayConfigProperties gatewayConfig;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public GatewayFilter apply(Object config) {
@@ -99,15 +100,20 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
                     new IvParameterSpec(gatewayConfig.getEncodeKey().getBytes()));
 
             // 获取请求密码并解密
-            Map<String, String> inParamsMap = HttpUtil.decodeParamMap((String) s, CharsetUtil.CHARSET_UTF_8);
-            if (inParamsMap.containsKey(PASSWORD)) {
-                String password = aes.decryptStr(inParamsMap.get(PASSWORD));
-                // 返回修改后报文字符
-                inParamsMap.put(PASSWORD, password);
-            } else {
-                log.error("非法请求数据:{}", s);
+            LoginByUsernameAo loginByUsernameAo = null;
+            try {
+                loginByUsernameAo = objectMapper.readValue((String) s, LoginByUsernameAo.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
             }
-            return Mono.just(HttpUtil.toParams(inParamsMap, Charset.defaultCharset(), true));
+            if (loginByUsernameAo != null && StrUtil.isNotBlank(loginByUsernameAo.getPassword())) {
+                loginByUsernameAo.setPassword(aes.decryptStr(loginByUsernameAo.getPassword()));
+            }
+            try {
+                return Mono.just(objectMapper.writeValueAsString(loginByUsernameAo));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         };
     }
 

@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -84,7 +85,7 @@ public class BlackListController {
     @PostMapping
     @SaCheckPermission("blackList:add")
     @ControllerEndpoint(operation = "新增黑名单")
-    public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) {
+    public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) throws JsonProcessingException {
         return RspUtil.data(this.blackListService.createBlackList(blackListAo));
     }
 
@@ -113,7 +114,7 @@ public class BlackListController {
     @PutMapping
     @SaCheckPermission("blackList:update")
     @ControllerEndpoint(operation = "修改黑名单")
-    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated(UpdateStrategy.class) BlackListAo blackListAo) {
+    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated(UpdateStrategy.class) BlackListAo blackListAo) throws JsonProcessingException {
         return RspUtil.data(this.blackListService.updateBlackList(blackListAo));
     }
 }

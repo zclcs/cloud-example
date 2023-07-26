@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
@@ -61,7 +62,7 @@ public interface BlackListService extends IService<BlackList> {
      * @param blackListAo blackListAo
      * @return BlackList
      */
-    BlackList createBlackList(BlackListAo blackListAo);
+    BlackList createBlackList(BlackListAo blackListAo) throws JsonProcessingException;
 
     /**
      * 修改
@@ -69,7 +70,7 @@ public interface BlackListService extends IService<BlackList> {
      * @param blackListAo blackListAo
      * @return BlackList
      */
-    BlackList updateBlackList(BlackListAo blackListAo);
+    BlackList updateBlackList(BlackListAo blackListAo) throws JsonProcessingException;
 
     /**
      * 删除

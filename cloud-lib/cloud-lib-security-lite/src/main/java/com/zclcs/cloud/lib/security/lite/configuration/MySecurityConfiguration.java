@@ -1,6 +1,7 @@
 package com.zclcs.cloud.lib.security.lite.configuration;
 
 import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
@@ -43,12 +44,16 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
     public SaServletFilter getSaServletFilter(ObjectMapper objectMapper, MySecurityProperties mySecurityProperties) {
         return new SaServletFilter()
                 .addInclude("/**")
-//                .addExclude("/actuator/**", "/error", "/v3/api-docs")
+                .addExclude("/actuator/**", "/error")
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
                     SaHolder.getResponse().setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-                    SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
+                    if (e instanceof NotLoginException exception) {
+                        SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
+                    } else {
+                        SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
+                    }
                     try {
                         return objectMapper.writeValueAsString(RspUtil.message("认证失败"));
                     } catch (JsonProcessingException ex) {

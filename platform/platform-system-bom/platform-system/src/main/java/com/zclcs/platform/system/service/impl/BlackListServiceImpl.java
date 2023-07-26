@@ -6,14 +6,16 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.system.api.bean.entity.BlackList;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
+import com.zclcs.platform.system.api.bean.entity.BlackList;
 import com.zclcs.platform.system.api.bean.vo.BlackListVo;
 import com.zclcs.platform.system.mapper.BlackListMapper;
 import com.zclcs.platform.system.service.BlackListService;
@@ -39,6 +41,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     private final RedisService redisService;
     private final Ip2regionSearcher ip2regionSearcher;
+    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<BlackListVo> findBlackListPage(BasePageAo basePageAo, BlackListVo blackListVo) {
@@ -73,7 +76,11 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
                     RouteEnhanceCacheUtil.getBlackListCacheKey(black.getBlackIp()) :
                     RouteEnhanceCacheUtil.getBlackListCacheKey();
             this.setCacheBlackList(black);
-            redisService.sSet(key, black);
+            try {
+                redisService.sSet(key, objectMapper.writeValueAsString(black));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
@@ -90,7 +97,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BlackList createBlackList(BlackListAo blackListAo) {
+    public BlackList createBlackList(BlackListAo blackListAo) throws JsonProcessingException {
         BlackList blackList = new BlackList();
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
@@ -99,13 +106,13 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         String key = StrUtil.isNotBlank(blackList.getBlackIp()) ?
                 RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getBlackIp()) :
                 RouteEnhanceCacheUtil.getBlackListCacheKey();
-        redisService.sSet(key, blackList);
+        redisService.sSet(key, objectMapper.writeValueAsString(blackList));
         return blackList;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BlackList updateBlackList(BlackListAo blackListAo) {
+    public BlackList updateBlackList(BlackListAo blackListAo) throws JsonProcessingException {
         BlackList blackList = new BlackList();
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
@@ -115,13 +122,13 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
             redisService.del(cacheKey);
             List<BlackList> list = this.lambdaQuery().eq(BlackList::getBlackId, blackList.getBlackId()).list();
             list.forEach(this::setCacheBlackList);
-            redisService.sSet(cacheKey, list);
+            redisService.sSet(cacheKey, objectMapper.writeValueAsString(list));
         } else {
             String cacheKey = RouteEnhanceCacheUtil.getBlackListCacheKey();
             redisService.del(cacheKey);
             List<BlackList> list = this.lambdaQuery().isNull(BlackList::getBlackId).or().eq(BlackList::getBlackId, "").list();
             list.forEach(this::setCacheBlackList);
-            redisService.sSet(cacheKey, list);
+            redisService.sSet(cacheKey, objectMapper.writeValueAsString(list));
         }
         return blackList;
     }

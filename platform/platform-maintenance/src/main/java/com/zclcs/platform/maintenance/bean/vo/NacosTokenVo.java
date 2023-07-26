@@ -1,11 +1,10 @@
 package com.zclcs.platform.maintenance.bean.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
- * NacosTokenVo
+ * Nacos Token Vo
  *
  * @author zclcs
  * @date 2023-01-10 10:39:49.113
@@ -19,14 +18,12 @@ import lombok.experimental.Accessors;
 public class NacosTokenVo {
 
     /**
-     * 服务名
+     * nacos token
      */
-    @Schema(description = "nacos token")
     private String accessToken;
 
     /**
-     * 服务名
+     * 过期时间(秒)
      */
-    @Schema(description = "过期时间(秒)")
     private Long tokenTtl;
 }

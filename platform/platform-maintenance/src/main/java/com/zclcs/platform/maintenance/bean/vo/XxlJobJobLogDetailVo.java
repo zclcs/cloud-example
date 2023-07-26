@@ -1,11 +1,10 @@
 package com.zclcs.platform.maintenance.bean.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
- * NacosTokenVo
+ * XxlJobJobLogDetailVo
  *
  * @author zclcs
  * @date 2023-01-10 10:39:49.113
@@ -16,31 +15,26 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "XxlJobJobLogDetailVo", description = "XxlJobJobLogDetailVo")
 public class XxlJobJobLogDetailVo {
 
     /**
-     * 服务名
+     * 开始行
      */
-    @Schema(description = "开始行")
     private Integer fromLineNum;
 
     /**
-     * 服务名
+     * 结束行
      */
-    @Schema(description = "结束行")
     private Integer toLineNum;
 
     /**
-     * 服务名
+     * 日志
      */
-    @Schema(description = "日志")
     private String logContent;
 
     /**
-     * 服务名
+     * 是否结束
      */
-    @Schema(description = "是否结束")
     private Boolean end;
 
 }

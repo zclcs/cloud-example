@@ -1,4 +1,9 @@
 gateway:
   encode-key: 'eXTqsEKIPRsksJSK'
-  ignore-clients:
-    - swagger
+  need-check-valid-code-urls:
+    - "/login/token/byUsername"
+    - "/login/token/byMobile"
+  ignore-urls:
+    - "/system/login/token/byUsername"
+    - "/system/login/token/byMobile"
+

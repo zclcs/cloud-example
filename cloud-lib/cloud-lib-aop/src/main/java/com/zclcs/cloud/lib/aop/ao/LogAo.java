@@ -1,6 +1,5 @@
 package com.zclcs.cloud.lib.aop.ao;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -21,46 +20,65 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "LogAo对象", description = "用户操作日志")
 public class LogAo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "日志id")
+    /**
+     * 日志id
+     */
     private Long id;
 
-    @Schema(description = "类名")
+    /**
+     * 类名
+     */
     private String className;
 
-    @Schema(description = "方法名")
+    /**
+     * 方法名
+     */
     private String methodName;
 
+    /**
+     * 操作用户
+     */
     @Size(max = 50, message = "{noMoreThan}")
-    @Schema(description = "操作用户")
     private String username;
 
+    /**
+     * 操作内容
+     */
     @Size(max = 65535, message = "{noMoreThan}")
-    @Schema(description = "操作内容")
     private String operation;
 
-    @Schema(description = "耗时")
+    /**
+     * 耗时
+     */
     private BigDecimal time;
 
+    /**
+     * 操作方法
+     */
     @Size(max = 65535, message = "{noMoreThan}")
-    @Schema(description = "操作方法")
     private String method;
 
+    /**
+     * 方法参数
+     */
     @Size(max = 65535, message = "{noMoreThan}")
-    @Schema(description = "方法参数")
     private String params;
 
+    /**
+     * 操作者ip
+     */
     @Size(max = 64, message = "{noMoreThan}")
-    @Schema(description = "操作者ip")
     private String ip;
 
+    /**
+     * 操作地点
+     */
     @Size(max = 50, message = "{noMoreThan}")
-    @Schema(description = "操作地点")
     private String location;
 
 

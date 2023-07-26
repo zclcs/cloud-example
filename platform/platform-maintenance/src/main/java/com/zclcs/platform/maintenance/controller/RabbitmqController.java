@@ -20,8 +20,6 @@ import com.zclcs.platform.maintenance.bean.ao.RabbitmqDetailAo;
 import com.zclcs.platform.maintenance.bean.ao.RabbitmqExchangeAo;
 import com.zclcs.platform.maintenance.bean.ao.RabbitmqQueueAo;
 import com.zclcs.platform.maintenance.bean.vo.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * nacos Controller
+ * rabbitmq控制台
  *
  * @author zclcs
  * @date 2023-01-10 10:39:10.151
@@ -47,7 +45,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rabbitmq")
 @RequiredArgsConstructor
-@Tag(name = "rabbitmq控制台")
 public class RabbitmqController {
 
     private final RabbitmqApiInfoProperties rabbitmqApiInfoProperties;
@@ -59,9 +56,16 @@ public class RabbitmqController {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * 交换机查询
+     * 权限: rabbitmq:view
+     *
+     * @param basePageAo         {@link BasePageAo}
+     * @param rabbitmqExchangeAo {@link RabbitmqExchangeAo}
+     * @return {@link RabbitmqExchangeVo}
+     */
     @GetMapping("/exchanges")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 交换机查询")
     public BaseRsp<BasePage<RabbitmqExchangeVo>> findRabbitmqExchangePage(@Validated BasePageAo basePageAo, @Validated RabbitmqExchangeAo rabbitmqExchangeAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", Optional.ofNullable(rabbitmqExchangeAo.getName()).orElse(""));
@@ -93,9 +97,15 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 交换机详情查询
+     * 权限: rabbitmq:view
+     *
+     * @param rabbitmqDetailAo {@link RabbitmqDetailAo}
+     * @return 交换机详情
+     */
     @GetMapping("/exchangeDetail")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 交换机详情查询")
     public BaseRsp<Map<String, String>> findRabbitmqExchangeDetail(@Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/exchanges/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
                 URLEncoder.encode(rabbitmqDetailAo.getName(), StandardCharsets.UTF_8) + "/bindings/source";
@@ -118,9 +128,15 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 删除交换机
+     * 权限: rabbitmq:view
+     *
+     * @param rabbitmqDetailAo {@link RabbitmqDetailAo}
+     * @return 是否成功
+     */
     @GetMapping("/delete/exchange")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 删除交换机")
     public BaseRsp<String> deleteRabbitmqExchange(@Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/exchanges/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
                 URLEncoder.encode(rabbitmqDetailAo.getName(), StandardCharsets.UTF_8);
@@ -138,9 +154,16 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 队列查询
+     * 权限: rabbitmq:view
+     *
+     * @param basePageAo      {@link BasePageAo}
+     * @param rabbitmqQueueAo {@link RabbitmqQueueAo}
+     * @return {@link RabbitmqQueueVo}
+     */
     @GetMapping("/queues")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 队列查询")
     public BaseRsp<BasePage<RabbitmqQueueVo>> findRabbitmqQueuePage(@Validated BasePageAo basePageAo, @Validated RabbitmqQueueAo rabbitmqQueueAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", Optional.ofNullable(rabbitmqQueueAo.getName()).orElse(""));
@@ -176,9 +199,15 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 队列详情查询
+     * 权限: rabbitmq:view
+     *
+     * @param rabbitmqDetailAo {@link RabbitmqDetailAo}
+     * @return 队列详情
+     */
     @GetMapping("/queueDetail")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 队列详情查询")
     public BaseRsp<Map<String, String>> findRabbitmqQueueDetail(@Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
                 URLEncoder.encode(rabbitmqDetailAo.getName(), StandardCharsets.UTF_8) + "/bindings";
@@ -203,9 +232,15 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 删除队列
+     * 权限: rabbitmq:view
+     *
+     * @param rabbitmqDetailAo {@link RabbitmqDetailAo}
+     * @return 是否成功
+     */
     @GetMapping("/delete/queue")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 删除队列")
     public BaseRsp<String> deleteRabbitmqQueue(@Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
                 URLEncoder.encode(rabbitmqDetailAo.getName(), StandardCharsets.UTF_8);
@@ -228,9 +263,15 @@ public class RabbitmqController {
         }
     }
 
+    /**
+     * 清空队列
+     * 权限: rabbitmq:view
+     *
+     * @param rabbitmqDetailAo {@link RabbitmqDetailAo}
+     * @return 是否成功
+     */
     @GetMapping("/purge/queue")
     @SaCheckPermission("rabbitmq:view")
-    @Operation(summary = "rabbitmq 清空队列")
     public BaseRsp<String> purgeRabbitmqQueue(@Validated RabbitmqDetailAo rabbitmqDetailAo) {
         String url = "/api/queues/" + URLEncoder.encode(rabbitmqDetailAo.getVhost(), StandardCharsets.UTF_8) + "/" +
                 URLEncoder.encode(rabbitmqDetailAo.getName(), StandardCharsets.UTF_8) + "/contents";

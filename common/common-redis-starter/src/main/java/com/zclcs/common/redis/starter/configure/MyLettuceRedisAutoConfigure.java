@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -37,24 +36,6 @@ public class MyLettuceRedisAutoConfigure {
         template.setHashKeySerializer(stringRedisSerializer);
         template.setValueSerializer(stringRedisSerializer);
         template.setHashValueSerializer(stringRedisSerializer);
-        template.afterPropertiesSet();
-
-        return template;
-    }
-
-    @Bean(name = "redisTemplateJava")
-    @ConditionalOnClass(RedisOperations.class)
-    public RedisTemplate<String, Object> redisTemplateJava(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(factory);
-
-        MyStringRedisSerializer myStringRedisSerializer = new MyStringRedisSerializer(myLettuceRedisProperties.getRedisCachePrefix());
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
-        template.setKeySerializer(myStringRedisSerializer);
-        template.setHashKeySerializer(stringRedisSerializer);
-        template.setValueSerializer(RedisSerializer.java());
-        template.setHashValueSerializer(RedisSerializer.java());
         template.afterPropertiesSet();
 
         return template;

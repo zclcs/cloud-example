@@ -1,6 +1,5 @@
 package com.zclcs.platform.maintenance.bean.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -16,24 +15,20 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "RedisVo对象", description = "redis")
 public class RedisVo {
 
     /**
-     * 服务名
+     * redis key
      */
-    @Schema(description = "redis key")
     private String key;
 
     /**
-     * 服务名
+     * 值
      */
-    @Schema(description = "值")
     private Object value;
 
     /**
-     * 服务名
+     * 过期时间(秒)
      */
-    @Schema(description = "过期时间(秒)")
     private Long ttl;
 }

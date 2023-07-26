@@ -6,6 +6,5 @@ dependencies {
     api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     api "com.github.ben-manes.caffeine:caffeine"
     api "jakarta.servlet:jakarta.servlet-api"
-    api "com.fast:jakarta.servlet-api"
     api "com.fasterxml.jackson.core:jackson-databind"
 }

@@ -14,15 +14,9 @@ import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.maintenance.bean.vo.RedisVo;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * redis Controller
+ * redis控制台
  *
  * @author zclcs
  * @date 2023-01-10 10:39:10.151
@@ -39,20 +33,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/redis")
 @RequiredArgsConstructor
-@Tag(name = "redis控制台")
 public class RedisController {
 
     private final static String BLOOM_FILTER = "bloom_filter";
-    private final static String TOKEN = "token";
-    private final static String ROUTE = "route";
     private final RedisService redisService;
-    private final RedisTemplate<String, Object> redisTemplateJava;
     private final GlobalProperties globalProperties;
     private final ObjectMapper objectMapper;
 
+    /**
+     * redis key 查询（分页）
+     * 权限: redis:view
+     *
+     * @param basePageAo {@link BasePageAo}
+     * @param redisVo    {@link RedisVo}
+     * @return {@link RedisVo}
+     */
     @GetMapping
     @SaCheckPermission("redis:view")
-    @Operation(summary = "redis key 查询（分页）")
     public BaseRsp<BasePage<RedisVo>> findRedisPage(@Validated BasePageAo basePageAo, @Validated RedisVo redisVo) {
         String key = globalProperties.getRedisCachePrefix() + Optional.ofNullable(redisVo.getKey()).filter(StrUtil::isNotBlank).orElse("*");
         int pageSize = basePageAo.getPageSize();
@@ -82,12 +79,15 @@ public class RedisController {
         return RspUtil.data(basePage);
     }
 
+    /**
+     * redis key 查询（单个）
+     * 权限: redis:view
+     *
+     * @param key redis Key
+     * @return {@link RedisVo}
+     */
     @GetMapping("/one/{key}")
     @SaCheckPermission("redis:view")
-    @Operation(summary = "redis key 查询（单个）")
-    @Parameters({
-            @Parameter(name = "key", description = "redis key", required = true, in = ParameterIn.PATH)
-    })
     public BaseRsp<RedisVo> findRedis(@NotBlank(message = "{required}") @PathVariable String key) {
         key = StrUtil.removePrefix(key, globalProperties.getRedisCachePrefix());
         if (redisService.hasKey(key)) {
@@ -95,14 +95,8 @@ public class RedisController {
             try {
                 Object value = null;
                 // 序列化方法采用的是java
-                if (key.contains(TOKEN)) {
-                    value = redisTemplateJava.opsForValue().get(key);
-                    //数据格式是HashTable
-                } else if (key.contains(BLOOM_FILTER)) {
+                if (key.contains(BLOOM_FILTER)) {
                     value = redisService.hmget(key);
-                    //数据格式是Set
-                } else if (key.contains(ROUTE)) {
-                    value = redisService.sGet(key);
                 } else {
                     value = redisService.get(key);
                 }
@@ -119,15 +113,18 @@ public class RedisController {
         }
     }
 
+    /**
+     * 删除redis值
+     * 权限: redis:view
+     *
+     * @param keys redis key集合
+     * @return 是否成功
+     */
     @DeleteMapping("/{keys}")
     @SaCheckPermission("redis:delete")
     @ControllerEndpoint(operation = "删除redis值")
-    @Operation(summary = "删除redis值")
-    @Parameters({
-            @Parameter(name = "keys", description = "redis key集合(,分隔)", required = true, in = ParameterIn.PATH)
-    })
     public BaseRsp<String> deleteRedis(@NotBlank(message = "{required}") @PathVariable String keys) {
-        if (StrUtil.containsAny(keys, BLOOM_FILTER, ROUTE)) {
+        if (StrUtil.containsAny(keys, BLOOM_FILTER)) {
             throw new MyException("key不能被删除");
         }
         List<String> keyList = Arrays.stream(keys.split(Strings.COMMA)).map(s ->

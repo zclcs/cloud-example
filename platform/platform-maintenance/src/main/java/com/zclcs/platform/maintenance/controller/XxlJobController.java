@@ -21,11 +21,6 @@ import com.zclcs.platform.maintenance.bean.ao.XxlJobJobInfoAo;
 import com.zclcs.platform.maintenance.bean.ao.XxlJobJobLogAo;
 import com.zclcs.platform.maintenance.bean.ao.XxlJobJobLogDetailAo;
 import com.zclcs.platform.maintenance.bean.vo.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * nacos Controller
+ * xxlJob 控制台
  *
  * @author zclcs
  * @date 2023-01-10 10:39:10.151
@@ -50,7 +45,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/xxl/job")
 @RequiredArgsConstructor
-@Tag(name = "nacos控制台")
 public class XxlJobController {
 
     private final RedisService redisService;
@@ -69,9 +63,16 @@ public class XxlJobController {
         this.myXxlJobProperties = myXxlJobProperties;
     }
 
+    /**
+     * 任务管理
+     * 权限: jobInfo:view
+     *
+     * @param basePageAo      {@link BasePageAo}
+     * @param xxlJobJobInfoAo {@link XxlJobJobInfoAo}
+     * @return {@link XxlJobJobInfoVo}
+     */
     @GetMapping("/jobInfos")
     @SaCheckPermission("jobInfo:view")
-    @Operation(summary = "xxlJob 任务管理")
     public BaseRsp<BasePage<XxlJobJobInfoVo>> findXxlJobJobInfoPage(@Validated BasePageAo basePageAo, @Validated XxlJobJobInfoAo xxlJobJobInfoAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("jobGroup", 0);
@@ -96,9 +97,16 @@ public class XxlJobController {
         }
     }
 
+    /**
+     * 日志管理
+     * 权限: jobInfo:view
+     *
+     * @param basePageAo     {@link BasePageAo}
+     * @param xxlJobJobLogAo {@link XxlJobJobLogAo}
+     * @return {@link XxlJobJobLogVo}
+     */
     @GetMapping("/jobLogs")
     @SaCheckPermission("jobLog:view")
-    @Operation(summary = "xxlJob 日志管理")
     public BaseRsp<BasePage<XxlJobJobLogVo>> findXxlJobJobLogPage(@Validated BasePageAo basePageAo, @Validated XxlJobJobLogAo xxlJobJobLogAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("jobGroup", Optional.ofNullable(xxlJobJobLogAo.getJobGroup()).orElse(0));
@@ -139,9 +147,15 @@ public class XxlJobController {
         }
     }
 
+    /**
+     * 查询日志详情
+     * 权限: jobInfo:view
+     *
+     * @param xxlJobJobLogDetailAo {@link XxlJobJobLogDetailAo}
+     * @return {@link XxlJobJobLogDetailVo}
+     */
     @GetMapping("/jobLogDetail")
     @SaCheckPermission("jobLog:view")
-    @Operation(summary = "xxlJob 查询日志")
     public BaseRsp<XxlJobJobLogDetailVo> findJobLogDetail(@Validated XxlJobJobLogDetailAo xxlJobJobLogDetailAo) {
         Map<String, Object> params = new HashMap<>();
         params.put("logId", xxlJobJobLogDetailAo.getLogId());
@@ -164,12 +178,15 @@ public class XxlJobController {
         }
     }
 
+    /**
+     * 启动任务
+     * 权限: jobInfo:view
+     *
+     * @param id 任务id
+     * @return 是否成功
+     */
     @GetMapping("/jobInfo/start")
     @SaCheckPermission("jobInfo:view")
-    @Operation(summary = "xxlJob 启动任务")
-    @Parameters({
-            @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),
-    })
     public BaseRsp<String> jobInfoStart(@RequestParam final Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
@@ -189,12 +206,15 @@ public class XxlJobController {
         }
     }
 
+    /**
+     * 停止任务
+     * 权限: jobInfo:view
+     *
+     * @param id 任务id
+     * @return 是否成功
+     */
     @GetMapping("/jobInfo/stop")
     @SaCheckPermission("jobInfo:view")
-    @Operation(summary = "xxlJob 停止任务")
-    @Parameters({
-            @Parameter(name = "id", description = "任务id", required = true, in = ParameterIn.QUERY),
-    })
     public BaseRsp<String> jobInfoStop(@RequestParam final Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);

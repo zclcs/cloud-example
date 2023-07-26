@@ -1,5 +1,8 @@
-package com.zclcs.cloud.lib.fegin.sentinel.handler;
+package com.zclcs.cloud.lib.security.lite.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.Tracer;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -26,16 +29,43 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p>
- * 全局异常处理器结合sentinel 全局异常处理器不能作用在 oauth server
- * </p>
+ * 全局异常处理器
  *
  * @author zclcs
- * @date 2020-06-29
  */
 @Slf4j
 @Order()
 public class BaseExceptionHandler {
+
+    /**
+     * 权限码异常
+     */
+    @ExceptionHandler(NotPermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public BaseRsp<Object> handleNotPermissionException(NotPermissionException e) {
+        log.error("权限校验异常", e);
+        return RspUtil.message("没有访问权限，请联系管理员授权");
+    }
+
+    /**
+     * 角色权限异常
+     */
+    @ExceptionHandler(NotRoleException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public BaseRsp<Object> handleNotRoleException(NotRoleException e) {
+        log.error("权限校验异常", e);
+        return RspUtil.message("没有访问权限，请联系管理员授权");
+    }
+
+    /**
+     * 认证失败
+     */
+    @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
+    public BaseRsp<Object> handleNotLoginException(NotLoginException e) {
+        log.error("token过期", e);
+        return RspUtil.message("token已过期");
+    }
 
     /**
      * 全局异常.
