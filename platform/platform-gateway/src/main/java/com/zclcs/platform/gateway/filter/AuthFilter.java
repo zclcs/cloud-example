@@ -43,13 +43,16 @@ public class AuthFilter {
                 })
                 .setError(e -> {
                     SaHolder.getResponse().setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+                    String message = "";
                     if (e instanceof NotLoginException exception) {
                         SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
+                        message = "token已过期";
                     } else {
                         SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
+                        message = "认证失败";
                     }
                     try {
-                        return objectMapper.writeValueAsString(RspUtil.message("认证失败"));
+                        return objectMapper.writeValueAsString(RspUtil.message(message));
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }

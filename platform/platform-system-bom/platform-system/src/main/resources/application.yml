@@ -1,5 +1,5 @@
 server:
-  port: ${PORT_PLATFORM_SYSTEM:8201}
+  port: ${PORT_PLATFORM_SYSTEM:8301}
 
 spring:
   profiles:

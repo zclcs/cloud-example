@@ -179,7 +179,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS}"
     volumes:
       - ./log/third-part-database-sync:/log/third-part-database-sync
     healthcheck:
@@ -206,7 +206,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_THIRD_PART_CONFIG_SYNC} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${THIRD_PART_CONFIG_SYNC_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_THIRD_PART_CONFIG_SYNC} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${THIRD_PART_CONFIG_SYNC_MAIN_CLASS}"
     volumes:
       - ./log/third-part-config-sync:/log/third-part-config-sync
     healthcheck:
@@ -232,7 +232,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_GATEWAY_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} -Dcsp.sentinel.app.type=1 ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_PLATFORM_GATEWAY} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${PLATFORM_GATEWAY_MAIN_CLASS}"
     volumes:
       - ./log/platform-gateway:/log/platform-gateway
     #      - ./log/platform-gateway/sentinel:/root/logs/csp/
@@ -260,7 +260,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_SYSTEM_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_PLATFORM_SYSTEM} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${PLATFORM_SYSTEM_MAIN_CLASS}"
     volumes:
       - ./log/platform-system:/log/platform-system
     healthcheck:
@@ -287,7 +287,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_MAINTENANCE} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_MAINTENANCE_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_PLATFORM_MAINTENANCE} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${PLATFORM_MAINTENANCE_MAIN_CLASS}"
     volumes:
       - ./log/platform-maintenance:/log/platform-maintenance
     healthcheck:
@@ -314,7 +314,7 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${TEST_TEST_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
+    command: sh -c "java -XX:+UseZGC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_TEST_TEST} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${TEST_TEST_MAIN_CLASS}"
     volumes:
       - ./log/test-test:/log/test-test
     healthcheck:

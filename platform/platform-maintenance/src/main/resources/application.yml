@@ -1,5 +1,5 @@
 server:
-  port: ${PORT_PLATFORM_MAINTENANCE:8202}
+  port: ${PORT_PLATFORM_MAINTENANCE:8301}
 
 spring:
   profiles:
@@ -43,24 +43,6 @@ spring:
     url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_ROOT_USERNAME:root}
     password: ${DATASOURCE_ROOT_PASSWORD:123456}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
-# spring security 配置
-security:
-  oauth2:
-    client:
-      client-id: ENC(imENTO7M8bLO38LFSIxnzw==)
-      client-secret: ENC(i3cDFhs26sa2Ucrfz2hnQw==)
-      scope: server
-    # 通用放行URL，服务个性化，请在对应配置文件覆盖
-    ignore:
-      urls:
-        - /v3/api-docs
 
 my:
   xxl:

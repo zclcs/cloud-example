@@ -3,7 +3,6 @@ rootProject.name = 'cloud-17'
 include 'cloud-bom'
 
 include 'common'
-include 'common:common-doc-starter'
 include 'common:common-logging-starter'
 include 'common:common-redis-starter'
 include 'common:common-web-starter'

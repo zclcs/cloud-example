@@ -47,13 +47,16 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
+                    String message = "";
                     if (e instanceof NotLoginException exception) {
                         SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
+                        message = "token已过期";
                     } else {
                         SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
+                        message = "认证失败";
                     }
                     try {
-                        return objectMapper.writeValueAsString(RspUtil.message("认证失败"));
+                        return objectMapper.writeValueAsString(RspUtil.message(message));
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }
