@@ -3,9 +3,9 @@ package com.zclcs.test.test.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.test.test.api.entity.Company;
-import com.zclcs.test.test.api.entity.ao.CompanyAo;
-import com.zclcs.test.test.api.entity.vo.CompanyVo;
+import com.zclcs.test.test.api.bean.entity.Company;
+import com.zclcs.test.test.api.bean.ao.CompanyAo;
+import com.zclcs.test.test.api.bean.vo.CompanyVo;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * 企业信息 Service接口
  *
  * @author zclcs
- * @date 2023-04-12 15:19:44.653
+ * @date 2023-07-26 22:30:41.396
  */
 public interface CompanyService extends IService<Company> {
 

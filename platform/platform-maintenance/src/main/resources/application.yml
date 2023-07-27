@@ -36,6 +36,7 @@ spring:
       - nacos:minio.yaml
       - nacos:xxl-job.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
+      - nacos:sa-token.yaml
 
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}

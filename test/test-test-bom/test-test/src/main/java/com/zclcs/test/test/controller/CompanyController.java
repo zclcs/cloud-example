@@ -8,9 +8,9 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.test.test.api.entity.Company;
-import com.zclcs.test.test.api.entity.ao.CompanyAo;
-import com.zclcs.test.test.api.entity.vo.CompanyVo;
+import com.zclcs.test.test.api.bean.entity.Company;
+import com.zclcs.test.test.api.bean.ao.CompanyAo;
+import com.zclcs.test.test.api.bean.vo.CompanyVo;
 import com.zclcs.test.test.service.CompanyService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * 企业信息
  *
  * @author zclcs
- * @date 2023-04-12 15:19:44.653
+ * @date 2023-07-26 22:30:41.396
  */
 @Slf4j
 @RestController

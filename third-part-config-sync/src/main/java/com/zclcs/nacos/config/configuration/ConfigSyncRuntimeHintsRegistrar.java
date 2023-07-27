@@ -12,8 +12,8 @@ class ConfigSyncRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        hints.resources()
-                .registerPattern("zip/*");
+//        hints.resources()
+//                .registerPattern("zip/*");
     }
 
 }

@@ -102,7 +102,7 @@ public class RedisController {
                 }
                 Long tll = redisService.getTll(key);
                 redisVo.setKey(globalProperties.getRedisCachePrefix() + key);
-                redisVo.setValue(objectMapper.writeValueAsString(value));
+                redisVo.setValue(value);
                 redisVo.setTtl(tll);
                 return RspUtil.data(redisVo);
             } catch (Exception e) {

@@ -252,33 +252,6 @@ services:
     depends_on:
       third-part-config-sync:
         condition: service_healthy
-  platform-auth:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-auth:${CLOUD_DEPOSITORY_TAG}
-    container_name: ${NACOS_NAMESPACE}-platform-auth
-    network_mode: host
-    environment:
-      # 设置时区
-      TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-    command: sh -c "java ${JAVA_OPS_LOG} ${JAVA_OPS_LOG_PLATFORM_AUTH} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_MEMORY} ${JAVA_OPS_GC} ${JAVA_OPS_SAFE_POINT} ${JAVA_OPS_JFR} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp /app/resources:/app/classes:/app/libs/* ${PLATFORM_AUTH_MAIN_CLASS} --spring.profiles.active=${RUN_MODE}"
-    volumes:
-      - ./log/platform-auth:/log/platform-auth
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_PLATFORM_AUTH} || exit 1" ]
-      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
-      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
-      retries: ${DOCKER_HEALTHCHECK_RETRIES}
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 1024M
-        reservations:
-          memory: 512M
-    env_file: .env
-    depends_on:
-      third-part-config-sync:
-        condition: service_healthy
   platform-system:
     image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/platform-system:${CLOUD_DEPOSITORY_TAG}
     container_name: ${NACOS_NAMESPACE}-platform-system
@@ -326,9 +299,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
         reservations:
-          memory: 128M
+          memory: 256M
     env_file: .env
     depends_on:
       third-part-config-sync:
@@ -353,9 +326,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
-        reservations:
           memory: 512M
+        reservations:
+          memory: 256M
     env_file: .env
     depends_on:
       third-part-config-sync:

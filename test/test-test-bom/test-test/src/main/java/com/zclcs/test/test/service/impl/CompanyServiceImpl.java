@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.test.test.api.entity.Company;
-import com.zclcs.test.test.api.entity.ao.CompanyAo;
-import com.zclcs.test.test.api.entity.vo.CompanyVo;
+import com.zclcs.test.test.api.bean.entity.Company;
+import com.zclcs.test.test.api.bean.ao.CompanyAo;
+import com.zclcs.test.test.api.bean.vo.CompanyVo;
 import com.zclcs.test.test.mapper.CompanyMapper;
 import com.zclcs.test.test.service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @date 2023-04-12 15:19:44.653
+ * @date 2023-07-26 22:30:41.396
  */
 @Slf4j
 @Service

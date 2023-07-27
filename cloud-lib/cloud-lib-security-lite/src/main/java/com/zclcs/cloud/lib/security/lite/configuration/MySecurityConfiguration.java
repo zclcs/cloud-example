@@ -17,7 +17,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -48,7 +47,6 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
-                    SaHolder.getResponse().setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
                     if (e instanceof NotLoginException exception) {
                         SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
                     } else {
@@ -59,7 +57,8 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }
-                });
+                })
+                ;
     }
 
     /**

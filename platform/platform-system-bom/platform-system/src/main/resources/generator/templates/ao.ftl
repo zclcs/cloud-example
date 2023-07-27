@@ -1,8 +1,7 @@
 package ${basePackage}.${entityPackage};
 
-import strategy.validate.com.zclcs.cloud.lib.UpdateStrategy;
-import annotation.json.com.zclcs.cloud.lib.DictValid;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,7 +30,6 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(title = "${className}Ao对象", description = "${tableComment}")
 public class ${className}Ao implements Serializable {
 
     @Serial
@@ -39,6 +37,9 @@ public class ${className}Ao implements Serializable {
 
 <#if columns??>
     <#list columns as column>
+    /**
+     * ${column.remark}
+     */
     <#if column.hasDict = true>
     @DictValid(value = "${column.remarkDict}", message = "{dict}")
     </#if>
@@ -49,23 +50,19 @@ public class ${className}Ao implements Serializable {
     </#if>
     <#if column.isKey = true>
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
-    @Schema(title = "${column.remark}")
     </#if>
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
     || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
         <#if column.isNullable = false && column.isKey = false>
     @NotBlank(message = "{required}")
-    @Schema(title = "${column.remark}", requiredMode = Schema.RequiredMode.REQUIRED)
         </#if>
     <#else>
         <#if column.isNullable = false && column.isKey = false>
     @NotNull(message = "{required}")
-    @Schema(title = "${column.remark}", requiredMode = Schema.RequiredMode.REQUIRED)
         </#if>
     </#if>
     <#if column.isNullable = true && column.isKey = false>
-    @Schema(title = "${column.remark}")
     </#if>
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'

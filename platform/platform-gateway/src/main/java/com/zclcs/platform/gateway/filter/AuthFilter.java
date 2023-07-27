@@ -40,7 +40,8 @@ public class AuthFilter {
                         // 检查是否登录 是否有token
                         StpUtil.checkLogin();
                     });
-                }).setError(e -> {
+                })
+                .setError(e -> {
                     SaHolder.getResponse().setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
                     if (e instanceof NotLoginException exception) {
                         SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
@@ -52,7 +53,8 @@ public class AuthFilter {
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }
-                });
+                })
+                ;
     }
 
 }

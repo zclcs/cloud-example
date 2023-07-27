@@ -18,6 +18,7 @@ spring:
       - nacos:jasypt.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
       - nacos:sa-token.yaml
+      - nacos:gateway.yaml?refresh=true
 
   cloud:
 

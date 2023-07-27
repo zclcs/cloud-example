@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import base.com.zclcs.cloud.lib.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -30,7 +29,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("${tableName}")
-@Schema(title = "${className}对象", description = "${tableComment}")
 public class ${className} extends BaseEntity implements Serializable {
 
     @Serial

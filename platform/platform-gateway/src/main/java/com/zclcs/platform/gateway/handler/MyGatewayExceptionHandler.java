@@ -1,5 +1,8 @@
 package com.zclcs.platform.gateway.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
@@ -109,6 +112,15 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (error instanceof ValidateCodeException) {
             errorMessage = error.getMessage();
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        } else if (error instanceof NotLoginException) {
+            errorMessage = error.getMessage();
+            httpStatus = HttpStatus.FAILED_DEPENDENCY;
+        } else if (error instanceof NotPermissionException) {
+            errorMessage = error.getMessage();
+            httpStatus = HttpStatus.UNAUTHORIZED;
+        } else if (error instanceof NotRoleException) {
+            errorMessage = error.getMessage();
+            httpStatus = HttpStatus.UNAUTHORIZED;
         } else if (error instanceof FlowException) {
             errorMessage = "访问频繁";
             httpStatus = HttpStatus.TOO_MANY_REQUESTS;
