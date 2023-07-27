@@ -315,9 +315,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
         reservations:
-          memory: 128M
+          memory: 256M
     env_file: .env
     depends_on:
       third-part-config-sync:
@@ -343,9 +343,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
-        reservations:
           memory: 512M
+        reservations:
+          memory: 256M
     env_file: .env
     depends_on:
       third-part-config-sync:
