@@ -34,7 +34,7 @@ public class GatewayConfigProperties {
     private Boolean isCheckValidCode = true;
 
     /**
-     * 网关需要校验验证码的路径 不支持通配符
+     * 网关需要校验验证码的路径 支持通配符
      */
     private List<String> needCheckValidCodeUrls;
 
@@ -43,4 +43,14 @@ public class GatewayConfigProperties {
      */
     private List<String> ignoreUrls;
 
+    @Override
+    public String toString() {
+        return "GatewayConfigProperties{" +
+                "encodeKey='" + encodeKey + '\'' +
+                ", isDecodePassword=" + isDecodePassword +
+                ", isCheckValidCode=" + isCheckValidCode +
+                ", needCheckValidCodeUrls=" + needCheckValidCodeUrls +
+                ", ignoreUrls=" + ignoreUrls +
+                '}';
+    }
 }

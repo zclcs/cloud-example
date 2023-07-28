@@ -1,8 +1,6 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -135,9 +133,11 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         } else {
             blackList.setLocation(null);
         }
-        if (StrUtil.isNotBlank(blackList.getLimitFrom()) && StrUtil.isNotBlank(blackList.getLimitTo())) {
-            blackList.setLimitFrom(DateUtil.parse(blackList.getLimitFrom()).toString(DatePattern.NORM_TIME_PATTERN));
-            blackList.setLimitTo(DateUtil.parse(blackList.getLimitTo()).toString(DatePattern.NORM_TIME_PATTERN));
+        if (StrUtil.isBlank(blackList.getLimitFrom())) {
+            blackList.setLimitFrom("00:00:00");
+        }
+        if (StrUtil.isBlank(blackList.getLimitTo())) {
+            blackList.setLimitFrom("23:59:59");
         }
     }
 

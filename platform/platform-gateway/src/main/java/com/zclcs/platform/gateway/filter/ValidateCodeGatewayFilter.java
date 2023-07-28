@@ -53,12 +53,10 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
 
             URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
 
-            log.info("");
-
             if (CollectionUtil.isNotEmpty(gatewayConfigProperties.getNeedCheckValidCodeUrls()) && originUri != null) {
                 for (String needCheckValidCodeUrl : gatewayConfigProperties.getNeedCheckValidCodeUrls()) {
                     // 不是需要验证的请求，直接向下执行
-                    if (pathMatcher.match(needCheckValidCodeUrl, originUri.getPath())) {
+                    if (!pathMatcher.match(needCheckValidCodeUrl, originUri.getPath())) {
                         return chain.filter(exchange);
                     }
                 }

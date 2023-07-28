@@ -1,8 +1,6 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -117,9 +115,11 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
     }
 
     private void setRateLimitRule(RateLimitRule rateLimitRule) {
-        if (StrUtil.isNotBlank(rateLimitRule.getLimitFrom()) && StrUtil.isNotBlank(rateLimitRule.getLimitTo())) {
-            rateLimitRule.setLimitFrom(DateUtil.parse(rateLimitRule.getLimitFrom()).toString(DatePattern.NORM_TIME_PATTERN));
-            rateLimitRule.setLimitTo(DateUtil.parse(rateLimitRule.getLimitTo()).toString(DatePattern.NORM_TIME_PATTERN));
+        if (StrUtil.isBlank(rateLimitRule.getLimitFrom())) {
+            rateLimitRule.setLimitFrom("00:00:00");
+        }
+        if (StrUtil.isBlank(rateLimitRule.getLimitTo())) {
+            rateLimitRule.setLimitFrom("23:59:59");
         }
     }
 }
