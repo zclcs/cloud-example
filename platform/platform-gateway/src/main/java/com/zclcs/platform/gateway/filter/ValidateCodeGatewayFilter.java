@@ -11,6 +11,7 @@ import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
+import com.zclcs.platform.gateway.utils.GatewayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -20,7 +21,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.AntPathMatcher;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 /**
  * The type Validate code gateway filter.
@@ -31,34 +35,33 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private final GatewayConfigProperties configProperties;
+    private final GatewayConfigProperties gatewayConfigProperties;
 
     private final ObjectMapper objectMapper;
 
     private final RedisService redisService;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if (!configProperties.getIsCheckValidCode()) {
+            if (!gatewayConfigProperties.getIsCheckValidCode()) {
                 return chain.filter(exchange);
             }
 
-            boolean needValidCode = false;
-            if (CollectionUtil.isNotEmpty(configProperties.getNeedCheckValidCodeUrls())) {
-                for (String needCheckValidCodeUrl : configProperties.getNeedCheckValidCodeUrls()) {
-                    if (needCheckValidCodeUrl.equals(request.getURI().getPath())) {
-                        needValidCode = true;
-                        break;
+            URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
+
+            log.info("");
+
+            if (CollectionUtil.isNotEmpty(gatewayConfigProperties.getNeedCheckValidCodeUrls()) && originUri != null) {
+                for (String needCheckValidCodeUrl : gatewayConfigProperties.getNeedCheckValidCodeUrls()) {
+                    // 不是需要验证的请求，直接向下执行
+                    if (pathMatcher.match(needCheckValidCodeUrl, originUri.getPath())) {
+                        return chain.filter(exchange);
                     }
                 }
-            }
-
-            // 不是需要验证的请求，直接向下执行
-            if (!needValidCode) {
-                return chain.filter(exchange);
             }
 
             try {

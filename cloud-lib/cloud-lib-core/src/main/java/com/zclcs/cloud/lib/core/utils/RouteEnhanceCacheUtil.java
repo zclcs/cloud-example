@@ -10,7 +10,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class RouteEnhanceCacheUtil {
 
-
     public String getBlackListCacheKey(String ip) {
         if (CommonCore.LOCALHOST.equalsIgnoreCase(ip)) {
             ip = CommonCore.LOCALHOST_IP;

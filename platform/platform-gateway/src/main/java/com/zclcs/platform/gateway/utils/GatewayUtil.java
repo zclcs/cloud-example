@@ -9,14 +9,19 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import jakarta.validation.constraints.NotNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.springframework.cloud.gateway.route.Route;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 /**
@@ -113,6 +118,23 @@ public class GatewayUtil {
             throw new MyException("Invalid basic authentication token");
         }
         return new String[]{token.substring(0, delim), token.substring(delim + 1)};
+    }
+
+    public URI getGatewayOriginalRequestUrl(ServerWebExchange exchange) {
+        LinkedHashSet<URI> uris = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
+        URI originUri = null;
+        if (uris != null) {
+            originUri = uris.stream().findFirst().orElse(null);
+        }
+        return originUri;
+    }
+
+    public URI getGatewayRequestUrl(ServerWebExchange exchange) {
+        return exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
+    }
+
+    public Route getGatewayRoute(ServerWebExchange exchange) {
+        return exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
     }
 
 }

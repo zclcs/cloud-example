@@ -1,5 +1,9 @@
 package com.zclcs.platform.gateway.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.zclcs.platform.system.api.bean.cache.BlackListCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheBean;
+
 import java.util.Set;
 
 /**
@@ -13,14 +17,14 @@ public interface RouteEnhanceCacheService {
      * @param ip ip
      * @return 黑名单
      */
-    Set<Object> getBlackList(String ip);
+    Set<BlackListCacheBean> getBlackList(String ip) throws JsonProcessingException;
 
     /**
      * 从缓存中获取黑名单规则
      *
      * @return 黑名单
      */
-    Set<Object> getBlackList();
+    Set<BlackListCacheBean> getBlackList() throws JsonProcessingException;
 
     /**
      * 从缓存中获取限流规则
@@ -29,7 +33,7 @@ public interface RouteEnhanceCacheService {
      * @param method method
      * @return 限流规则
      */
-    Object getRateLimitRule(String uri, String method);
+    RateLimitRuleCacheBean getRateLimitRule(String uri, String method) throws JsonProcessingException;
 
     /**
      * 获取当前请求次数

@@ -24,7 +24,7 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml?refresh=true
+      - nacos:global-configuration.yaml
       - nacos:tomcat.yaml
       - nacos:openfeign.yaml
       - nacos:hikari.yaml

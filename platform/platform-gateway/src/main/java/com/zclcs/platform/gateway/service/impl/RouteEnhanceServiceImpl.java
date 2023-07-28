@@ -18,12 +18,11 @@ import com.zclcs.platform.gateway.utils.GatewayUtil;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
-import com.zclcs.platform.system.api.bean.entity.BlackList;
-import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
+import com.zclcs.platform.system.api.bean.cache.BlackListCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.Route;
-import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,7 +37,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -62,13 +60,13 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         try {
-            URI originUri = getGatewayOriginalRequestUrl(exchange);
+            URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
             if (originUri != null) {
                 String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
                 HttpMethod httpMethod = request.getMethod();
                 String requestMethod = httpMethod.name();
                 AtomicBoolean forbid = new AtomicBoolean(false);
-                Set<Object> blackList = routeEnhanceCacheService.getBlackList(requestIp);
+                Set<BlackListCacheBean> blackList = routeEnhanceCacheService.getBlackList(requestIp);
                 blackList.addAll(routeEnhanceCacheService.getBlackList());
 
                 doBlackListCheck(forbid, blackList, originUri, requestMethod);
@@ -93,18 +91,17 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         try {
-            URI originUri = getGatewayOriginalRequestUrl(exchange);
+            URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
             if (originUri != null) {
                 String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
                 HttpMethod httpMethod = request.getMethod();
                 String requestMethod = httpMethod.name();
                 AtomicBoolean limit = new AtomicBoolean(false);
-                Object o = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), METHOD_ALL);
-                if (o == null) {
-                    o = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), requestMethod);
+                RateLimitRuleCacheBean rule = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), METHOD_ALL);
+                if (rule == null) {
+                    rule = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), requestMethod);
                 }
-                if (o != null) {
-                    RateLimitRule rule = (RateLimitRule) o;
+                if (rule != null) {
                     Mono<Void> result = doRateLimitCheck(limit, rule, originUri, requestIp, requestMethod, response);
                     log.debug("Rate limit verification completed - {}", stopwatch.stop());
                     if (result != null) {
@@ -124,15 +121,15 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     public void saveRequestLogs(ServerWebExchange exchange) {
         Long startTime = exchange.getAttribute(CommonCore.START_TIME);
         if (startTime != null) {
-            URI originUri = getGatewayOriginalRequestUrl(exchange);
+            URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
             // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
             Long executeTime = (System.currentTimeMillis() - startTime);
             int code = 500;
             if (exchange.getResponse().getStatusCode() != null) {
                 code = exchange.getResponse().getStatusCode().value();
             }
-            URI url = getGatewayRequestUrl(exchange);
-            Route route = getGatewayRoute(exchange);
+            URI url = GatewayUtil.getGatewayRequestUrl(exchange);
+            Route route = GatewayUtil.getGatewayRoute(exchange);
             ServerHttpRequest request = exchange.getRequest();
             String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
             if (url != null && route != null) {
@@ -161,7 +158,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     @Override
     public void saveBlockLogs(ServerWebExchange exchange) {
-        URI originUri = getGatewayOriginalRequestUrl(exchange);
+        URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
         ServerHttpRequest request = exchange.getRequest();
         String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
         if (originUri != null) {
@@ -180,7 +177,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     @Override
     public void saveRateLimitLogs(ServerWebExchange exchange) {
-        URI originUri = getGatewayOriginalRequestUrl(exchange);
+        URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
         ServerHttpRequest request = exchange.getRequest();
         String requestIp = GatewayUtil.getServerHttpRequestIpAddress(request);
         if (originUri != null) {
@@ -197,9 +194,8 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         }
     }
 
-    private void doBlackListCheck(AtomicBoolean forbid, Set<Object> blackList, URI uri, String requestMethod) {
-        for (Object o : blackList) {
-            BlackList b = (BlackList) o;
+    private void doBlackListCheck(AtomicBoolean forbid, Set<BlackListCacheBean> blackList, URI uri, String requestMethod) {
+        for (BlackListCacheBean b : blackList) {
             if (pathMatcher.match(b.getRequestUri(), uri.getPath()) && Dict.OPEN.equals(b.getBlackStatus())) {
                 if (Params.METHOD_ALL.equalsIgnoreCase(b.getRequestMethod())
                         || StrUtil.equalsIgnoreCase(requestMethod, b.getRequestMethod())) {
@@ -212,7 +208,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         }
     }
 
-    private Mono<Void> doRateLimitCheck(AtomicBoolean limit, RateLimitRule rule, URI uri,
+    private Mono<Void> doRateLimitCheck(AtomicBoolean limit, RateLimitRuleCacheBean rule, URI uri,
                                         String requestIp, String requestMethod, ServerHttpResponse response) {
         boolean isRateLimitRuleHit = Dict.OPEN.equals(rule.getRuleStatus())
                 && (Params.METHOD_ALL.equalsIgnoreCase(rule.getRequestMethod())
@@ -246,22 +242,5 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         } else {
             checkTime.set(true);
         }
-    }
-
-    private URI getGatewayOriginalRequestUrl(ServerWebExchange exchange) {
-        LinkedHashSet<URI> uris = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
-        URI originUri = null;
-        if (uris != null) {
-            originUri = uris.stream().findFirst().orElse(null);
-        }
-        return originUri;
-    }
-
-    private URI getGatewayRequestUrl(ServerWebExchange exchange) {
-        return exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
-    }
-
-    private Route getGatewayRoute(ServerWebExchange exchange) {
-        return exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
     }
 }

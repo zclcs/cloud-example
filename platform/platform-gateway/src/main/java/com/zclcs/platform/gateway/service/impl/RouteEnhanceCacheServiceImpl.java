@@ -1,12 +1,17 @@
 package com.zclcs.platform.gateway.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
+import com.zclcs.platform.system.api.bean.cache.BlackListCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,27 +23,46 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
 
     private RedisService redisService;
 
+    private ObjectMapper objectMapper;
+
     @Autowired
     public void setRedisService(RedisService redisService) {
         this.redisService = redisService;
     }
 
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
-    public Set<Object> getBlackList(String ip) {
+    public Set<BlackListCacheBean> getBlackList(String ip) throws JsonProcessingException {
         String key = RouteEnhanceCacheUtil.getBlackListCacheKey(ip);
-        return redisService.sGet(key);
+        Set<Object> objects = redisService.sGet(key);
+        Set<BlackListCacheBean> blackListCacheBeans = new HashSet<>();
+        for (Object object : objects) {
+            BlackListCacheBean blackListCacheBean = objectMapper.readValue((String) object, BlackListCacheBean.class);
+            blackListCacheBeans.add(blackListCacheBean);
+        }
+        return blackListCacheBeans;
     }
 
     @Override
-    public Set<Object> getBlackList() {
+    public Set<BlackListCacheBean> getBlackList() throws JsonProcessingException {
         String key = RouteEnhanceCacheUtil.getBlackListCacheKey();
-        return redisService.sGet(key);
+        Set<Object> objects = redisService.sGet(key);
+        Set<BlackListCacheBean> blackListCacheBeans = new HashSet<>();
+        for (Object object : objects) {
+            BlackListCacheBean blackListCacheBean = objectMapper.readValue((String) object, BlackListCacheBean.class);
+            blackListCacheBeans.add(blackListCacheBean);
+        }
+        return blackListCacheBeans;
     }
 
     @Override
-    public Object getRateLimitRule(String uri, String method) {
+    public RateLimitRuleCacheBean getRateLimitRule(String uri, String method) throws JsonProcessingException {
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(uri, method);
-        return redisService.get(key);
+        return objectMapper.readValue((String) redisService.get(key), RateLimitRuleCacheBean.class);
     }
 
     @Override

@@ -12,13 +12,13 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml?refresh=true
+      - nacos:global-configuration.yaml
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
       - nacos:jasypt.yaml
       - nacos:platform-system-rabbit-mq-queue.yaml
       - nacos:sa-token.yaml
-      - nacos:gateway.yaml?refresh=true
+      - nacos:gateway.yaml
 
   cloud:
 

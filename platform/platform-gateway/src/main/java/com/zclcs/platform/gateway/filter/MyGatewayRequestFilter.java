@@ -27,11 +27,11 @@ public class MyGatewayRequestFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-//        Mono<Void> blackListResult = routeEnhanceService.filterBlackList(exchange);
-//        if (blackListResult != null) {
-//            routeEnhanceService.saveBlockLogs(exchange);
-//            return blackListResult;
-//        }
+        Mono<Void> blackListResult = routeEnhanceService.filterBlackList(exchange);
+        if (blackListResult != null) {
+            routeEnhanceService.saveBlockLogs(exchange);
+            return blackListResult;
+        }
 //        Mono<Void> rateLimitResult = routeEnhanceService.filterRateLimit(exchange);
 //        if (rateLimitResult != null) {
 //            routeEnhanceService.saveRateLimitLogs(exchange);
