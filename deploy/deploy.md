@@ -147,8 +147,8 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ### 构建jdk基础镜像
 
-> - 使用 Dockerfile 构建基础镜像`docker build -t 192.168.33.10:3000/library/17-jre-centos7:1.0.0 .`
-> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/17-jre-centos7:1.0.0`
+> - 使用 Dockerfile 构建基础镜像`docker build -t 192.168.33.10:3000/library/java-17:1.0.0 .`
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/java-17:1.0.0`
 > - 这里最好新增两个镜像一个生产用 jre 一个开发用 jdk、jdk 8 也建一份
 > - 进入本项目目录执行maven命令(如果harbor账号密码不是默认记得改，地址及端口也是一样)
     ：`jib -DsendCredentialsOverHttp=true`
