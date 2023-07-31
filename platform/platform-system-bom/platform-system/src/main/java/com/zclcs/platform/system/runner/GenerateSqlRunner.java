@@ -1,9 +1,7 @@
 package com.zclcs.platform.system.runner;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
-import com.zclcs.common.db.merge.starter.properties.MyDbMergeProperties;
 import com.zclcs.platform.system.api.bean.entity.*;
 import com.zclcs.platform.system.properties.PlatformSystemProperties;
 import com.zclcs.platform.system.service.*;
@@ -39,7 +37,6 @@ public class GenerateSqlRunner implements ApplicationRunner {
     private final MenuService menuService;
     private final DictItemService dictItemService;
     private final RoleMenuService roleMenuService;
-    private final MyDbMergeProperties myDbMergeProperties;
 
 
     @Override
@@ -322,8 +319,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
     private void writeSql(String sql, String fileName) {
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
         String finalPath = applicationHome.getDir().getParentFile().getParentFile()
-                .getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\"
-                + StrUtil.replace(myDbMergeProperties.getSql(), "/", "\\") + fileName;
+                .getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\sql\\" + fileName;
         FileUtil.touch(finalPath);
         FileUtil.writeString(sql, finalPath, StandardCharsets.UTF_8);
     }
