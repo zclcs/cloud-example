@@ -62,7 +62,11 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
     @Override
     public RateLimitRuleCacheBean getRateLimitRule(String uri, String method) throws JsonProcessingException {
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(uri, method);
-        return objectMapper.readValue((String) redisService.get(key), RateLimitRuleCacheBean.class);
+        Object o = redisService.get(key);
+        if (o == null) {
+            return null;
+        }
+        return objectMapper.readValue((String) o, RateLimitRuleCacheBean.class);
     }
 
     @Override

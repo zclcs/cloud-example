@@ -50,6 +50,7 @@ public class ImageCodeHandler implements HandlerFunction<ServerResponse> {
         randomStr.ifPresent(s -> redisService.set(RedisCachePrefix.CODE_PREFIX + s, result,
                 myValidateCodeProperties.getTime()));
 
+
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         captcha.out(os);

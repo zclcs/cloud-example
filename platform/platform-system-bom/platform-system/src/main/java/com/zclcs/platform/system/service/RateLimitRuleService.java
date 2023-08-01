@@ -1,10 +1,11 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import com.zclcs.platform.system.api.bean.ao.RateLimitRuleAo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import com.zclcs.platform.system.api.bean.vo.RateLimitRuleVo;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @param rateLimitRuleAo rateLimitRuleAo
      * @return RateLimitRule
      */
-    RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo);
+    RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
 
     /**
      * 修改
@@ -69,7 +70,7 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @param rateLimitRuleAo rateLimitRuleAo
      * @return RateLimitRule
      */
-    RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo);
+    RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
 
     /**
      * 删除

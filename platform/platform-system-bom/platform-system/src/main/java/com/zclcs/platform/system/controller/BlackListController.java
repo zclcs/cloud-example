@@ -99,7 +99,7 @@ public class BlackListController {
     @DeleteMapping("/{blackListIds}")
     @SaCheckPermission("blackList:delete")
     @ControllerEndpoint(operation = "删除黑名单")
-    public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) {
+    public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) throws JsonProcessingException {
         List<Long> ids = Arrays.stream(blackListIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blackListService.deleteBlackList(ids);
         return RspUtil.message("删除成功");

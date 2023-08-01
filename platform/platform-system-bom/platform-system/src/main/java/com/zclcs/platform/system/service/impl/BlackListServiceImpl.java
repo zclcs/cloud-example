@@ -119,11 +119,11 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBlackList(List<Long> ids) {
+    public void deleteBlackList(List<Long> ids) throws JsonProcessingException {
         List<BlackList> list = this.lambdaQuery().in(BlackList::getBlackId, ids).list();
         this.removeByIds(ids);
         for (BlackList blackList : list) {
-            redisService.setRemove(getCacheKey(blackList), blackList);
+            redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(blackList)));
         }
     }
 

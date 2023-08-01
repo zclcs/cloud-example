@@ -5,6 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  * @author zclcs
  * 资源服务器对外直接暴露URL,如果设置contex-path 要特殊处理
  */
+@Slf4j
 @Getter
 @Setter
 @RefreshScope
@@ -52,4 +54,10 @@ public class MySecurityProperties implements InitializingBean {
         });
     }
 
+    @Override
+    public String toString() {
+        return "MySecurityProperties{" +
+                "ignoreUrls=" + ignoreUrls +
+                '}';
+    }
 }

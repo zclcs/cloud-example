@@ -1,10 +1,12 @@
 package com.zclcs.platform.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.entity.Log;
@@ -73,7 +75,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     @Transactional(rollbackFor = Exception.class)
     public void createLog(LogAo logAo) {
         Log log = new Log();
-        String ip = logAo.getIp();
+        List<String> split = StrUtil.split(logAo.getIp(), Strings.COMMA);
+        String ip = split.get(0);
         log.setIp(ip);
         log.setUsername(logAo.getUsername());
         log.setTime(logAo.getTime());

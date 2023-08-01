@@ -4,6 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
@@ -36,6 +38,7 @@ import java.util.List;
 public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, RateLimitRule> implements RateLimitRuleService {
 
     private final RedisService redisService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<RateLimitRuleVo> findRateLimitRulePage(BasePageAo basePageAo, RateLimitRuleVo rateLimitRuleVo) {
@@ -67,7 +70,11 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
         List<RateLimitRule> list = this.lambdaQuery().list();
         list.forEach(rateLimitRule -> {
             String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-            redisService.set(key, RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule));
+            try {
+                redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
@@ -81,25 +88,25 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) {
+    public RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException {
         RateLimitRule rateLimitRule = new RateLimitRule();
         BeanUtil.copyProperties(rateLimitRuleAo, rateLimitRule);
         setRateLimitRule(rateLimitRule);
         this.save(rateLimitRule);
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-        redisService.set(key, RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule));
+        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
         return rateLimitRule;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) {
+    public RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException {
         RateLimitRule rateLimitRule = new RateLimitRule();
         BeanUtil.copyProperties(rateLimitRuleAo, rateLimitRule);
         setRateLimitRule(rateLimitRule);
         this.updateById(rateLimitRule);
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-        redisService.set(key, RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule));
+        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
         return rateLimitRule;
     }
 

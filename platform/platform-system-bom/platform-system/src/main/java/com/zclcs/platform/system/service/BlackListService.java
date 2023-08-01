@@ -77,6 +77,6 @@ public interface BlackListService extends IService<BlackList> {
      *
      * @param ids ids
      */
-    void deleteBlackList(List<Long> ids);
+    void deleteBlackList(List<Long> ids) throws JsonProcessingException;
 
 }
