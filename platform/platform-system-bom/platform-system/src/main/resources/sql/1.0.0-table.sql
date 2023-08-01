@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `system_dept`
     `create_by`   varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '创建人',
     `update_by`   varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '编辑人',
     PRIMARY KEY (`dept_id`) USING BTREE,
-    UNIQUE INDEX `uk_system_dept_dept_code` (`dept_code`) USING BTREE COMMENT '部门编码索引',
+    UNIQUE INDEX `uk_system_dept_dept_code` (`dept_code`) USING BTREE COMMENT '部门编码唯一索引',
     INDEX `nk_system_dept_dept_name` (`dept_name`) USING BTREE COMMENT '部门名称索引',
     INDEX `nk_system_dept_parent_code` (`parent_code`) USING BTREE COMMENT '上级部门索引'
 ) ENGINE = InnoDB
