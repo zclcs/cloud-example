@@ -1,17 +1,21 @@
 package com.zclcs.third.part.database.sync.properties;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.stereotype.Component;
 
 /**
  * @author zclcs
  */
-@Data
-@Component
-@ConfigurationProperties(prefix = "third-part-database-sync")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
+@ConfigurationProperties(prefix = "third-part-database-sync")
 public class ThirdPartDatabaseSyncProperties {
 
     /**

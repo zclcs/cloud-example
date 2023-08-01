@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -29,6 +30,7 @@ import java.util.List;
 @Slf4j
 @AutoConfiguration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(MyThirdPartDbMergeProperties.class)
 @ConditionalOnProperty(value = "my.third.part.db.merge.enable", havingValue = "true", matchIfMissing = false)
 public class MyThirdPartDbMergeAutoConfigure {
 

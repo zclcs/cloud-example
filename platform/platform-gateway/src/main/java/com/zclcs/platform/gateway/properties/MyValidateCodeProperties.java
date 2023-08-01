@@ -1,13 +1,21 @@
 package com.zclcs.platform.gateway.properties;
 
 import com.zclcs.cloud.lib.core.constant.ImageType;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.validate.code")
 public class MyValidateCodeProperties {
 

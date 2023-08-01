@@ -12,10 +12,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.zclcs.common.jackson.starter.properties.MyJacksonProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.time.format.DateTimeFormatter;
  * @author zclcs
  */
 @AutoConfiguration
+@EnableConfigurationProperties(MyJacksonProperties.class)
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "my.jackson.enable", havingValue = "true", matchIfMissing = true)
 public class MyJacksonSerialConfiguration {

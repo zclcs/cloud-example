@@ -3,8 +3,10 @@ package com.zclcs.cloud.lib.security.lite.properties;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,14 +26,14 @@ import java.util.regex.Pattern;
 @Slf4j
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
 @ConfigurationProperties(prefix = "my.security")
 public class MySecurityProperties implements InitializingBean {
 
     private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
 
-    @Getter
-    @Setter
     private List<String> ignoreUrls = new ArrayList<>();
 
     @Override
@@ -54,10 +56,4 @@ public class MySecurityProperties implements InitializingBean {
         });
     }
 
-    @Override
-    public String toString() {
-        return "MySecurityProperties{" +
-                "ignoreUrls=" + ignoreUrls +
-                '}';
-    }
 }

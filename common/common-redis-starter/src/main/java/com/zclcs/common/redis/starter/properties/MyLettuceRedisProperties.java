@@ -1,12 +1,20 @@
 package com.zclcs.common.redis.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my")
 public class MyLettuceRedisProperties {
 
@@ -33,11 +41,4 @@ public class MyLettuceRedisProperties {
         this.lettuceRedisEnable = lettuceRedisEnable;
     }
 
-    @Override
-    public String toString() {
-        return "MyLettuceRedisProperties{" +
-                "redisCachePrefix='" + redisCachePrefix + '\'' +
-                ", lettuceRedisEnable=" + lettuceRedisEnable +
-                '}';
-    }
 }

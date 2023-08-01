@@ -1,7 +1,9 @@
 package com.zclcs.cloud.lib.core.properties;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
@@ -10,6 +12,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
  */
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
 @ConfigurationProperties(prefix = "my")
 public class GlobalProperties {
@@ -40,11 +44,4 @@ public class GlobalProperties {
         this.defaultPassword = defaultPassword;
     }
 
-    @Override
-    public String toString() {
-        return "GlobalProperties{" +
-                "redisCachePrefix='" + redisCachePrefix + '\'' +
-                ", defaultPassword='" + defaultPassword + '\'' +
-                '}';
-    }
 }

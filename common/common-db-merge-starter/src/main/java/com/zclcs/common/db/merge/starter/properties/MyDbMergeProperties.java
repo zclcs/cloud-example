@@ -1,12 +1,20 @@
 package com.zclcs.common.db.merge.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.db.merge")
 public class MyDbMergeProperties {
 
@@ -19,7 +27,7 @@ public class MyDbMergeProperties {
      * sql脚本
      */
     private String sql = "classpath:sql/**.sql";
-    
+
     public Boolean getEnable() {
         return enable;
     }
@@ -36,11 +44,4 @@ public class MyDbMergeProperties {
         this.sql = sql;
     }
 
-    @Override
-    public String toString() {
-        return "MyDbMergeProperties{" +
-                "enable=" + enable +
-                ", sql='" + sql + '\'' +
-                '}';
-    }
 }

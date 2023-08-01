@@ -1,29 +1,27 @@
 package com.zclcs.common.jackson.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.jackson")
 public class MyJacksonProperties {
 
     private Boolean enable = true;
 
-    public Boolean getEnable() {
-        return enable;
-    }
-
     public void setEnable(Boolean enable) {
         this.enable = enable;
     }
 
-    @Override
-    public String toString() {
-        return "MyJacksonProperties{" +
-                "enable=" + enable +
-                '}';
-    }
 }

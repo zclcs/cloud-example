@@ -1,12 +1,20 @@
 package com.zclcs.common.db.merge.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.third.part.db.merge")
 public class MyThirdPartDbMergeProperties {
 
@@ -75,12 +83,4 @@ public class MyThirdPartDbMergeProperties {
         this.xxlJobSql = xxlJobSql;
     }
 
-    @Override
-    public String toString() {
-        return "MyDbMergeProperties{" +
-                "enable=" + enable +
-                ", nacosSql='" + nacosSql + '\'' +
-                ", xxlJobSql='" + xxlJobSql + '\'' +
-                '}';
-    }
 }

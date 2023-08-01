@@ -1,12 +1,20 @@
 package com.zclcs.common.xxl.job.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.xxl.job")
 public class MyXxlJobProperties {
 
@@ -18,6 +26,7 @@ public class MyXxlJobProperties {
     /**
      * 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册
      */
+    @Getter
     private String adminAddresses;
 
     /**
@@ -65,99 +74,5 @@ public class MyXxlJobProperties {
      */
     private String adminPassword;
 
-    public String getAdminAddresses() {
-        return adminAddresses;
-    }
 
-    public void setAdminAddresses(String adminAddresses) {
-        this.adminAddresses = adminAddresses;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getLogPath() {
-        return logPath;
-    }
-
-    public void setLogPath(String logPath) {
-        this.logPath = logPath;
-    }
-
-    public int getLogRetentionDays() {
-        return logRetentionDays;
-    }
-
-    public void setLogRetentionDays(int logRetentionDays) {
-        this.logRetentionDays = logRetentionDays;
-    }
-
-    public String getAdminUsername() {
-        return adminUsername;
-    }
-
-    public void setAdminUsername(String adminUsername) {
-        this.adminUsername = adminUsername;
-    }
-
-    public String getAdminPassword() {
-        return adminPassword;
-    }
-
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
-    }
-
-    @Override
-    public String toString() {
-        return "MyXxlJobProperties{" +
-                "adminAddresses='" + adminAddresses + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", appName='" + appName + '\'' +
-                ", address='" + address + '\'' +
-                ", ip='" + ip + '\'' +
-                ", port=" + port +
-                ", logPath='" + logPath + '\'' +
-                ", logRetentionDays=" + logRetentionDays +
-                ", adminUsername='" + adminUsername + '\'' +
-                ", adminPassword='" + adminPassword + '\'' +
-                '}';
-    }
 }

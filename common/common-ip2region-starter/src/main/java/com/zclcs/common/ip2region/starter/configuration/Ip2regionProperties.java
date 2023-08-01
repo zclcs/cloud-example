@@ -1,7 +1,9 @@
 package com.zclcs.common.ip2region.starter.configuration;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
@@ -12,6 +14,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
  */
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
 @ConfigurationProperties(Ip2regionProperties.PREFIX)
 public class Ip2regionProperties {

@@ -1,12 +1,20 @@
 package com.zclcs.common.web.starter.properties;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author zclcs
  */
-@Component
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.web")
 public class MyWebProperties {
 
@@ -20,10 +28,4 @@ public class MyWebProperties {
         this.enableDateConverter = enableDateConverter;
     }
 
-    @Override
-    public String toString() {
-        return "MyWebProperties{" +
-                "enableDateConverter=" + enableDateConverter +
-                '}';
-    }
 }

@@ -1,15 +1,20 @@
 package com.zclcs.cloud.lib.rabbit.mq.properties;
 
 import com.zclcs.cloud.lib.core.enums.ExchangeType;
-import lombok.Data;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.util.Map;
 
 /**
  * @author zclcs
  */
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RefreshScope
 @ConfigurationProperties(prefix = "my.rabbit.mq")
 public class MyRabbitMqProperties {
 

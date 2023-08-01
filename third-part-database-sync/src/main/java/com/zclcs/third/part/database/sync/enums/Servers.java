@@ -11,8 +11,10 @@ import lombok.Getter;
 public enum Servers {
 
     PLATFORM_SYSTEM("platform-system", "系统服务"),
+
+    PLATFORM_MAINTENANCE("platform-maintenance", "监控服务"),
     ;
-    
+
     private final String serverName;
     private final String desc;
 }

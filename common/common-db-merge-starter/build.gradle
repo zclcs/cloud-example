@@ -1,5 +1,6 @@
 dependencies {
     api "cn.hutool:hutool-core"
     api 'org.springframework.boot:spring-boot-starter-jdbc'
+    api "org.springframework.cloud:spring-cloud-context"
     api runtimeOnly("com.mysql:mysql-connector-j")
 }

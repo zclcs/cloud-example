@@ -1,17 +1,21 @@
 package com.zclcs.common.minio.starter.properties;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.stereotype.Component;
 
 /**
  * @author zclcs
  */
-@Data
-@Component
-@ConfigurationProperties(prefix = "minio")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
+@ConfigurationProperties(prefix = "minio")
 public class MinioProperties {
 
     /**

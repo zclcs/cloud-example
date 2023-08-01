@@ -1,7 +1,9 @@
 package com.zclcs.platform.gateway.properties;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
@@ -12,8 +14,10 @@ import java.util.List;
  * <p>
  * 网关配置文件
  */
-@Setter
 @Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @RefreshScope
 @ConfigurationProperties("gateway")
 public class GatewayConfigProperties {
@@ -43,14 +47,4 @@ public class GatewayConfigProperties {
      */
     private List<String> ignoreUrls;
 
-    @Override
-    public String toString() {
-        return "GatewayConfigProperties{" +
-                "encodeKey='" + encodeKey + '\'' +
-                ", isDecodePassword=" + isDecodePassword +
-                ", isCheckValidCode=" + isCheckValidCode +
-                ", needCheckValidCodeUrls=" + needCheckValidCodeUrls +
-                ", ignoreUrls=" + ignoreUrls +
-                '}';
-    }
 }

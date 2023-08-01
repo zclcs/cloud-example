@@ -1,6 +1,8 @@
 package com.zclcs.platform.system.configure;
 
 import com.zclcs.cloud.lib.core.constant.CommonCore;
+import com.zclcs.platform.system.properties.PlatformSystemProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -11,6 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author zclcs
  */
 @Configuration
+@EnableConfigurationProperties(PlatformSystemProperties.class)
 public class MyWebConfigure {
 
     /**

@@ -1,9 +1,11 @@
 package com.zclcs.common.web.starter.configure;
 
+import com.zclcs.common.web.starter.properties.MyWebProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.lang.Nullable;
@@ -19,6 +21,7 @@ import java.time.format.DateTimeFormatter;
  */
 @AutoConfiguration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(MyWebProperties.class)
 @ConditionalOnProperty(value = "my.web.enable.date.converter", havingValue = "true", matchIfMissing = true)
 public class MyWebConfiguration implements WebMvcConfigurer {
 
