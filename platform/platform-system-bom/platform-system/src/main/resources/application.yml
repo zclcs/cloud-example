@@ -55,12 +55,6 @@ spring:
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
 mybatis-plus:
   type-aliases-package: com.zclcs.platform.system.api.entity
   mapper-locations: classpath:com/zclcs/platform/system/mapper/*.xml

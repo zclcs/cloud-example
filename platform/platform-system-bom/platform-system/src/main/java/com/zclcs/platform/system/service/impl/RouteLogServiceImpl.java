@@ -8,8 +8,8 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
-import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
+import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
 import com.zclcs.platform.system.mapper.RouteLogMapper;
 import com.zclcs.platform.system.service.RouteLogService;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,6 +79,20 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
         setRouteLog(routeLog);
         this.save(routeLog);
         return routeLog;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createRouteLogBatch(List<RouteLogAo> routeLogAos) {
+        List<RouteLog> routeLogs = new ArrayList<>();
+        for (RouteLogAo routeLogAo : routeLogAos) {
+            RouteLog routeLog = new RouteLog();
+            BeanUtil.copyProperties(routeLogAo, routeLog);
+            setRouteLog(routeLog);
+            routeLogs.add(routeLog);
+        }
+        this.saveBatch(routeLogs);
+
     }
 
     @Override

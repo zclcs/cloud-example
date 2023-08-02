@@ -139,6 +139,17 @@ public class UserController {
     }
 
     /**
+     * 获取用户权限
+     * 权限: 用户登录即可获取
+     *
+     * @return 用户权限
+     */
+    @GetMapping("/permissions/test")
+    public BaseRsp<Object> test() {
+        return RspUtil.message();
+    }
+
+    /**
      * 获取用户路由
      * 权限: 用户登录即可获取
      *

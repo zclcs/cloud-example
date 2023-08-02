@@ -9,8 +9,10 @@ import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Params;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
-import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
+import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
+import com.zclcs.platform.gateway.event.SaveBlockLogEvent;
+import com.zclcs.platform.gateway.event.SaveRateLimitLogEvent;
+import com.zclcs.platform.gateway.event.SaveRouteLogEvent;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
@@ -50,8 +52,6 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
     private static final String METHOD_ALL = "ALL";
     private final RouteEnhanceCacheService routeEnhanceCacheService;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
-    private final RabbitService rabbitService;
-    private final MyRabbitMqProperties myRabbitMqProperties;
 
     @Override
     public Mono<Void> filterBlackList(ServerWebExchange exchange) {
@@ -145,8 +145,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                         .code(String.valueOf(code))
                         .time(executeTime)
                         .build();
-                // TODO: mq 挂了会卡住，需要更好的实现
-//                rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
+                SpringContextHolderUtil.publishEvent(new SaveRouteLogEvent(routeLog));
             }
             // 记录日志
             if (log.isDebugEnabled()) {
@@ -169,8 +168,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            // TODO: mq 挂了会卡住，需要更好的实现
-//            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), blockLog);
+            SpringContextHolderUtil.publishEvent(new SaveBlockLogEvent(blockLog));
             log.debug("Store blocked request logs >>>");
         }
     }
@@ -189,8 +187,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            // TODO: mq 挂了会卡住，需要更好的实现
-//            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), rateLimitLog);
+            SpringContextHolderUtil.publishEvent(new SaveRateLimitLogEvent(rateLimitLog));
             log.debug("Store rate limit logs >>>");
         }
     }

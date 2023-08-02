@@ -1,5 +1,7 @@
 package com.zclcs.cloud.lib.core.utils;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -10,24 +12,22 @@ import org.springframework.stereotype.Service;
 /**
  * @author zclcs
  */
+@Getter
 @Service
 @Lazy(false)
 public class SpringContextHolderUtil implements ApplicationContextAware, DisposableBean {
 
-    private static ApplicationContext applicationContext = null;
-
     /**
+     * -- GETTER --
      * 取得存储在静态变量中的ApplicationContext.
      */
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
+    private static ApplicationContext applicationContext = null;
 
     /**
      * 实现ApplicationContextAware接口, 注入Context到静态变量中.
      */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
         SpringContextHolderUtil.applicationContext = applicationContext;
     }
 

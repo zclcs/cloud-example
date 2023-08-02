@@ -46,6 +46,8 @@ public class MyRabbitMqAutoConfigure {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+//        factory.setConsumerBatchEnabled(true);
+//        factory.setBatchSize(20);
         return factory;
     }
 

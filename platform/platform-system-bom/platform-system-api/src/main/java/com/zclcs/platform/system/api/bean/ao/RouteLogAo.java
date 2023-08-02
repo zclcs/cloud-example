@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)

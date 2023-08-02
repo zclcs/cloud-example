@@ -1,7 +1,6 @@
 package com.zclcs.cloud.lib.rabbit.mq.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.cloud.lib.rabbit.mq.entity.MessageStruct;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +25,18 @@ public class RabbitService {
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.DirectQueue directQueue, T message) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(directQueue),
-                RabbitKeyUtil.getDirectRouteKey(directQueue), MessageStruct.builder().message(objectMapper.writeValueAsString(message)).build());
+                RabbitKeyUtil.getDirectRouteKey(directQueue), objectMapper.writeValueAsString(message));
     }
 
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.FanoutQueue fanoutQueue, T message) {
-        rabbitTemplate.convertAndSend(fanoutQueue.getExchangeName(), MessageStruct.builder().message(objectMapper.writeValueAsString(message)).build());
+        rabbitTemplate.convertAndSend(fanoutQueue.getExchangeName(), objectMapper.writeValueAsString(message));
     }
 
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.TopicQueue topicQueue, T message) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getTopicExchangeName(topicQueue),
-                RabbitKeyUtil.getTopicRouteKey(topicQueue), MessageStruct.builder().message(objectMapper.writeValueAsString(message)).build());
+                RabbitKeyUtil.getTopicRouteKey(topicQueue), objectMapper.writeValueAsString(message));
     }
 
     /**
@@ -48,7 +47,7 @@ public class RabbitService {
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.DelayedQueue delayedQueue, T message, int delayTime) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getDelayedExchangeName(delayedQueue),
-                RabbitKeyUtil.getDelayedRouteKey(delayedQueue), MessageStruct.builder().message(objectMapper.writeValueAsString(message)).build(),
+                RabbitKeyUtil.getDelayedRouteKey(delayedQueue), objectMapper.writeValueAsString(message),
                 messageSetting -> {
                     //设置消息持久化
                     messageSetting.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);

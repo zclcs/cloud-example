@@ -1,7 +1,5 @@
 package com.zclcs.platform.gateway.service;
 
-import com.zclcs.cloud.lib.core.constant.CommonCore;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -31,7 +29,7 @@ public interface RouteEnhanceService {
      *
      * @param exchange ServerWebExchange
      */
-    @Async(CommonCore.ASYNC_POOL)
+//    @Async(CommonCore.ASYNC_POOL)
     void saveRequestLogs(ServerWebExchange exchange);
 
     /**
@@ -39,7 +37,7 @@ public interface RouteEnhanceService {
      *
      * @param exchange ServerWebExchange
      */
-    @Async(CommonCore.ASYNC_POOL)
+//    @Async(CommonCore.ASYNC_POOL)
     void saveBlockLogs(ServerWebExchange exchange);
 
     /**
@@ -47,6 +45,6 @@ public interface RouteEnhanceService {
      *
      * @param exchange ServerWebExchange
      */
-    @Async(CommonCore.ASYNC_POOL)
+//    @Async(CommonCore.ASYNC_POOL)
     void saveRateLimitLogs(ServerWebExchange exchange);
 }

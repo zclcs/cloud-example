@@ -3,8 +3,8 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
+import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
 
 import java.util.List;
@@ -56,8 +56,15 @@ public interface RouteLogService extends IService<RouteLog> {
      * @param routeLogAo routeLogAo
      * @return RouteLog
      */
-//    @Async(MyConstant.ASYNC_POOL)
     RouteLog createRouteLog(RouteLogAo routeLogAo);
+
+    /**
+     * 新增
+     *
+     * @param routeLogAos {@link RouteLogAo}
+     * @return RouteLog
+     */
+    void createRouteLogBatch(List<RouteLogAo> routeLogAos);
 
     /**
      * 删除
