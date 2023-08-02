@@ -37,8 +37,8 @@ public class StartedUpRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         try {
-            Resource[] overwrite = resourcePatternResolver.getResources("classpath:zip/skip/**.zip");
-            Resource[] skip = resourcePatternResolver.getResources("classpath:zip/overwrite/**.zip");
+            Resource[] overwrite = resourcePatternResolver.getResources("classpath:zip/overwrite/**.zip");
+            Resource[] skip = resourcePatternResolver.getResources("classpath:zip/skip/**.zip");
             log.info("nacos配置导入开始 总配置数 {} ", overwrite.length + skip.length);
             for (Resource resource : overwrite) {
                 importNacos("OVERWRITE", resource);

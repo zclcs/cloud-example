@@ -43,27 +43,27 @@ public class GatewayUtil {
     public String getServerHttpRequestIpAddress(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
         String ip = headers.getFirst("x-forwarded-for");
-        if (ip != null && ip.length() != 0 && !CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip != null && !ip.isEmpty() && !CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             if (ip.contains(Strings.COMMA)) {
                 ip = ip.split(Strings.COMMA)[0];
             }
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("HTTP_X_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = headers.getFirst("X-Real-IP");
         }
-        if (ip == null || ip.length() == 0 || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || CommonCore.UNKNOWN.equalsIgnoreCase(ip)) {
             ip = Objects.requireNonNull(request.getRemoteAddress()).getAddress().getHostAddress();
         }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;

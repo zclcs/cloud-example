@@ -8,7 +8,6 @@ import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Params;
-import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
@@ -122,7 +121,6 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         Long startTime = exchange.getAttribute(CommonCore.START_TIME);
         if (startTime != null) {
             URI originUri = GatewayUtil.getGatewayOriginalRequestUrl(exchange);
-            // /auth/user为令牌校验请求，是系统自发行为，非用户请求，故不记录
             Long executeTime = (System.currentTimeMillis() - startTime);
             int code = 500;
             if (exchange.getResponse().getStatusCode() != null) {
@@ -147,7 +145,8 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                         .code(String.valueOf(code))
                         .time(executeTime)
                         .build();
-                rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
+                // TODO: mq 挂了会卡住，需要更好的实现
+//                rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), routeLog);
             }
             // 记录日志
             if (log.isDebugEnabled()) {
@@ -170,8 +169,9 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), blockLog);
-            log.info("Store blocked request logs >>>");
+            // TODO: mq 挂了会卡住，需要更好的实现
+//            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), blockLog);
+            log.debug("Store blocked request logs >>>");
         }
     }
 
@@ -189,8 +189,9 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), rateLimitLog);
-            log.info("Store rate limit logs >>>");
+            // TODO: mq 挂了会卡住，需要更好的实现
+//            rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_ROUTE_LOG), rateLimitLog);
+            log.debug("Store rate limit logs >>>");
         }
     }
 

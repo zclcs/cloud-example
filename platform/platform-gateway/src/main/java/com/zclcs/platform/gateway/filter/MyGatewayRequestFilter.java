@@ -1,7 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
 import cn.dev33.satoken.same.SaSameUtil;
-import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +45,6 @@ public class MyGatewayRequestFilter implements GlobalFilter {
                         }
                 ).build();
         ServerWebExchange newExchange = exchange.mutate().request(request).build();
-        newExchange.getAttributes().put(CommonCore.START_TIME, System.currentTimeMillis());
-        return chain.filter(newExchange).then(Mono.fromRunnable(() ->
-                routeEnhanceService.saveRequestLogs(exchange)));
+        return chain.filter(newExchange);
     }
 }
