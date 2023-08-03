@@ -92,7 +92,6 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
             routeLogs.add(routeLog);
         }
         this.saveBatch(routeLogs);
-
     }
 
     @Override

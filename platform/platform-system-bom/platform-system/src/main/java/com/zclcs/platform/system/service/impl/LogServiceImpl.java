@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +75,26 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createLog(LogAo logAo) {
+        this.save(genLog(logAo));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createLogBatch(List<LogAo> logAos) {
+        List<Log> logs = new ArrayList<>();
+        for (LogAo logAo : logAos) {
+            logs.add(genLog(logAo));
+        }
+        this.saveBatch(logs);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteLog(List<Long> ids) {
+        this.removeByIds(ids);
+    }
+
+    private Log genLog(LogAo logAo) {
         Log log = new Log();
         List<String> split = StrUtil.split(logAo.getIp(), Strings.COMMA);
         String ip = split.get(0);
@@ -84,12 +105,6 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         log.setMethod(logAo.getClassName() + "." + logAo.getMethodName() + "()");
         log.setParams(Optional.ofNullable(logAo.getParams()).orElse(""));
         log.setLocation(ip2regionSearcher.getAddress(ip));
-        this.save(log);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteLog(List<Long> ids) {
-        this.removeByIds(ids);
+        return log;
     }
 }

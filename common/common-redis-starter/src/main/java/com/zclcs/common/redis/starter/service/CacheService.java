@@ -381,6 +381,9 @@ public abstract class CacheService<T> {
                         return result;
                     }
                     T cacheWithRedis = findCacheWithRedis(key);
+                    if (cacheWithRedis == null) {
+                        return null;
+                    }
                     cache.put(redisKey, cacheWithRedis);
                     return cacheWithRedis;
                 }

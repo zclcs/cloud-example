@@ -8,8 +8,8 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
-import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
+import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
 import com.zclcs.platform.system.api.bean.vo.RateLimitLogVo;
 import com.zclcs.platform.system.mapper.RateLimitLogMapper;
 import com.zclcs.platform.system.service.RateLimitLogService;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,6 +79,19 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
         setRateLimitLog(rateLimitLog);
         this.save(rateLimitLog);
         return rateLimitLog;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createRateLimitLogBatch(List<RateLimitLogAo> rateLimitLogAos) {
+        List<RateLimitLog> rateLimitLogs = new ArrayList<>();
+        for (RateLimitLogAo rateLimitLogAo : rateLimitLogAos) {
+            RateLimitLog rateLimitLog = new RateLimitLog();
+            BeanUtil.copyProperties(rateLimitLogAo, rateLimitLog);
+            setRateLimitLog(rateLimitLog);
+            rateLimitLogs.add(rateLimitLog);
+        }
+        this.saveBatch(rateLimitLogs);
     }
 
     @Override

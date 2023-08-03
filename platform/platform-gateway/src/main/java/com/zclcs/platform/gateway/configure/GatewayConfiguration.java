@@ -116,7 +116,13 @@ public class GatewayConfiguration {
         executor.setThreadNamePrefix("My-Gateway-Async-Thread");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        /*
+          AbortPolicy:默认策略，丢弃任务，抛RejectedExecutionException异常
+          DiscardPolicy:丢弃任务，但不抛异常
+          DiscardOldestPolicy:丢弃队列最前面的任务，然后重新尝试执行任务
+          CallerRunsPolicy:由调用线程处理任务
+         */
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
         executor.initialize();
         return executor;
     }

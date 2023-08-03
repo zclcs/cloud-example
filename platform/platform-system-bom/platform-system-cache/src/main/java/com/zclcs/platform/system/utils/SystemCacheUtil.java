@@ -185,15 +185,13 @@ public class SystemCacheUtil {
     }
 
     public static List<String> getPermissionsByUsername(String username) {
-        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
-        List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
         return SystemCacheUtil.getMenusByUsername(username).stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
                 .filter(StrUtil::isNotBlank).toList();
     }
 
     public static UserVo getUserByUsername(String username) {
         UserCacheBean userCache = getUserCache(username);
-        if (StrUtil.isBlank(userCache.getUsername())) {
+        if (userCache == null || StrUtil.isBlank(userCache.getUsername())) {
             return null;
         }
         UserVo userVo = new UserVo();
@@ -214,7 +212,7 @@ public class SystemCacheUtil {
 
     public static LoginVo getLoginVoByUsername(String username) {
         UserCacheBean userCache = getUserCache(username);
-        if (StrUtil.isBlank(userCache.getUsername())) {
+        if (userCache == null || StrUtil.isBlank(userCache.getUsername())) {
             return null;
         }
         LoginVo loginVo = new LoginVo();

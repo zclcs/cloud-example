@@ -51,10 +51,21 @@ public class MyRabbitMqAutoConfigure {
         return factory;
     }
 
+    @Bean
+    public SimpleRabbitListenerContainerFactory batchRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        factory.setConsumerBatchEnabled(true);
+        factory.setBatchSize(100);
+        return factory;
+    }
+
     @Bean(name = "rabbitTemplate")
     public RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory) {
         connectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.SIMPLE);
         connectionFactory.setPublisherReturns(true);
+        connectionFactory.setConnectionTimeout(5000);
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) ->

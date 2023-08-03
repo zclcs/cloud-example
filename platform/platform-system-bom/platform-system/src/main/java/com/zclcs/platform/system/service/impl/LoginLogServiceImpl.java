@@ -7,8 +7,8 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
-import com.zclcs.platform.system.api.bean.entity.LoginLog;
 import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.entity.LoginLog;
 import com.zclcs.platform.system.api.bean.vo.LoginLogVo;
 import com.zclcs.platform.system.mapper.LoginLogMapper;
 import com.zclcs.platform.system.service.LoginLogService;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,6 +78,19 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
         BeanUtil.copyProperties(loginLogAo, loginLog);
         loginLog.setLocation(ip2regionSearcher.getAddress(loginLogAo.getIp()));
         this.save(loginLog);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createLoginLogBatch(List<LoginLogAo> loginLogAos) {
+        List<LoginLog> loginLogs = new ArrayList<>();
+        for (LoginLogAo loginLogAo : loginLogAos) {
+            LoginLog loginLog = new LoginLog();
+            BeanUtil.copyProperties(loginLogAo, loginLog);
+            loginLog.setLocation(ip2regionSearcher.getAddress(loginLogAo.getIp()));
+            loginLogs.add(loginLog);
+        }
+        this.saveBatch(loginLogs);
     }
 
     @Override

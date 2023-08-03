@@ -3,8 +3,8 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.LoginLog;
 import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
+import com.zclcs.platform.system.api.bean.entity.LoginLog;
 import com.zclcs.platform.system.api.bean.vo.LoginLogVo;
 
 import java.util.List;
@@ -53,10 +53,16 @@ public interface LoginLogService extends IService<LoginLog> {
     /**
      * 新增
      *
-     * @param loginLogAo loginLogAo
+     * @param loginLogAo {@link LoginLogAo}
      */
-//    @Async(MyConstant.ASYNC_POOL)
     void createLoginLog(LoginLogAo loginLogAo);
+
+    /**
+     * 新增
+     *
+     * @param loginLogAos {@link LoginLogAo}
+     */
+    void createLoginLogBatch(List<LoginLogAo> loginLogAos);
 
     /**
      * 删除

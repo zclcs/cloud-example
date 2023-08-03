@@ -1,9 +1,9 @@
 package com.zclcs.platform.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.platform.system.api.bean.entity.Log;
 import com.zclcs.platform.system.api.bean.vo.LogVo;
 
@@ -53,10 +53,16 @@ public interface LogService extends IService<Log> {
     /**
      * 新增日志
      *
-     * @param LogAo
+     * @param logAo
      */
-//    @Async(MyConstant.ASYNC_POOL)
     void createLog(LogAo logAo);
+
+    /**
+     * 批量新增日志
+     *
+     * @param logAos {@link LogAo}
+     */
+    void createLogBatch(List<LogAo> logAos);
 
     /**
      * 删除

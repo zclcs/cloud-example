@@ -1,2 +1,3 @@
-FROM eclipse-temurin:17-jre-focal
-COPY --from=ghcr.io/ufoscout/docker-compose-wait:2.12.0 /wait /wait
+FROM amazoncorretto:17.0.8
+ADD wait /wait
+RUN chmod +x /wait

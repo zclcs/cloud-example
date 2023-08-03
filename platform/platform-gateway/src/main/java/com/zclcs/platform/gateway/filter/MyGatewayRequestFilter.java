@@ -31,11 +31,11 @@ public class MyGatewayRequestFilter implements GlobalFilter {
             routeEnhanceService.saveBlockLogs(exchange);
             return blackListResult;
         }
-        Mono<Void> rateLimitResult = routeEnhanceService.filterRateLimit(exchange);
-        if (rateLimitResult != null) {
-            routeEnhanceService.saveRateLimitLogs(exchange);
-            return rateLimitResult;
-        }
+//        Mono<Void> rateLimitResult = routeEnhanceService.filterRateLimit(exchange);
+//        if (rateLimitResult != null) {
+//            routeEnhanceService.saveRateLimitLogs(exchange);
+//            return rateLimitResult;
+//        }
         // 1. 清洗请求头中from 参数 添加
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(httpHeaders -> {

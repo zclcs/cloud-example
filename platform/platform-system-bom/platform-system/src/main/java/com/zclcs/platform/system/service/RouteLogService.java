@@ -59,10 +59,9 @@ public interface RouteLogService extends IService<RouteLog> {
     RouteLog createRouteLog(RouteLogAo routeLogAo);
 
     /**
-     * 新增
+     * 批量新增
      *
      * @param routeLogAos {@link RouteLogAo}
-     * @return RouteLog
      */
     void createRouteLogBatch(List<RouteLogAo> routeLogAos);
 

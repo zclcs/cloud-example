@@ -114,7 +114,10 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
         "unix:///var/run/docker.sock"
     ],
     "registry-mirrors":[
-        "https://docker.mirrors.ustc.edu.cn"
+        "https://dockerproxy.com",
+        "https://hub-mirror.c.163.com",
+        "https://mirror.baidubce.com",
+        "https://ccr.ccs.tencentyun.com"
     ],
     "insecure-registries":[
         "192.168.33.10:3000"

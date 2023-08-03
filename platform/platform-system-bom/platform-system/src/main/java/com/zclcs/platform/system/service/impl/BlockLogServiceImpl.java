@@ -8,8 +8,8 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
-import com.zclcs.platform.system.api.bean.entity.BlockLog;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
+import com.zclcs.platform.system.api.bean.entity.BlockLog;
 import com.zclcs.platform.system.api.bean.vo.BlockLogVo;
 import com.zclcs.platform.system.mapper.BlockLogMapper;
 import com.zclcs.platform.system.service.BlockLogService;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,6 +79,19 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
         setBlockLog(blockLog);
         this.save(blockLog);
         return blockLog;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createBlockLogBatch(List<BlockLogAo> blockLogAos) {
+        List<BlockLog> blockLogs = new ArrayList<>();
+        for (BlockLogAo blockLogAo : blockLogAos) {
+            BlockLog blockLog = new BlockLog();
+            BeanUtil.copyProperties(blockLogAo, blockLog);
+            setBlockLog(blockLog);
+            blockLogs.add(blockLog);
+        }
+        this.saveBatch(blockLogs);
     }
 
     @Override
