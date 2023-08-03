@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEvent;
  * @author zclcs
  */
 public class SaveRouteLogEvent extends ApplicationEvent {
+    
     public SaveRouteLogEvent(final RouteLogAo routeLogAo) {
         super(routeLogAo);
     }
