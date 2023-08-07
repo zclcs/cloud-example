@@ -7,6 +7,7 @@ import cn.hutool.crypto.symmetric.AES;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Security;
+import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.system.api.bean.ao.LoginByUsernameAo;
 import lombok.RequiredArgsConstructor;
@@ -104,15 +105,17 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
             try {
                 loginByUsernameAo = objectMapper.readValue((String) s, LoginByUsernameAo.class);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new ValidateCodeException("参数解析异常");
             }
             if (loginByUsernameAo != null && StrUtil.isNotBlank(loginByUsernameAo.getPassword())) {
                 loginByUsernameAo.setPassword(aes.decryptStr(loginByUsernameAo.getPassword()));
+            } else {
+                throw new ValidateCodeException("参数解析异常");
             }
             try {
                 return Mono.just(objectMapper.writeValueAsString(loginByUsernameAo));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new ValidateCodeException("参数解析异常");
             }
         };
     }
