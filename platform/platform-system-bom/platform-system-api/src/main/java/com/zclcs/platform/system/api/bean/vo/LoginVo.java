@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -43,6 +44,7 @@ public class LoginVo implements Serializable {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**

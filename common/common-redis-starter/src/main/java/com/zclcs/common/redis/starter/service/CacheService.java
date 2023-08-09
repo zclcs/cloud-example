@@ -21,6 +21,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zclcs.common.redis.starter.enums.CacheType;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
@@ -57,6 +58,7 @@ public abstract class CacheService<T> {
     /**
      * redis服务类
      */
+    @Getter
     private ObjectMapper objectMapper;
 
     /**
@@ -259,10 +261,6 @@ public abstract class CacheService<T> {
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DatePattern.NORM_TIME_FORMATTER));
         objectMapper.registerModule(javaTimeModule);
         this.objectMapper = objectMapper;
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
     /**

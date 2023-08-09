@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.*;
@@ -45,6 +46,7 @@ public class UserVo extends BaseEntity implements Serializable {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
