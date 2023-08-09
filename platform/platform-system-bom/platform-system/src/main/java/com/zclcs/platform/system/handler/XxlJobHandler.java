@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.handler;
 
+import cn.dev33.satoken.same.SaSameUtil;
 import cn.hutool.core.date.DateUtil;
 import com.google.common.base.Stopwatch;
 import com.xxl.job.core.context.XxlJobHelper;
@@ -36,6 +37,16 @@ public class XxlJobHandler {
         blackListService.cacheAllBlackList();
         rateLimitRuleService.cacheAllRateLimitRules();
         XxlJobHelper.log("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
+    }
+
+    /**
+     * 刷新sa-same-token
+     */
+    @XxlJob("refreshSaSameToken")
+    public void refreshSaSameToken() throws Exception {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        SaSameUtil.refreshToken();
+        XxlJobHelper.log("Refresh Sa Same Token Completed - {}", stopwatch.stop());
     }
 
     /**

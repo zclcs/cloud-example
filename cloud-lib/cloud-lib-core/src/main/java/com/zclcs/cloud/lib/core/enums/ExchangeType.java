@@ -29,12 +29,10 @@ public enum ExchangeType {
     /**
      * 主题交换机，即 Topic Exchange ，是通过 routing_key 与
      * bidding_key 的匹配规则进行消息传递的一种交换机。
-     *
      * 与直通交换机不同的是，直通交换机中的 routing_key 和
      * bidding_key 的名称必须保持一致，但是在主题交换机中，
      * bidding_key 会通过一定的规则去匹配 routing_key ，
      * 以此将消息发送到相匹配的消息队列中去。
-     *
      * Tips: 交换机与队列之间进行绑定的 key ，被称为 bidding_key ，消息与交换机之间进行绑定的 key ，被称为 routing_key 。
      */
     TOPIC(".topic"),
