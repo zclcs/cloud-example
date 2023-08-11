@@ -3,6 +3,8 @@ package com.zclcs.platform.system.api.fegin;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
+import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,5 +35,23 @@ public interface RemoteMenuService {
      */
     @GetMapping(value = "/menu/findByMenuIds/{menuIds}", headers = Security.HEADER_FROM_IN)
     Map<Long, MenuCacheBean> findByMenuIds(@PathVariable List<Long> menuIds);
+
+    /**
+     * 获取用户权限
+     *
+     * @param username 用户名称
+     * @return 权限
+     */
+    @GetMapping(value = "/menu/findUserPermissions/{username}", headers = Security.HEADER_FROM_IN)
+    List<String> findUserPermissions(@PathVariable String username);
+
+    /**
+     * 获取用户路由
+     *
+     * @param username 用户名称
+     * @return 路由
+     */
+    @GetMapping(value = "/menu/findUserRouters/{username}", headers = Security.HEADER_FROM_IN)
+    List<VueRouter<MenuVo>> findUserRouters(@PathVariable String username);
 
 }

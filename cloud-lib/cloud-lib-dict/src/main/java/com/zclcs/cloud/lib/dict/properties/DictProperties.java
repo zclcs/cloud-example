@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * 系统数据字典配置文件配置信息对象
@@ -15,7 +16,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ToString
 @EqualsAndHashCode
-@ConfigurationProperties("system.dict")
+@RefreshScope
+@ConfigurationProperties("my.dict")
 public class DictProperties {
 
     /**

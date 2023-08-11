@@ -14,6 +14,7 @@ import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Menu;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.service.MenuService;
@@ -127,6 +128,32 @@ public class MenuController {
             }
         }
         return menuMap;
+    }
+
+    /**
+     * 获取用户权限
+     * 权限: 仅限内部调用
+     *
+     * @param username 用户名称
+     * @return 权限
+     */
+    @GetMapping(value = "/findUserPermissions/{username}")
+    @Inner
+    public List<String> findUserPermissions(@PathVariable String username) {
+        return this.menuService.findUserPermissions(username);
+    }
+
+    /**
+     * 获取用户路由
+     * 权限: 仅限内部调用
+     *
+     * @param username 用户名称
+     * @return 路由
+     */
+    @GetMapping(value = "/findUserRouters/{username}")
+    @Inner
+    public List<VueRouter<MenuVo>> findUserRouters(@PathVariable String username) {
+        return this.menuService.findUserRouters(username);
     }
 
     /**

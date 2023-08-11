@@ -33,11 +33,6 @@ public interface RedisCachePrefix {
     String DICT_CHILDREN = "dict:%s:children:%s";
 
     /**
-     * oauth 缓存前缀
-     */
-    String PROJECT_OAUTH_ACCESS = "token::access_token";
-
-    /**
      * 验证码 key前缀
      */
     String CODE_PREFIX = "captcha:";
@@ -52,7 +47,15 @@ public interface RedisCachePrefix {
      */
     String USER = "user:%s";
 
-    String USER_LOGIN = "user:login";
+    /**
+     * 用户 权限 redis key
+     */
+    String USER_PERMISSIONS = "user:permissions:%s";
+
+    /**
+     * 用户 路由 redis key
+     */
+    String USER_ROUTERS = "user:routers:%s";
 
     /**
      * 用户-手机号 redis key

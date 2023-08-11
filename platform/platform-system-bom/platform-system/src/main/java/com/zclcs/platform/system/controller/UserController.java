@@ -12,11 +12,14 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
+import com.zclcs.common.export.excel.starter.annotation.ResponseExcel;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
+import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
+import com.zclcs.platform.system.api.bean.vo.UserExcelVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
@@ -72,6 +75,26 @@ public class UserController {
     }
 
     /**
+     * 导出用户信息
+     * 权限: user:excel
+     *
+     * @see UserService#findUserList(UserVo)
+     */
+    @ResponseExcel(name = "用户信息")
+    @GetMapping("/excel")
+    @SaCheckPermission("user:excel")
+    public List<UserExcelVo> excelUserList(@Validated UserVo userVo) {
+        List<UserVo> list = this.userService.findUserList(userVo);
+        List<UserExcelVo> userExcelVos = new ArrayList<>();
+        for (UserVo vo : list) {
+            UserExcelVo userExcelVo = new UserExcelVo();
+            userExcelVo.setUsername(vo.getUsername());
+            userExcelVos.add(UserExcelVo.builder().username(vo.getUsername()).build());
+        }
+        return userExcelVos;
+    }
+
+    /**
      * 用户查询（单个）
      * 权限: user:view
      *
@@ -113,13 +136,12 @@ public class UserController {
     /**
      * 获取用户信息
      * 权限: 用户登录即可获取
-     * 包括用户权限、用户数据权限
      *
      * @return 用户信息
      */
     @GetMapping("/findUserInfo")
-    public BaseRsp<UserVo> findUserInfo() {
-        UserVo userDetail = SystemCacheUtil.getUserByUsername(LoginHelper.getUsername());
+    public BaseRsp<LoginVo> findUserInfo() {
+        LoginVo userDetail = SystemCacheUtil.getLoginVoByMobile(LoginHelper.getUsername());
         if (userDetail == null) {
             RspUtil.message("获取当前用户信息失败");
         }

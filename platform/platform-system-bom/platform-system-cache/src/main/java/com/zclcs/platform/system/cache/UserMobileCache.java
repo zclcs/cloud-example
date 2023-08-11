@@ -16,7 +16,7 @@ public class UserMobileCache extends CacheService<String> {
     private RemoteUserService remoteUserService;
 
     public UserMobileCache() {
-        super(RedisCachePrefix.USER_MOBILE);
+        super(RedisCachePrefix.USER_MOBILE, false);
     }
 
     @Autowired

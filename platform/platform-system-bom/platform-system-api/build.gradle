@@ -2,4 +2,5 @@ dependencies {
     api(project(":cloud-lib:cloud-lib-core"))
     api(project(":cloud-lib:cloud-lib-dict"))
     api "cn.hutool:hutool-http"
+    api "com.alibaba:easyexcel-core"
 }

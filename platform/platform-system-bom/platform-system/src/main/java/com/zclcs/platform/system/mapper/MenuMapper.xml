@@ -44,4 +44,30 @@
     <select id="countVo" resultType="java.lang.Integer">
         <include refid="baseCountSql"/>
     </select>
+    <select id="findMenuCacheBeanByUsername" resultType="com.zclcs.platform.system.api.bean.cache.MenuCacheBean"
+            parameterType="java.lang.String">
+        SELECT sm.menu_id,
+               sm.menu_code,
+               sm.parent_code,
+               sm.menu_name,
+               sm.keep_alive_name,
+               sm.path,
+               sm.component,
+               sm.redirect,
+               sm.perms,
+               sm.icon,
+               sm.type,
+               sm.hide_menu,
+               sm.ignore_keep_alive,
+               sm.hide_breadcrumb,
+               sm.hide_children_in_menu,
+               sm.current_active_menu,
+               sm.order_num
+        FROM system_menu sm
+                 INNER JOIN system_role_menu srm on sm.menu_id = srm.menu_id
+                 INNER JOIN system_role sr ON srm.role_id = sr.role_id
+                 INNER JOIN system_user_role sur on sr.role_id = sur.role_id
+                 INNER JOIN system_user su ON sur.user_id = su.user_id
+        WHERE su.username = #{username}
+    </select>
 </mapper>

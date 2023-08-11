@@ -7,26 +7,23 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
-import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
-import com.zclcs.platform.system.api.bean.router.RouterMeta;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
-import com.zclcs.platform.system.api.utils.BaseRouterUtil;
 import com.zclcs.platform.system.mapper.UserMapper;
 import com.zclcs.platform.system.service.DeptService;
 import com.zclcs.platform.system.service.UserDataPermissionService;
@@ -39,7 +36,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -128,36 +128,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<VueRouter<MenuVo>> findUserRouters(String username) {
-        List<VueRouter<MenuVo>> routes = new ArrayList<>();
-        List<MenuCacheBean> menus = SystemCacheUtil.getMenusByUsername(username);
-        List<MenuCacheBean> userMenus = menus.stream().filter(Objects::nonNull)
-                .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
-                .sorted(Comparator.comparing(MenuCacheBean::getOrderNum)).toList();
-        userMenus.forEach(menu -> {
-            VueRouter<MenuVo> route = new VueRouter<>();
-            route.setId(menu.getMenuId());
-            route.setCode(menu.getMenuCode());
-            route.setParentCode(menu.getParentCode());
-            route.setPath(menu.getPath());
-            route.setName(StrUtil.isNotBlank(menu.getKeepAliveName()) ? menu.getKeepAliveName() : menu.getMenuName());
-            route.setComponent(menu.getComponent());
-            route.setRedirect(menu.getRedirect());
-            route.setMeta(new RouterMeta(
-                    menu.getMenuName(),
-                    menu.getIcon(),
-                    Dict.YES_NO_1.equals(menu.getHideMenu()),
-                    Dict.YES_NO_1.equals(menu.getIgnoreKeepAlive()),
-                    Dict.YES_NO_1.equals(menu.getHideBreadcrumb()),
-                    Dict.YES_NO_1.equals(menu.getHideChildrenInMenu()),
-                    menu.getCurrentActiveMenu()));
-            routes.add(route);
-        });
-        return BaseRouterUtil.buildVueRouter(routes);
+        return SystemCacheUtil.getRoutersByUsername(username);
     }
 
     @Override
     public List<String> findUserPermissions(String username) {
-        return SystemCacheUtil.getPermissionsByUsername(username);
+        Stopwatch started = Stopwatch.createStarted();
+        List<String> permissionsByUsername = SystemCacheUtil.getPermissionsByUsername(username);
+        log.info("获取缓存耗时 {}", started.stop());
+        return permissionsByUsername;
     }
 
     @Override
@@ -171,7 +150,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAvatar(CommonCore.DEFAULT_AVATAR);
         user.setPassword(BCrypt.hashpw(globalProperties.getDefaultPassword()));
         this.save(user);
-        Long userId = userAo.getUserId();
+        Long userId = user.getUserId();
+        String username = user.getUsername();
+        SystemCacheUtil.deletePermissionsByUsername(username);
+        SystemCacheUtil.deleteRoutersByUsername(username);
         SystemCacheUtil.deleteRoleIdsByUserId(userId);
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
         userRoleService.saveBatch(userRoles);
@@ -190,10 +172,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         BeanUtil.copyProperties(userAo, user);
         Long userId = user.getUserId();
+        String username = user.getUsername();
         // 更新用户
         user.setPassword(null);
 
         this.updateById(user);
+
+        SystemCacheUtil.deletePermissionsByUsername(username);
+        SystemCacheUtil.deleteRoutersByUsername(username);
 
         userRoleService.lambdaUpdate().eq(UserRole::getUserId, userId).remove();
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
@@ -215,6 +201,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Object[] usernames = list.stream().map(User::getUsername).toList().toArray();
         Object[] mobiles = list.stream().map(User::getMobile).filter(StrUtil::isNotBlank).toList().toArray();
         Object[] userIds = ids.toArray();
+
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+
         SystemCacheUtil.deleteUserCaches(usernames);
         SystemCacheUtil.deleteUsernameByMobiles(mobiles);
         // 删除用户角色

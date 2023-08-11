@@ -7,6 +7,7 @@ import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.fegin.RemoteMenuService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,14 @@ import java.util.Map;
 /**
  * @author zclcs
  */
+@Slf4j
 @Service
 public class MenuCache extends CacheService<MenuCacheBean> {
 
     private RemoteMenuService remoteMenuService;
 
     public MenuCache(RedisService redisService) {
-        super(RedisCachePrefix.MENU, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU), 10000, 0.03);
+        super(RedisCachePrefix.MENU, false, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU), 10000, 0.03);
     }
 
     @Autowired

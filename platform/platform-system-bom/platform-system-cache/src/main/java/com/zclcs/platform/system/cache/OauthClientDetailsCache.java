@@ -17,7 +17,7 @@ public class OauthClientDetailsCache extends CacheService<OauthClientDetailsCach
     private RemoteClientDetailsService remoteClientDetailsService;
 
     public OauthClientDetailsCache() {
-        super(RedisCachePrefix.CLIENT_DETAILS);
+        super(RedisCachePrefix.CLIENT_DETAILS, false);
     }
 
     @Autowired

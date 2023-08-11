@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.zclcs.cloud.lib.core.base.BasePage;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import org.apache.ibatis.annotations.Param;
@@ -50,5 +51,13 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return 对象
      */
     Integer countVo(@Param(Constants.WRAPPER) Wrapper<MenuVo> ew);
+
+    /**
+     * 查询用户菜单
+     *
+     * @param username 用户名称
+     * @return {@link MenuCacheBean}
+     */
+    List<MenuCacheBean> findMenuCacheBeanByUsername(@Param("username") String username);
 
 }

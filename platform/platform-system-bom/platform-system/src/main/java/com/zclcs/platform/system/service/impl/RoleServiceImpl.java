@@ -9,15 +9,17 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.platform.system.api.bean.ao.RoleAo;
 import com.zclcs.platform.system.api.bean.entity.Role;
 import com.zclcs.platform.system.api.bean.entity.RoleMenu;
+import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
-import com.zclcs.platform.system.api.bean.ao.RoleAo;
 import com.zclcs.platform.system.api.bean.vo.RoleVo;
 import com.zclcs.platform.system.mapper.RoleMapper;
 import com.zclcs.platform.system.service.RoleMenuService;
 import com.zclcs.platform.system.service.RoleService;
 import com.zclcs.platform.system.service.UserRoleService;
+import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     private final RoleMenuService roleMenuService;
     private final UserRoleService userRoleService;
+    private final UserService userService;
 
     @Override
     public BasePage<RoleVo> findRolePage(BasePageAo basePageAo, RoleVo roleVo) {
@@ -94,10 +97,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         BeanUtil.copyProperties(roleAo, role);
         this.save(role);
         Long roleId = role.getRoleId();
+        List<UserRole> list = userRoleService.lambdaQuery().in(UserRole::getRoleId, roleId).list();
+        List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
+        Object[] usernames = userService.lambdaQuery().in(User::getUserId, userIdList).select(User::getUsername).list().stream().map(User::getUsername).toList().toArray();
         SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
         roleMenuService.saveBatch(roleMenus);
         SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
+
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
         return role;
     }
 
@@ -108,27 +117,42 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Role role = new Role();
         BeanUtil.copyProperties(roleAo, role);
         role.setRoleCode(null);
+        List<UserRole> list = userRoleService.lambdaQuery().in(UserRole::getRoleId, role.getRoleId()).list();
+        List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
+        Object[] usernames = userService.lambdaQuery().in(User::getUserId, userIdList).list().stream().map(User::getUsername).toList().toArray();
         this.updateById(role);
         Long roleId = role.getRoleId();
         SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
         this.roleMenuService.lambdaUpdate().eq(RoleMenu::getRoleId, roleId).remove();
+
         roleMenuService.saveBatch(roleMenus);
         SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
+
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
         return role;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(List<Long> ids) {
-        Object[] userIds = userRoleService.lambdaQuery().in(UserRole::getRoleId, ids).list().stream().map(UserRole::getUserId).toList().toArray();
+        List<UserRole> list = userRoleService.lambdaQuery().in(UserRole::getRoleId, ids).list();
+        List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
+        Object[] userIds = userIdList.toArray();
+        Object[] usernames = userService.lambdaQuery().in(User::getUserId, userIdList).list().stream().map(User::getUsername).toList().toArray();
         this.removeByIds(ids);
         Object[] roleIds = ids.toArray();
         SystemCacheUtil.deleteRoleByRoleIds(roleIds);
+
         this.roleMenuService.lambdaUpdate().in(RoleMenu::getRoleId, ids).remove();
         SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
+
         this.userRoleService.lambdaUpdate().in(UserRole::getRoleId, ids).remove();
         SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
+
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deleteRoutersByUsernames(usernames);
     }
 
     private List<RoleMenu> getRoleMenus(Role role, List<Long> menuIds) {

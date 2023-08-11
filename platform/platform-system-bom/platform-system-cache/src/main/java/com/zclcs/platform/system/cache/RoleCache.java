@@ -18,7 +18,7 @@ public class RoleCache extends CacheService<RoleCacheBean> {
     private RemoteRoleService remoteRoleService;
 
     public RoleCache(RedisService redisService) {
-        super(RedisCachePrefix.ROLE, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_ROLE), 10000, 0.03);
+        super(RedisCachePrefix.ROLE, false, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_ROLE), 10000, 0.03);
     }
 
     @Autowired

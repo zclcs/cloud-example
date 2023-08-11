@@ -14,14 +14,22 @@ import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.platform.system.api.bean.ao.MenuAo;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.entity.RoleMenu;
-import com.zclcs.platform.system.api.bean.ao.MenuAo;
+import com.zclcs.platform.system.api.bean.entity.User;
+import com.zclcs.platform.system.api.bean.entity.UserRole;
+import com.zclcs.platform.system.api.bean.router.RouterMeta;
+import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
+import com.zclcs.platform.system.api.utils.BaseRouterUtil;
 import com.zclcs.platform.system.mapper.MenuMapper;
 import com.zclcs.platform.system.service.MenuService;
 import com.zclcs.platform.system.service.RoleMenuService;
+import com.zclcs.platform.system.service.UserRoleService;
+import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +38,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 菜单 Service实现
@@ -45,6 +55,8 @@ import java.util.List;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
     private final RoleMenuService roleMenuService;
+    private final UserRoleService userRoleService;
+    private final UserService userService;
 
     @Override
     public BasePage<MenuVo> findMenuPage(BasePageAo basePageAo, MenuVo menuVo) {
@@ -102,7 +114,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.save(menu);
-        SystemCacheUtil.deleteMenuByMenuId(menu.getMenuId());
+        Long menuId = menu.getMenuId();
+        SystemCacheUtil.deleteMenuByMenuId(menuId);
+        List<Long> roleIds = roleMenuService.lambdaQuery().eq(RoleMenu::getMenuId, menuId).list().stream().map(RoleMenu::getRoleId).toList();
+        if (CollectionUtil.isNotEmpty(roleIds)) {
+            List<Long> userIdList = userRoleService.lambdaQuery().in(UserRole::getRoleId, roleIds).list().stream().map(UserRole::getUserId).toList();
+            if (CollectionUtil.isNotEmpty(userIdList)) {
+                Object[] usernames = userService.lambdaQuery().in(User::getUserId, userIdList).list().stream().map(User::getUsername).toList().toArray();
+                SystemCacheUtil.deletePermissionsByUsernames(usernames);
+                SystemCacheUtil.deleteRoutersByUsernames(usernames);
+            }
+        }
         return menu;
     }
 
@@ -114,7 +136,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.updateById(menu);
-        SystemCacheUtil.deleteMenuByMenuId(menu.getMenuId());
+        Long menuId = menu.getMenuId();
+        SystemCacheUtil.deleteMenuByMenuId(menuId);
+        List<Long> roleIds = roleMenuService.lambdaQuery().eq(RoleMenu::getMenuId, menuId).list().stream().map(RoleMenu::getRoleId).toList();
+        if (CollectionUtil.isNotEmpty(roleIds)) {
+            List<Long> userIdList = userRoleService.lambdaQuery().in(UserRole::getRoleId, roleIds).list().stream().map(UserRole::getUserId).toList();
+            if (CollectionUtil.isNotEmpty(userIdList)) {
+                Object[] usernames = userService.lambdaQuery().in(User::getUserId, userIdList).list().stream().map(User::getUsername).toList().toArray();
+                SystemCacheUtil.deletePermissionsByUsernames(usernames);
+                SystemCacheUtil.deleteRoutersByUsernames(usernames);
+            }
+        }
         return menu;
     }
 
@@ -128,13 +160,25 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         List<Long> distinct = CollectionUtil.distinct(allMenuIds);
         Object[] menuIds = distinct.toArray();
-        Object[] roleIds = roleMenuService.lambdaQuery()
-                .in(RoleMenu::getMenuId, distinct).list().stream().map(RoleMenu::getRoleId).toList().toArray();
+        List<RoleMenu> roleIdList = roleMenuService.lambdaQuery()
+                .in(RoleMenu::getMenuId, distinct).list();
+        Object[] roleIds = roleIdList.stream().map(RoleMenu::getRoleId).toList().toArray();
+        Object[] usernames = new Object[0];
+        if (CollectionUtil.isNotEmpty(roleIdList)) {
+            List<Long> userIdList = userRoleService.lambdaQuery().in(UserRole::getRoleId, roleIds).list().stream().map(UserRole::getUserId).toList();
+            if (CollectionUtil.isNotEmpty(userIdList)) {
+                usernames = userService.lambdaQuery().in(User::getUserId, userIdList).list().stream().map(User::getUsername).toList().toArray();
+            }
+        }
         this.removeByIds(distinct);
         SystemCacheUtil.deleteMenuByMenuIds(menuIds);
         roleMenuService.lambdaUpdate().in(RoleMenu::getMenuId, distinct).remove();
         if (ArrayUtil.isNotEmpty(roleIds)) {
             SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
+        }
+        if (ArrayUtil.isNotEmpty(usernames)) {
+            SystemCacheUtil.deletePermissionsByUsernames(usernames);
+            SystemCacheUtil.deleteRoutersByUsernames(usernames);
         }
     }
 
@@ -204,5 +248,41 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (one != null && !one.getMenuId().equals(menuId)) {
             throw new MyException("菜单编码重复");
         }
+    }
+
+    @Override
+    public List<String> findUserPermissions(String username) {
+        List<MenuCacheBean> menus = this.baseMapper.findMenuCacheBeanByUsername(username);
+        return menus.stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
+                .filter(StrUtil::isNotBlank).toList();
+    }
+
+    @Override
+    public List<VueRouter<MenuVo>> findUserRouters(String username) {
+        List<VueRouter<MenuVo>> routes = new ArrayList<>();
+        List<MenuCacheBean> menus = this.baseMapper.findMenuCacheBeanByUsername(username);
+        List<MenuCacheBean> userMenus = menus.stream().filter(Objects::nonNull)
+                .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
+                .sorted(Comparator.comparing(MenuCacheBean::getOrderNum)).toList();
+        userMenus.forEach(menu -> {
+            VueRouter<MenuVo> route = new VueRouter<>();
+            route.setId(menu.getMenuId());
+            route.setCode(menu.getMenuCode());
+            route.setParentCode(menu.getParentCode());
+            route.setPath(menu.getPath());
+            route.setName(StrUtil.isNotBlank(menu.getKeepAliveName()) ? menu.getKeepAliveName() : menu.getMenuName());
+            route.setComponent(menu.getComponent());
+            route.setRedirect(menu.getRedirect());
+            route.setMeta(new RouterMeta(
+                    menu.getMenuName(),
+                    menu.getIcon(),
+                    Dict.YES_NO_1.equals(menu.getHideMenu()),
+                    Dict.YES_NO_1.equals(menu.getIgnoreKeepAlive()),
+                    Dict.YES_NO_1.equals(menu.getHideBreadcrumb()),
+                    Dict.YES_NO_1.equals(menu.getHideChildrenInMenu()),
+                    menu.getCurrentActiveMenu()));
+            routes.add(route);
+        });
+        return BaseRouterUtil.buildVueRouter(routes);
     }
 }

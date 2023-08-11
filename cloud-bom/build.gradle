@@ -39,5 +39,7 @@ dependencies {
         api "cn.dev33:sa-token-core:$saTokenVersion"
         api "cn.dev33:sa-token-spring-boot3-starter:$saTokenVersion"
         api "cn.dev33:sa-token-reactor-spring-boot3-starter:$saTokenVersion"
+        api "com.alibaba:easyexcel:$easyexcelVersion"
+        api "com.alibaba:easyexcel-core:$easyexcelVersion"
     }
 }
