@@ -17,7 +17,7 @@ public class DictItemCache extends CacheService<DictItemCacheBean> {
     private RemoteDictItemService remoteDictItemService;
 
     public DictItemCache() {
-        super(RedisCachePrefix.DICT_ITEM);
+        super(RedisCachePrefix.DICT_ITEM, true);
     }
 
     @Autowired(required = false)

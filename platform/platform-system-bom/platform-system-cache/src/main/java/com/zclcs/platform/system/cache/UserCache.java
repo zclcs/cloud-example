@@ -17,7 +17,7 @@ public class UserCache extends CacheService<UserCacheBean> {
     private RemoteUserService remoteUserService;
 
     public UserCache() {
-        super(RedisCachePrefix.USER, false);
+        super(RedisCachePrefix.USER);
     }
 
     @Autowired

@@ -74,7 +74,7 @@ public abstract class CacheService<T> {
     /**
      * 是否启用缓存-内存
      */
-    private boolean withCache = true;
+    private boolean withCache = false;
 
     /**
      * 缓存最大容量
@@ -105,7 +105,6 @@ public abstract class CacheService<T> {
      */
     public CacheService(String redisPrefix) {
         this.redisPrefix = redisPrefix;
-        cache = buildCache(maximumSize, initialCapacity, duration);
     }
 
     /**

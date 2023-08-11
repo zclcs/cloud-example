@@ -19,7 +19,7 @@ public class UserPermissionsCache extends CacheService<List<String>> {
     private RemoteMenuService remoteMenuService;
 
     public UserPermissionsCache() {
-        super(RedisCachePrefix.USER_PERMISSIONS, false);
+        super(RedisCachePrefix.USER_PERMISSIONS);
     }
 
     @Autowired

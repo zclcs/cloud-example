@@ -47,7 +47,6 @@ public class AuthFilter {
                     if (e instanceof NotLoginException exception) {
                         SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
                         message = "token已过期";
-                        log.error(exception.getMessage(), exception);
                     } else {
                         SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
                         message = "认证失败";

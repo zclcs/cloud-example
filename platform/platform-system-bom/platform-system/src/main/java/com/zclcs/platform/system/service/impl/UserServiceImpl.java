@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
@@ -133,9 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<String> findUserPermissions(String username) {
-        Stopwatch started = Stopwatch.createStarted();
         List<String> permissionsByUsername = SystemCacheUtil.getPermissionsByUsername(username);
-        log.info("获取缓存耗时 {}", started.stop());
         return permissionsByUsername;
     }
 

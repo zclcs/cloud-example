@@ -18,7 +18,7 @@ public class DeptCache extends CacheService<DeptCacheBean> {
     private RemoteDeptService remoteDeptService;
 
     public DeptCache(RedisService redisService) {
-        super(RedisCachePrefix.DEPT, false, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_DEPT), 10000, 0.03);
+        super(RedisCachePrefix.DEPT, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_DEPT), 10000, 0.03);
     }
 
     @Autowired

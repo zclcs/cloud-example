@@ -25,7 +25,7 @@ public class MenuCache extends CacheService<MenuCacheBean> {
     private RemoteMenuService remoteMenuService;
 
     public MenuCache(RedisService redisService) {
-        super(RedisCachePrefix.MENU, false, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU), 10000, 0.03);
+        super(RedisCachePrefix.MENU, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU), 10000, 0.03);
     }
 
     @Autowired

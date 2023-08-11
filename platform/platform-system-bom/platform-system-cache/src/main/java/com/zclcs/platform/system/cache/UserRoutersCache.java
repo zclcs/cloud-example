@@ -21,14 +21,14 @@ public class UserRoutersCache extends CacheService<List<VueRouter<MenuVo>>> {
     private RemoteMenuService remoteMenuService;
 
     public UserRoutersCache() {
-        super(RedisCachePrefix.USER_ROUTERS, false);
+        super(RedisCachePrefix.USER_ROUTERS);
     }
 
     @Autowired
     public void setRemoteMenuService(RemoteMenuService remoteMenuService) {
         this.remoteMenuService = remoteMenuService;
     }
-    
+
     @Override
     protected List<VueRouter<MenuVo>> findByKey(Object... key) {
         return remoteMenuService.findUserRouters((String) key[0]);

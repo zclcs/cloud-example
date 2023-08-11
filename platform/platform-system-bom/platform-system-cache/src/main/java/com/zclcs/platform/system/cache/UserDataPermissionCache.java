@@ -19,7 +19,7 @@ public class UserDataPermissionCache extends CacheService<List<Long>> {
     private RemoteUserDataPermissionService remoteUserDataPermissionService;
 
     public UserDataPermissionCache() {
-        super(RedisCachePrefix.USER_DATA_PERMISSION, false);
+        super(RedisCachePrefix.USER_DATA_PERMISSION);
     }
 
     @Autowired

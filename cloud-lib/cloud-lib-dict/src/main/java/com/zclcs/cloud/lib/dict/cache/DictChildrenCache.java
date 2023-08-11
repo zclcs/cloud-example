@@ -20,7 +20,7 @@ public class DictChildrenCache extends CacheService<List<DictItemCacheBean>> {
     private RemoteDictItemService remoteDictItemService;
 
     public DictChildrenCache() {
-        super(RedisCachePrefix.DICT_CHILDREN);
+        super(RedisCachePrefix.DICT_CHILDREN, true);
     }
 
     @Autowired(required = false)

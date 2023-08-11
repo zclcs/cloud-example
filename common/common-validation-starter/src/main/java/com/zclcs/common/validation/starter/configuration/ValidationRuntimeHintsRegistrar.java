@@ -13,7 +13,6 @@ class ValidationRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
         hints.resources()
-                .registerPattern("banner.txt")
                 .registerPattern("spy.properties")
                 .registerPattern("ValidationMessages.properties");
     }
