@@ -3,10 +3,8 @@ package com.zclcs.cloud.lib.core.base;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 
-import java.io.Serial;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,50 +15,39 @@ import java.util.List;
  */
 public class BasePage<T> implements IPage<T> {
 
-    @Serial
-    private static final long serialVersionUID = 8545996863226528798L;
-
     /**
      * 分页对象记录列表
      */
+    @Getter
     protected List<T> list;
 
     /**
      * 总条数
      */
-    protected long total;
+    protected Long total;
 
     /**
      * 每页显示条数
      */
-    protected long pageSize;
+    @Getter
+    protected Long pageSize;
 
     /**
      * 当前页
      */
-    protected long pageNum;
+    @Getter
+    protected Long pageNum;
 
-    protected List<OrderItem> orders;
-
-    protected boolean optimizeCountSql;
-
-    protected boolean searchCount;
-
-    protected boolean optimizeJoinOfCountSql;
-
-    protected String countId;
-
-    protected Long maxLimit;
+    /**
+     * 总页数
+     */
+    protected Long pages;
 
     public BasePage() {
         this.list = Collections.emptyList();
         this.total = 0L;
         this.pageSize = 10L;
         this.pageNum = 1L;
-        this.orders = new ArrayList<>();
-        this.optimizeCountSql = true;
-        this.searchCount = true;
-        this.optimizeJoinOfCountSql = true;
     }
 
     public BasePage(long pageNum, long pageSize) {
@@ -68,48 +55,19 @@ public class BasePage<T> implements IPage<T> {
     }
 
     public BasePage(long pageNum, long pageSize, long total) {
-        this(pageNum, pageSize, total, true);
-    }
-
-    public BasePage(long pageNum, long pageSize, boolean searchCount) {
-        this(pageNum, pageSize, 0L, searchCount);
-    }
-
-    public BasePage(long pageNum, long pageSize, long total, boolean searchCount) {
         this.list = Collections.emptyList();
-        this.orders = new ArrayList<>();
-        this.optimizeCountSql = true;
-        this.optimizeJoinOfCountSql = true;
+        this.total = total;
         this.pageSize = Math.max(pageSize, 1L);
         this.pageNum = pageNum;
-        this.total = total;
-        this.searchCount = searchCount;
     }
 
-    public static <T> BasePage<T> of(long pageNum, long pageSize, long total, boolean searchCount) {
-        return new BasePage<>(pageNum, pageSize, total, searchCount);
+    @JsonIgnore
+    @Override
+    public List<OrderItem> orders() {
+        return null;
     }
 
-    public static <T> BasePage<T> of(long pageNum, long pageSize) {
-        return of(pageNum, pageSize, 0L);
-    }
-
-    public static <T> BasePage<T> of(long pageNum, long pageSize, long total) {
-        return of(pageNum, pageSize, total, true);
-    }
-
-    public static <T> BasePage<T> of(long pageNum, long pageSize, boolean searchCount) {
-        return of(pageNum, pageSize, 0L, searchCount);
-    }
-
-    public boolean hasPrevious() {
-        return this.pageSize > 1L;
-    }
-
-    public boolean hasNext() {
-        return this.pageSize < this.getPages();
-    }
-
+    @JsonIgnore
     @Override
     public List<T> getRecords() {
         return this.list;
@@ -139,12 +97,14 @@ public class BasePage<T> implements IPage<T> {
         return this.pageSize;
     }
 
+    @JsonIgnore
     @Override
     public BasePage<T> setSize(long size) {
         this.pageSize = size;
         return this;
     }
 
+    @JsonIgnore
     @Override
     public long getCurrent() {
         return this.pageNum;
@@ -152,123 +112,26 @@ public class BasePage<T> implements IPage<T> {
 
     @JsonIgnore
     @Override
-    public BasePage<T> setCurrent(long current) {
+    public IPage<T> setCurrent(long current) {
         this.pageNum = current;
         return this;
     }
 
     @Override
-    public String countId() {
-        return this.countId;
-    }
-
-    @Override
-    public Long maxLimit() {
-        return this.maxLimit;
-    }
-
-
-    public void addOrder(OrderItem... items) {
-        this.orders.addAll(Arrays.asList(items));
-    }
-
-    @Override
-    public List<OrderItem> orders() {
-        return this.orders;
-    }
-
-    @Override
-    public boolean optimizeCountSql() {
-        return this.optimizeCountSql;
-    }
-
-    @Override
-    public boolean optimizeJoinOfCountSql() {
-        return optimizeJoinOfCountSql;
-    }
-
-    @JsonIgnore
-    public BasePage<T> setSearchCount(boolean searchCount) {
-        this.searchCount = searchCount;
-        return this;
-    }
-
-    @JsonIgnore
-    public BasePage<T> setOptimizeCountSql(boolean optimizeCountSql) {
-        this.optimizeCountSql = optimizeCountSql;
-        return this;
-    }
-
-    /**
-     * 内部什么也不干
-     * <p>只是为了 json 反序列化时不报错</p>
-     *
-     * @param pages 总页数
-     */
-    @JsonIgnore
-    @Override
-    public IPage<T> setPages(long pages) {
-        return null;
-    }
-
-    @Override
     public long getPages() {
-        return IPage.super.getPages();
-    }
-
-    public List<OrderItem> getOrders() {
-        return this.orders;
-    }
-
-    @JsonIgnore
-    public void setOrders(final List<OrderItem> orders) {
-        this.orders = orders;
-    }
-
-    public String getCountId() {
-        return this.countId;
-    }
-
-    @JsonIgnore
-    public void setCountId(final String countId) {
-        this.countId = countId;
-    }
-
-    public Long getMaxLimit() {
-        return this.maxLimit;
-    }
-
-    @JsonIgnore
-    public void setMaxLimit(final Long maxLimit) {
-        this.maxLimit = maxLimit;
-    }
-
-    public List<T> getList() {
-        return list;
+        this.pages = IPage.super.getPages();
+        return this.pages;
     }
 
     public void setList(List<T> list) {
         this.list = list;
     }
 
-    public long getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(long pageSize) {
+    public void setPageSize(Long pageSize) {
         this.pageSize = pageSize;
     }
 
-    public long getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(long pageNum) {
+    public void setPageNum(Long pageNum) {
         this.pageNum = pageNum;
-    }
-
-    @JsonIgnore
-    public void setOptimizeJoinOfCountSql(final boolean optimizeJoinOfCountSql) {
-        this.optimizeJoinOfCountSql = optimizeJoinOfCountSql;
     }
 }

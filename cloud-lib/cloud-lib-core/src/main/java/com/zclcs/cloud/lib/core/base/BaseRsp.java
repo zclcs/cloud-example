@@ -28,20 +28,19 @@ public class BaseRsp<T> {
     /**
      * 时间戳
      */
-    private long time;
+    private Long time;
 
     public BaseRsp() {
         this.time = System.currentTimeMillis();
     }
 
     public BaseRsp(String msg) {
+        this();
         this.msg = msg;
-        this.time = System.currentTimeMillis();
     }
 
     public BaseRsp(String msg, T data) {
-        this.msg = msg;
+        this(msg);
         this.data = data;
-        this.time = System.currentTimeMillis();
     }
 }

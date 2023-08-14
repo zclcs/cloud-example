@@ -88,7 +88,7 @@ public class RabbitmqController {
             BasePage<RabbitmqExchangeVo> basePage = new BasePage<>();
             basePage.setPages(pageResultVo.getPageCount());
             basePage.setTotal(pageResultVo.getFilteredCount());
-            basePage.setPageNum(pageResultVo.getPage());
+            basePage.setPageNum(Long.valueOf(pageResultVo.getPage()));
             basePage.setList(pageResultVo.getItems());
             return RspUtil.data(basePage);
         } catch (Exception e) {
@@ -190,7 +190,7 @@ public class RabbitmqController {
             BasePage<RabbitmqQueueVo> basePage = new BasePage<>();
             basePage.setPages(pageResultVo.getPageCount());
             basePage.setTotal(pageResultVo.getFilteredCount());
-            basePage.setPageNum(pageResultVo.getPage());
+            basePage.setPageNum(Long.valueOf(pageResultVo.getPage()));
             basePage.setList(pageResultVo.getItems());
             return RspUtil.data(basePage);
         } catch (Exception e) {

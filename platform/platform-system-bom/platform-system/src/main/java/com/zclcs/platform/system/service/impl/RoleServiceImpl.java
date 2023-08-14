@@ -105,7 +105,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleMenuService.saveBatch(roleMenus);
         SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
 
-        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deletePermissionsByUsernames(usernames);
         SystemCacheUtil.deleteRoutersByUsernames(usernames);
         return role;
     }
@@ -129,7 +129,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleMenuService.saveBatch(roleMenus);
         SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
 
-        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deletePermissionsByUsernames(usernames);
         SystemCacheUtil.deleteRoutersByUsernames(usernames);
         return role;
     }
@@ -151,7 +151,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         this.userRoleService.lambdaUpdate().in(UserRole::getRoleId, ids).remove();
         SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
 
-        SystemCacheUtil.deleteRoutersByUsernames(usernames);
+        SystemCacheUtil.deletePermissionsByUsernames(usernames);
         SystemCacheUtil.deleteRoutersByUsernames(usernames);
     }
 
