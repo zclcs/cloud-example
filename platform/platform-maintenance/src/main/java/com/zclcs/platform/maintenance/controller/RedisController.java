@@ -52,13 +52,13 @@ public class RedisController {
     @SaCheckPermission("redis:view")
     public BaseRsp<BasePage<RedisVo>> findRedisPage(@Validated BasePageAo basePageAo, @Validated RedisVo redisVo) {
         String key = globalProperties.getRedisCachePrefix() + Optional.ofNullable(redisVo.getKey()).filter(StrUtil::isNotBlank).orElse("*");
-        int pageSize = basePageAo.getPageSize();
-        int pageNum = basePageAo.getPageNum();
+        long pageSize = basePageAo.getPageSize();
+        long pageNum = basePageAo.getPageNum();
         Set<String> keys = redisService.keys(key);
         List<String> pages = null;
         if (CollectionUtil.isNotEmpty(keys)) {
             pages = new ArrayList<>(keys);
-            pages = pages.stream().sorted().skip((long) (pageNum - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+            pages = pages.stream().sorted().skip((pageNum - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
         }
         BasePage<RedisVo> basePage = new BasePage<>(pageNum, pageSize);
         List<RedisVo> redisVos = null;

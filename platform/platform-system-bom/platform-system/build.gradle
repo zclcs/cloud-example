@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":common:common-ip2region-starter"))
     implementation(project(":common:common-minio-starter"))
     implementation(project(":common:common-export-excel-starter"))
+    implementation(project(":common:common-validation-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":cloud-lib:cloud-lib-mybatis-plus"))

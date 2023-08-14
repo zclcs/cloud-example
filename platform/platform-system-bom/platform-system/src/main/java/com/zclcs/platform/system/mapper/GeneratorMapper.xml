@@ -25,6 +25,7 @@
         <if test="tableName != null and tableName != ''">
             AND TABLE_NAME like concat('%', #{tableName}, '%')
         </if>
+        order by create_at, update_at
     </select>
 
     <!--查询数据库表下面的列属性-->

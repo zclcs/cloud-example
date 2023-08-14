@@ -15,16 +15,11 @@ public class BasePageAo {
      * 页数
      */
     @NotNull(message = "{required}")
-    private Integer pageNum;
+    private Long pageNum;
 
     /**
      * 页码
      */
     @NotNull(message = "{required}")
-    private Integer pageSize;
-
-    /**
-     * 字段排序
-     */
-    private String fieldOrders;
+    private Long pageSize;
 }

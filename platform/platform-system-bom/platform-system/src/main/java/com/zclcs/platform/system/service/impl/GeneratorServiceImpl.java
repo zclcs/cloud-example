@@ -1,8 +1,6 @@
 package com.zclcs.platform.system.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
@@ -58,9 +56,6 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public BasePage<Table> getTables(String tableName, BasePageAo request, String databaseType, String schemaName) {
         BasePage<Table> page = new BasePage<>(request.getPageNum(), request.getPageSize());
-        OrderItem createAt = new OrderItem("create_at", false);
-        OrderItem updateAt = new OrderItem("update_at", false);
-        page.setOrders(CollectionUtil.newArrayList(createAt, updateAt));
         generatorMapper.getTables(page, tableName, databaseType, schemaName);
         return page;
     }
