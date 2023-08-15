@@ -89,7 +89,7 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
     private QueryWrapper<GeneratorConfigVo> getQueryWrapper(GeneratorConfigVo generatorConfigVo) {
         QueryWrapper<GeneratorConfigVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotNull(queryWrapper, "gc.id", generatorConfigVo.getId());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "gc.server_name", generatorConfigVo.getServerName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "gc.server_name", generatorConfigVo.getServerName());
         return queryWrapper;
     }
 }

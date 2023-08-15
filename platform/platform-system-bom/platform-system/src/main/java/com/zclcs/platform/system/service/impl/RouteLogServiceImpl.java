@@ -63,9 +63,9 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
 
     private QueryWrapper<RouteLogVo> getQueryWrapper(RouteLogVo routeLogVo) {
         QueryWrapper<RouteLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.route_ip", routeLogVo.getRouteIp());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.target_server", routeLogVo.getTargetServer());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srl.request_method", routeLogVo.getRequestMethod());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.route_ip", routeLogVo.getRouteIp());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.target_server", routeLogVo.getTargetServer());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.request_method", routeLogVo.getRequestMethod());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srl.request_time", routeLogVo.getRequestTimeFrom(), routeLogVo.getRequestTimeTo());
         queryWrapper.orderByDesc("srl.request_time");
         return queryWrapper;

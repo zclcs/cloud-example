@@ -63,9 +63,9 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
 
     private QueryWrapper<BlockLogVo> getQueryWrapper(BlockLogVo blockLogVo) {
         QueryWrapper<BlockLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.request_time", blockLogVo.getRequestTimeFrom(), blockLogVo.getRequestTimeTo());
         queryWrapper.orderByDesc("sbl.request_time");
         return queryWrapper;

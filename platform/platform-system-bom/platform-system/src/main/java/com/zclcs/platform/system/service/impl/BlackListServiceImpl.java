@@ -81,8 +81,8 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     private QueryWrapper<BlackListVo> getQueryWrapper(BlackListVo blackListVo) {
         QueryWrapper<BlackListVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sbl.request_uri", blackListVo.getRequestUri());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_uri", blackListVo.getRequestUri());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.request_method", blackListVo.getRequestMethod());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_status", blackListVo.getBlackStatus());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());

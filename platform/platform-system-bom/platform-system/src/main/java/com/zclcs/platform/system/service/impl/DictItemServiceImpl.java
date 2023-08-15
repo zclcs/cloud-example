@@ -111,17 +111,17 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
 
     private QueryWrapper<DictItemVo> getDictItemQueryWrapper(DictItemVo dictItemVo) {
         QueryWrapper<DictItemVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.dict_name", dictItemVo.getDictName());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.value", dictItemVo.getValue());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.parent_value", dictItemVo.getParentValue());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.title", dictItemVo.getTitle());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.dict_name", dictItemVo.getDictName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.value", dictItemVo.getValue());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.parent_value", dictItemVo.getParentValue());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.title", dictItemVo.getTitle());
         QueryWrapperUtil.eqNotNull(queryWrapper, "tb.id", dictItemVo.getId());
         return queryWrapper;
     }
 
     private QueryWrapper<DictVo> getDictQueryWrapper(DictVo dictVo) {
         QueryWrapper<DictVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.dictName", dictVo.getDictName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.dictName", dictVo.getDictName());
         return queryWrapper;
     }
 

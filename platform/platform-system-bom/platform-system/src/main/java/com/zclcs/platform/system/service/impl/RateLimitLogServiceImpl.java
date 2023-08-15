@@ -63,9 +63,9 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
 
     private QueryWrapper<RateLimitLogVo> getQueryWrapper(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.rate_limit_log_ip", rateLimitLogVo.getRateLimitLogIp());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_uri", rateLimitLogVo.getRequestUri());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srll.request_method", rateLimitLogVo.getRequestMethod());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.rate_limit_log_ip", rateLimitLogVo.getRateLimitLogIp());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.request_uri", rateLimitLogVo.getRequestUri());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.request_method", rateLimitLogVo.getRequestMethod());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srll.request_time", rateLimitLogVo.getRequestTimeFrom(), rateLimitLogVo.getRequestTimeTo());
         queryWrapper.orderByDesc("srll.request_time");
         return queryWrapper;

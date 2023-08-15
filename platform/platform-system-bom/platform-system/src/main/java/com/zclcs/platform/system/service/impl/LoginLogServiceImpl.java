@@ -62,8 +62,8 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     private QueryWrapper<LoginLogVo> getQueryWrapper(LoginLogVo loginLogVo) {
         QueryWrapper<LoginLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sll.ip", loginLogVo.getIp());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sll.ip", loginLogVo.getIp());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "sll.login_type", loginLogVo.getLoginType());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper,
                 "sll.login_time", loginLogVo.getLoginTimeFrom(), loginLogVo.getLoginTimeTo());

@@ -60,6 +60,15 @@ public class QueryWrapperUtil {
         return queryWrapper;
     }
 
+    /**
+     * 模糊查询 （不使用覆盖索引情况下是会走 全表扫描的）
+     *
+     * @param queryWrapper 条件构造器
+     * @param column       表字段
+     * @param param        参数
+     * @param <T>          泛型
+     * @return 条件构造器
+     */
     public <T> QueryWrapper<T> likeNotBlank(QueryWrapper<T> queryWrapper, String column, String param) {
         queryWrapper.like(StrUtil.isNotBlank(param), column, param);
         return queryWrapper;

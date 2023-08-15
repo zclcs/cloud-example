@@ -80,7 +80,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
 
     private QueryWrapper<RateLimitRuleVo> getQueryWrapper(RateLimitRuleVo rateLimitRuleVo) {
         QueryWrapper<RateLimitRuleVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "srlr.request_uri", rateLimitRuleVo.getRequestUri());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srlr.request_uri", rateLimitRuleVo.getRequestUri());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "srlr.request_method", rateLimitRuleVo.getRequestMethod());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "srlr.rule_status", rateLimitRuleVo.getRuleStatus());
         return queryWrapper;

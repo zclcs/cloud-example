@@ -86,7 +86,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     private QueryWrapper<MenuVo> getQueryWrapper(MenuVo menuVo) {
         QueryWrapper<MenuVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.menu_name", menuVo.getMenuName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.menu_name", menuVo.getMenuName());
         QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.menu_id", menuVo.getMenuIds());
         QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.type", menuVo.getType());
         QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.type", menuVo.getTypes());

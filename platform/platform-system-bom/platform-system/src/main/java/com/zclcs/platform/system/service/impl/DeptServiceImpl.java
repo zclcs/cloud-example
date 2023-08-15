@@ -96,7 +96,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     private QueryWrapper<DeptVo> getQueryWrapper(DeptVo deptVo) {
         QueryWrapper<DeptVo> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("sd.order_num");
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "sd.dept_name", deptVo.getDeptName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sd.dept_name", deptVo.getDeptName());
         QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sd.create_at", deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo());
         return queryWrapper;
     }

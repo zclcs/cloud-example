@@ -111,7 +111,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     private QueryWrapper<MinioFileVo> getQueryWrapper(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotBlank(queryWrapper, "mf.id", minioFileVo.getId());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "mf.original_file_name", minioFileVo.getOriginalFileName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "mf.original_file_name", minioFileVo.getOriginalFileName());
         queryWrapper.orderByDesc("mf.create_at");
         return queryWrapper;
     }

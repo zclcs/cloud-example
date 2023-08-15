@@ -81,7 +81,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     private QueryWrapper<RoleVo> getQueryWrapper(RoleVo roleVo) {
         QueryWrapper<RoleVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.role_name", roleVo.getRoleName());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.role_name", roleVo.getRoleName());
         QueryWrapperUtil.eqNotNull(queryWrapper, "tb.role_id", roleVo.getRoleId());
         queryWrapper
                 .orderByDesc("tb.create_at");

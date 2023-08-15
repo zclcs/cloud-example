@@ -121,7 +121,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         });
         QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.dept_id", deptList.get());
-        QueryWrapperUtil.likeNotBlank(queryWrapper, "tb.username", userVo.getUsername());
+        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.username", userVo.getUsername());
         return queryWrapper;
     }
 
