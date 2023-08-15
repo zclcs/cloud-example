@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.LoginByMobileAo;
@@ -58,11 +57,7 @@ public class LoginController {
      */
     @DeleteMapping("/logout")
     public BaseRsp<Object> logout() {
-        try {
-            StpUtil.logout();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        loginService.logout();
         return RspUtil.message();
     }
 }

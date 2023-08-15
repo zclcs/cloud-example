@@ -15,17 +15,16 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 @ToString
 @EqualsAndHashCode
 @RefreshScope
-@ConfigurationProperties(prefix = "my")
-public class GlobalProperties {
+@ConfigurationProperties(prefix = "sa-token")
+public class SaTokenProperties {
 
     /**
      * 服务缓存前缀
      */
-    private String redisCachePrefix;
+    private Long refreshTokenTimeOut = 608400L;
 
     /**
-     * 默认密码
+     * 服务缓存前缀
      */
-    private String defaultPassword;
-
+    private String tokenName = "Authorization";
 }

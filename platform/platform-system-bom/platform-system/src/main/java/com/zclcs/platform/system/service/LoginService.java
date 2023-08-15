@@ -11,6 +11,7 @@ import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.UserTokenVo;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,38 +19,50 @@ import java.util.Optional;
 /**
  * @author zclcs
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
 
     public UserTokenVo loginByUsername(LoginByUsernameAo loginByUsernameAo) {
-        LoginVo loginVoByUsername = SystemCacheUtil.getLoginVoByUsername(loginByUsernameAo.getUsername());
-        Optional.ofNullable(loginVoByUsername).map(LoginVo::getUsername).filter(StrUtil::isNotBlank).orElseThrow(() -> new MyException("用户名或密码错误"));
-        if (!BCrypt.checkpw(loginByUsernameAo.getPassword(), loginVoByUsername.getPassword())) {
+        String username = loginByUsernameAo.getUsername();
+        LoginVo loginVo = SystemCacheUtil.getLoginVoByUsername(username);
+        Optional.ofNullable(loginVo).map(LoginVo::getUsername).filter(StrUtil::isNotBlank).orElseThrow(() -> new MyException("用户名或密码错误"));
+        if (!BCrypt.checkpw(loginByUsernameAo.getPassword(), loginVo.getPassword())) {
             throw new MyException("用户名或密码错误");
         }
-        if (Dict.USER_STATUS_0.equals(loginVoByUsername.getStatus())) {
-            throw new MyException("用户已被锁定");
-        }
-        LoginHelper.login(loginVoByUsername);
-        return UserTokenVo.builder()
-                .token(StpUtil.getTokenValue())
-                .expire(StpUtil.getTokenTimeout())
-                .userinfo(loginVoByUsername)
-                .build();
+        checkUserStatus(loginVo);
+        return login(loginVo);
     }
 
     public UserTokenVo loginByMobile(String mobile) {
-        LoginVo loginVoByUsername = SystemCacheUtil.getLoginVoByMobile(mobile);
-        Optional.ofNullable(loginVoByUsername).map(LoginVo::getUsername).filter(StrUtil::isNotBlank).orElseThrow(() -> new MyException("手机号错误"));
-        if (Dict.USER_STATUS_0.equals(loginVoByUsername.getStatus())) {
+        LoginVo loginVo = SystemCacheUtil.getLoginVoByMobile(mobile);
+        Optional.ofNullable(loginVo).map(LoginVo::getUsername).filter(StrUtil::isNotBlank).orElseThrow(() -> new MyException("手机号错误"));
+        checkUserStatus(loginVo);
+        return login(loginVo);
+    }
+
+    public void logout() {
+        try {
+            StpUtil.logout();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void checkUserStatus(LoginVo loginVo) {
+        if (Dict.USER_STATUS_0.equals(loginVo.getStatus())) {
             throw new MyException("用户已被锁定");
         }
-        LoginHelper.login(loginVoByUsername);
+    }
+
+    private UserTokenVo login(LoginVo loginVo) {
+        LoginHelper.login(loginVo);
+        String accessToken = StpUtil.getTokenValue();
         return UserTokenVo.builder()
-                .token(StpUtil.getTokenValue())
+                .token(accessToken)
                 .expire(StpUtil.getTokenTimeout())
-                .userinfo(loginVoByUsername)
+                .userinfo(loginVo)
                 .build();
     }
 

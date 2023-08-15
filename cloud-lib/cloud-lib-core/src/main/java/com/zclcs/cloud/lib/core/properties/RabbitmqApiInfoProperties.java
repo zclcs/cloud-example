@@ -48,28 +48,4 @@ public class RabbitmqApiInfoProperties {
      */
     private String virtualHost;
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public void setApiPort(String apiPort) {
-        this.apiPort = apiPort;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setVirtualHost(String virtualHost) {
-        this.virtualHost = virtualHost;
-    }
-
 }

@@ -20,6 +20,11 @@ public interface RedisCachePrefix {
     /**
      * 字典 redis key
      */
+    String REFRESH_TOKEN = "%s:login:refresh:%s";
+
+    /**
+     * 字典 redis key
+     */
     String DICT = "dict:%s";
 
     /**
