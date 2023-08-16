@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.dict.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
 import com.zclcs.cloud.lib.dict.cache.DictCache;
 import com.zclcs.cloud.lib.dict.cache.DictChildrenCache;
@@ -34,7 +35,7 @@ public class DictCacheUtil {
         DICT_CACHE.deleteCache(dictNames);
     }
 
-    public static DictItemCacheBean getDictItemByDictNameAndValue(String dictName, String value) {
+    private static DictItemCacheBean getDictItemByDictNameAndValue(String dictName, String value) {
         return DICT_ITEM_CACHE.findCache(dictName, value);
     }
 
@@ -56,6 +57,13 @@ public class DictCacheUtil {
 
     public static void deleteDictByDictNamesAndParentValues(List<List<Object>> keys) {
         DICT_CHILDREN_CACHE.deleteCache(keys);
+    }
+
+    public static DictItemCacheBean getDict(String dictName, String value) {
+        if (StrUtil.isBlank(value)) {
+            return null;
+        }
+        return getDictItemByDictNameAndValue(dictName, value);
     }
 
     @Autowired(required = false)

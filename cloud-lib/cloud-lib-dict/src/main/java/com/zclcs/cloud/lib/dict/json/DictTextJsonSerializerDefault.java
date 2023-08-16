@@ -259,18 +259,20 @@ public class DictTextJsonSerializerDefault extends JsonSerializer<Object> {
             final List<String> values = new LinkedList<>();
             String value = dictValue;
             do {
-                DictItemCacheBean dictItemCacheBean = DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, value);
+                DictItemCacheBean dictItemCacheBean = DictCacheUtil.getDict(dictTypeKey, value);
                 if (dictItemCacheBean != null) {
                     values.add(0, dictItemCacheBean.getTitle());
                 }
-                value = DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, value).getParentValue();
+                DictItemCacheBean dict = DictCacheUtil.getDict(dictTypeKey, value);
+                value = dict == null ? null : dict.getParentValue();
             } while (value != null && !CommonCore.TOP_PARENT_CODE.equals(value));
             if (values.isEmpty()) {
                 return null;
             }
             return String.join("/", values);
         }
-        return DictCacheUtil.getDictItemByDictNameAndValue(dictTypeKey, dictValue).getTitle();
+        DictItemCacheBean dict = DictCacheUtil.getDict(dictTypeKey, dictValue);
+        return dict == null ? null : dict.getTitle();
     }
 
     /**

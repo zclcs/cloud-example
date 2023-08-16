@@ -53,6 +53,7 @@ public class DictController {
      */
     @GetMapping(value = "/dictTextQuery")
     public BaseRsp<String> dictTextQuery(@RequestParam String dictName, @RequestParam String value) {
-        return RspUtil.data(DictCacheUtil.getDictItemByDictNameAndValue(dictName, value).getTitle());
+        DictItemCacheBean dict = DictCacheUtil.getDict(dictName, value);
+        return RspUtil.data(dict == null ? null : dict.getTitle());
     }
 }

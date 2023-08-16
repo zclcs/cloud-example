@@ -20,7 +20,7 @@ public class DictValidConstraintValidator implements ConstraintValidator<DictVal
         if (name == null || StrUtil.isBlankIfStr(value)) {
             return true;
         }
-        return DictCacheUtil.getDictItemByDictNameAndValue(name, String.valueOf(value)) != null;
+        return DictCacheUtil.getDict(name, String.valueOf(value)) != null;
     }
 
     @Override
