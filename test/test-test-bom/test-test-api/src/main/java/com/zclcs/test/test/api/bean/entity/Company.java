@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * 企业信息 Entity
  *
  * @author zclcs
- * @date 2023-07-26 22:21:40.994
+ * @date 2023-08-16 14:53:29.133
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

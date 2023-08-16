@@ -44,14 +44,19 @@ public class Column {
     private String remark;
 
     /**
+     * 注释中是否有字典
+     */
+    private Boolean hasDict;
+
+    /**
      * 属性名称
      */
     private String field;
 
     /**
-     * 注释中是否有字典
+     * 默认值
      */
-    private Boolean hasDict;
+    private String defaultValue;
 
     /**
      * 注释中带的字典
@@ -67,5 +72,5 @@ public class Column {
      * 字典是否是tree
      */
     private Boolean isTree;
-    
+
 }

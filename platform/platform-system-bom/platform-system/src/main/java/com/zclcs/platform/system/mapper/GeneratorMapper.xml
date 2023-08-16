@@ -46,7 +46,8 @@
         DATA_TYPE type,
         if(CHARACTER_MAXIMUM_LENGTH, 1, 0) isCharMaxLength,
         CHARACTER_MAXIMUM_LENGTH charMaxLength,
-        COLUMN_COMMENT remark
+        COLUMN_COMMENT remark,
+        COLUMN_DEFAULT defaultValue
         FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = #{schemaName}
         AND TABLE_NAME = #{tableName}
