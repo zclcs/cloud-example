@@ -5,6 +5,7 @@ import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.same.SaSameUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.feign.MyOAuthRequestInterceptor;
@@ -46,7 +47,11 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
                     SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
-                    return RspUtil.message("认证失败");
+                    try {
+                        return objectMapper.writeValueAsString(RspUtil.message("认证失败"));
+                    } catch (JsonProcessingException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 })
                 ;
     }
