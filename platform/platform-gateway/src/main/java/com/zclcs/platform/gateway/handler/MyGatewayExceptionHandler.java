@@ -112,14 +112,14 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (error instanceof ValidateCodeException) {
             errorMessage = error.getMessage();
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        } else if (error instanceof NotLoginException) {
-            errorMessage = error.getMessage();
+        } else if (error.getCause() instanceof NotLoginException e) {
+            errorMessage = e.getMessage();
             httpStatus = HttpStatus.FAILED_DEPENDENCY;
-        } else if (error instanceof NotPermissionException) {
-            errorMessage = error.getMessage();
+        } else if (error.getCause() instanceof NotPermissionException e) {
+            errorMessage = e.getMessage();
             httpStatus = HttpStatus.UNAUTHORIZED;
-        } else if (error instanceof NotRoleException) {
-            errorMessage = error.getMessage();
+        } else if (error.getCause() instanceof NotRoleException e) {
+            errorMessage = e.getMessage();
             httpStatus = HttpStatus.UNAUTHORIZED;
         } else if (error instanceof FlowException) {
             errorMessage = "访问频繁";

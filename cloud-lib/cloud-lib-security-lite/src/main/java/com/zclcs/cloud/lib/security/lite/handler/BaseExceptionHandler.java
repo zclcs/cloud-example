@@ -59,13 +59,13 @@ public class BaseExceptionHandler {
     }
 
     /**
-     * 认证失败
+     * 请通过网关访问接口
      */
     @ExceptionHandler(SameTokenInvalidException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public BaseRsp<Object> handleSameTokenInvalidException(SameTokenInvalidException e) {
-        log.error("没有访问权限", e);
-        return RspUtil.message("没有访问权限");
+        log.error("请通过网关访问接口", e);
+        return RspUtil.message("请通过网关访问接口");
     }
 
     /**

@@ -1,12 +1,10 @@
 package com.zclcs.cloud.lib.security.lite.configuration;
 
 import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.same.SaSameUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.feign.MyOAuthRequestInterceptor;
@@ -47,19 +45,8 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
-                    String message = "";
-                    if (e instanceof NotLoginException exception) {
-                        SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
-                        message = "token已过期";
-                    } else {
-                        SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
-                        message = "认证失败";
-                    }
-                    try {
-                        return objectMapper.writeValueAsString(RspUtil.message(message));
-                    } catch (JsonProcessingException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
+                    return RspUtil.message("认证失败");
                 })
                 ;
     }

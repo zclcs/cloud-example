@@ -1,19 +1,13 @@
 package com.zclcs.platform.gateway.filter;
 
-import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 /**
  * Sa-Token 拦截器
@@ -41,22 +35,7 @@ public class AuthFilter {
                         StpUtil.checkLogin();
                     });
                 })
-                .setError(e -> {
-                    SaHolder.getResponse().setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-                    String message = "";
-                    if (e instanceof NotLoginException exception) {
-                        SaHolder.getResponse().setStatus(HttpStatus.FAILED_DEPENDENCY.value());
-                        message = "token已过期";
-                    } else {
-                        SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
-                        message = "认证失败";
-                    }
-                    try {
-                        return objectMapper.writeValueAsString(RspUtil.message(message));
-                    } catch (JsonProcessingException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                })
+//                .setError(e -> SaResult.error("认证失败，无法访问系统资源").setCode(HttpStatus.UNAUTHORIZED.value()))
                 ;
     }
 
