@@ -46,6 +46,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {
+                    SaHolder.getResponse().setHeader("Content-Type", "application/json;charset=UTF-8");
                     SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
                     try {
                         return objectMapper.writeValueAsString(RspUtil.message("认证失败"));

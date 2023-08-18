@@ -35,7 +35,6 @@ public class AuthFilter {
                         StpUtil.checkLogin();
                     });
                 })
-//                .setError(e -> SaResult.error("认证失败，无法访问系统资源").setCode(HttpStatus.UNAUTHORIZED.value()))
                 ;
     }
 
