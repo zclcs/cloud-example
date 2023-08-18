@@ -2,6 +2,7 @@ package org.springframework.cloud.openfeign;
 
 import com.zclcs.cloud.lib.fegin.MyFeignAutoConfiguration;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -29,6 +30,7 @@ import java.util.Map;
  * <p>
  * feign 自动配置功能 from mica
  */
+@Slf4j
 public class MyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware, EnvironmentAware {
 
     @Getter
@@ -112,7 +114,7 @@ public class MyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, B
                 BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
 
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
     }

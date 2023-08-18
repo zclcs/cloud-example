@@ -50,15 +50,3 @@ spring:
 mybatis-plus:
   type-aliases-package: com.zclcs.test.test.api.entity
   mapper-locations: classpath:com/zclcs/test/test/biz/mapper/*.xml
-
-# spring security 配置
-security:
-  oauth2:
-    client:
-      client-id: ENC(imENTO7M8bLO38LFSIxnzw==)
-      client-secret: ENC(i3cDFhs26sa2Ucrfz2hnQw==)
-      scope: server
-    # 通用放行URL，服务个性化，请在对应配置文件覆盖
-    ignore:
-      urls:
-        - /v3/api-docs

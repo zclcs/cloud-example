@@ -5,6 +5,7 @@ import feign.Contract;
 import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.Target;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -63,12 +64,23 @@ public final class MySentinelFeign {
 
                     // 查找 FeignClient 上的 降级策略
                     FeignClient feignClient = AnnotationUtils.findAnnotation(target.type(), FeignClient.class);
-                    Class<?> fallback = feignClient.fallback();
-                    Class<?> fallbackFactory = feignClient.fallbackFactory();
+                    Class<?> fallback = null;
+                    if (feignClient != null) {
+                        fallback = feignClient.fallback();
+                    }
+                    Class<?> fallbackFactory = null;
+                    if (feignClient != null) {
+                        fallbackFactory = feignClient.fallbackFactory();
+                    }
 
-                    String beanName = feignClient.contextId();
+                    String beanName = null;
+                    if (feignClient != null) {
+                        beanName = feignClient.contextId();
+                    }
                     if (!StringUtils.hasText(beanName)) {
-                        beanName = feignClient.name();
+                        if (feignClient != null) {
+                            beanName = feignClient.name();
+                        }
                     }
 
                     Object fallbackInstance;
@@ -109,9 +121,13 @@ public final class MySentinelFeign {
 
         private Object getFieldValue(Object instance, String fieldName) {
             Field field = ReflectionUtils.findField(instance.getClass(), fieldName);
-            field.setAccessible(true);
+            if (field != null) {
+                field.setAccessible(true);
+            }
             try {
-                return field.get(instance);
+                if (field != null) {
+                    return field.get(instance);
+                }
             } catch (IllegalAccessException e) {
                 // ignore
             }
@@ -119,7 +135,7 @@ public final class MySentinelFeign {
         }
 
         @Override
-        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
             this.applicationContext = applicationContext;
             this.feignClientFactory = (FeignClientFactory) this.applicationContext.getBean(FeignClientFactory.class);
         }
