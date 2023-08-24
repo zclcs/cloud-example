@@ -7,9 +7,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.common.export.excel.starter.service.ExcelService;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
+import com.zclcs.platform.system.api.bean.excel.RouteLogExcelVo;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
 import com.zclcs.platform.system.mapper.RouteLogMapper;
 import com.zclcs.platform.system.service.RouteLogService;
@@ -32,7 +35,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService {
+public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService, ExcelService<RouteLogVo, RouteLogExcelVo> {
 
     private final Ip2regionSearcher ip2regionSearcher;
 
@@ -50,13 +53,18 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
     }
 
     @Override
+    public void export(RouteLogVo routeLogVo) throws Exception {
+        this.export(WebUtil.getHttpServletResponse(), "网关转发日志", RouteLogExcelVo.class, routeLogVo);
+    }
+
+    @Override
     public RouteLogVo findRouteLog(RouteLogVo routeLogVo) {
         QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
-    public Integer countRouteLog(RouteLogVo routeLogVo) {
+    public Long countRouteLog(RouteLogVo routeLogVo) {
         QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
         return this.baseMapper.countVo(queryWrapper);
     }
@@ -104,5 +112,18 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
         if (StrUtil.isNotBlank(routeLog.getRouteIp())) {
             routeLog.setLocation(ip2regionSearcher.getAddress(routeLog.getRouteIp()));
         }
+    }
+
+    @Override
+    public Long count(RouteLogVo t) {
+        return this.countRouteLog(t);
+    }
+
+    @Override
+    public List<RouteLogExcelVo> getDataWithIndex(RouteLogVo t, Long startIndex, Long endIndex) {
+        QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(t);
+        queryWrapper.last("limit " + startIndex + ", " + endIndex);
+        List<RouteLogVo> listVo = this.baseMapper.findListVo(queryWrapper);
+        return RouteLogExcelVo.convertToList(listVo);
     }
 }

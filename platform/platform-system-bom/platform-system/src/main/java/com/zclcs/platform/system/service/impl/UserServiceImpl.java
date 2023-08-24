@@ -15,11 +15,14 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
+import com.zclcs.common.export.excel.starter.service.ExcelService;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
+import com.zclcs.platform.system.api.bean.excel.UserExcelVo;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
@@ -51,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, ExcelService<UserVo, UserExcelVo> {
 
     private final UserRoleService userRoleService;
     private final UserDataPermissionService userDataPermissionService;
@@ -84,13 +87,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public void export(UserVo userVo) throws Exception {
+        this.export(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
+    }
+
+    @Override
     public UserVo findUser(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
         return this.baseMapper.findOneVo(queryWrapper);
     }
 
     @Override
-    public Integer countUser(UserVo userVo) {
+    public Long countUser(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
         return this.baseMapper.countVo(queryWrapper);
     }
@@ -302,4 +310,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    @Override
+    public Long count(UserVo userVo) {
+        return this.countUser(userVo);
+    }
+
+    @Override
+    public List<UserExcelVo> getDataWithIndex(UserVo userVo, Long startIndex, Long endIndex) {
+        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
+        List<UserVo> listVo = this.baseMapper.findListVo(queryWrapper);
+        return UserExcelVo.convertToList(listVo);
+    }
 }

@@ -11,6 +11,8 @@
                srl.request_time,
                srl.target_server,
                srl.location,
+               srl.code,
+               srl.time,
                srl.create_at,
                srl.update_at
         from system_route_log srl
@@ -30,7 +32,7 @@
     <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.RouteLogVo">
         <include refid="baseSql"/>
     </select>
-    <select id="countVo" resultType="java.lang.Integer">
+    <select id="countVo" resultType="java.lang.Long">
         <include refid="baseCountSql"/>
     </select>
 </mapper>

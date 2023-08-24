@@ -3,8 +3,8 @@ package com.zclcs.platform.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
+import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
@@ -22,11 +22,11 @@ public interface UserService extends IService<User> {
     /**
      * 查询（分页）
      *
-     * @see BasePageAo
-     * @see UserVo
      * @param basePageAo BasePageAo
      * @param userVo     UserVo
      * @return BasePage<UserVo>
+     * @see BasePageAo
+     * @see UserVo
      */
     BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo);
 
@@ -37,6 +37,8 @@ public interface UserService extends IService<User> {
      * @return List<UserVo>
      */
     List<UserVo> findUserList(UserVo userVo);
+
+    void export(UserVo userVo) throws Exception;
 
     /**
      * 查询（单个）
@@ -52,7 +54,7 @@ public interface UserService extends IService<User> {
      * @param userVo userVo
      * @return UserVo
      */
-    Integer countUser(UserVo userVo);
+    Long countUser(UserVo userVo);
 
     /**
      * 通过用户名查找用户

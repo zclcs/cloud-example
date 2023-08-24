@@ -12,14 +12,12 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
-import com.zclcs.common.export.excel.starter.annotation.ResponseExcel;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
-import com.zclcs.platform.system.api.bean.vo.UserExcelVo;
 import com.zclcs.platform.system.api.bean.vo.UserVo;
 import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
@@ -80,18 +78,10 @@ public class UserController {
      *
      * @see UserService#findUserList(UserVo)
      */
-    @ResponseExcel(name = "用户信息")
     @GetMapping("/excel")
     @SaCheckPermission("user:excel")
-    public List<UserExcelVo> excelUserList(@Validated UserVo userVo) {
-        List<UserVo> list = this.userService.findUserList(userVo);
-        List<UserExcelVo> userExcelVos = new ArrayList<>();
-        for (UserVo vo : list) {
-            UserExcelVo userExcelVo = new UserExcelVo();
-            userExcelVo.setUsername(vo.getUsername());
-            userExcelVos.add(UserExcelVo.builder().username(vo.getUsername()).build());
-        }
-        return userExcelVos;
+    public void excelUserList(@Validated UserVo userVo) throws Exception {
+        userService.export(userVo);
     }
 
     /**

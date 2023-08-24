@@ -34,6 +34,8 @@ public interface RouteLogService extends IService<RouteLog> {
      */
     List<RouteLogVo> findRouteLogList(RouteLogVo routeLogVo);
 
+    void export(RouteLogVo routeLogVo) throws Exception;
+
     /**
      * 查询（单个）
      *
@@ -48,7 +50,7 @@ public interface RouteLogService extends IService<RouteLog> {
      * @param routeLogVo routeLogVo
      * @return RouteLogVo
      */
-    Integer countRouteLog(RouteLogVo routeLogVo);
+    Long countRouteLog(RouteLogVo routeLogVo);
 
     /**
      * 新增

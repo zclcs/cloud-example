@@ -91,14 +91,14 @@ public class BaseExceptionHandler {
 
         // 业务异常交由 sentinel 记录
         Tracer.trace(e);
-        return RspUtil.message(e.getLocalizedMessage());
+        return RspUtil.message("系统异常");
     }
 
     @ExceptionHandler(value = MyException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleMyException(MyException e) {
-        log.error("系统业务异常 ex={}", e.getMessage());
-        return RspUtil.message(e.getLocalizedMessage());
+        log.error("系统业务异常 ex={}", e.getMessage(), e);
+        return RspUtil.message("系统业务异常");
     }
 
     @ExceptionHandler(value = ValidateCodeException.class)

@@ -49,6 +49,6 @@ public interface UserMapper extends BaseMapper<User> {
      * @param ew 查询条件
      * @return 对象
      */
-    Integer countVo(@Param(Constants.WRAPPER) Wrapper<UserVo> ew);
+    Long countVo(@Param(Constants.WRAPPER) Wrapper<UserVo> ew);
 
 }

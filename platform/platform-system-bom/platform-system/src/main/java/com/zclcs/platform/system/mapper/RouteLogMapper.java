@@ -49,6 +49,6 @@ public interface RouteLogMapper extends BaseMapper<RouteLog> {
      * @param ew 查询条件
      * @return 对象
      */
-    Integer countVo(@Param(Constants.WRAPPER) Wrapper<RouteLogVo> ew);
+    Long countVo(@Param(Constants.WRAPPER) Wrapper<RouteLogVo> ew);
 
 }

@@ -66,6 +66,14 @@ public class DictCacheUtil {
         return getDictItemByDictNameAndValue(dictName, value);
     }
 
+    public static String getDictTitle(String dictName, String value) {
+        if (StrUtil.isBlank(value)) {
+            return "";
+        }
+        DictItemCacheBean dictItemByDictNameAndValue = getDictItemByDictNameAndValue(dictName, value);
+        return dictItemByDictNameAndValue == null ? "" : dictItemByDictNameAndValue.getTitle();
+    }
+
     @Autowired(required = false)
     public void setDictCache(DictCache dictCache) {
         this.dictCache = dictCache;

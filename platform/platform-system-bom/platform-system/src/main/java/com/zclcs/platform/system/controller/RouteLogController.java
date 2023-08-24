@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -59,6 +60,20 @@ public class RouteLogController {
     public BaseRsp<List<RouteLogVo>> findRouteLogList(@Validated RouteLogVo routeLogVo) {
         List<RouteLogVo> list = this.routeLogService.findRouteLogList(routeLogVo);
         return RspUtil.data(list);
+    }
+
+    /**
+     * 导出网关转发日志
+     * 权限: routeLog:export
+     *
+     * @see RouteLogService#findRouteLogList(RouteLogVo)
+     */
+    @GetMapping("/excel")
+    @SaCheckPermission("routeLog:export")
+    public void exportRouteLogList(@Validated RouteLogVo routeLogVo) throws Exception {
+        Stopwatch started = Stopwatch.createStarted();
+        routeLogService.export(routeLogVo);
+        log.info("导出耗时 {}", started.stop());
     }
 
     /**
