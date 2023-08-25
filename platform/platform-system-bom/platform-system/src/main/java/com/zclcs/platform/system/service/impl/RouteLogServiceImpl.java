@@ -46,7 +46,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RouteLogServiceImplExport extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService {
+public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
 
@@ -74,7 +74,7 @@ public class RouteLogServiceImplExport extends ServiceImpl<RouteLogMapper, Route
             @Override
             public List<RouteLogExcelVo> getDataWithIndex(RouteLogVo t, Long startIndex, Long endIndex) {
                 QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(t);
-                queryWrapper.last("limit " + startIndex + " " + endIndex);
+                queryWrapper.last("limit " + startIndex + ", " + endIndex);
                 List<RouteLogVo> listVo = baseMapper.findListVo(queryWrapper);
                 return RouteLogExcelVo.convertToList(listVo);
             }
@@ -105,7 +105,7 @@ public class RouteLogServiceImplExport extends ServiceImpl<RouteLogMapper, Route
             public void saveBeans(List<RouteLog> t) {
                 saveBatch(t);
             }
-        });
+        }, 200);
         EasyExcel.read(file.getInputStream(), routeLogSimpleImportListener).sheet().doRead();
         Map<Integer, CellData<?>> error = routeLogSimpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {

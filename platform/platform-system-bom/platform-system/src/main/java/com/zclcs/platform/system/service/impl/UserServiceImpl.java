@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class UserServiceImplExport extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final UserRoleService userRoleService;
     private final UserDataPermissionService userDataPermissionService;
