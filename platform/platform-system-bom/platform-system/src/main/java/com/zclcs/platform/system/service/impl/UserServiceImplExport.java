@@ -15,7 +15,8 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
-import com.zclcs.common.export.excel.starter.service.ExcelService;
+import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
+import com.zclcs.common.export.excel.starter.service.ExportExcelService;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
@@ -54,7 +55,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, ExcelService<UserVo, UserExcelVo> {
+public class UserServiceImplExport extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final UserRoleService userRoleService;
     private final UserDataPermissionService userDataPermissionService;
@@ -87,8 +88,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void export(UserVo userVo) throws Exception {
-        this.export(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
+    public void exportExcel(UserVo userVo) {
+        SimpleExportListener<UserVo, UserExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<UserVo, UserExcelVo>() {
+            @Override
+            public Long count(UserVo userVo) {
+                return countUser(userVo);
+            }
+
+            @Override
+            public List<UserExcelVo> getDataWithIndex(UserVo userVo, Long startIndex, Long endIndex) {
+                QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
+                List<UserVo> listVo = baseMapper.findListVo(queryWrapper);
+                return UserExcelVo.convertToList(listVo);
+            }
+        });
+        routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
     }
 
     @Override
@@ -308,17 +322,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StrUtil.isNotBlank(mobile)) {
             SystemCacheUtil.deleteUsernameByMobile(mobile);
         }
-    }
-
-    @Override
-    public Long count(UserVo userVo) {
-        return this.countUser(userVo);
-    }
-
-    @Override
-    public List<UserExcelVo> getDataWithIndex(UserVo userVo, Long startIndex, Long endIndex) {
-        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        List<UserVo> listVo = this.baseMapper.findListVo(queryWrapper);
-        return UserExcelVo.convertToList(listVo);
     }
 }

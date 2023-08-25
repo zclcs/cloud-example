@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,14 +66,25 @@ public class RouteLogController {
      * 导出网关转发日志
      * 权限: routeLog:export
      *
-     * @see RouteLogService#findRouteLogList(RouteLogVo)
+     * @see RouteLogService#exportExcel(RouteLogVo)
      */
-    @GetMapping("/excel")
+    @GetMapping("/export/excel")
     @SaCheckPermission("routeLog:export")
-    public void exportRouteLogList(@Validated RouteLogVo routeLogVo) throws Exception {
-        Stopwatch started = Stopwatch.createStarted();
-        routeLogService.export(routeLogVo);
-        log.info("导出耗时 {}", started.stop());
+    public void exportRouteLogList(@Validated RouteLogVo routeLogVo) {
+        routeLogService.exportExcel(routeLogVo);
+    }
+
+    /**
+     * 导入网关转发日志
+     * 权限: routeLog:import
+     *
+     * @see RouteLogService#importExcel(MultipartFile)
+     */
+    @GetMapping("/import/excel")
+    @SaCheckPermission("routeLog:import")
+    public BaseRsp<String> importRouteLogList(MultipartFile file) {
+        routeLogService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 
     /**

@@ -16,8 +16,8 @@ public class RspUtil {
      *
      * @return 返回json
      */
-    public BaseRsp<Object> message() {
-        return new BaseRsp<>().setMsg(CommonCore.SUCCESS_MSG);
+    public <T> BaseRsp<T> message() {
+        return new BaseRsp<T>().setMsg(CommonCore.SUCCESS_MSG);
     }
 
     /**
@@ -26,8 +26,8 @@ public class RspUtil {
      * @param data 数据体
      * @return 返回json
      */
-    public BaseRsp<Object> message(Object data) {
-        BaseRsp<Object> vo = new BaseRsp<>();
+    public <T> BaseRsp<T> message(T data) {
+        BaseRsp<T> vo = new BaseRsp<>();
         vo.setData(data);
         return vo;
     }
@@ -38,8 +38,8 @@ public class RspUtil {
      * @param data 数据体
      * @return 返回json
      */
-    public BaseRsp<Object> message(String msg, Object data) {
-        BaseRsp<Object> vo = new BaseRsp<>();
+    public <T> BaseRsp<T> message(String msg, T data) {
+        BaseRsp<T> vo = new BaseRsp<>();
         vo.setMsg(msg);
         vo.setData(data);
         return vo;

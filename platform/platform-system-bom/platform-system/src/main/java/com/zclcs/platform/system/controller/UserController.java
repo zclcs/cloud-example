@@ -76,12 +76,12 @@ public class UserController {
      * 导出用户信息
      * 权限: user:excel
      *
-     * @see UserService#findUserList(UserVo)
+     * @see UserService#exportExcel(UserVo)
      */
-    @GetMapping("/excel")
+    @GetMapping("/export/excel")
     @SaCheckPermission("user:excel")
-    public void excelUserList(@Validated UserVo userVo) throws Exception {
-        userService.export(userVo);
+    public void excelUserList(@Validated UserVo userVo) {
+        userService.exportExcel(userVo);
     }
 
     /**

@@ -6,6 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,7 +35,19 @@ public interface RouteLogService extends IService<RouteLog> {
      */
     List<RouteLogVo> findRouteLogList(RouteLogVo routeLogVo);
 
-    void export(RouteLogVo routeLogVo) throws Exception;
+    /**
+     * 导出
+     *
+     * @param routeLogVo {@link RouteLogVo}
+     */
+    void exportExcel(RouteLogVo routeLogVo);
+
+    /**
+     * 导入
+     *
+     * @param file 文件
+     */
+    void importExcel(MultipartFile file);
 
     /**
      * 查询（单个）

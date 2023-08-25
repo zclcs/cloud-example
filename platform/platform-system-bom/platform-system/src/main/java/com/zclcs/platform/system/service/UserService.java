@@ -38,7 +38,12 @@ public interface UserService extends IService<User> {
      */
     List<UserVo> findUserList(UserVo userVo);
 
-    void export(UserVo userVo) throws Exception;
+    /**
+     * 导出
+     *
+     * @param userVo {@link UserVo}
+     */
+    void exportExcel(UserVo userVo);
 
     /**
      * 查询（单个）
