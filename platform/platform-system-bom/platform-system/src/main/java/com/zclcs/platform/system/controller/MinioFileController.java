@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +98,7 @@ public class MinioFileController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //@SaCheckPermission("file:add")
     public BaseRsp<MinioFile> addMinioFile(@RequestPart(value = "file") MultipartFile file,
-                                           String bucketName) {
+                                           String bucketName) throws IOException {
         return RspUtil.data(this.minioFileService.createMinioFile(file, bucketName));
     }
 

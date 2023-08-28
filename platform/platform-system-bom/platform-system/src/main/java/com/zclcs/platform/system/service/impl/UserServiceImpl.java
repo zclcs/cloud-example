@@ -89,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void exportExcel(UserVo userVo) {
-        SimpleExportListener<UserVo, UserExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<UserVo, UserExcelVo>() {
+        SimpleExportListener<UserVo, UserExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<>() {
             @Override
             public Long count(UserVo userVo) {
                 return countUser(userVo);

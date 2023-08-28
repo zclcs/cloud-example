@@ -9,6 +9,7 @@ import com.alibaba.csp.sentinel.Tracer;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.FileDownloadException;
+import com.zclcs.cloud.lib.core.exception.FileUploadException;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
@@ -168,8 +169,16 @@ public class BaseExceptionHandler {
 
     @ExceptionHandler(value = FileDownloadException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void handleFileDownloadException(FileDownloadException e) {
+    public BaseRsp<Object> handleFileDownloadException(FileDownloadException e) {
         log.error("FileDownloadException", e);
+        return RspUtil.message(e.getMessage());
+    }
+
+    @ExceptionHandler(value = FileUploadException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseRsp<Object> handleINTERNAL_SERVER_ERROR(FileUploadException e) {
+        log.error("FileUploadException", e);
+        return RspUtil.message(e.getMessage());
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)

@@ -32,6 +32,7 @@ buildscript {
         dynamicTpVersion = "1.1.3"
         saTokenVersion = "1.35.0.RC"
         easyexcelVersion = "3.3.2"
+        tikaVersion = "2.8.0"
     }
 }
 
@@ -102,6 +103,7 @@ configure(commons) {
         management platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
+        management platform("org.apache.tika:tika-bom:$tikaVersion")
         management platform(project(":cloud-bom"))
 //        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

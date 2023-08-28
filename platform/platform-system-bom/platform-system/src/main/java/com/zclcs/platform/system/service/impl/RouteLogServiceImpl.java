@@ -65,7 +65,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
 
     @Override
     public void exportExcel(RouteLogVo routeLogVo) {
-        SimpleExportListener<RouteLogVo, RouteLogExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<RouteLogVo, RouteLogExcelVo>() {
+        SimpleExportListener<RouteLogVo, RouteLogExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<>() {
             @Override
             public Long count(RouteLogVo t) {
                 return countRouteLog(t);
@@ -85,7 +85,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile file) {
-        SimpleImportListener<RouteLog> routeLogSimpleImportListener = new SimpleImportListener<>(new ImportExcelService<RouteLog>() {
+        SimpleImportListener<RouteLog> routeLogSimpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
             @Override
             public RouteLog toBean(Map<Integer, String> cellData) {
                 RouteLog routeLog = new RouteLog();

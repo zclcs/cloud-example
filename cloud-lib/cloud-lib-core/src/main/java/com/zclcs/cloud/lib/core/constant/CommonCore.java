@@ -1,5 +1,7 @@
 package com.zclcs.cloud.lib.core.constant;
 
+import java.util.List;
+
 /**
  * @author zclcs
  */
@@ -100,4 +102,9 @@ public interface CommonCore {
     String HTTP = "http://";
 
     String BOOLEAN_TRUE = "true";
+
+    /**
+     * 允许上传的文件类型
+     */
+    List<String> ALLOW_FILE_TYPE = List.of("jpg", "png", "pdf", "xls");
 }

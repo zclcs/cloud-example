@@ -6,7 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FileUploadException;
+import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.minio.starter.bean.vo.FileUploadVo;
 import com.zclcs.common.minio.starter.utils.MinioUtil;
@@ -19,11 +20,18 @@ import com.zclcs.platform.system.service.MinioBucketService;
 import com.zclcs.platform.system.service.MinioFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
+import org.apache.tika.mime.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +49,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
 
     private final MinioUtil minioUtil;
     private final MinioBucketService minioBucketService;
+    private final GlobalProperties globalProperties;
 
     @Override
     public BasePage<MinioFileVo> findMinioFilePage(BasePageAo basePageAo, MinioFileVo minioFileVo) {
@@ -63,7 +72,11 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) {
+    public MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) throws IOException {
+        String mimeType = getMimeType(multipartFile);
+        if (!globalProperties.getAllowFileType().contains(mimeType)) {
+            throw new FileUploadException("不支持上传该类型文件");
+        }
         String defaultBucket = Optional.ofNullable(bucketName).filter(StrUtil::isNotBlank).orElse("default");
         Long bucketId;
         FileUploadVo fileUploadVo;
@@ -73,7 +86,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
                 fileUploadVo = minioUtil.uploadFile(multipartFile, defaultBucket);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                throw new MyException("调用minio失败，" + e.getMessage());
+                throw new FileUploadException("调用minio失败，" + e.getMessage());
             }
         } else {
             MinioBucket one = minioBucketService.lambdaQuery().eq(MinioBucket::getBucketName, defaultBucket).one();
@@ -82,7 +95,7 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
                 fileUploadVo = minioUtil.uploadFile(multipartFile, defaultBucket);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                throw new MyException("调用minio失败，" + e.getMessage());
+                throw new FileUploadException("调用minio失败，" + e.getMessage());
             }
         }
         MinioFile minioFile = new MinioFile();
@@ -98,11 +111,14 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     public void deleteMinioFile(List<String> ids) {
         for (String id : ids) {
             MinioFileVo minioFile = this.findMinioFile(MinioFileVo.builder().id(id).build());
+            if (minioFile == null) {
+                return;
+            }
             try {
                 minioUtil.removeObject(minioFile.getBucketName(), minioFile.getFileName());
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                throw new MyException("调用minio失败，" + e.getMessage());
+                throw new FileUploadException("调用minio失败，" + e.getMessage());
             }
             this.removeById(id);
         }
@@ -115,4 +131,23 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
         queryWrapper.orderByDesc("mf.create_at");
         return queryWrapper;
     }
+
+    /**
+     * 获取文件类型
+     *
+     * @param file 文件
+     * @return 文件类型
+     */
+    public static String getMimeType(MultipartFile file) throws IOException {
+        TikaConfig config = TikaConfig.getDefaultConfig();
+        Detector detector = config.getDetector();
+
+        TikaInputStream stream = TikaInputStream.get(file.getInputStream());
+
+        Metadata metadata = new Metadata();
+        metadata.add(TikaCoreProperties.RESOURCE_NAME_KEY, file.getOriginalFilename());
+        MediaType mediaType = detector.detect(stream, metadata);
+        return mediaType.toString();
+    }
+
 }

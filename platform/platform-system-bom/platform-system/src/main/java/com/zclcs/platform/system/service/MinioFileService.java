@@ -7,6 +7,7 @@ import com.zclcs.platform.system.api.bean.entity.MinioFile;
 import com.zclcs.platform.system.api.bean.vo.MinioFileVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public interface MinioFileService extends IService<MinioFile> {
      * @param bucketName    桶名称
      * @return 文件
      */
-    MinioFile createMinioFile(MultipartFile multipartFile, String bucketName);
+    MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) throws IOException;
 
     /**
      * 删除
