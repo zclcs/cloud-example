@@ -13,7 +13,6 @@ buildscript {
         lombokVersion = "1.18.24"
         hutoolVersion = "5.8.11"
         mybatisPlusVersion = "3.5.3.2"
-        dynamicDatasourceVersion = "3.6.0"
         p6spyVersion = "3.9.1"
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
@@ -29,10 +28,10 @@ buildscript {
         redissonVersion = "3.20.0"
         xxlJobVersion = "2.4.0"
         janinoVersion = "3.1.9"
-        dynamicTpVersion = "1.1.3"
         saTokenVersion = "1.35.0.RC"
         easyexcelVersion = "3.3.2"
         tikaVersion = "2.8.0"
+        mybatisFlexVersion = "1.6.1"
     }
 }
 
@@ -104,6 +103,9 @@ configure(commons) {
         management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform("org.apache.tika:tika-bom:$tikaVersion")
+        management platform("com.mybatis-flex:mybatis-flex-dependencies:$mybatisFlexVersion")
+        management platform("cn.hutool:hutool-bom:$hutoolVersion")
+        management platform("com.baomidou:mybatis-plus-bom:$mybatisPlusVersion")
         management platform(project(":cloud-bom"))
 //        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

@@ -1,5 +1,0 @@
-dependencies {
-    api "org.dromara.dynamictp:dynamic-tp-spring-boot-starter-nacos"
-    api "org.dromara.dynamictp:dynamic-tp-spring-boot-starter-adapter-webserver"
-    api "org.springframework.cloud:spring-cloud-context"
-}
