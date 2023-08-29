@@ -31,24 +31,7 @@ public class GlobalProperties {
     private String defaultPassword;
 
     /**
-     * 允许的文件类型
-     * application/msword	word(.doc)
-     * application/vnd.ms-powerpoint	powerpoint(.ppt)
-     * application/vnd.ms-excel	excel(.xls)
-     * application/vnd.openxmlformats-officedocument.wordprocessingml.document	word(.docx)
-     * application/vnd.openxmlformats-officedocument.presentationml.presentation	powerpoint(.pptx)
-     * application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	excel(.xlsx)
-     * application/x-rar-compressed	rar
-     * application/zip	zip
-     * application/pdf	pdf
-     * video/*	视频文件
-     * image/*	图片文件
-     * text/plain	纯文本
-     * text/css	css文件
-     * text/html	html文件
-     * text/x-java-source	java源代码
-     * text/x-csrc	c源代码
-     * text/x-c++src	c++源代码
+     * 允许的文件类型 {@link cn.hutool.core.io.FileTypeUtil}
      */
     private List<String> allowFileType;
 

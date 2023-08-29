@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,12 +21,6 @@ import com.zclcs.platform.system.service.MinioBucketService;
 import com.zclcs.platform.system.service.MinioFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.io.TikaInputStream;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.metadata.TikaCoreProperties;
-import org.apache.tika.mime.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,8 +68,8 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) throws IOException {
-        String mimeType = getMimeType(multipartFile);
-        if (!globalProperties.getAllowFileType().contains(mimeType)) {
+        String type = FileTypeUtil.getType(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+        if (!globalProperties.getAllowFileType().contains(type)) {
             throw new FileUploadException("不支持上传该类型文件");
         }
         String defaultBucket = Optional.ofNullable(bucketName).filter(StrUtil::isNotBlank).orElse("default");
@@ -130,24 +125,6 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
         QueryWrapperUtil.likeRightNotBlank(queryWrapper, "mf.original_file_name", minioFileVo.getOriginalFileName());
         queryWrapper.orderByDesc("mf.create_at");
         return queryWrapper;
-    }
-
-    /**
-     * 获取文件类型
-     *
-     * @param file 文件
-     * @return 文件类型
-     */
-    public static String getMimeType(MultipartFile file) throws IOException {
-        TikaConfig config = TikaConfig.getDefaultConfig();
-        Detector detector = config.getDetector();
-
-        TikaInputStream stream = TikaInputStream.get(file.getInputStream());
-
-        Metadata metadata = new Metadata();
-        metadata.add(TikaCoreProperties.RESOURCE_NAME_KEY, file.getOriginalFilename());
-        MediaType mediaType = detector.detect(stream, metadata);
-        return mediaType.toString();
     }
 
 }

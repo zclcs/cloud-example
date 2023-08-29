@@ -12,7 +12,7 @@ buildscript {
         findbugsVersion = "3.0.2"
         lombokVersion = "1.18.24"
         hutoolVersion = "5.8.11"
-        mybatisPlusVersion = "3.5.3.1"
+        mybatisPlusVersion = "3.5.3.2"
         dynamicDatasourceVersion = "3.6.0"
         p6spyVersion = "3.9.1"
         apmToolkitLogbackVersion = "8.7.0"

@@ -31,5 +31,4 @@ dependencies {
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
     implementation "org.freemarker:freemarker"
-    implementation "org.apache.tika:tika-core"
 }
