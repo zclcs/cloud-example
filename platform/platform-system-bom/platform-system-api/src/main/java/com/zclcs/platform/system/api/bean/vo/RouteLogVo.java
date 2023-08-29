@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -8,6 +9,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 网关转发日志 Vo
@@ -85,6 +88,41 @@ public class RouteLogVo extends BaseEntity implements Serializable {
      * ip对应地址
      */
     private String location;
+
+    public static RouteLogVo convertToRouteLogVo(RouteLog item) {
+        if (item == null) {
+            return null;
+        }
+        RouteLogVo build = RouteLogVo.builder()
+                .routeId(item.getRouteId())
+                .routeIp(item.getRouteIp())
+                .requestUri(item.getRequestUri())
+                .targetUri(item.getTargetUri())
+                .requestMethod(item.getRequestMethod())
+                .targetServer(item.getTargetServer())
+                .requestTime(item.getRequestTime())
+                .code(item.getCode())
+                .time(item.getTime())
+                .location(item.getLocation())
+                .build();
+        build.setCreateAt(item.getCreateAt());
+        build.setUpdateBy(item.getUpdateBy());
+        return build;
+    }
+
+    public static List<RouteLogVo> convertToList(List<RouteLog> items) {
+        if (items == null) {
+            return null;
+        }
+        List<RouteLogVo> result = new ArrayList<>();
+        for (RouteLog item : items) {
+            RouteLogVo routeLogVo = convertToRouteLogVo(item);
+            if (routeLogVo != null) {
+                result.add(routeLogVo);
+            }
+        }
+        return result;
+    }
 
 
 }

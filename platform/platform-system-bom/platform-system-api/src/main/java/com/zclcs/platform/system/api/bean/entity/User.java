@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.platform.system.api.bean.ao.UserAo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -113,6 +114,28 @@ public class User extends BaseEntity implements Serializable {
      */
     @TableField("description")
     private String description;
+
+    public static User convertToUser(UserAo item) {
+        if (item == null) {
+            return null;
+        }
+        User result = new User();
+        result.setUserId(item.getUserId());
+        result.setUsername(item.getUsername());
+        result.setRealName(item.getRealName());
+        result.setPassword(item.getPassword());
+        result.setDeptId(item.getDeptId());
+        result.setEmail(item.getEmail());
+        result.setMobile(item.getMobile());
+        result.setStatus(item.getStatus());
+        result.setLastLoginTime(item.getLastLoginTime());
+        result.setGender(item.getGender());
+        result.setIsTab(item.getIsTab());
+        result.setTheme(item.getTheme());
+        result.setAvatar(item.getAvatar());
+        result.setDescription(item.getDescription());
+        return result;
+    }
 
 
 }

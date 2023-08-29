@@ -103,7 +103,7 @@ configure(commons) {
         management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
         management platform("org.apache.tika:tika-bom:$tikaVersion")
-        management platform("com.mybatis-flex:mybatis-flex-dependencies:$mybatisFlexVersion")
+//        management platform("com.mybatis-flex:mybatis-flex-dependencies:$mybatisFlexVersion")
         management platform("cn.hutool:hutool-bom:$hutoolVersion")
         management platform("com.baomidou:mybatis-plus-bom:$mybatisPlusVersion")
         management platform(project(":cloud-bom"))
@@ -111,6 +111,7 @@ configure(commons) {
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
+        annotationProcessor "com.mybatis-flex:mybatis-flex-processor:$mybatisFlexVersion"
     }
 
     compileJava.options.compilerArgs.add '-parameters'

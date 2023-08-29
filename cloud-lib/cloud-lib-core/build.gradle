@@ -5,6 +5,8 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-annotations"
     api "com.baomidou:mybatis-plus-annotation"
     api "com.baomidou:mybatis-plus-extension"
+    api "com.mybatis-flex:mybatis-flex-annotation"
+    api "com.mybatis-flex:mybatis-flex-core"
     api "com.google.guava:guava"
     api "org.springframework.cloud:spring-cloud-context"
     api "org.springframework.boot:spring-boot-autoconfigure"

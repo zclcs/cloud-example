@@ -23,6 +23,7 @@ dependencies {
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
     implementation(project(":cloud-lib:cloud-lib-mybatis-plus"))
+    implementation(project(":cloud-lib:cloud-lib-mybatis-flex"))
     implementation(project(":cloud-lib:cloud-lib-security-lite"))
     implementation(project(":cloud-lib:cloud-lib-fegin"))
     implementation(project(":cloud-lib:cloud-lib-aop"))

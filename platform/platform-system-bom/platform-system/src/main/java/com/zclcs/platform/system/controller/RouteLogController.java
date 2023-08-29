@@ -1,6 +1,8 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -10,6 +12,7 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
+import com.zclcs.platform.system.mapper.RouteLogFlexMapper;
 import com.zclcs.platform.system.service.RouteLogService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.ROUTE_LOG;
 
 /**
  * 网关转发日志
@@ -36,6 +41,8 @@ public class RouteLogController {
 
     private final RouteLogService routeLogService;
 
+    private final RouteLogFlexMapper routeLogFlexMapper;
+
     /**
      * 网关转发日志查询（分页）
      * 权限: routeLog:view
@@ -47,6 +54,38 @@ public class RouteLogController {
     public BaseRsp<BasePage<RouteLogVo>> findRouteLogPage(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
         BasePage<RouteLogVo> page = this.routeLogService.findRouteLogPage(basePageAo, routeLogVo);
         return RspUtil.data(page);
+    }
+
+    /**
+     * 网关转发日志查询（分页）
+     * 权限: routeLog:view
+     *
+     * @see RouteLogService#findRouteLogPage(BasePageAo, RouteLogVo)
+     */
+    @GetMapping("/flex")
+    @SaCheckPermission("routeLog:view")
+    public BaseRsp<BasePage<RouteLogVo>> findRouteLogPageFlex(@Validated BasePageAo basePageAo, @Validated RouteLogVo routeLogVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                ROUTE_LOG.ROUTE_ID,
+                ROUTE_LOG.ROUTE_IP,
+                ROUTE_LOG.REQUEST_URI,
+                ROUTE_LOG.REQUEST_METHOD,
+                ROUTE_LOG.REQUEST_TIME,
+                ROUTE_LOG.TARGET_SERVER,
+                ROUTE_LOG.LOCATION,
+                ROUTE_LOG.CODE,
+                ROUTE_LOG.TIME,
+                ROUTE_LOG.CREATE_AT,
+                ROUTE_LOG.UPDATE_AT);
+        Page<RouteLog> paginate = routeLogFlexMapper.paginate(basePageAo.getPageNum(), basePageAo.getPageSize(), 20000, queryWrapper);
+        BasePage<RouteLogVo> routeLogVoBasePage = new BasePage<>();
+        routeLogVoBasePage.setPageNum(paginate.getPageNumber());
+        routeLogVoBasePage.setPageSize(paginate.getPageSize());
+        routeLogVoBasePage.setPages(paginate.getTotalPage());
+        routeLogVoBasePage.setTotal(paginate.getTotalRow());
+        routeLogVoBasePage.setRecords(RouteLogVo.convertToList(paginate.getRecords()));
+        return RspUtil.data(routeLogVoBasePage);
     }
 
     /**
