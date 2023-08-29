@@ -51,6 +51,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
     privileged: true
     user: root
     env_file: .env
@@ -64,12 +70,11 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-      # TODO 修改JVM调优参数
-      JVM_XMS: 128m   #-Xms default :2g
-      JVM_XMX: 128m   #-Xmx default :2g
+      JVM_XMS: 512m   #-Xms default :2g
+      JVM_XMX: 512m   #-Xmx default :2g
       JVM_XMN: 64m    #-Xmn default :1g
-      JVM_MS: 32m     #-XX:MetaspaceSize default :128m
-      JVM_MMS: 32m    #-XX:MaxMetaspaceSize default :320m
+      JVM_MS: 64m     #-XX:MetaspaceSize default :128m
+      JVM_MMS: 128m    #-XX:MaxMetaspaceSize default :320m
     volumes:
       - ./nacos/standalone-logs/:/home/nacos/logs
       - ./nacos/init.d/application.properties:/home/nacos/conf/application.properties
@@ -78,6 +83,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
     env_file: .env
     depends_on:
       third-part-database-sync:
@@ -106,6 +117,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
     env_file: .env
     command: server /data
   rabbitmq:
@@ -129,6 +146,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1024M
     env_file: .env
   nginx:
     image: ${CLOUD_DEPOSITORY_IP_PORT}/library/nginx:1.21.3
@@ -152,6 +175,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
     env_file: .env
     privileged: true
     user: root
@@ -176,6 +205,12 @@ services:
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
     env_file: .env
     depends_on:
       third-part-database-sync:

@@ -24,7 +24,6 @@ import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -32,11 +31,7 @@ import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.result.view.ViewResolver;
-import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.Collections;
 import java.util.List;
@@ -90,20 +85,6 @@ public class GatewayConfiguration {
                                        RouteDefinitionWriter routeDefinitionWriter) {
         return new RoutesHandler(objectMapper,
                 routeDefinitionWriter);
-    }
-
-    @Profile({"dev", "test"})
-    @Bean
-    public CorsWebFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedMethod("*");
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
-        source.registerCorsConfiguration("/**", config);
-
-        return new CorsWebFilter(source);
     }
 
     @Bean(CommonCore.ASYNC_POOL)
