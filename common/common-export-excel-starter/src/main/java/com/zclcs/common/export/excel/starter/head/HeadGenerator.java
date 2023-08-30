@@ -4,7 +4,7 @@ package com.zclcs.common.export.excel.starter.head;
  * Excel头生成器，用于自定义生成头部信息
  *
  * @author zclcs
- * @date 2020/10/27
+ * @since 2020/10/27
  */
 public interface HeadGenerator {
 

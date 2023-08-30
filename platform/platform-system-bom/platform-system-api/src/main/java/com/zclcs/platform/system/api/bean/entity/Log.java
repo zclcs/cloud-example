@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,12 +20,15 @@ import java.math.BigDecimal;
  * 用户操作日志 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:40:01.346
+ * @since 2023-01-10 10:40:01.346
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_log")
+@Table("system_log")
 public class Log extends BaseEntity implements Serializable {
 
     @Serial
@@ -31,49 +37,49 @@ public class Log extends BaseEntity implements Serializable {
     /**
      * 日志id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @Id(value = "id", keyType = KeyType.Auto)
     private Long id;
 
     /**
      * 操作用户
      */
-    @TableField("username")
+    @Column("username")
     private String username;
 
     /**
      * 操作内容
      */
-    @TableField("operation")
+    @Column("operation")
     private String operation;
 
     /**
      * 耗时
      */
-    @TableField("time")
+    @Column("time")
     private BigDecimal time;
 
     /**
      * 操作方法
      */
-    @TableField("method")
+    @Column("method")
     private String method;
 
     /**
      * 方法参数
      */
-    @TableField("params")
+    @Column("params")
     private String params;
 
     /**
      * 操作者ip
      */
-    @TableField("ip")
+    @Column("ip")
     private String ip;
 
     /**
      * 操作地点
      */
-    @TableField("location")
+    @Column("location")
     private String location;
 
 

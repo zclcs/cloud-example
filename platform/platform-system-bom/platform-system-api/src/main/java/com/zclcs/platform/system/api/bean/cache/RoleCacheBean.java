@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 角色缓存
  *
  * @author zclcs
- * @date 2023-01-10 10:39:28.842
+ * @since 2023-01-10 10:39:28.842
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

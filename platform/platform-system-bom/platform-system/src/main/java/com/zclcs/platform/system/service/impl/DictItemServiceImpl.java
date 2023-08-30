@@ -3,8 +3,10 @@ package com.zclcs.platform.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
@@ -13,7 +15,6 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
 import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
 import com.zclcs.platform.system.api.bean.vo.DictItemVo;
@@ -29,64 +30,67 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mybatisflex.core.query.QueryMethods.max;
+import static com.zclcs.cloud.lib.dict.bean.entity.table.DictItemTableDef.DICT_ITEM;
+import static com.zclcs.platform.system.api.bean.entity.table.DeptTableDef.DEPT;
+
 /**
  * 字典项 Service实现
  *
  * @author zclcs
- * @date 2023-03-06 10:56:41.301
+ * @since 2023-03-06 10:56:41.301
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> implements DictItemService {
 
     @Override
     public BasePage<DictItemVo> findDictItemPage(BasePageAo basePageAo, DictItemVo dictItemVo) {
-        BasePage<DictItemVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<DictItemVo> queryWrapper = getDictItemQueryWrapper(dictItemVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getDictItemQueryWrapper(dictItemVo);
+        Page<DictItemVo> dictItemVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, DictItemVo.class);
+        return new BasePage<>(dictItemVoPage);
     }
 
     @Override
     public List<DictItemVo> findDictItemList(DictItemVo dictItemVo) {
-        QueryWrapper<DictItemVo> queryWrapper = getDictItemQueryWrapper(dictItemVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getDictItemQueryWrapper(dictItemVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, DictItemVo.class);
     }
 
     @Override
     public DictItemVo findDictItem(DictItemVo dictItemVo) {
-        QueryWrapper<DictItemVo> queryWrapper = getDictItemQueryWrapper(dictItemVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getDictItemQueryWrapper(dictItemVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, DictItemVo.class);
     }
 
     @Override
-    public Integer countDictItem(DictItemVo dictItemVo) {
-        QueryWrapper<DictItemVo> queryWrapper = getDictItemQueryWrapper(dictItemVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countDictItem(DictItemVo dictItemVo) {
+        QueryWrapper queryWrapper = getDictItemQueryWrapper(dictItemVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
     @Override
     public BasePage<DictVo> findDictPage(BasePageAo basePageAo, DictVo dictVo) {
-        BasePage<DictVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<DictVo> queryWrapper = getDictQueryWrapper(dictVo);
-        BasePage<DictVo> pageDictVo = this.baseMapper.findPageDictVo(basePage, queryWrapper);
-        pageDictVo.getList().forEach(this::setDict);
-        return pageDictVo;
+        QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
+        Page<DictVo> dictVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, DictVo.class);
+        dictVoPage.getRecords().forEach(this::setDict);
+        return new BasePage<>(dictVoPage);
     }
 
     @Override
     public List<DictVo> findDictList(DictVo dictVo) {
-        QueryWrapper<DictVo> queryWrapper = getDictQueryWrapper(dictVo);
-        List<DictVo> listDictVo = this.baseMapper.findListDictVo(queryWrapper);
+        QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
+        List<DictVo> listDictVo = this.mapper.selectListByQueryAs(queryWrapper, DictVo.class);
         listDictVo.forEach(this::setDict);
         return listDictVo;
     }
 
     @Override
     public DictVo findDict(DictVo dictVo) {
-        QueryWrapper<DictVo> queryWrapper = getDictQueryWrapper(dictVo);
-        DictVo oneDictVo = this.baseMapper.findOneDictVo(queryWrapper);
+        QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
+        DictVo oneDictVo = this.mapper.selectOneByQueryAs(queryWrapper, DictVo.class);
         setDict(oneDictVo);
         return oneDictVo;
     }
@@ -104,24 +108,44 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     }
 
     @Override
-    public Integer countDict(DictVo dictVo) {
-        QueryWrapper<DictVo> queryWrapper = getDictQueryWrapper(dictVo);
-        return this.baseMapper.countDictVo(queryWrapper);
+    public Long countDict(DictVo dictVo) {
+        QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<DictItemVo> getDictItemQueryWrapper(DictItemVo dictItemVo) {
-        QueryWrapper<DictItemVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.dict_name", dictItemVo.getDictName());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.value", dictItemVo.getValue());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.parent_value", dictItemVo.getParentValue());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.title", dictItemVo.getTitle());
-        QueryWrapperUtil.eqNotNull(queryWrapper, "tb.id", dictItemVo.getId());
+    private QueryWrapper getDictItemQueryWrapper(DictItemVo dictItemVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        DICT_ITEM.ID,
+                        DICT_ITEM.DICT_NAME,
+                        DICT_ITEM.PARENT_VALUE,
+                        DICT_ITEM.VALUE,
+                        DICT_ITEM.TITLE,
+                        DICT_ITEM.TYPE,
+                        DICT_ITEM.WHETHER_SYSTEM_DICT,
+                        DICT_ITEM.DESCRIPTION,
+                        DICT_ITEM.SORTED,
+                        DICT_ITEM.IS_DISABLED
+                )
+                .where(DICT_ITEM.DICT_NAME.likeRight(dictItemVo.getDictName(), If::hasText))
+                .and(DICT_ITEM.VALUE.likeRight(dictItemVo.getValue(), If::hasText))
+                .and(DICT_ITEM.PARENT_VALUE.likeRight(dictItemVo.getParentValue(), If::hasText))
+                .and(DICT_ITEM.TITLE.likeRight(dictItemVo.getTitle(), If::hasText))
+                .and(DICT_ITEM.ID.eq(dictItemVo.getId()))
+                .orderBy(DEPT.ORDER_NUM.asc())
+        ;
         return queryWrapper;
     }
 
-    private QueryWrapper<DictVo> getDictQueryWrapper(DictVo dictVo) {
-        QueryWrapper<DictVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.dictName", dictVo.getDictName());
+    private QueryWrapper getDictQueryWrapper(DictVo dictVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        max(DICT_ITEM.ID).as("id"),
+                        DICT_ITEM.DICT_NAME.as("name")
+                ).groupBy(DICT_ITEM.DICT_NAME)
+                .where(DICT_ITEM.DICT_NAME.likeRight(dictVo.getDictName(), If::hasText))
+                .orderBy(DEPT.ORDER_NUM.asc())
+        ;
         return queryWrapper;
     }
 
@@ -162,7 +186,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteDictItem(List<Long> ids) {
-        List<DictItem> list = this.lambdaQuery().in(DictItem::getId, ids).list();
+        List<DictItem> list = this.listByIds(ids);
         Object[] objects = list.stream().map(DictItem::getDictName).distinct().toArray();
         List<List<Object>> dictItems = new ArrayList<>();
         List<List<Object>> dictParents = new ArrayList<>();
@@ -178,9 +202,9 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
 
     @Override
     public void validateDictNameAndValueAndType(String dictName, String value, Long id) {
-        DictItem one = this.lambdaQuery()
-                .eq(DictItem::getDictName, dictName)
-                .eq(DictItem::getValue, value).one();
+        DictItem one = this.queryChain()
+                .where(DICT_ITEM.DICT_NAME.eq(dictName))
+                .and(DICT_ITEM.VALUE.eq(value)).one();
         if (one != null && !one.getId().equals(id)) {
             throw new MyException("字典项重复");
         }

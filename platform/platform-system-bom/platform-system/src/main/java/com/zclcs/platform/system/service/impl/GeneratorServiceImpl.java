@@ -1,6 +1,9 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
@@ -13,11 +16,13 @@ import com.zclcs.cloud.lib.core.utils.FileUtil;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.bean.ao.GenerateAo;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
-import com.zclcs.platform.system.api.bean.entity.Column;
+import com.zclcs.platform.system.api.bean.entity.ColumnInfo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
-import com.zclcs.platform.system.api.bean.entity.Table;
+import com.zclcs.platform.system.api.bean.entity.TableInfo;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
+import com.zclcs.platform.system.mapper.ColumnInfoMapper;
 import com.zclcs.platform.system.mapper.GeneratorMapper;
+import com.zclcs.platform.system.mapper.TableInfoMapper;
 import com.zclcs.platform.system.service.GeneratorConfigService;
 import com.zclcs.platform.system.service.GeneratorService;
 import com.zclcs.platform.system.service.MenuService;
@@ -35,6 +40,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import static com.mybatisflex.core.query.QueryMethods.case_;
+import static com.zclcs.platform.system.api.bean.entity.table.ColumnInfoTableDef.COLUMN_INFO;
+import static com.zclcs.platform.system.api.bean.entity.table.TableInfoTableDef.TABLE_INFO;
+
 /**
  * @author zclcs
  */
@@ -45,24 +54,68 @@ import java.util.Optional;
 public class GeneratorServiceImpl implements GeneratorService {
 
     private final GeneratorMapper generatorMapper;
+    private final TableInfoMapper tableInfoMapper;
+    private final ColumnInfoMapper columnInfoMapper;
     private final GeneratorConfigService generatorConfigService;
     private final MenuService menuService;
 
     @Override
     public List<String> getDatabases(String databaseType) {
-        return generatorMapper.getDatabases(databaseType);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(TABLE_INFO.DATASOURCE)
+                .groupBy(TABLE_INFO.DATASOURCE)
+                .where(TABLE_INFO.DATASOURCE.notIn("information_schema", "mysql", "sys", "performance_schema"))
+        ;
+        return tableInfoMapper.selectListByQueryAs(queryWrapper, String.class);
     }
 
     @Override
-    public BasePage<Table> getTables(String tableName, BasePageAo request, String databaseType, String schemaName) {
-        BasePage<Table> page = new BasePage<>(request.getPageNum(), request.getPageSize());
-        generatorMapper.getTables(page, tableName, databaseType, schemaName);
-        return page;
+    public BasePage<TableInfo> getTables(String tableName, BasePageAo request, String databaseType, String schemaName) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        TABLE_INFO.CREATE_AT,
+                        TABLE_INFO.UPDATE_AT,
+                        TABLE_INFO.DATA_ROWS,
+                        TABLE_INFO.DATASOURCE,
+                        TABLE_INFO.NAME,
+                        TABLE_INFO.REMARK,
+                        TABLE_INFO.TABLE_COLLATION
+                )
+                .where(TABLE_INFO.DATASOURCE.eq(schemaName, If::hasText))
+                .and(TABLE_INFO.NAME.eq(tableName, If::hasText))
+                .orderBy(TABLE_INFO.CREATE_AT.desc(), TABLE_INFO.UPDATE_AT.desc())
+        ;
+        Page<TableInfo> paginate = tableInfoMapper.paginate(request.getPageNum(), request.getPageSize(), queryWrapper);
+        return new BasePage<>(paginate);
     }
 
     @Override
-    public List<Column> getColumns(String databaseType, String schemaName, String tableName, List<String> excludeColumns) {
-        return generatorMapper.getColumns(databaseType, schemaName, tableName, excludeColumns);
+    public List<ColumnInfo> getColumns(String databaseType, String schemaName, String tableName, List<String> excludeColumns) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        COLUMN_INFO.NAME,
+                        case_()
+                                .when(COLUMN_INFO.KEY.eq("PRI")).then("1")
+                                .else_("0")
+                                .end().as("isKey"),
+                        case_()
+                                .when(COLUMN_INFO.NULLABLE.eq("YES")).then("1")
+                                .else_("0")
+                                .end().as("isNullable"),
+                        COLUMN_INFO.TYPE,
+                        case_()
+                                .when(COLUMN_INFO.CHAR_MAX_LENGTH.isNull()).then("1")
+                                .else_("0")
+                                .end().as("isCharMaxLength"),
+                        COLUMN_INFO.CHAR_MAX_LENGTH,
+                        COLUMN_INFO.REMARK,
+                        COLUMN_INFO.DEFAULT_VALUE
+                )
+                .where(COLUMN_INFO.TABLE_SCHEMA.eq(schemaName, If::hasText))
+                .and(COLUMN_INFO.TABLE_NAME.eq(tableName, If::hasText))
+                .and(COLUMN_INFO.NAME.notIn(excludeColumns, If::isNotEmpty))
+        ;
+        return columnInfoMapper.selectListByQuery(queryWrapper);
     }
 
     @Override
@@ -86,31 +139,31 @@ public class GeneratorServiceImpl implements GeneratorService {
         generatorConfigVo.setClassName(underscoreToCamel);
         generatorConfigVo.setTableComment(remark);
         // 生成代码到临时目录
-        List<Column> columns = this.getColumns(Generator.DATABASE_TYPE, generateAo.getDatasource(), name, StrUtil.split(generatorConfigVo.getExcludeColumns(), StrUtil.COMMA));
-        for (Column column : columns) {
-            if (column.getIsKey()) {
-                generatorConfigVo.setKeyName(column.getName());
+        List<ColumnInfo> columnInfos = this.getColumns(Generator.DATABASE_TYPE, generateAo.getDatasource(), name, StrUtil.split(generatorConfigVo.getExcludeColumns(), StrUtil.COMMA));
+        for (ColumnInfo columnInfo : columnInfos) {
+            if (columnInfo.getIsKey()) {
+                generatorConfigVo.setKeyName(columnInfo.getName());
             }
-            String columnRemark = column.getRemark();
+            String columnRemark = columnInfo.getRemark();
             if (StrUtil.contains(columnRemark, CommonCore.DICT_REMARK)) {
-                column.setHasDict(true);
+                columnInfo.setHasDict(true);
                 List<String> strings = StrUtil.splitTrim(columnRemark, CommonCore.DICT_REMARK);
-                column.setRemarkDict(strings.get(strings.size() - 1));
+                columnInfo.setRemarkDict(strings.get(strings.size() - 1));
             } else {
-                column.setHasDict(false);
+                columnInfo.setHasDict(false);
             }
-            column.setIsArray(StrUtil.contains(columnRemark, CommonCore.DICT_ARRAY));
-            column.setIsTree(StrUtil.contains(columnRemark, CommonCore.DICT_TREE));
+            columnInfo.setIsArray(StrUtil.contains(columnRemark, CommonCore.DICT_ARRAY));
+            columnInfo.setIsTree(StrUtil.contains(columnRemark, CommonCore.DICT_TREE));
         }
         try {
-            GeneratorUtil.generateEntityFile(columns, generatorConfigVo);
-            GeneratorUtil.generateAoFile(columns, generatorConfigVo);
-            GeneratorUtil.generateVoFile(columns, generatorConfigVo);
-            GeneratorUtil.generateMapperFile(columns, generatorConfigVo);
-            GeneratorUtil.generateMapperXmlFile(columns, generatorConfigVo);
-            GeneratorUtil.generateServiceFile(columns, generatorConfigVo);
-            GeneratorUtil.generateServiceImplFile(columns, generatorConfigVo);
-            GeneratorUtil.generateControllerFile(columns, generatorConfigVo);
+            GeneratorUtil.generateEntityFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateAoFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateVoFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateMapperFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateMapperXmlFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateServiceFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateServiceImplFile(columnInfos, generatorConfigVo);
+            GeneratorUtil.generateControllerFile(columnInfos, generatorConfigVo);
             // 打包
             String zipFile = System.currentTimeMillis() + Params.SUFFIX;
             FileUtil.compress(Generator.TEMP_PATH + "src", zipFile);

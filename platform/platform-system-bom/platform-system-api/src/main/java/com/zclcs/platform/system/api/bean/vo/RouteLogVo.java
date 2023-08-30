@@ -2,8 +2,12 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,12 +20,12 @@ import java.util.List;
  * 网关转发日志 Vo
  *
  * @author zclcs
- * @date 2023-01-10 10:40:09.958
+ * @since 2023-01-10 10:40:09.958
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class RouteLogVo extends BaseEntity implements Serializable {
@@ -93,21 +97,24 @@ public class RouteLogVo extends BaseEntity implements Serializable {
         if (item == null) {
             return null;
         }
-        RouteLogVo build = RouteLogVo.builder()
-                .routeId(item.getRouteId())
-                .routeIp(item.getRouteIp())
-                .requestUri(item.getRequestUri())
-                .targetUri(item.getTargetUri())
-                .requestMethod(item.getRequestMethod())
-                .targetServer(item.getTargetServer())
-                .requestTime(item.getRequestTime())
-                .code(item.getCode())
-                .time(item.getTime())
-                .location(item.getLocation())
-                .build();
-        build.setCreateAt(item.getCreateAt());
-        build.setUpdateBy(item.getUpdateBy());
-        return build;
+        RouteLogVo result = new RouteLogVo();
+        result.setRouteId(item.getRouteId());
+        result.setRouteIp(item.getRouteIp());
+        result.setRequestUri(item.getRequestUri());
+        result.setTargetUri(item.getTargetUri());
+        result.setRequestMethod(item.getRequestMethod());
+        result.setTargetServer(item.getTargetServer());
+        result.setRequestTime(item.getRequestTime());
+        result.setCode(item.getCode());
+        result.setTime(item.getTime());
+        result.setLocation(item.getLocation());
+        result.setVersion(item.getVersion());
+        result.setTenantId(item.getTenantId());
+        result.setCreateAt(item.getCreateAt());
+        result.setCreateBy(item.getCreateBy());
+        result.setUpdateAt(item.getUpdateAt());
+        result.setUpdateBy(item.getUpdateBy());
+        return result;
     }
 
     public static List<RouteLogVo> convertToList(List<RouteLog> items) {

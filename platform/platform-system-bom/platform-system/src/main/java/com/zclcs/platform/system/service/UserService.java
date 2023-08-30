@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
@@ -15,7 +15,7 @@ import java.util.List;
  * 用户 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:34.182
+ * @since 2023-01-10 10:39:34.182
  */
 public interface UserService extends IService<User> {
 

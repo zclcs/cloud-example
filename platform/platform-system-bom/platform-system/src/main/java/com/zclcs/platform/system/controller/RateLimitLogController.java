@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * 限流拦截日志
  *
  * @author zclcs
- * @date 2023-01-10 10:39:53.040
+ * @since 2023-01-10 10:39:53.040
  */
 @Slf4j
 @RestController

@@ -1,9 +1,10 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
@@ -15,7 +16,7 @@ import java.util.List;
  * 菜单 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:18.238
+ * @since 2023-01-10 10:39:18.238
  */
 public interface MenuService extends IService<Menu> {
 
@@ -50,7 +51,7 @@ public interface MenuService extends IService<Menu> {
      * @param menuVo menuVo
      * @return MenuVo
      */
-    Integer countMenu(MenuVo menuVo);
+    Long countMenu(MenuVo menuVo);
 
     /**
      * 获取用户菜单
@@ -98,6 +99,14 @@ public interface MenuService extends IService<Menu> {
      * @return 权限
      */
     List<String> findUserPermissions(String username);
+
+    /**
+     * 查询用户权限
+     *
+     * @param username 用户名
+     * @return 权限
+     */
+    List<MenuCacheBean> findUserMenus(String username);
 
     /**
      * 查询用户路由

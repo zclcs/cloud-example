@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * 角色 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:28.842
+ * @since 2023-01-10 10:39:28.842
  */
 @Slf4j
 @Service
@@ -52,7 +52,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public BasePage<RoleVo> findRolePage(BasePageAo basePageAo, RoleVo roleVo) {
         BasePage<RoleVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<RoleVo> queryWrapper = getQueryWrapper(roleVo);
-        BasePage<RoleVo> pageVo = this.baseMapper.findPageVo(basePage, queryWrapper);
+        BasePage<RoleVo> pageVo = this.mapper.findPageVo(basePage, queryWrapper);
         pageVo.getList().forEach(vo -> {
             List<Long> menuIds = SystemCacheUtil.getMenuIdsByRoleId(vo.getRoleId());
             vo.setMenuIds(menuIds);
@@ -64,19 +64,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<RoleVo> findRoleList(RoleVo roleVo) {
         QueryWrapper<RoleVo> queryWrapper = getQueryWrapper(roleVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public RoleVo findRole(RoleVo roleVo) {
         QueryWrapper<RoleVo> queryWrapper = getQueryWrapper(roleVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countRole(RoleVo roleVo) {
         QueryWrapper<RoleVo> queryWrapper = getQueryWrapper(roleVo);
-        return this.baseMapper.countVo(queryWrapper);
+        return this.mapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<RoleVo> getQueryWrapper(RoleVo roleVo) {

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * ${tableComment}
  *
  * @author ${author}
- * @date ${date}
+ * @since ${date}
  */
 @Slf4j
 @RestController

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 字典树
  *
  * @author zclcs
- * @date 2023-03-06 10:56:41.301
+ * @since 2023-03-06 10:56:41.301
  */
 @Data
 @AllArgsConstructor

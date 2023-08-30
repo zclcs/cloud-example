@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
@@ -13,7 +13,7 @@ import java.util.List;
  * 登录日志 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:57.150
+ * @since 2023-01-10 10:39:57.150
  */
 public interface LoginLogService extends IService<LoginLog> {
 
@@ -48,7 +48,7 @@ public interface LoginLogService extends IService<LoginLog> {
      * @param loginLogVo loginLogVo
      * @return LoginLogVo
      */
-    Integer countLoginLog(LoginLogVo loginLogVo);
+    Long countLoginLog(LoginLogVo loginLogVo);
 
     /**
      * 新增

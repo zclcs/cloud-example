@@ -2,11 +2,12 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.api.bean.entity.BlockLog;
@@ -22,11 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zclcs.platform.system.api.bean.entity.table.BlockLogTableDef.BLOCK_LOG;
+import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.ROUTE_LOG;
+
 /**
  * 黑名单拦截日志 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:40:05.798
+ * @since 2023-01-10 10:40:05.798
  */
 @Slf4j
 @Service
@@ -38,36 +42,47 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
 
     @Override
     public BasePage<BlockLogVo> findBlockLogPage(BasePageAo basePageAo, BlockLogVo blockLogVo) {
-        BasePage<BlockLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<BlockLogVo> queryWrapper = getQueryWrapper(blockLogVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blockLogVo);
+        Page<BlockLogVo> blockLogVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, BlockLogVo.class);
+        return new BasePage<>(blockLogVoPage);
     }
 
     @Override
     public List<BlockLogVo> findBlockLogList(BlockLogVo blockLogVo) {
-        QueryWrapper<BlockLogVo> queryWrapper = getQueryWrapper(blockLogVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blockLogVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, BlockLogVo.class);
     }
 
     @Override
     public BlockLogVo findBlockLog(BlockLogVo blockLogVo) {
-        QueryWrapper<BlockLogVo> queryWrapper = getQueryWrapper(blockLogVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blockLogVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, BlockLogVo.class);
     }
 
     @Override
-    public Integer countBlockLog(BlockLogVo blockLogVo) {
-        QueryWrapper<BlockLogVo> queryWrapper = getQueryWrapper(blockLogVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countBlockLog(BlockLogVo blockLogVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(blockLogVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<BlockLogVo> getQueryWrapper(BlockLogVo blockLogVo) {
-        QueryWrapper<BlockLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.block_ip", blockLogVo.getBlockIp());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_uri", blockLogVo.getRequestUri());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_method", blockLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sbl.request_time", blockLogVo.getRequestTimeFrom(), blockLogVo.getRequestTimeTo());
-        queryWrapper.orderByDesc("sbl.request_time");
+    private QueryWrapper getQueryWrapper(BlockLogVo blockLogVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        BLOCK_LOG.BLOCK_ID,
+                        BLOCK_LOG.BLOCK_IP,
+                        BLOCK_LOG.REQUEST_URI,
+                        BLOCK_LOG.REQUEST_METHOD,
+                        BLOCK_LOG.REQUEST_TIME,
+                        BLOCK_LOG.LOCATION,
+                        BLOCK_LOG.CREATE_AT,
+                        BLOCK_LOG.UPDATE_BY
+                )
+                .where(BLOCK_LOG.BLOCK_IP.likeRight(blockLogVo.getBlockIp(), If::hasText))
+                .and(BLOCK_LOG.REQUEST_URI.likeRight(blockLogVo.getRequestUri(), If::hasText))
+                .and(BLOCK_LOG.REQUEST_METHOD.eq(blockLogVo.getRequestMethod(), If::hasText))
+                .and(ROUTE_LOG.REQUEST_TIME.between(blockLogVo.getRequestTimeFrom(), blockLogVo.getRequestTimeTo()))
+                .orderBy(ROUTE_LOG.REQUEST_TIME.desc())
+        ;
         return queryWrapper;
     }
 

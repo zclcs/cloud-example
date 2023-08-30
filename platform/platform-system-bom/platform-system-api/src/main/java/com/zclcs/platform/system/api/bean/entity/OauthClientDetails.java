@@ -1,12 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,12 +19,15 @@ import java.io.Serializable;
  * 终端信息 Entity
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_oauth_client_details")
+@Table("system_oauth_client_details")
 public class OauthClientDetails extends BaseEntity implements Serializable {
 
     @Serial
@@ -29,67 +36,67 @@ public class OauthClientDetails extends BaseEntity implements Serializable {
     /**
      * 客户端ID
      */
-    @TableId(value = "client_id")
+    @Id(value = "client_id", keyType = KeyType.None)
     private String clientId;
 
     /**
      * 资源列表
      */
-    @TableField("resource_ids")
+    @Column("resource_ids")
     private String resourceIds;
 
     /**
      * 客户端密钥
      */
-    @TableField("client_secret")
+    @Column("client_secret")
     private String clientSecret;
 
     /**
      * 域
      */
-    @TableField("scope")
+    @Column("scope")
     private String scope;
 
     /**
      * 认证类型
      */
-    @TableField("authorized_grant_types")
+    @Column("authorized_grant_types")
     private String authorizedGrantTypes;
 
     /**
      * 重定向地址
      */
-    @TableField("web_server_redirect_uri")
+    @Column("web_server_redirect_uri")
     private String webServerRedirectUri;
 
     /**
      * 角色列表
      */
-    @TableField("authorities")
+    @Column("authorities")
     private String authorities;
 
     /**
      * token 有效期
      */
-    @TableField("access_token_validity")
+    @Column("access_token_validity")
     private Integer accessTokenValidity;
 
     /**
      * 刷新令牌有效期
      */
-    @TableField("refresh_token_validity")
+    @Column("refresh_token_validity")
     private Integer refreshTokenValidity;
 
     /**
      * 令牌扩展字段JSON
      */
-    @TableField("additional_information")
+    @Column("additional_information")
     private String additionalInformation;
 
     /**
      * 是否自动放行
      */
-    @TableField("autoapprove")
+    @Column("autoapprove")
     private String autoapprove;
 
 

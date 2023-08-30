@@ -39,7 +39,7 @@ import java.util.Optional;
  * rabbitmq控制台
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 @Slf4j
 @RestController
@@ -86,8 +86,8 @@ public class RabbitmqController {
                 }
             }
             BasePage<RabbitmqExchangeVo> basePage = new BasePage<>();
-            basePage.setPages(pageResultVo.getPageCount());
-            basePage.setTotal(pageResultVo.getFilteredCount());
+            basePage.setPages(Long.valueOf(pageResultVo.getPageCount()));
+            basePage.setTotal(Long.valueOf(pageResultVo.getFilteredCount()));
             basePage.setPageNum(Long.valueOf(pageResultVo.getPage()));
             basePage.setList(pageResultVo.getItems());
             return RspUtil.data(basePage);
@@ -188,8 +188,8 @@ public class RabbitmqController {
                 }
             }
             BasePage<RabbitmqQueueVo> basePage = new BasePage<>();
-            basePage.setPages(pageResultVo.getPageCount());
-            basePage.setTotal(pageResultVo.getFilteredCount());
+            basePage.setPages(Long.valueOf(pageResultVo.getPageCount()));
+            basePage.setTotal(Long.valueOf(pageResultVo.getFilteredCount()));
             basePage.setPageNum(Long.valueOf(pageResultVo.getPage()));
             basePage.setList(pageResultVo.getItems());
             return RspUtil.data(basePage);

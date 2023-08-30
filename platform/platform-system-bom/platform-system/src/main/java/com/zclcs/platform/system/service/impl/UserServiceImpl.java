@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 用户 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:34.182
+ * @since 2023-01-10 10:39:34.182
  */
 @Slf4j
 @Service
@@ -66,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo) {
         BasePage<UserVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        BasePage<UserVo> pageVo = this.baseMapper.findPageVo(basePage, queryWrapper);
+        BasePage<UserVo> pageVo = this.mapper.findPageVo(basePage, queryWrapper);
         pageVo.getList().forEach(vo -> {
             Long userId = vo.getUserId();
             List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userId);
@@ -84,7 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<UserVo> findUserList(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             @Override
             public List<UserExcelVo> getDataWithIndex(UserVo userVo, Long startIndex, Long endIndex) {
                 QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-                List<UserVo> listVo = baseMapper.findListVo(queryWrapper);
+                List<UserVo> listVo = mapper.findListVo(queryWrapper);
                 return UserExcelVo.convertToList(listVo);
             }
         });
@@ -108,27 +108,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserVo findUser(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Long countUser(UserVo userVo) {
         QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.baseMapper.countVo(queryWrapper);
+        return this.mapper.countVo(queryWrapper);
     }
 
     @Override
     public UserVo findByName(String username) {
         QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.username", username);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public UserVo findByMobile(String mobile) {
         QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
         QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.mobile", mobile);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     private QueryWrapper<UserVo> getQueryWrapper(UserVo userVo) {

@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.Role;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
+import com.zclcs.platform.system.api.bean.entity.Role;
 import com.zclcs.platform.system.api.bean.vo.RoleVo;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * 角色 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:28.842
+ * @since 2023-01-10 10:39:28.842
  */
 public interface RoleService extends IService<Role> {
 

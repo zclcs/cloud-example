@@ -39,7 +39,7 @@ import java.util.Optional;
  * xxlJob 控制台
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 @Slf4j
 @RestController
@@ -88,7 +88,7 @@ public class XxlJobController {
             };
             XxlJobBasePageResultVo<XxlJobJobInfoVo> xxlJobJobInfoVo = objectMapper.readValue(body, typeReference);
             BasePage<XxlJobJobInfoVo> xxlJobInfoBasePage = new BasePage<>();
-            xxlJobInfoBasePage.setTotal(xxlJobJobInfoVo.getRecordsTotal());
+            xxlJobInfoBasePage.setTotal(Long.valueOf(xxlJobJobInfoVo.getRecordsTotal()));
             xxlJobInfoBasePage.setList(xxlJobJobInfoVo.getData());
             return RspUtil.data(xxlJobInfoBasePage);
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class XxlJobController {
                         .replace("</span>", ""));
             }
             BasePage<XxlJobJobLogVo> xxlJobLogBasePage = new BasePage<>();
-            xxlJobLogBasePage.setTotal(xxlJobJobLogVo.getRecordsTotal());
+            xxlJobLogBasePage.setTotal(Long.valueOf(xxlJobJobLogVo.getRecordsTotal()));
             xxlJobLogBasePage.setList(xxlJobJobLogVo.getData());
             return RspUtil.data(xxlJobLogBasePage);
         } catch (Exception e) {

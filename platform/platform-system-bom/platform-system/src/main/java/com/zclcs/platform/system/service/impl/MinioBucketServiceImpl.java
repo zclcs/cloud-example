@@ -30,7 +30,7 @@ import java.util.Optional;
  * 桶 Service实现
  *
  * @author zclcs
- * @date 2021-10-18 10:37:09.922
+ * @since 2021-10-18 10:37:09.922
  */
 @Slf4j
 @Service
@@ -45,19 +45,19 @@ public class MinioBucketServiceImpl extends ServiceImpl<MinioBucketMapper, Minio
     public BasePage<MinioBucketVo> findMinioBucketPage(BasePageAo basePageAo, MinioBucketVo minioBucketVo) {
         BasePage<MinioBucketVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioBucketVo> findMinioBucketList(MinioBucketVo minioBucketVo) {
         QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioBucketVo findMinioBucket(MinioBucketVo minioBucketVo) {
         QueryWrapper<MinioBucketVo> queryWrapper = getQueryWrapper(minioBucketVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override

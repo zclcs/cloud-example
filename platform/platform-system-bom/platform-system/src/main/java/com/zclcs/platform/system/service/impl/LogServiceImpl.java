@@ -1,13 +1,14 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.entity.Log;
 import com.zclcs.platform.system.api.bean.vo.LogVo;
@@ -23,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.zclcs.platform.system.api.bean.entity.table.LogTableDef.LOG;
+
 /**
  * 用户操作日志 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:40:01.346
+ * @since 2023-01-10 10:40:01.346
  */
 @Slf4j
 @Service
@@ -39,36 +42,48 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     @Override
     public BasePage<LogVo> findLogPage(BasePageAo basePageAo, LogVo logVo) {
-        BasePage<LogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(logVo);
+        Page<LogVo> logVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, LogVo.class);
+        return new BasePage<>(logVoPage);
     }
 
     @Override
     public List<LogVo> findLogList(LogVo logVo) {
-        QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(logVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, LogVo.class);
     }
 
     @Override
     public LogVo findLog(LogVo logVo) {
-        QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(logVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, LogVo.class);
     }
 
     @Override
-    public Integer countLog(LogVo logVo) {
-        QueryWrapper<LogVo> queryWrapper = getQueryWrapper(logVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countLog(LogVo logVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(logVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<LogVo> getQueryWrapper(LogVo logVo) {
-        QueryWrapper<LogVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("sl.create_at");
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sl.username", logVo.getUsername());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sl.operation", logVo.getOperation());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sl.location", logVo.getLocation());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sl.create_at", logVo.getCreateAtFrom(), logVo.getCreateAtTo());
+    private QueryWrapper getQueryWrapper(LogVo logVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        LOG.ID,
+                        LOG.USERNAME,
+                        LOG.OPERATION,
+                        LOG.TIME,
+                        LOG.METHOD,
+                        LOG.PARAMS,
+                        LOG.IP,
+                        LOG.CREATE_AT,
+                        LOG.LOCATION
+                )
+                .where(LOG.USERNAME.eq(logVo.getUsername(), If::hasText))
+                .and(LOG.OPERATION.likeRight(logVo.getOperation(), If::hasText))
+                .and(LOG.LOCATION.likeRight(logVo.getLocation(), If::hasText))
+                .and(LOG.CREATE_AT.between(logVo.getCreateAtFrom(), logVo.getCreateAtTo()))
+                .orderBy(LOG.CREATE_AT.desc())
+        ;
         return queryWrapper;
     }
 

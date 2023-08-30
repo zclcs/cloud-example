@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 代码生成配置 Entity
@@ -15,99 +18,102 @@ import lombok.experimental.Accessors;
  * @author zclcs
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_generator_config")
+@Table("system_generator_config")
 public class GeneratorConfig extends BaseEntity {
 
     /**
      * 主键
      */
-    @TableId(value = "ID", type = IdType.AUTO)
+    @Id(value = "ID", keyType = KeyType.Auto)
     private Long id;
 
     /**
      * 服务名
      */
-    @TableField("server_name")
+    @Column("server_name")
     private String serverName;
 
     /**
      * 作者
      */
-    @TableField("author")
+    @Column("author")
     private String author;
 
     /**
      * 基础包名
      */
-    @TableField("base_package")
+    @Column("base_package")
     private String basePackage;
 
     /**
      * entity文件存放路径
      */
-    @TableField("entity_package")
+    @Column("entity_package")
     private String entityPackage;
 
     /**
      * 入参
      */
-    @TableField("ao_package")
+    @Column("ao_package")
     private String aoPackage;
 
     /**
      * 出参
      */
-    @TableField("vo_package")
+    @Column("vo_package")
     private String voPackage;
 
     /**
      * mapper文件存放路径
      */
-    @TableField("mapper_package")
+    @Column("mapper_package")
     private String mapperPackage;
 
     /**
      * mapper xml文件存放路径
      */
-    @TableField("mapper_xml_package")
+    @Column("mapper_xml_package")
     private String mapperXmlPackage;
 
     /**
      * servcie文件存放路径
      */
-    @TableField("service_package")
+    @Column("service_package")
     private String servicePackage;
 
     /**
      * serviceImpl文件存放路径
      */
-    @TableField("service_impl_package")
+    @Column("service_impl_package")
     private String serviceImplPackage;
 
     /**
      * controller文件存放路径
      */
-    @TableField("controller_package")
+    @Column("controller_package")
     private String controllerPackage;
 
     /**
      * 是否去除前缀
      */
-    @TableField("is_trim")
+    @Column("is_trim")
     private String isTrim;
 
     /**
      * 前缀内容
      */
-    @TableField("trim_value")
+    @Column("trim_value")
     private String trimValue;
 
     /**
      * 需要排除的字段
      */
-    @TableField("exclude_columns")
+    @Column("exclude_columns")
     private String excludeColumns;
 
 }

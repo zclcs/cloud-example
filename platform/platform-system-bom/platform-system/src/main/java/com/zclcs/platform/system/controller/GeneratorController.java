@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Generator;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.GenerateAo;
-import com.zclcs.platform.system.api.bean.entity.Table;
+import com.zclcs.platform.system.api.bean.entity.TableInfo;
 import com.zclcs.platform.system.service.GeneratorService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -64,10 +64,10 @@ public class GeneratorController {
      */
     @GetMapping("/tables")
     @SaCheckPermission("gen:generate")
-    public BaseRsp<BasePage<Table>> tablesInfo(String name,
-                                               String datasource,
-                                               BasePageAo basePageAo) {
-        BasePage<Table> tables = generatorService.getTables(name, basePageAo, Generator.DATABASE_TYPE, datasource);
+    public BaseRsp<BasePage<TableInfo>> tablesInfo(String name,
+                                                   String datasource,
+                                                   BasePageAo basePageAo) {
+        BasePage<TableInfo> tables = generatorService.getTables(name, basePageAo, Generator.DATABASE_TYPE, datasource);
         return RspUtil.data(tables);
     }
 

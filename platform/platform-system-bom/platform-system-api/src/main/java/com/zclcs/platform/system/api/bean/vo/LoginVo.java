@@ -2,8 +2,12 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,12 +17,12 @@ import java.time.LocalDateTime;
  * 登录 Vo
  *
  * @author zclcs
- * @date 2023-01-10 10:39:34.182
+ * @since 2023-01-10 10:39:34.182
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class LoginVo implements Serializable {

@@ -1,8 +1,12 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,12 +16,12 @@ import java.util.List;
  * 终端信息 Vo
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class OauthClientDetailsVo extends BaseEntity implements Serializable {

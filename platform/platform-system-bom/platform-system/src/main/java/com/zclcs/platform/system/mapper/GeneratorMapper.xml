@@ -9,7 +9,7 @@
     </select>
 
     <!--查询数据库下面的表-->
-    <select id="getTables" resultType="com.zclcs.platform.system.api.bean.entity.Table" parameterType="string">
+    <select id="getTables" resultType="com.zclcs.platform.system.api.bean.entity.TableInfo" parameterType="string">
         SELECT
         CREATE_TIME create_at,
         UPDATE_TIME update_at,
@@ -20,19 +20,25 @@
         TABLE_COLLATION as table_collation
         FROM
         information_schema.TABLES
-        WHERE
-        TABLE_SCHEMA = #{schemaName}
-        <if test="tableName != null and tableName != ''">
-            AND TABLE_NAME like concat('%', #{tableName}, '%')
-        </if>
-        order by create_at, update_at
+        ${qwSql} limit ${pageOffset}, ${pageSize}
+        <!--        WHERE-->
+        <!--        TABLE_SCHEMA = #{schemaName}-->
+        <!--        <if test="tableName != null and tableName != ''">-->
+        <!--            AND TABLE_NAME like concat('%', #{tableName}, '%')-->
+        <!--        </if>-->
+        <!--        order by create_at, update_at-->
+    </select>
+
+    <select id="getTables_COUNT" resultType="long">
+        select count(*)
+        from information_schema.TABLES ${qwSql}
     </select>
 
     <!--查询数据库表下面的列属性-->
-    <select id="getColumns" resultType="com.zclcs.platform.system.api.bean.entity.Column">
+    <select id="getColumns" resultType="com.zclcs.platform.system.api.bean.entity.ColumnInfo">
         SELECT COLUMN_NAME name,
         CASE
-        COLUMN_key
+        COLUMN_KEY
         WHEN 'PRI' THEN
         1
         ELSE 0

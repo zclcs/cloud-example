@@ -14,7 +14,7 @@ import java.util.List;
  * 终端信息 Ao
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 @Data
 @AllArgsConstructor

@@ -34,7 +34,7 @@ import java.util.Optional;
  * 文件 Service实现
  *
  * @author zclcs
- * @date 2021-10-18 10:37:21.262
+ * @since 2021-10-18 10:37:21.262
  */
 @Slf4j
 @Service
@@ -50,19 +50,19 @@ public class MinioFileServiceImpl extends ServiceImpl<MinioFileMapper, MinioFile
     public BasePage<MinioFileVo> findMinioFilePage(BasePageAo basePageAo, MinioFileVo minioFileVo) {
         BasePage<MinioFileVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<MinioFileVo> findMinioFileList(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public MinioFileVo findMinioFile(MinioFileVo minioFileVo) {
         QueryWrapper<MinioFileVo> queryWrapper = getQueryWrapper(minioFileVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override

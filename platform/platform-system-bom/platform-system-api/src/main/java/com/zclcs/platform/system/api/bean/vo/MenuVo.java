@@ -3,8 +3,12 @@ package com.zclcs.platform.system.api.bean.vo;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.Array;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,12 +18,12 @@ import java.util.List;
  * 菜单 Vo
  *
  * @author zclcs
- * @date 2023-01-10 10:39:18.238
+ * @since 2023-01-10 10:39:18.238
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class MenuVo extends BaseEntity implements Serializable {

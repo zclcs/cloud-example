@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * 终端信息 Service实现
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 @Slf4j
 @Service
@@ -52,25 +52,25 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
                     setMenuIds(s, allPermissions, clientDetailsVo));
             clientDetailsVo.setClientSecret(null);
         });
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<OauthClientDetailsVo> findOauthClientDetailsList(OauthClientDetailsVo oauthClientDetailsVo) {
         QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public OauthClientDetailsVo findOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo) {
         QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo) {
         QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.baseMapper.countVo(queryWrapper);
+        return this.mapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<OauthClientDetailsVo> getQueryWrapper(OauthClientDetailsVo oauthClientDetailsVo) {

@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,12 +19,15 @@ import java.io.Serializable;
  * 部门 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_dept")
+@Table("system_dept")
 public class Dept extends BaseEntity implements Serializable {
 
     @Serial
@@ -30,31 +36,31 @@ public class Dept extends BaseEntity implements Serializable {
     /**
      * 部门id
      */
-    @TableId(value = "dept_id", type = IdType.AUTO)
+    @Id(value = "dept_id", keyType = KeyType.Auto)
     private Long deptId;
 
     /**
      * 部门编码
      */
-    @TableField("dept_code")
+    @Column("dept_code")
     private String deptCode;
 
     /**
      * 上级部门编码
      */
-    @TableField("parent_code")
+    @Column("parent_code")
     private String parentCode;
 
     /**
      * 部门名称
      */
-    @TableField("dept_name")
+    @Column("dept_name")
     private String deptName;
 
     /**
      * 排序
      */
-    @TableField("order_num")
+    @Column("order_num")
     private Double orderNum;
 
 

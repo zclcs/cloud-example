@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * redis控制台
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 @Slf4j
 @RestController
@@ -70,11 +70,11 @@ public class RedisController {
                 redisVos.add(vo);
             }
         }
-        basePage.setRecords(redisVos);
+        basePage.setList(redisVos);
         if (keys != null) {
-            basePage.setTotal(keys.size());
+            basePage.setTotal((long) keys.size());
         } else {
-            basePage.setTotal(0);
+            basePage.setTotal(0L);
         }
         return RspUtil.data(basePage);
     }

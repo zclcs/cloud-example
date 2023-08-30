@@ -1,8 +1,6 @@
 package com.zclcs.cloud.lib.core.base;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mybatisflex.core.paginate.Page;
 import lombok.Getter;
 
 import java.util.Collections;
@@ -13,12 +11,12 @@ import java.util.List;
  *
  * @author zclcs
  */
-public class BasePage<T> implements IPage<T> {
+@Getter
+public class BasePage<T> {
 
     /**
      * 分页对象记录列表
      */
-    @Getter
     protected List<T> list;
 
     /**
@@ -29,19 +27,25 @@ public class BasePage<T> implements IPage<T> {
     /**
      * 每页显示条数
      */
-    @Getter
     protected Long pageSize;
 
     /**
      * 当前页
      */
-    @Getter
     protected Long pageNum;
 
     /**
      * 总页数
      */
     protected Long pages;
+
+    public BasePage(Page<T> page) {
+        this.list = page.getRecords();
+        this.total = page.getTotalRow();
+        this.pageSize = page.getPageSize();
+        this.pageNum = page.getPageNumber();
+        this.pages = page.getTotalPage();
+    }
 
     public BasePage() {
         this.list = Collections.emptyList();
@@ -61,66 +65,12 @@ public class BasePage<T> implements IPage<T> {
         this.pageNum = pageNum;
     }
 
-    @JsonIgnore
-    @Override
-    public List<OrderItem> orders() {
-        return null;
-    }
-
-    @JsonIgnore
-    @Override
-    public List<T> getRecords() {
-        return this.list;
-    }
-
-    @JsonIgnore
-    @Override
-    public BasePage<T> setRecords(List<T> records) {
-        this.list = records;
-        return this;
-    }
-
-    @Override
-    public long getTotal() {
-        return this.total;
-    }
-
-    @Override
-    public BasePage<T> setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
-        return this;
     }
 
-    @JsonIgnore
-    @Override
-    public long getSize() {
-        return this.pageSize;
-    }
-
-    @JsonIgnore
-    @Override
-    public BasePage<T> setSize(long size) {
-        this.pageSize = size;
-        return this;
-    }
-
-    @JsonIgnore
-    @Override
-    public long getCurrent() {
-        return this.pageNum;
-    }
-
-    @JsonIgnore
-    @Override
-    public IPage<T> setCurrent(long current) {
-        this.pageNum = current;
-        return this;
-    }
-
-    @Override
-    public long getPages() {
-        this.pages = IPage.super.getPages();
-        return this.pages;
+    public void setPages(Long pages) {
+        this.pages = pages;
     }
 
     public void setList(List<T> list) {

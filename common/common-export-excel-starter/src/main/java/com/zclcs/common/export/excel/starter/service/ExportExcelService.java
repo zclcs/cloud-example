@@ -23,6 +23,6 @@ public interface ExportExcelService<T, K> {
      * @param endIndex   结束
      * @return 出参泛型
      */
-    List<K> getDataWithIndex(T t, Long startIndex, Long endIndex);
+    List<K> getDataPaginateAs(T t, Long pageNum, Long pageSize, Long totalRows);
 
 }

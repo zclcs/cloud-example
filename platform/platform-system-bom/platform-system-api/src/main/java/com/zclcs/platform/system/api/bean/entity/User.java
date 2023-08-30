@@ -1,15 +1,18 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,12 +22,15 @@ import java.time.LocalDateTime;
  * 用户 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:34.182
+ * @since 2023-01-10 10:39:34.182
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_user")
+@Table("system_user")
 public class User extends BaseEntity implements Serializable {
 
     @Serial
@@ -33,86 +39,86 @@ public class User extends BaseEntity implements Serializable {
     /**
      * 用户id
      */
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @Id(value = "user_id", keyType = KeyType.Auto)
     private Long userId;
 
     /**
      * 用户名
      */
-    @TableField("username")
+    @Column("username")
     private String username;
 
     /**
      * 用户昵称
      */
-    @TableField("real_name")
+    @Column("real_name")
     private String realName;
 
     /**
      * 密码
      */
     @JsonIgnore
-    @TableField("password")
+    @Column("password")
     private String password;
 
     /**
      * 部门id
      */
-    @TableField("dept_id")
+    @Column("dept_id")
     private String deptId;
 
     /**
      * 邮箱
      */
-    @TableField("email")
+    @Column("email")
     private String email;
 
     /**
      * 联系电话
      */
-    @TableField("mobile")
+    @Column("mobile")
     private String mobile;
 
     /**
      * 状态 @@system_user.status
      */
-    @TableField("status")
+    @Column("status")
     private String status;
 
     /**
      * 最近访问时间
      */
-    @TableField("last_login_time")
+    @Column("last_login_time")
     private LocalDateTime lastLoginTime;
 
     /**
      * 性别 @@system_user.gender
      */
-    @TableField("gender")
+    @Column("gender")
     private String gender;
 
     /**
      * 是否开启tab @@yes_no
      */
-    @TableField("is_tab")
+    @Column("is_tab")
     private String isTab;
 
     /**
      * 主题
      */
-    @TableField("theme")
+    @Column("theme")
     private String theme;
 
     /**
      * 头像
      */
-    @TableField("avatar")
+    @Column("avatar")
     private String avatar;
 
     /**
      * 描述
      */
-    @TableField("description")
+    @Column("description")
     private String description;
 
     public static User convertToUser(UserAo item) {

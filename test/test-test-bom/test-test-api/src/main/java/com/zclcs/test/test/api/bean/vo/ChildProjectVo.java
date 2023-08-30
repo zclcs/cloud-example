@@ -2,8 +2,12 @@ package com.zclcs.test.test.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,12 +17,12 @@ import java.time.LocalDate;
  * 工程信息 Vo
  *
  * @author zclcs
- * @date 2023-08-16 14:53:25.234
+ * @since 2023-08-16 14:53:25.234
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class ChildProjectVo extends BaseEntity implements Serializable {
