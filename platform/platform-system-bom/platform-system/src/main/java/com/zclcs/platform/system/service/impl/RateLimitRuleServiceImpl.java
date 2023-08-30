@@ -29,7 +29,7 @@ import java.util.List;
  * 限流规则 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:49.113
+ * @since 2023-01-10 10:39:49.113
  */
 @Slf4j
 @Service
@@ -44,25 +44,25 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
     public BasePage<RateLimitRuleVo> findRateLimitRulePage(BasePageAo basePageAo, RateLimitRuleVo rateLimitRuleVo) {
         BasePage<RateLimitRuleVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<RateLimitRuleVo> queryWrapper = getQueryWrapper(rateLimitRuleVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<RateLimitRuleVo> findRateLimitRuleList(RateLimitRuleVo rateLimitRuleVo) {
         QueryWrapper<RateLimitRuleVo> queryWrapper = getQueryWrapper(rateLimitRuleVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public RateLimitRuleVo findRateLimitRule(RateLimitRuleVo rateLimitRuleVo) {
         QueryWrapper<RateLimitRuleVo> queryWrapper = getQueryWrapper(rateLimitRuleVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countRateLimitRule(RateLimitRuleVo rateLimitRuleVo) {
         QueryWrapper<RateLimitRuleVo> queryWrapper = getQueryWrapper(rateLimitRuleVo);
-        return this.baseMapper.countVo(queryWrapper);
+        return this.mapper.countVo(queryWrapper);
     }
 
     @Override

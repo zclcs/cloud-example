@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
@@ -14,7 +14,7 @@ import java.util.List;
  * 网关转发日志 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:40:09.958
+ * @since 2023-01-10 10:40:09.958
  */
 public interface RouteLogService extends IService<RouteLog> {
 

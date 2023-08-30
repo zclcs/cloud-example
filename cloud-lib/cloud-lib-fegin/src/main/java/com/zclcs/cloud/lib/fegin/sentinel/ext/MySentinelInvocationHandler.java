@@ -30,7 +30,7 @@ import static feign.Util.checkNotNull;
  * 支持自动降级注入 重写 {@link SentinelInvocationHandler}
  *
  * @author zclcs
- * @date 2020/6/9
+ * @since 2020/6/9
  */
 @Slf4j
 public class MySentinelInvocationHandler implements InvocationHandler {

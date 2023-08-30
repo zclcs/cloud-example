@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.RateLimitRuleAo;
@@ -14,7 +14,7 @@ import java.util.List;
  * 限流规则 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:49.113
+ * @since 2023-01-10 10:39:49.113
  */
 public interface RateLimitRuleService extends IService<RateLimitRule> {
 

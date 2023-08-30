@@ -13,7 +13,7 @@ import java.util.List;
  * ${tableComment} Service接口
  *
  * @author ${author}
- * @date ${date}
+ * @since ${date}
  */
 public interface ${className}Service extends IService<${className}> {
 

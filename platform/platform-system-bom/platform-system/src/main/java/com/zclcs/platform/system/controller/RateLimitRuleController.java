@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * 限流规则
  *
  * @author zclcs
- * @date 2023-01-10 10:39:49.113
+ * @since 2023-01-10 10:39:49.113
  */
 @Slf4j
 @RestController

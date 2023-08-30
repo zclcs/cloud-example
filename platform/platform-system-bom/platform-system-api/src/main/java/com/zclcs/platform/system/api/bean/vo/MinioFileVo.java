@@ -1,8 +1,12 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,12 +15,12 @@ import java.io.Serializable;
  * 文件 Vo
  *
  * @author zclcs
- * @date 2021-10-18 10:37:21.262
+ * @since 2021-10-18 10:37:21.262
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class MinioFileVo extends BaseEntity implements Serializable {

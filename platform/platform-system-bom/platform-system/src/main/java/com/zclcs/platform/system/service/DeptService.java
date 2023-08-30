@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
+import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.vo.DeptTreeVo;
 import com.zclcs.platform.system.api.bean.vo.DeptVo;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * 部门 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 public interface DeptService extends IService<Dept> {
 
@@ -49,7 +49,7 @@ public interface DeptService extends IService<Dept> {
      * @param deptVo deptVo
      * @return DeptVo
      */
-    Integer countDept(DeptVo deptVo);
+    Long countDept(DeptVo deptVo);
 
     /**
      * 获取部门列表树

@@ -1,11 +1,12 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
 import com.zclcs.platform.system.api.bean.entity.LoginLog;
@@ -21,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zclcs.platform.system.api.bean.entity.table.LoginLogTableDef.LOGIN_LOG;
+
 /**
  * 登录日志 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:57.150
+ * @since 2023-01-10 10:39:57.150
  */
 @Slf4j
 @Service
@@ -37,37 +40,47 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     @Override
     public BasePage<LoginLogVo> findLoginLogPage(BasePageAo basePageAo, LoginLogVo loginLogVo) {
-        BasePage<LoginLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<LoginLogVo> queryWrapper = getQueryWrapper(loginLogVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(loginLogVo);
+        Page<LoginLogVo> loginLogVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, LoginLogVo.class);
+        return new BasePage<>(loginLogVoPage);
     }
 
     @Override
     public List<LoginLogVo> findLoginLogList(LoginLogVo loginLogVo) {
-        QueryWrapper<LoginLogVo> queryWrapper = getQueryWrapper(loginLogVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(loginLogVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, LoginLogVo.class);
     }
 
     @Override
     public LoginLogVo findLoginLog(LoginLogVo loginLogVo) {
-        QueryWrapper<LoginLogVo> queryWrapper = getQueryWrapper(loginLogVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(loginLogVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, LoginLogVo.class);
     }
 
     @Override
-    public Integer countLoginLog(LoginLogVo loginLogVo) {
-        QueryWrapper<LoginLogVo> queryWrapper = getQueryWrapper(loginLogVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countLoginLog(LoginLogVo loginLogVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(loginLogVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<LoginLogVo> getQueryWrapper(LoginLogVo loginLogVo) {
-        QueryWrapper<LoginLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sll.ip", loginLogVo.getIp());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sll.username", loginLogVo.getUsername());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sll.login_type", loginLogVo.getLoginType());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper,
-                "sll.login_time", loginLogVo.getLoginTimeFrom(), loginLogVo.getLoginTimeTo());
-        queryWrapper.orderByDesc("sll.login_time");
+    private QueryWrapper getQueryWrapper(LoginLogVo loginLogVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        LOGIN_LOG.ID,
+                        LOGIN_LOG.USERNAME,
+                        LOGIN_LOG.LOGIN_TIME,
+                        LOGIN_LOG.LOGIN_TYPE,
+                        LOGIN_LOG.LOCATION,
+                        LOGIN_LOG.IP,
+                        LOGIN_LOG.SYSTEM,
+                        LOGIN_LOG.BROWSER
+                )
+                .where(LOGIN_LOG.IP.likeRight(loginLogVo.getIp(), If::hasText))
+                .and(LOGIN_LOG.USERNAME.likeRight(loginLogVo.getUsername(), If::hasText))
+                .and(LOGIN_LOG.LOGIN_TYPE.eq(loginLogVo.getLoginType(), If::hasText))
+                .and(LOGIN_LOG.LOGIN_TIME.between(loginLogVo.getLoginTimeFrom(), loginLogVo.getLoginTimeTo()))
+                .orderBy(LOGIN_LOG.LOGIN_TIME.desc());
+        ;
         return queryWrapper;
     }
 

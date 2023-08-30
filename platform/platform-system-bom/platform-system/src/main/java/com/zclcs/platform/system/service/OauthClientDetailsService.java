@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
+import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * 终端信息 Service接口
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 public interface OauthClientDetailsService extends IService<OauthClientDetails> {
 

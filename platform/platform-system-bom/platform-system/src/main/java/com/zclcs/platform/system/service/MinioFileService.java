@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.entity.MinioFile;
@@ -14,7 +14,7 @@ import java.util.List;
  * 文件 Service接口
  *
  * @author zclcs
- * @date 2021-10-18 10:37:21.262
+ * @since 2021-10-18 10:37:21.262
  */
 public interface MinioFileService extends IService<MinioFile> {
 

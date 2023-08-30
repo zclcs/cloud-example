@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * 终端信息
  *
  * @author zclcs
- * @date 2023-01-30 16:48:03.522
+ * @since 2023-01-30 16:48:03.522
  */
 @Slf4j
 @RestController

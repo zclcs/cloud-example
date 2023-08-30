@@ -25,7 +25,7 @@ import java.util.Objects;
  * 配置初始化
  *
  * @author zclcs
- * @date 2020/3/29
+ * @since 2020/3/29
  */
 @AutoConfiguration
 @RequiredArgsConstructor

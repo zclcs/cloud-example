@@ -2,8 +2,12 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,12 +17,12 @@ import java.util.List;
  * 黑名单 Vo
  *
  * @author zclcs
- * @date 2023-01-10 10:40:14.628
+ * @since 2023-01-10 10:40:14.628
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class BlackListVo extends BaseEntity implements Serializable {

@@ -1,9 +1,6 @@
 package com.zclcs.platform.system.mapper;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zclcs.cloud.lib.core.base.BasePage;
-import com.zclcs.platform.system.api.bean.entity.Column;
-import com.zclcs.platform.system.api.bean.entity.Table;
+import com.zclcs.platform.system.api.bean.entity.ColumnInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,18 +19,6 @@ public interface GeneratorMapper {
     List<String> getDatabases(@Param("databaseType") String databaseType);
 
     /**
-     * 获取数据表
-     *
-     * @param page         page
-     * @param tableName    tableName
-     * @param databaseType databaseType
-     * @param schemaName   schemaName
-     * @param <T>          Type
-     * @return 数据表分页数据
-     */
-    <T> IPage<Table> getTables(BasePage<T> page, @Param("tableName") String tableName, @Param("databaseType") String databaseType, @Param("schemaName") String schemaName);
-
-    /**
      * 获取数据表列信息
      *
      * @param databaseType databaseType
@@ -41,5 +26,5 @@ public interface GeneratorMapper {
      * @param tableName    tableName
      * @return 数据表列信息
      */
-    List<Column> getColumns(@Param("databaseType") String databaseType, @Param("schemaName") String schemaName, @Param("tableName") String tableName, @Param("excludeColumns") List<String> excludeColumns);
+    List<ColumnInfo> getColumns(@Param("databaseType") String databaseType, @Param("schemaName") String schemaName, @Param("tableName") String tableName, @Param("excludeColumns") List<String> excludeColumns);
 }

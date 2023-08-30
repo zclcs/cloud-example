@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.test.test.api.bean.entity.Project;
 import com.zclcs.test.test.api.bean.ao.ProjectAo;
+import com.zclcs.test.test.api.bean.entity.Project;
 import com.zclcs.test.test.api.bean.vo.ProjectVo;
 import com.zclcs.test.test.mapper.ProjectMapper;
 import com.zclcs.test.test.service.ProjectService;
@@ -22,7 +22,7 @@ import java.util.List;
  * 项目信息 Service实现
  *
  * @author zclcs
- * @date 2023-08-16 14:53:10.430
+ * @since 2023-08-16 14:53:10.430
  */
 @Slf4j
 @Service
@@ -34,32 +34,32 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public BasePage<ProjectVo> findProjectPage(BasePageAo basePageAo, ProjectVo projectVo) {
         BasePage<ProjectVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<ProjectVo> queryWrapper = getQueryWrapper(projectVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<ProjectVo> findProjectList(ProjectVo projectVo) {
         QueryWrapper<ProjectVo> queryWrapper = getQueryWrapper(projectVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public ProjectVo findProject(ProjectVo projectVo) {
         QueryWrapper<ProjectVo> queryWrapper = getQueryWrapper(projectVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countProject(ProjectVo projectVo) {
-    QueryWrapper<ProjectVo> queryWrapper = getQueryWrapper(projectVo);
-        return this.baseMapper.countVo(queryWrapper);
+        QueryWrapper<ProjectVo> queryWrapper = getQueryWrapper(projectVo);
+        return this.mapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<ProjectVo> getQueryWrapper(ProjectVo projectVo) {
         QueryWrapper<ProjectVo> queryWrapper = new QueryWrapper<>();
         // TODO 设置公共查询条件
         return queryWrapper;
-   }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

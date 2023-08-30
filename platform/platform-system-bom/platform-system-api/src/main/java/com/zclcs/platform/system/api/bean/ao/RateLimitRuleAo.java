@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 限流规则 Ao
  *
  * @author zclcs
- * @date 2023-01-10 10:39:49.113
+ * @since 2023-01-10 10:39:49.113
  */
 @Data
 @AllArgsConstructor

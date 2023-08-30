@@ -8,7 +8,7 @@ import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.FieldType;
 import com.zclcs.cloud.lib.core.constant.Generator;
 import com.zclcs.cloud.lib.core.utils.BaseUtil;
-import com.zclcs.platform.system.api.bean.entity.Column;
+import com.zclcs.platform.system.api.bean.entity.ColumnInfo;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -43,33 +43,33 @@ public class GeneratorUtil {
         return String.format("/%s/", packageName.contains(".") ? packageName.replaceAll("\\.", "/") : packageName);
     }
 
-    public void generateEntityFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateEntityFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.JAVA_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getEntityPackage(), suffix, false);
         String templateName = Generator.ENTITY_TEMPLATE;
-        getDao(columns, configure, path, templateName);
+        getDao(columnInfos, configure, path, templateName);
     }
 
-    public void generateAoFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateAoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.AO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getAoPackage(), suffix, false);
         String templateName = Generator.AO_TEMPLATE;
-        getDao(columns, configure, path, templateName);
+        getDao(columnInfos, configure, path, templateName);
     }
 
-    public void generateVoFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateVoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.VO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getVoPackage(), suffix, false);
         String templateName = Generator.VO_TEMPLATE;
-        getDao(columns, configure, path, templateName);
+        getDao(columnInfos, configure, path, templateName);
     }
 
-    public void getDao(List<Column> columns, GeneratorConfigVo configure, String path, String templateName) throws Exception {
+    public void getDao(List<ColumnInfo> columnInfos, GeneratorConfigVo configure, String path, String templateName) throws Exception {
         File entityFile = new File(path);
         Map<String, Object> map = BeanUtil.beanToMap(configure);
         map.put("hasDate", false);
         map.put("hasBigDecimal", false);
-        columns.forEach(c -> {
+        columnInfos.forEach(c -> {
             c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT)));
             if (StrUtil.containsAny(c.getType(), FieldType.DATE, FieldType.DATETIME, FieldType.TIMESTAMP)) {
                 map.put("hasDate", true);
@@ -78,11 +78,11 @@ public class GeneratorUtil {
                 map.put("hasBigDecimal", true);
             }
         });
-        map.put("columns", columns);
+        map.put("columns", columnInfos);
         generateFileByTemplate(templateName, entityFile, map);
     }
 
-    public void generateMapperFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateMapperFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.MAPPER_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getMapperPackage(), suffix, false);
         String templateName = Generator.MAPPER_TEMPLATE;
@@ -90,7 +90,7 @@ public class GeneratorUtil {
         generateFileByTemplate(templateName, mapperFile, BeanUtil.beanToMap(configure));
     }
 
-    public void generateServiceFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateServiceFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.SERVICE_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getServicePackage(), suffix, true);
         String templateName = Generator.SERVICE_TEMPLATE;
@@ -98,7 +98,7 @@ public class GeneratorUtil {
         generateFileByTemplate(templateName, serviceFile, BeanUtil.beanToMap(configure));
     }
 
-    public void generateServiceImplFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateServiceImplFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.SERVICE_IMPL_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getServiceImplPackage(), suffix, false);
         String templateName = Generator.SERVICE_IMPL_TEMPLATE;
@@ -106,7 +106,7 @@ public class GeneratorUtil {
         generateFileByTemplate(templateName, serviceImplFile, BeanUtil.beanToMap(configure));
     }
 
-    public void generateControllerFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateControllerFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.CONTROLLER_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getControllerPackage(), suffix, false);
         String templateName = Generator.CONTROLLER_TEMPLATE;
@@ -114,14 +114,14 @@ public class GeneratorUtil {
         generateFileByTemplate(templateName, controllerFile, BeanUtil.beanToMap(configure));
     }
 
-    public void generateMapperXmlFile(List<Column> columns, GeneratorConfigVo configure) throws Exception {
+    public void generateMapperXmlFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
         String suffix = Generator.MAPPER_XML_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getMapperXmlPackage(), suffix, false);
         String templateName = Generator.MAPPER_XML_TEMPLATE;
         File mapperXmlFile = new File(path);
         Map<String, Object> map = BeanUtil.beanToMap(configure);
-        columns.forEach(c -> c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT))));
-        map.put("columns", columns);
+        columnInfos.forEach(c -> c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT))));
+        map.put("columns", columnInfos);
         generateFileByTemplate(templateName, mapperXmlFile, map);
     }
 

@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,12 +19,15 @@ import java.io.Serializable;
  * 角色 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:28.842
+ * @since 2023-01-10 10:39:28.842
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_role")
+@Table("system_role")
 public class Role extends BaseEntity implements Serializable {
 
     @Serial
@@ -30,25 +36,25 @@ public class Role extends BaseEntity implements Serializable {
     /**
      * 角色id
      */
-    @TableId(value = "role_id", type = IdType.AUTO)
+    @Id(value = "role_id", keyType = KeyType.Auto)
     private Long roleId;
 
     /**
      * 角色名称
      */
-    @TableField("role_name")
+    @Column("role_name")
     private String roleName;
 
     /**
      * 角色编码（唯一值）
      */
-    @TableField("role_code")
+    @Column("role_code")
     private String roleCode;
 
     /**
      * 角色描述
      */
-    @TableField("remark")
+    @Column("remark")
     private String remark;
 
 

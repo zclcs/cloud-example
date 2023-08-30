@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -13,7 +13,7 @@ import java.util.List;
  * 用户操作日志 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:40:01.346
+ * @since 2023-01-10 10:40:01.346
  */
 public interface LogService extends IService<Log> {
 
@@ -48,7 +48,7 @@ public interface LogService extends IService<Log> {
      * @param logVo logVo
      * @return LogVo
      */
-    Integer countLog(LogVo logVo);
+    Long countLog(LogVo logVo);
 
     /**
      * 新增日志

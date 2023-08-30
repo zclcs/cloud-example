@@ -4,17 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryCondition;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
+import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
-import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.vo.DeptTreeVo;
 import com.zclcs.platform.system.api.bean.vo.DeptVo;
 import com.zclcs.platform.system.mapper.DeptMapper;
@@ -30,11 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zclcs.platform.system.api.bean.entity.table.DeptTableDef.DEPT;
+import static com.zclcs.platform.system.api.bean.entity.table.UserDataPermissionTableDef.USER_DATA_PERMISSION;
+
 /**
  * 部门 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:10.151
+ * @since 2023-01-10 10:39:10.151
  */
 @Slf4j
 @Service
@@ -46,27 +51,27 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public BasePage<DeptVo> findDeptPage(BasePageAo basePageAo, DeptVo deptVo) {
-        BasePage<DeptVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<DeptVo> queryWrapper = getQueryWrapper(deptVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(deptVo);
+        Page<DeptVo> deptVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, DeptVo.class);
+        return new BasePage<>(deptVoPage);
     }
 
     @Override
     public List<DeptVo> findDeptList(DeptVo deptVo) {
-        QueryWrapper<DeptVo> queryWrapper = getQueryWrapper(deptVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(deptVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, DeptVo.class);
     }
 
     @Override
     public DeptVo findDept(DeptVo deptVo) {
-        QueryWrapper<DeptVo> queryWrapper = getQueryWrapper(deptVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(deptVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, DeptVo.class);
     }
 
     @Override
-    public Integer countDept(DeptVo deptVo) {
-        QueryWrapper<DeptVo> queryWrapper = getQueryWrapper(deptVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countDept(DeptVo deptVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(deptVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
     @Override
@@ -84,7 +89,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public List<Long> getChildDeptId(Long deptId) {
         List<Long> deptIds = new ArrayList<>();
-        Dept one = this.lambdaQuery().eq(Dept::getDeptId, deptId).one();
+        Dept one = this.getById(deptId);
         if (one == null) {
             return deptIds;
         }
@@ -93,11 +98,21 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         return deptIds;
     }
 
-    private QueryWrapper<DeptVo> getQueryWrapper(DeptVo deptVo) {
-        QueryWrapper<DeptVo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByAsc("sd.order_num");
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sd.dept_name", deptVo.getDeptName());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "sd.create_at", deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo());
+    private QueryWrapper getQueryWrapper(DeptVo deptVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        DEPT.DEPT_ID,
+                        DEPT.DEPT_CODE,
+                        DEPT.PARENT_CODE,
+                        DEPT.DEPT_NAME,
+                        DEPT.ORDER_NUM,
+                        DEPT.CREATE_AT,
+                        DEPT.UPDATE_AT
+                )
+                .where(DEPT.DEPT_NAME.likeRight(deptVo.getDeptName(), If::hasText))
+                .and(DEPT.CREATE_AT.between(deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo()))
+                .orderBy(DEPT.ORDER_NUM.asc())
+        ;
         return queryWrapper;
     }
 
@@ -135,12 +150,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         ArrayList<Long> deptIdsDistinct = CollectionUtil.distinct(allDeptIds);
         Object[] deptIds = deptIdsDistinct.toArray();
-        Object[] userIds = userDataPermissionService.lambdaQuery()
-                .in(UserDataPermission::getDeptId, ids).list().stream()
+        Object[] userIds = userDataPermissionService.queryChain().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)).list().stream()
                 .map(UserDataPermission::getUserId).toList().toArray();
         removeByIds(deptIdsDistinct);
         SystemCacheUtil.deleteDeptByDeptIds(deptIds);
-        userDataPermissionService.lambdaUpdate().in(UserDataPermission::getDeptId, ids).remove();
+        userDataPermissionService.remove(QueryCondition.create(USER_DATA_PERMISSION.DEPT_ID, ids));
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
@@ -159,7 +173,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     private void getChild(List<Long> allDeptId, Dept systemDept) {
-        List<Dept> list = this.lambdaQuery().eq(Dept::getParentCode, systemDept.getDeptCode()).list();
+        List<Dept> list = this.list(QueryCondition.create(DEPT.PARENT_CODE, systemDept.getDeptCode()));
         if (CollUtil.isNotEmpty(list)) {
             for (Dept dept : list) {
                 allDeptId.add(dept.getDeptId());
@@ -173,7 +187,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (CommonCore.TOP_PARENT_CODE.equals(deptCode)) {
             throw new MyException("部门编码输入非法值");
         }
-        Dept one = this.lambdaQuery().eq(Dept::getDeptCode, deptCode).one();
+        Dept one = this.getOne(QueryCondition.create(DEPT.DEPT_CODE, deptCode));
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门编码重复");
         }
@@ -181,7 +195,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptName(String deptName, Long deptId) {
-        Dept one = this.lambdaQuery().eq(Dept::getDeptName, deptName).one();
+        Dept one = this.getOne(QueryCondition.create(DEPT.DEPT_NAME, deptName));
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门名称重复");
         }

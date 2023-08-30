@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
@@ -13,7 +13,7 @@ import java.util.List;
  * 限流拦截日志 Service接口
  *
  * @author zclcs
- * @date 2023-01-10 10:39:53.040
+ * @since 2023-01-10 10:39:53.040
  */
 public interface RateLimitLogService extends IService<RateLimitLog> {
 

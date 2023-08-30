@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 用户角色关联
  *
  * @author zclcs
- * @date 2023-01-10 10:39:28.842
+ * @since 2023-01-10 10:39:28.842
  */
 @Slf4j
 @RestController
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
-    
+
     /**
      * 根据用户id查询角色id集合
      * 权限: 仅限内部调用

@@ -193,14 +193,14 @@ public class SimpleExportListener<T, K> {
     private void responseExcel(String sheetName, T t, Long count, ExcelWriter excelWriter) {
         WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
         if (count <= singleLimit) {
-            List<K> dataWithIndex = exportExcelService.getDataWithIndex(t, 0L, singleLimit);
+            List<K> dataWithIndex = exportExcelService.getDataPaginateAs(t, 1L, singleLimit, count);
             excelWriter.write(dataWithIndex, writeSheet);
             dataWithIndex = new ArrayList<>();
         } else {
             BigDecimal bd = new BigDecimal(count);
             long pageSize = bd.divide(new BigDecimal(batchSize), RoundingMode.UP).longValue();
             for (int i = 1; i <= pageSize; i++) {
-                List<K> dataWithIndex = exportExcelService.getDataWithIndex(t, (i - 1) * batchSize, batchSize);
+                List<K> dataWithIndex = exportExcelService.getDataPaginateAs(t, 1L, singleLimit, count);
                 excelWriter.write(dataWithIndex, writeSheet);
                 dataWithIndex = new ArrayList<>();
             }

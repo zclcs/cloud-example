@@ -2,14 +2,15 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
@@ -26,11 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.zclcs.platform.system.api.bean.entity.table.BlackListTableDef.BLACK_LIST;
+
 /**
  * 黑名单 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:40:14.628
+ * @since 2023-01-10 10:40:14.628
  */
 @Slf4j
 @Service
@@ -44,32 +47,32 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     @Override
     public BasePage<BlackListVo> findBlackListPage(BasePageAo basePageAo, BlackListVo blackListVo) {
-        BasePage<BlackListVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<BlackListVo> queryWrapper = getQueryWrapper(blackListVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blackListVo);
+        Page<BlackListVo> paginate = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, BlackListVo.class);
+        return new BasePage<>(paginate);
     }
 
     @Override
     public List<BlackListVo> findBlackListList(BlackListVo blackListVo) {
-        QueryWrapper<BlackListVo> queryWrapper = getQueryWrapper(blackListVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blackListVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, BlackListVo.class);
     }
 
     @Override
     public BlackListVo findBlackList(BlackListVo blackListVo) {
-        QueryWrapper<BlackListVo> queryWrapper = getQueryWrapper(blackListVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(blackListVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, BlackListVo.class);
     }
 
     @Override
-    public Integer countBlackList(BlackListVo blackListVo) {
-        QueryWrapper<BlackListVo> queryWrapper = getQueryWrapper(blackListVo);
-        return this.baseMapper.countVo(queryWrapper);
+    public Long countBlackList(BlackListVo blackListVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(blackListVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
     @Override
     public void cacheAllBlackList() {
-        List<BlackList> list = this.lambdaQuery().list();
+        List<BlackList> list = this.list();
         list.forEach(black -> {
             try {
                 redisService.sSet(getCacheKey(black), objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(black)));
@@ -79,14 +82,26 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         });
     }
 
-    private QueryWrapper<BlackListVo> getQueryWrapper(BlackListVo blackListVo) {
-        QueryWrapper<BlackListVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "sbl.request_uri", blackListVo.getRequestUri());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.request_method", blackListVo.getRequestMethod());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_status", blackListVo.getBlackStatus());
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "sbl.black_ip", blackListVo.getBlackIp());
-        QueryWrapperUtil.inNotEmpty(queryWrapper, "sbl.black_id", blackListVo.getBlackIds());
+    private QueryWrapper getQueryWrapper(BlackListVo blackListVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        BLACK_LIST.BLACK_ID,
+                        BLACK_LIST.BLACK_IP,
+                        BLACK_LIST.REQUEST_URI,
+                        BLACK_LIST.REQUEST_METHOD,
+                        BLACK_LIST.LIMIT_FROM,
+                        BLACK_LIST.LIMIT_TO,
+                        BLACK_LIST.LOCATION,
+                        BLACK_LIST.BLACK_STATUS,
+                        BLACK_LIST.CREATE_AT,
+                        BLACK_LIST.UPDATE_BY
+                )
+                .where(BLACK_LIST.BLACK_IP.likeRight(blackListVo.getBlackIp(), If::hasText))
+                .and(BLACK_LIST.REQUEST_URI.likeRight(blackListVo.getRequestUri(), If::hasText))
+                .and(BLACK_LIST.REQUEST_METHOD.eq(blackListVo.getRequestMethod(), If::hasText))
+                .and(BLACK_LIST.BLACK_STATUS.eq(blackListVo.getBlackStatus(), If::hasText))
+                .and(BLACK_LIST.BLACK_ID.eq(blackListVo.getBlackId()))
+        ;
         return queryWrapper;
     }
 
@@ -105,7 +120,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BlackList updateBlackList(BlackListAo blackListAo) throws JsonProcessingException {
-        BlackList old = this.lambdaQuery().eq(BlackList::getBlackId, blackListAo.getBlackId()).one();
+        BlackList old = this.getById(blackListAo.getBlackId());
         BlackList blackList = new BlackList();
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
@@ -120,7 +135,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteBlackList(List<Long> ids) throws JsonProcessingException {
-        List<BlackList> list = this.lambdaQuery().in(BlackList::getBlackId, ids).list();
+        List<BlackList> list = this.listByIds(ids);
         this.removeByIds(ids);
         for (BlackList blackList : list) {
             redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(blackList)));

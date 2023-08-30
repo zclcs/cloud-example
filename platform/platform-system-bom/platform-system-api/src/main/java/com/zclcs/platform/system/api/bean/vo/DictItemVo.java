@@ -2,8 +2,12 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,12 +16,12 @@ import java.io.Serializable;
  * 字典项 Vo
  *
  * @author zclcs
- * @date 2023-03-06 10:56:41.301
+ * @since 2023-03-06 10:56:41.301
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class DictItemVo extends BaseEntity implements Serializable {

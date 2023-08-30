@@ -1,10 +1,10 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.platform.system.api.bean.entity.MinioBucket;
 import com.zclcs.platform.system.api.bean.ao.MinioBucketAo;
+import com.zclcs.platform.system.api.bean.entity.MinioBucket;
 import com.zclcs.platform.system.api.bean.vo.MinioBucketVo;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * 桶 Service接口
  *
  * @author zclcs
- * @date 2021-10-18 10:37:09.922
+ * @since 2021-10-18 10:37:09.922
  */
 public interface MinioBucketService extends IService<MinioBucket> {
 

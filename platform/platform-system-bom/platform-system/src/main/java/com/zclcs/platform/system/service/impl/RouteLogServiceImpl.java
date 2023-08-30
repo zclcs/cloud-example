@@ -6,11 +6,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.metadata.data.CellData;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -36,11 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.ROUTE_LOG;
+
 /**
  * 网关转发日志 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:40:09.958
+ * @since 2023-01-10 10:40:09.958
  */
 @Slf4j
 @Service
@@ -52,15 +55,15 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
 
     @Override
     public BasePage<RouteLogVo> findRouteLogPage(BasePageAo basePageAo, RouteLogVo routeLogVo) {
-        BasePage<RouteLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(routeLogVo);
+        Page<RouteLogVo> paginate = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, RouteLogVo.class);
+        return new BasePage<>(paginate);
     }
 
     @Override
     public List<RouteLogVo> findRouteLogList(RouteLogVo routeLogVo) {
-        QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(routeLogVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, RouteLogVo.class);
     }
 
     @Override
@@ -72,11 +75,10 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
             }
 
             @Override
-            public List<RouteLogExcelVo> getDataWithIndex(RouteLogVo t, Long startIndex, Long endIndex) {
-                QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(t);
-                queryWrapper.last("limit " + startIndex + ", " + endIndex);
-                List<RouteLogVo> listVo = baseMapper.findListVo(queryWrapper);
-                return RouteLogExcelVo.convertToList(listVo);
+            public List<RouteLogExcelVo> getDataPaginateAs(RouteLogVo routeLogVo, Long pageNum, Long pageSize, Long totalRows) {
+                QueryWrapper queryWrapper = getQueryWrapper(routeLogVo);
+                Page<RouteLogExcelVo> routeLogVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, RouteLogExcelVo.class);
+                return routeLogVoPage.getRecords();
             }
         });
         routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "网关转发日志", RouteLogExcelVo.class, routeLogVo);
@@ -115,23 +117,36 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
 
     @Override
     public RouteLogVo findRouteLog(RouteLogVo routeLogVo) {
-        QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(routeLogVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, RouteLogVo.class);
     }
 
     @Override
     public Long countRouteLog(RouteLogVo routeLogVo) {
-        QueryWrapper<RouteLogVo> queryWrapper = getQueryWrapper(routeLogVo);
-        return this.baseMapper.countVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(routeLogVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<RouteLogVo> getQueryWrapper(RouteLogVo routeLogVo) {
-        QueryWrapper<RouteLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.route_ip", routeLogVo.getRouteIp());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.target_server", routeLogVo.getTargetServer());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srl.request_method", routeLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srl.request_time", routeLogVo.getRequestTimeFrom(), routeLogVo.getRequestTimeTo());
-        queryWrapper.orderByDesc("srl.request_time");
+    private QueryWrapper getQueryWrapper(RouteLogVo routeLogVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        ROUTE_LOG.ROUTE_ID,
+                        ROUTE_LOG.ROUTE_IP,
+                        ROUTE_LOG.REQUEST_URI,
+                        ROUTE_LOG.REQUEST_METHOD,
+                        ROUTE_LOG.REQUEST_TIME,
+                        ROUTE_LOG.TARGET_SERVER,
+                        ROUTE_LOG.LOCATION,
+                        ROUTE_LOG.CODE,
+                        ROUTE_LOG.TIME,
+                        ROUTE_LOG.CREATE_AT,
+                        ROUTE_LOG.UPDATE_AT)
+                .where(ROUTE_LOG.ROUTE_IP.likeRight(routeLogVo.getRouteIp(), If::hasText))
+                .and(ROUTE_LOG.TARGET_SERVER.likeRight(routeLogVo.getTargetServer(), If::hasText))
+                .and(ROUTE_LOG.REQUEST_METHOD.likeRight(routeLogVo.getRequestMethod(), If::hasText))
+                .and(ROUTE_LOG.REQUEST_TIME.between(routeLogVo.getRequestTimeFrom(), routeLogVo.getRequestTimeTo()))
+                .orderBy(ROUTE_LOG.REQUEST_TIME.desc())
+        ;
         return queryWrapper;
     }
 

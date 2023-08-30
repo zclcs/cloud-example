@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author xuxueli
- * @date 16/9/30
+ * @since 16/9/30
  */
 public class XxlJobGroup {
 

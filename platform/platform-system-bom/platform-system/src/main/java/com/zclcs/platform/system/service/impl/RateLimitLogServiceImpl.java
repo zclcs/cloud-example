@@ -26,7 +26,7 @@ import java.util.List;
  * 限流拦截日志 Service实现
  *
  * @author zclcs
- * @date 2023-01-10 10:39:53.040
+ * @since 2023-01-10 10:39:53.040
  */
 @Slf4j
 @Service
@@ -40,25 +40,25 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
     public BasePage<RateLimitLogVo> findRateLimitLogPage(BasePageAo basePageAo, RateLimitLogVo rateLimitLogVo) {
         BasePage<RateLimitLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.baseMapper.findPageVo(basePage, queryWrapper);
+        return this.mapper.findPageVo(basePage, queryWrapper);
     }
 
     @Override
     public List<RateLimitLogVo> findRateLimitLogList(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.baseMapper.findListVo(queryWrapper);
+        return this.mapper.findListVo(queryWrapper);
     }
 
     @Override
     public RateLimitLogVo findRateLimitLog(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.baseMapper.findOneVo(queryWrapper);
+        return this.mapper.findOneVo(queryWrapper);
     }
 
     @Override
     public Integer countRateLimitLog(RateLimitLogVo rateLimitLogVo) {
         QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.baseMapper.countVo(queryWrapper);
+        return this.mapper.countVo(queryWrapper);
     }
 
     private QueryWrapper<RateLimitLogVo> getQueryWrapper(RateLimitLogVo rateLimitLogVo) {

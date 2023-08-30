@@ -1,11 +1,14 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,12 +17,15 @@ import java.io.Serializable;
  * 用户角色关联 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:38.682
+ * @since 2023-01-10 10:39:38.682
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_user_role")
+@Table("system_user_role")
 public class UserRole extends BaseEntity implements Serializable {
 
     @Serial
@@ -28,13 +34,13 @@ public class UserRole extends BaseEntity implements Serializable {
     /**
      * 用户id
      */
-    @TableField(value = "user_id")
+    @Column(value = "user_id")
     private Long userId;
 
     /**
      * 角色id
      */
-    @TableField(value = "role_id")
+    @Column(value = "role_id")
     private Long roleId;
 
 

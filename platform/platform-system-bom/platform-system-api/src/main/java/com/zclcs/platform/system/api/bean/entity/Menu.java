@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,12 +19,15 @@ import java.io.Serializable;
  * 菜单 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:18.238
+ * @since 2023-01-10 10:39:18.238
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_menu")
+@Table("system_menu")
 public class Menu extends BaseEntity implements Serializable {
 
     @Serial
@@ -30,103 +36,103 @@ public class Menu extends BaseEntity implements Serializable {
     /**
      * 目录/菜单/按钮id
      */
-    @TableId(value = "menu_id", type = IdType.AUTO)
+    @Id(value = "menu_id", keyType = KeyType.Auto)
     private Long menuId;
 
     /**
      * 目录/菜单/按钮编码（唯一值）
      */
-    @TableField("menu_code")
+    @Column("menu_code")
     private String menuCode;
 
     /**
      * 上级目录/菜单编码
      */
-    @TableField("parent_code")
+    @Column("parent_code")
     private String parentCode;
 
     /**
      * 目录/菜单/按钮名称
      */
-    @TableField("menu_name")
+    @Column("menu_name")
     private String menuName;
 
     /**
      * 页面缓存名称
      */
-    @TableField("keep_alive_name")
+    @Column("keep_alive_name")
     private String keepAliveName;
 
     /**
      * 对应路由path
      */
-    @TableField("path")
+    @Column("path")
     private String path;
 
     /**
      * 对应路由组件component
      */
-    @TableField("component")
+    @Column("component")
     private String component;
 
     /**
      * 打开目录重定向的子菜单
      */
-    @TableField("redirect")
+    @Column("redirect")
     private String redirect;
 
     /**
      * 权限标识
      */
-    @TableField("perms")
+    @Column("perms")
     private String perms;
 
     /**
      * 图标
      */
-    @TableField("icon")
+    @Column("icon")
     private String icon;
 
     /**
      * 类型 @@system_menu.type
      */
-    @TableField("type")
+    @Column("type")
     private String type;
 
     /**
      * 是否隐藏菜单 @@yes_no
      */
-    @TableField("hide_menu")
+    @Column("hide_menu")
     private String hideMenu;
 
     /**
      * 是否忽略KeepAlive缓存 @@yes_no
      */
-    @TableField("ignore_keep_alive")
+    @Column("ignore_keep_alive")
     private String ignoreKeepAlive;
 
     /**
      * 隐藏该路由在面包屑上面的显示 @@yes_no
      */
-    @TableField("hide_breadcrumb")
+    @Column("hide_breadcrumb")
     private String hideBreadcrumb;
 
     /**
      * 隐藏所有子菜单 @@yes_no
      */
-    @TableField("hide_children_in_menu")
+    @Column("hide_children_in_menu")
     private String hideChildrenInMenu;
 
     /**
      * 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
      */
-    @TableField("current_active_menu")
+    @Column("current_active_menu")
     private String currentActiveMenu;
 
     /**
      * 排序
      */
-    @TableField("order_num")
+    @Column("order_num")
     private Double orderNum;
 
 

@@ -1,11 +1,14 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,12 +17,15 @@ import java.io.Serializable;
  * 角色菜单关联 Entity
  *
  * @author zclcs
- * @date 2023-01-10 10:39:23.376
+ * @since 2023-01-10 10:39:23.376
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_role_menu")
+@Table("system_role_menu")
 public class RoleMenu extends BaseEntity implements Serializable {
 
     @Serial
@@ -28,13 +34,13 @@ public class RoleMenu extends BaseEntity implements Serializable {
     /**
      * 角色id
      */
-    @TableField(value = "role_id")
+    @Column(value = "role_id")
     private Long roleId;
 
     /**
      * 菜单id
      */
-    @TableField(value = "menu_id")
+    @Column(value = "menu_id")
     private Long menuId;
 
 

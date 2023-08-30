@@ -1,8 +1,12 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,12 +17,12 @@ import java.time.LocalDateTime;
  * 限流拦截日志 Vo
  *
  * @author zclcs
- * @date 2023-01-10 10:39:53.040
+ * @since 2023-01-10 10:39:53.040
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class RateLimitLogVo extends BaseEntity implements Serializable {

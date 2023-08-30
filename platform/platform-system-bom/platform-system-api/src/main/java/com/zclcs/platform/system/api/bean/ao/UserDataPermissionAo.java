@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 用户数据权限关联 Ao
  *
  * @author zclcs
- * @date 2023-01-10 10:39:43.325
+ * @since 2023-01-10 10:39:43.325
  */
 @Data
 @AllArgsConstructor

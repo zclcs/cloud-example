@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
@@ -15,7 +15,7 @@ import java.util.List;
  * 字典项 Service接口
  *
  * @author zclcs
- * @date 2023-03-06 10:56:41.301
+ * @since 2023-03-06 10:56:41.301
  */
 public interface DictItemService extends IService<DictItem> {
 
@@ -50,7 +50,7 @@ public interface DictItemService extends IService<DictItem> {
      * @param dictItemVo dictItemVo
      * @return DictItemVo
      */
-    Integer countDictItem(DictItemVo dictItemVo);
+    Long countDictItem(DictItemVo dictItemVo);
 
     /**
      * 查询（分页）
@@ -91,7 +91,7 @@ public interface DictItemService extends IService<DictItem> {
      * @param dictVo dictVo
      * @return Integer
      */
-    Integer countDict(DictVo dictVo);
+    Long countDict(DictVo dictVo);
 
     /**
      * 新增

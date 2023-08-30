@@ -1,13 +1,16 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,12 +19,15 @@ import java.io.Serializable;
  * minio桶 Entity
  *
  * @author zclcs
- * @date 2021-10-21 16:45:35.202
+ * @since 2021-10-21 16:45:35.202
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("system_minio_bucket")
+@Table("system_minio_bucket")
 public class MinioBucket extends BaseEntity implements Serializable {
 
     @Serial
@@ -30,19 +36,19 @@ public class MinioBucket extends BaseEntity implements Serializable {
     /**
      * 桶id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @Id(value = "id", keyType = KeyType.Auto)
     private Long id;
 
     /**
      * 桶名称
      */
-    @TableField("bucket_name")
+    @Column("bucket_name")
     private String bucketName;
 
     /**
      * 桶权限
      */
-    @TableField("bucket_policy")
+    @Column("bucket_policy")
     private String bucketPolicy;
 
 }
