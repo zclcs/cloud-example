@@ -40,7 +40,6 @@ public class BasePage<T> {
     protected Long pages;
 
     public BasePage(Page<T> page) {
-        this.list = page.getRecords();
         this.total = page.getTotalRow();
         this.pageSize = page.getPageSize();
         this.pageNum = page.getPageNumber();
@@ -63,6 +62,14 @@ public class BasePage<T> {
         this.total = total;
         this.pageSize = Math.max(pageSize, 1L);
         this.pageNum = pageNum;
+    }
+
+    public BasePage(Long pageNum, Long pageSize, Long total, Long pages, List<T> list) {
+        this.list = list;
+        this.total = total;
+        this.pageSize = pageSize;
+        this.pageNum = pageNum;
+        this.pages = pages;
     }
 
     public void setTotal(Long total) {

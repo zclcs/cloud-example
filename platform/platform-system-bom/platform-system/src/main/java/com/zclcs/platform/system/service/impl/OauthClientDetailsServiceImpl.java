@@ -4,12 +4,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.exception.MyException;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.OauthClientDetailsTableDef.OAUTH_CLIENT_DETAILS;
+
 /**
  * 终端信息 Service实现
  *
@@ -37,45 +39,60 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetailsMapper, OauthClientDetails> implements OauthClientDetailsService {
 
     private final MenuService menuService;
 
     @Override
     public BasePage<OauthClientDetailsVo> findOauthClientDetailsPage(BasePageAo basePageAo, OauthClientDetailsVo oauthClientDetailsVo) {
-        BasePage<OauthClientDetailsVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
+        QueryWrapper queryWrapper = getQueryWrapper(oauthClientDetailsVo);
+        Page<OauthClientDetailsVo> oauthClientDetailsVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(),
+                queryWrapper, OauthClientDetailsVo.class);
         List<MenuVo> allPermissions = menuService.findMenuList(MenuVo.builder().build());
-        basePage.getList().forEach(clientDetailsVo -> {
+        oauthClientDetailsVoPage.getRecords().forEach(clientDetailsVo -> {
             Optional.ofNullable(clientDetailsVo.getAuthorities()).filter(StrUtil::isNotBlank).ifPresent(s ->
                     setMenuIds(s, allPermissions, clientDetailsVo));
             clientDetailsVo.setClientSecret(null);
         });
-        return this.mapper.findPageVo(basePage, queryWrapper);
+        return new BasePage<>(oauthClientDetailsVoPage);
     }
 
     @Override
     public List<OauthClientDetailsVo> findOauthClientDetailsList(OauthClientDetailsVo oauthClientDetailsVo) {
-        QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.mapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(oauthClientDetailsVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, OauthClientDetailsVo.class);
     }
 
     @Override
     public OauthClientDetailsVo findOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo) {
-        QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.mapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(oauthClientDetailsVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, OauthClientDetailsVo.class);
     }
 
     @Override
-    public Integer countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo) {
-        QueryWrapper<OauthClientDetailsVo> queryWrapper = getQueryWrapper(oauthClientDetailsVo);
-        return this.mapper.countVo(queryWrapper);
+    public Long countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(oauthClientDetailsVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<OauthClientDetailsVo> getQueryWrapper(OauthClientDetailsVo oauthClientDetailsVo) {
-        QueryWrapper<OauthClientDetailsVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.eqNotNull(queryWrapper, "socd.client_id", oauthClientDetailsVo.getClientId());
+    private QueryWrapper getQueryWrapper(OauthClientDetailsVo oauthClientDetailsVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        OAUTH_CLIENT_DETAILS.CLIENT_ID,
+                        OAUTH_CLIENT_DETAILS.RESOURCE_IDS,
+                        OAUTH_CLIENT_DETAILS.CLIENT_SECRET,
+                        OAUTH_CLIENT_DETAILS.SCOPE,
+                        OAUTH_CLIENT_DETAILS.AUTHORIZED_GRANT_TYPES,
+                        OAUTH_CLIENT_DETAILS.WEB_SERVER_REDIRECT_URI,
+                        OAUTH_CLIENT_DETAILS.AUTHORITIES,
+                        OAUTH_CLIENT_DETAILS.ACCESS_TOKEN_VALIDITY,
+                        OAUTH_CLIENT_DETAILS.REFRESH_TOKEN_VALIDITY,
+                        OAUTH_CLIENT_DETAILS.ADDITIONAL_INFORMATION,
+                        OAUTH_CLIENT_DETAILS.AUTOAPPROVE
+                )
+                .where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(oauthClientDetailsVo.getClientId()))
+        ;
         return queryWrapper;
     }
 
@@ -94,7 +111,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OauthClientDetails updateOauthClientDetails(OauthClientDetailsAo oauthClientDetailsAo) {
-        Long count = this.lambdaQuery().eq(OauthClientDetails::getClientId, oauthClientDetailsAo.getClientId()).count();
+        long count = this.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(oauthClientDetailsAo.getClientId())).count();
         if (count == 0L) {
             throw new MyException("该Client不存在");
         }
@@ -104,7 +121,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
         oauthClientDetails.setClientId(null);
         oauthClientDetails.setClientSecret(null);
         String clientId = oauthClientDetails.getClientId();
-        this.lambdaUpdate().eq(OauthClientDetails::getClientId, clientId).update(oauthClientDetails);
+        this.update(oauthClientDetails, new QueryWrapper().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)));
         SystemCacheUtil.deleteOauthClientDetailsCache(clientId);
         return oauthClientDetails;
     }
@@ -118,7 +135,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
 
     @Override
     public void validateClientId(String clientId) {
-        if (this.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).count() > 0L) {
+        if (this.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).count() > 0L) {
             throw new MyException("客户端id重复");
         }
     }

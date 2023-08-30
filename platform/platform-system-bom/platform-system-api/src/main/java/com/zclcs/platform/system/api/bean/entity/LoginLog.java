@@ -37,7 +37,7 @@ public class LoginLog extends BaseEntity implements Serializable {
     /**
      * id
      */
-    @Id(value = "id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

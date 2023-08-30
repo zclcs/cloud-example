@@ -36,7 +36,7 @@ public class BlockLog extends BaseEntity implements Serializable {
     /**
      * 拦截日志id
      */
-    @Id(value = "block_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long blockId;
 
     /**

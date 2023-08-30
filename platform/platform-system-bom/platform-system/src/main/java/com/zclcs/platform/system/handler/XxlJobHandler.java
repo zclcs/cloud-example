@@ -5,15 +5,16 @@ import cn.hutool.core.date.DateUtil;
 import com.google.common.base.Stopwatch;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.zclcs.platform.system.api.bean.entity.BlockLog;
-import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
-import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static com.zclcs.platform.system.api.bean.entity.table.BlockLogTableDef.BLOCK_LOG;
+import static com.zclcs.platform.system.api.bean.entity.table.RateLimitLogTableDef.RATE_LIMIT_LOG;
+import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.ROUTE_LOG;
 
 /**
  * @author zclcs
@@ -58,26 +59,26 @@ public class XxlJobHandler {
         Long limit = Long.valueOf(Optional.of(XxlJobHelper.getJobParam()).orElse("0"));
         LocalDateTime localDateTime = DateUtil.beginOfDay(DateUtil.date()).toLocalDateTime();
 
-        Long blockLogCount = blockLogService.lambdaQuery().le(BlockLog::getCreateAt, localDateTime).count();
+        Long blockLogCount = blockLogService.queryChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).count();
         while (blockLogCount > limit) {
             blockLogCount -= limit;
-            blockLogService.lambdaUpdate().le(BlockLog::getCreateAt, localDateTime).last("limit " + limit).remove();
+            blockLogService.updateChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
         }
-        blockLogService.lambdaUpdate().le(BlockLog::getCreateAt, localDateTime).remove();
+        blockLogService.updateChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).remove();
 
-        Long rateLimitLogCount = rateLimitLogService.lambdaQuery().le(RateLimitLog::getCreateAt, localDateTime).count();
+        Long rateLimitLogCount = rateLimitLogService.queryChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).count();
         while (rateLimitLogCount > limit) {
             rateLimitLogCount -= limit;
-            rateLimitLogService.lambdaUpdate().le(RateLimitLog::getCreateAt, localDateTime).last("limit " + limit).remove();
+            rateLimitLogService.updateChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
         }
-        rateLimitLogService.lambdaUpdate().le(RateLimitLog::getCreateAt, localDateTime).remove();
+        rateLimitLogService.updateChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).remove();
 
-        Long routeLogCount = routeLogService.lambdaQuery().le(RouteLog::getCreateAt, localDateTime).count();
+        Long routeLogCount = routeLogService.queryChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).count();
         while (routeLogCount > limit) {
             routeLogCount -= limit;
-            routeLogService.lambdaUpdate().le(RouteLog::getCreateAt, localDateTime).last("limit " + limit).remove();
+            routeLogService.updateChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
         }
-        routeLogService.lambdaUpdate().le(RouteLog::getCreateAt, localDateTime).remove();
+        routeLogService.updateChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).remove();
 
         XxlJobHelper.log("Clean Log Completed - {}", stopwatch.stop());
     }

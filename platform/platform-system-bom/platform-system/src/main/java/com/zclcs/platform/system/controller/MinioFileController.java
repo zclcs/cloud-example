@@ -10,7 +10,7 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.minio.starter.utils.MinioUtil;
 import com.zclcs.platform.system.api.bean.entity.MinioFile;
 import com.zclcs.platform.system.api.bean.vo.MinioFileVo;
-import com.zclcs.platform.system.service.MinioFileService;
+import com.zclcs.platform.system.service.MinioService;
 import io.minio.StatObjectResponse;
 import io.minio.errors.MinioException;
 import jakarta.servlet.ServletOutputStream;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MinioFileController {
 
-    private final MinioFileService minioFileService;
+    private final MinioService minioService;
 
     private final MinioUtil minioUtil;
 
@@ -53,12 +53,12 @@ public class MinioFileController {
      * 文件查询（分页）
      * 权限: file:view
      *
-     * @see MinioFileService#findMinioFilePage(BasePageAo, MinioFileVo)
+     * @see MinioService#findMinioFilePage(BasePageAo, MinioFileVo)
      */
     @GetMapping
     @SaCheckPermission("file:view")
     public BaseRsp<BasePage<MinioFileVo>> findMinioFilePage(@Validated BasePageAo basePageAo, @Validated MinioFileVo minioFileVo) {
-        BasePage<MinioFileVo> page = this.minioFileService.findMinioFilePage(basePageAo, minioFileVo);
+        BasePage<MinioFileVo> page = this.minioService.findMinioFilePage(basePageAo, minioFileVo);
         return RspUtil.data(page);
     }
 
@@ -66,12 +66,12 @@ public class MinioFileController {
      * 文件查询（集合）
      * 权限: file:view
      *
-     * @see MinioFileService#findMinioFileList(MinioFileVo)
+     * @see MinioService#findMinioFileList(MinioFileVo)
      */
     @GetMapping("list")
     @SaCheckPermission("file:view")
     public BaseRsp<List<MinioFileVo>> findMinioFileList(@Validated MinioFileVo minioFileVo) {
-        List<MinioFileVo> list = this.minioFileService.findMinioFileList(minioFileVo);
+        List<MinioFileVo> list = this.minioService.findMinioFileList(minioFileVo);
         return RspUtil.data(list);
     }
 
@@ -79,12 +79,12 @@ public class MinioFileController {
      * 文件查询（单个）
      * 权限: file:view
      *
-     * @see MinioFileService#findMinioFile(MinioFileVo)
+     * @see MinioService#findMinioFile(MinioFileVo)
      */
     @GetMapping("one")
     @SaCheckPermission("file:view")
     public BaseRsp<MinioFileVo> findMinioFile(@Validated MinioFileVo minioFileVo) {
-        MinioFileVo minioFile = this.minioFileService.findMinioFile(minioFileVo);
+        MinioFileVo minioFile = this.minioService.findMinioFile(minioFileVo);
         return RspUtil.data(minioFile);
     }
 
@@ -99,7 +99,7 @@ public class MinioFileController {
     //@SaCheckPermission("file:add")
     public BaseRsp<MinioFile> addMinioFile(@RequestPart(value = "file") MultipartFile file,
                                            String bucketName) throws IOException {
-        return RspUtil.data(this.minioFileService.createMinioFile(file, bucketName));
+        return RspUtil.data(this.minioService.createMinioFile(file, bucketName));
     }
 
     /**
@@ -112,7 +112,7 @@ public class MinioFileController {
     @SaCheckPermission("file:delete")
     public void deleteMinioFile(@NotBlank(message = "{required}") @PathVariable String fileIds) {
         List<String> ids = Arrays.stream(fileIds.split(Strings.COMMA)).collect(Collectors.toList());
-        this.minioFileService.deleteMinioFile(ids);
+        this.minioService.deleteMinioFile(ids);
     }
 
     /**
@@ -126,7 +126,7 @@ public class MinioFileController {
     @GetMapping("/preViewPicture/{fileId}")
     //@SaCheckPermission("file:view")
     public void preViewPicture(@NotBlank(message = "{required}") @PathVariable("fileId") String fileId, HttpServletResponse response) throws Exception {
-        MinioFileVo minioFile = minioFileService.findMinioFile(MinioFileVo.builder().id(fileId).build());
+        MinioFileVo minioFile = minioService.findMinioFile(MinioFileVo.builder().id(fileId).build());
         if (minioFile == null) {
             throw new MyException("文件不存在");
         }
@@ -158,7 +158,7 @@ public class MinioFileController {
     @GetMapping("/download/{fileId}")
     //@SaCheckPermission("file:download")
     public ResponseEntity<byte[]> download(@NotBlank(message = "{required}") @PathVariable("fileId") String fileId) throws Exception {
-        MinioFileVo minioFile = minioFileService.findMinioFile(MinioFileVo.builder().id(fileId).build());
+        MinioFileVo minioFile = minioService.findMinioFile(MinioFileVo.builder().id(fileId).build());
         if (minioFile == null) {
             throw new MyException("文件不存在");
         }

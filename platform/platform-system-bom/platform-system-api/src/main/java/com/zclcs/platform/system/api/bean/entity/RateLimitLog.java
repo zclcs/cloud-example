@@ -36,7 +36,7 @@ public class RateLimitLog extends BaseEntity implements Serializable {
     /**
      * 限流日志id
      */
-    @Id(value = "rate_limit_log_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long rateLimitLogId;
 
     /**

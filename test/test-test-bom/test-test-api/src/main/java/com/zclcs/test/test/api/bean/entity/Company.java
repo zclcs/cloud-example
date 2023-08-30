@@ -31,7 +31,7 @@ public class Company extends BaseEntity implements Serializable {
     /**
      * 企业id
      */
-    @Id(value = "company_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long companyId;
 
     /**

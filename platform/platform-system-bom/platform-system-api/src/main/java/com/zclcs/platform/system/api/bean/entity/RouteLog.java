@@ -37,7 +37,7 @@ public class RouteLog extends BaseEntity implements Serializable {
     /**
      * 网关转发日志id
      */
-    @Id(value = "route_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long routeId;
 
     /**

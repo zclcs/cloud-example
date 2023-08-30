@@ -36,7 +36,7 @@ public class Role extends BaseEntity implements Serializable {
     /**
      * 角色id
      */
-    @Id(value = "role_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long roleId;
 
     /**

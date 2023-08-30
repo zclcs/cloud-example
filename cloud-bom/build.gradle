@@ -33,5 +33,6 @@ dependencies {
         api "com.mybatis-flex:mybatis-flex-processor:$mybatisFlexVersion"
         api "com.mybatis-flex:mybatis-flex-annotation:$mybatisFlexVersion"
         api "com.mybatis-flex:mybatis-flex-core:$mybatisFlexVersion"
+        api "org.mybatis:mybatis-spring:$mybatisVersion"
     }
 }

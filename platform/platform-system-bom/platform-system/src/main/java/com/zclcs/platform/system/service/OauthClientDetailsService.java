@@ -48,7 +48,7 @@ public interface OauthClientDetailsService extends IService<OauthClientDetails> 
      * @param oauthClientDetailsVo oauthClientDetailsVo
      * @return OauthClientDetailsVo
      */
-    Integer countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo);
+    Long countOauthClientDetails(OauthClientDetailsVo oauthClientDetailsVo);
 
     /**
      * 新增

@@ -39,7 +39,7 @@ public class User extends BaseEntity implements Serializable {
     /**
      * 用户id
      */
-    @Id(value = "user_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long userId;
 
     /**
@@ -65,7 +65,7 @@ public class User extends BaseEntity implements Serializable {
      * 部门id
      */
     @Column("dept_id")
-    private String deptId;
+    private Long deptId;
 
     /**
      * 邮箱

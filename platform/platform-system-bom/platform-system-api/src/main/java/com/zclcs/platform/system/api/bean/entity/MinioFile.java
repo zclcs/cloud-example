@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.keygen.KeyGenerators;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class MinioFile extends BaseEntity implements Serializable {
     /**
      * 文件id
      */
-    @Id(value = "id", keyType = KeyType.Generator)
+    @Id(value = KeyGenerators.uuid, keyType = KeyType.Generator)
     private String id;
 
     /**

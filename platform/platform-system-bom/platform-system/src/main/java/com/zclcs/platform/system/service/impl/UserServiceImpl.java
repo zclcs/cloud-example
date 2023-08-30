@@ -5,15 +5,16 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.service.ExportExcelService;
@@ -45,6 +46,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.zclcs.platform.system.api.bean.entity.table.UserDataPermissionTableDef.USER_DATA_PERMISSION;
+import static com.zclcs.platform.system.api.bean.entity.table.UserRoleTableDef.USER_ROLE;
+import static com.zclcs.platform.system.api.bean.entity.table.UserTableDef.USER;
+
 /**
  * 用户 Service实现
  *
@@ -64,10 +69,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo) {
-        BasePage<UserVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        BasePage<UserVo> pageVo = this.mapper.findPageVo(basePage, queryWrapper);
-        pageVo.getList().forEach(vo -> {
+        QueryWrapper queryWrapper = getQueryWrapper(userVo);
+        Page<User> pageVo = this.mapper.paginate(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper);
+        BasePage<UserVo> userVoBasePage = new BasePage<>(pageVo.getPageNumber(), pageVo.getPageSize(), pageVo.getTotalRow(), pageVo.getTotalPage(), UserVo.convertToList(pageVo.getRecords()));
+        userVoBasePage.getList().forEach(vo -> {
             Long userId = vo.getUserId();
             List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userId);
             if (CollectionUtil.isNotEmpty(roles)) {
@@ -78,13 +83,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             vo.setDeptIds(SystemCacheUtil.getDeptIdsByUserId(userId));
         });
-        return pageVo;
+        return userVoBasePage;
     }
 
     @Override
     public List<UserVo> findUserList(UserVo userVo) {
-        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.mapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(userVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, UserVo.class);
     }
 
     @Override
@@ -96,10 +101,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
 
             @Override
-            public List<UserExcelVo> getDataWithIndex(UserVo userVo, Long startIndex, Long endIndex) {
-                QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-                List<UserVo> listVo = mapper.findListVo(queryWrapper);
-                return UserExcelVo.convertToList(listVo);
+            public List<UserExcelVo> getDataPaginateAs(UserVo userVo, Long pageNum, Long pageSize, Long totalRows) {
+                QueryWrapper queryWrapper = getQueryWrapper(userVo);
+                Page<UserExcelVo> pageVo = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, UserExcelVo.class);
+                return pageVo.getRecords();
             }
         });
         routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
@@ -107,32 +112,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserVo findUser(UserVo userVo) {
-        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.mapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(userVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, UserVo.class);
     }
 
     @Override
     public Long countUser(UserVo userVo) {
-        QueryWrapper<UserVo> queryWrapper = getQueryWrapper(userVo);
-        return this.mapper.countVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(userVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
     @Override
     public UserVo findByName(String username) {
-        QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.username", username);
-        return this.mapper.findOneVo(queryWrapper);
+        return this.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserVo.class);
     }
 
     @Override
     public UserVo findByMobile(String mobile) {
-        QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.eqNotBlank(queryWrapper, "tb.mobile", mobile);
-        return this.mapper.findOneVo(queryWrapper);
+        return this.queryChain().where(USER.MOBILE.eq(mobile)).oneAs(UserVo.class);
     }
 
-    private QueryWrapper<UserVo> getQueryWrapper(UserVo userVo) {
-        QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
+    private QueryWrapper getQueryWrapper(UserVo userVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
         AtomicReference<List<Long>> deptList = new AtomicReference<>();
         Optional.ofNullable(userVo.getDeptId()).ifPresent(deptId -> {
             List<Long> childDeptId = deptService.getChildDeptId(deptId);
@@ -142,8 +143,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 deptList.set(CollectionUtil.newArrayList(CommonCore.TOP_PARENT_ID));
             }
         });
-        QueryWrapperUtil.inNotEmpty(queryWrapper, "tb.dept_id", deptList.get());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "tb.username", userVo.getUsername());
+        queryWrapper.select(
+                        USER.USER_ID,
+                        USER.USERNAME,
+                        USER.REAL_NAME,
+                        USER.PASSWORD,
+                        USER.DEPT_ID,
+                        USER.EMAIL,
+                        USER.MOBILE,
+                        USER.STATUS,
+                        USER.LAST_LOGIN_TIME,
+                        USER.GENDER,
+                        USER.IS_TAB,
+                        USER.THEME,
+                        USER.AVATAR,
+                        USER.DESCRIPTION,
+                        USER.CREATE_AT
+                )
+                .where(USER.USER_ID.in(deptList.get(), If::isNotEmpty))
+                .and(USER.USERNAME.likeRight(userVo.getUsername(), If::hasText))
+        ;
         return queryWrapper;
     }
 
@@ -200,12 +219,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         SystemCacheUtil.deletePermissionsByUsername(username);
         SystemCacheUtil.deleteRoutersByUsername(username);
 
-        userRoleService.lambdaUpdate().eq(UserRole::getUserId, userId).remove();
+        userRoleService.updateChain().where(USER_ROLE.USER_ID.eq(userId)).remove();
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
         userRoleService.saveBatch(userRoles);
         SystemCacheUtil.deleteRoleIdsByUserId(userId);
 
-        userDataPermissionService.lambdaUpdate().eq(UserDataPermission::getUserId, userId).remove();
+        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.USER_ID.eq(userId)).remove();
         List<UserDataPermission> userDataPermissions = getUserDataPermissions(user, userAo.getDeptIds());
         userDataPermissionService.saveBatch(userDataPermissions);
         SystemCacheUtil.deleteDeptIdsByUserId(userId);
@@ -215,7 +234,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(List<Long> ids) {
-        List<User> list = this.lambdaQuery().in(User::getUserId, ids).list();
+        List<User> list = this.queryChain().where(USER.USER_ID.in(ids)).list();
         this.removeByIds(ids);
         Object[] usernames = list.stream().map(User::getUsername).toList().toArray();
         Object[] mobiles = list.stream().map(User::getMobile).filter(StrUtil::isNotBlank).toList().toArray();
@@ -227,17 +246,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         SystemCacheUtil.deleteUserCaches(usernames);
         SystemCacheUtil.deleteUsernameByMobiles(mobiles);
         // 删除用户角色
-        userRoleService.lambdaUpdate().in(UserRole::getUserId, ids).remove();
+        userRoleService.updateChain().where(USER_ROLE.USER_ID.in(ids)).remove();
         SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
         // 删除用户权限
-        userDataPermissionService.lambdaUpdate().in(UserDataPermission::getUserId, ids).remove();
+        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.USER_ID.in(ids)).remove();
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateLoginTime(String username) {
-        this.lambdaUpdate().eq(User::getUsername, username).set(User::getLastLoginTime, DateUtil.date()).update();
+        this.updateChain().where(USER.USERNAME.eq(username)).set(User::getLastLoginTime, DateUtil.date()).update();
         SystemCacheUtil.deleteUserCache(username);
     }
 
@@ -245,7 +264,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void updatePassword(String username, String password) {
         String currentUsername = LoginHelper.getUsername();
-        this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
+        this.updateChain().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername)))
                 .set(User::getPassword, BCrypt.hashpw(password)).update();
         SystemCacheUtil.deleteUserCache(username);
     }
@@ -255,7 +274,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateStatus(String username, String status) {
         String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(Security.STATUS_LOCK);
         String currentUsername = LoginHelper.getUsername();
-        this.lambdaUpdate().eq(User::getUsername, Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))
+        this.updateChain().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername)))
                 .set(User::getStatus, orElse)
                 .update();
         SystemCacheUtil.deleteUserCache(username);
@@ -264,7 +283,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPassword(List<String> usernames) {
-        this.lambdaUpdate().in(User::getUsername, usernames)
+        this.updateChain().where(USER.USERNAME.in(usernames))
                 .set(User::getPassword, BCrypt.hashpw(globalProperties.getDefaultPassword())).update();
         SystemCacheUtil.deleteUserCaches(usernames.toArray());
     }
@@ -312,7 +331,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private void deleteCache(UserAo userAo) {
         deleteUserCache(userAo.getUsername(), userAo.getMobile());
         if (userAo.getUserId() != null) {
-            User one = this.lambdaQuery().eq(User::getUserId, userAo.getUserId()).one();
+            User one = this.getById(userAo.getUserId());
             deleteUserCache(one.getUsername(), one.getMobile());
         }
     }

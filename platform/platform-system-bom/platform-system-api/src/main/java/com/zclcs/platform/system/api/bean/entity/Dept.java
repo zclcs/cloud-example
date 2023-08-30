@@ -36,7 +36,7 @@ public class Dept extends BaseEntity implements Serializable {
     /**
      * 部门id
      */
-    @Id(value = "dept_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long deptId;
 
     /**

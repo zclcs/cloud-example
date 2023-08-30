@@ -36,7 +36,7 @@ public class BlackList extends BaseEntity implements Serializable {
     /**
      * 黑名单id
      */
-    @Id(value = "black_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long blackId;
 
     /**

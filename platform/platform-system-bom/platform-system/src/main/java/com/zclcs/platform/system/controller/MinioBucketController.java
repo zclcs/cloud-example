@@ -13,7 +13,7 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.MinioBucketAo;
 import com.zclcs.platform.system.api.bean.entity.MinioBucket;
 import com.zclcs.platform.system.api.bean.vo.MinioBucketVo;
-import com.zclcs.platform.system.service.MinioBucketService;
+import com.zclcs.platform.system.service.MinioService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,18 +36,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MinioBucketController {
 
-    private final MinioBucketService minioBucketService;
+    private final MinioService minioService;
 
     /**
      * 桶查询（分页）
      * 权限: bucket:view
      *
-     * @see MinioBucketService#findMinioBucketPage(BasePageAo, MinioBucketVo)
+     * @see MinioService#findMinioBucketPage(BasePageAo, MinioBucketVo)
      */
     @GetMapping
     @SaCheckPermission("bucket:view")
     public BaseRsp<BasePage<MinioBucketVo>> findMinioBucketPage(@Validated BasePageAo basePageAo, @Validated MinioBucketVo minioBucketVo) {
-        BasePage<MinioBucketVo> page = this.minioBucketService.findMinioBucketPage(basePageAo, minioBucketVo);
+        BasePage<MinioBucketVo> page = this.minioService.findMinioBucketPage(basePageAo, minioBucketVo);
         return RspUtil.data(page);
     }
 
@@ -55,12 +55,12 @@ public class MinioBucketController {
      * 桶查询（集合）
      * 权限: bucket:view
      *
-     * @see MinioBucketService#findMinioBucketList(MinioBucketVo)
+     * @see MinioService#findMinioBucketList(MinioBucketVo)
      */
     @GetMapping("/list")
     @SaCheckPermission("bucket:view")
     public BaseRsp<List<MinioBucketVo>> findMinioBucketList(@Validated MinioBucketVo minioBucketVo) {
-        List<MinioBucketVo> list = this.minioBucketService.findMinioBucketList(minioBucketVo);
+        List<MinioBucketVo> list = this.minioService.findMinioBucketList(minioBucketVo);
         return RspUtil.data(list);
     }
 
@@ -68,12 +68,12 @@ public class MinioBucketController {
      * 桶查询（单个）
      * 权限: bucket:view
      *
-     * @see MinioBucketService#findMinioBucket(MinioBucketVo)
+     * @see MinioService#findMinioBucket(MinioBucketVo)
      */
     @GetMapping("/one")
     @SaCheckPermission("bucket:view")
     public BaseRsp<MinioBucketVo> findMinioBucket(@Validated MinioBucketVo minioBucketVo) {
-        MinioBucketVo minioBucket = this.minioBucketService.findMinioBucket(minioBucketVo);
+        MinioBucketVo minioBucket = this.minioService.findMinioBucket(minioBucketVo);
         return RspUtil.data(minioBucket);
     }
 
@@ -89,7 +89,7 @@ public class MinioBucketController {
     @SaCheckPermission(value = {"bucket:add", "bucket:update"}, mode = SaMode.OR)
     public BaseRsp<Object> checkBucketName(@RequestParam(required = false) Long bucketId,
                                            @NotBlank(message = "{required}") @RequestParam String bucketName) {
-        minioBucketService.validateBucketName(bucketName, bucketId);
+        minioService.validateBucketName(bucketName, bucketId);
         return RspUtil.message();
     }
 
@@ -97,27 +97,27 @@ public class MinioBucketController {
      * 新增桶
      * 权限: bucket:add
      *
-     * @see MinioBucketService#createMinioBucket(MinioBucketAo)
+     * @see MinioService#createMinioBucket(MinioBucketAo)
      */
     @PostMapping
     @SaCheckPermission("bucket:add")
     @ControllerEndpoint(operation = "新增桶")
     public BaseRsp<MinioBucket> addMinioBucket(@RequestBody @Validated(AddStrategy.class) MinioBucketAo minioBucketAo) {
-        return RspUtil.data(this.minioBucketService.createMinioBucket(minioBucketAo));
+        return RspUtil.data(this.minioService.createMinioBucket(minioBucketAo));
     }
 
     /**
      * 删除桶
      * 权限: bucket:delete
      *
-     * @see MinioBucketService#deleteMinioBucket(List)
+     * @see MinioService#deleteMinioBucket(List)
      */
     @DeleteMapping("/{bucketIds}")
     @SaCheckPermission("bucket:delete")
     @ControllerEndpoint(operation = "删除桶")
     public BaseRsp<String> deleteMinioBucket(@NotBlank(message = "{required}") @PathVariable String bucketIds) {
         List<Long> ids = Arrays.stream(bucketIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
-        this.minioBucketService.deleteMinioBucket(ids);
+        this.minioService.deleteMinioBucket(ids);
         return RspUtil.message("删除成功");
     }
 
@@ -125,13 +125,13 @@ public class MinioBucketController {
      * 修改桶
      * 权限: bucket:update
      *
-     * @see MinioBucketService#updateMinioBucket(MinioBucketAo)
+     * @see MinioService#updateMinioBucket(MinioBucketAo)
      */
     @PutMapping
     @SaCheckPermission("bucket:update")
     @ControllerEndpoint(operation = "修改桶")
     public BaseRsp<MinioBucket> updateMinioBucket(@RequestBody @Validated(UpdateStrategy.class) MinioBucketAo minioBucketAo) {
-        return RspUtil.data(this.minioBucketService.updateMinioBucket(minioBucketAo));
+        return RspUtil.data(this.minioService.updateMinioBucket(minioBucketAo));
     }
 
 }

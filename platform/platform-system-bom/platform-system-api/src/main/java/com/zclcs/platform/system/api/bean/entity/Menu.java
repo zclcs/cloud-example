@@ -36,7 +36,7 @@ public class Menu extends BaseEntity implements Serializable {
     /**
      * 目录/菜单/按钮id
      */
-    @Id(value = "menu_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long menuId;
 
     /**

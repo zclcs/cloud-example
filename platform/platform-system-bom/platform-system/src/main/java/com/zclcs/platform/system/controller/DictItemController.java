@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.zclcs.cloud.lib.dict.bean.entity.table.DictItemTableDef.DICT_ITEM;
+
 /**
  * 字典项
  *
@@ -89,8 +91,7 @@ public class DictItemController {
     @GetMapping("/findByDictName/{dictName}")
     @Inner
     public List<DictItemCacheBean> findByDictName(@PathVariable String dictName) {
-        return DictItemCacheBean.convertToDictItemCacheBeanList(this.dictItemService.lambdaQuery()
-                .eq(DictItem::getDictName, dictName).list());
+        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName)).listAs(DictItemCacheBean.class);
     }
 
     /**
@@ -103,10 +104,10 @@ public class DictItemController {
     @GetMapping("/findByDictNameAndValue/{dictName}/{value}")
     @Inner
     public DictItemCacheBean findByDictNameAndValue(@PathVariable String dictName, @PathVariable String value) {
-        return DictItemCacheBean.convertToDictItemCacheBean(this.dictItemService.lambdaQuery()
-                .eq(DictItem::getDictName, dictName)
-                .eq(DictItem::getValue, value)
-                .orderByAsc(DictItem::getSorted).one());
+        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
+                .and(DICT_ITEM.VALUE.eq(value))
+                .orderBy(DICT_ITEM.SORTED.asc())
+                .oneAs(DictItemCacheBean.class);
     }
 
     /**
@@ -119,10 +120,10 @@ public class DictItemController {
     @GetMapping("/findByDictNameAndParentValue/{dictName}/{parentValue}")
     @Inner
     public List<DictItemCacheBean> findByDictNameAndParentValue(@PathVariable String dictName, @PathVariable String parentValue) {
-        return DictItemCacheBean.convertToDictItemCacheBeanList(this.dictItemService.lambdaQuery()
-                .eq(DictItem::getDictName, dictName)
-                .eq(DictItem::getParentValue, parentValue)
-                .orderByAsc(DictItem::getSorted).list());
+        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
+                .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
+                .orderBy(DICT_ITEM.SORTED.asc())
+                .listAs(DictItemCacheBean.class);
     }
 
     /**

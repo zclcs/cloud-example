@@ -6,7 +6,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
-import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
@@ -154,7 +153,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                 .map(UserDataPermission::getUserId).toList().toArray();
         removeByIds(deptIdsDistinct);
         SystemCacheUtil.deleteDeptByDeptIds(deptIds);
-        userDataPermissionService.remove(QueryCondition.create(USER_DATA_PERMISSION.DEPT_ID, ids));
+        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)).remove();
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
@@ -173,7 +172,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     private void getChild(List<Long> allDeptId, Dept systemDept) {
-        List<Dept> list = this.list(QueryCondition.create(DEPT.PARENT_CODE, systemDept.getDeptCode()));
+        List<Dept> list = this.queryChain().where(DEPT.PARENT_CODE.eq(systemDept.getDeptCode())).list();
         if (CollUtil.isNotEmpty(list)) {
             for (Dept dept : list) {
                 allDeptId.add(dept.getDeptId());
@@ -187,7 +186,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (CommonCore.TOP_PARENT_CODE.equals(deptCode)) {
             throw new MyException("部门编码输入非法值");
         }
-        Dept one = this.getOne(QueryCondition.create(DEPT.DEPT_CODE, deptCode));
+        Dept one = this.queryChain().where(DEPT.DEPT_CODE.eq(deptCode)).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门编码重复");
         }
@@ -195,7 +194,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptName(String deptName, Long deptId) {
-        Dept one = this.getOne(QueryCondition.create(DEPT.DEPT_NAME, deptName));
+        Dept one = this.queryChain().where(DEPT.DEPT_NAME.eq(deptName)).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new MyException("部门名称重复");
         }

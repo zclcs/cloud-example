@@ -37,7 +37,7 @@ public class Log extends BaseEntity implements Serializable {
     /**
      * 日志id
      */
-    @Id(value = "id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

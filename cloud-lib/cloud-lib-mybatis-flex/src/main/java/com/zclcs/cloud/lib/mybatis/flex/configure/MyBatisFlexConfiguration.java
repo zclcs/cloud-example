@@ -1,6 +1,9 @@
 package com.zclcs.cloud.lib.mybatis.flex.configure;
 
 import com.mybatisflex.core.FlexGlobalConfig;
+import com.mybatisflex.core.audit.AuditManager;
+import com.mybatisflex.core.audit.ConsoleMessageCollector;
+import com.mybatisflex.core.audit.MessageCollector;
 import com.mybatisflex.core.dialect.DbType;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
@@ -28,6 +31,13 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
 
         //为 Entity1 和 Entity2 注册 updateListener
         config.registerUpdateListener(updateListener, BaseEntity.class);
+
+        //开启审计功能
+        AuditManager.setAuditEnable(true);
+
+        //设置 SQL 审计收集器
+        MessageCollector collector = new ConsoleMessageCollector();
+        AuditManager.setMessageCollector(collector);
     }
 
 }

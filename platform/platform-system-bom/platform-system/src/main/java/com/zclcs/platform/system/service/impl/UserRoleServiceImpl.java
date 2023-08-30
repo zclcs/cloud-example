@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
 import com.zclcs.platform.system.mapper.UserRoleMapper;
 import com.zclcs.platform.system.service.UserRoleService;

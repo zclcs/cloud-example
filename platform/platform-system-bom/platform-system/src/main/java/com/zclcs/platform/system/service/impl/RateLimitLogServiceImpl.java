@@ -2,11 +2,11 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.mybatis.plus.utils.QueryWrapperUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.zclcs.platform.system.api.bean.entity.table.RateLimitLogTableDef.RATE_LIMIT_LOG;
 
 /**
  * 限流拦截日志 Service实现
@@ -38,36 +40,47 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
 
     @Override
     public BasePage<RateLimitLogVo> findRateLimitLogPage(BasePageAo basePageAo, RateLimitLogVo rateLimitLogVo) {
-        BasePage<RateLimitLogVo> basePage = new BasePage<>(basePageAo.getPageNum(), basePageAo.getPageSize());
-        QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.mapper.findPageVo(basePage, queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(rateLimitLogVo);
+        Page<RateLimitLogVo> rateLimitLogVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, RateLimitLogVo.class);
+        return new BasePage<>(rateLimitLogVoPage);
     }
 
     @Override
     public List<RateLimitLogVo> findRateLimitLogList(RateLimitLogVo rateLimitLogVo) {
-        QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.mapper.findListVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(rateLimitLogVo);
+        return this.mapper.selectListByQueryAs(queryWrapper, RateLimitLogVo.class);
     }
 
     @Override
     public RateLimitLogVo findRateLimitLog(RateLimitLogVo rateLimitLogVo) {
-        QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.mapper.findOneVo(queryWrapper);
+        QueryWrapper queryWrapper = getQueryWrapper(rateLimitLogVo);
+        return this.mapper.selectOneByQueryAs(queryWrapper, RateLimitLogVo.class);
     }
 
     @Override
-    public Integer countRateLimitLog(RateLimitLogVo rateLimitLogVo) {
-        QueryWrapper<RateLimitLogVo> queryWrapper = getQueryWrapper(rateLimitLogVo);
-        return this.mapper.countVo(queryWrapper);
+    public Long countRateLimitLog(RateLimitLogVo rateLimitLogVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(rateLimitLogVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
-    private QueryWrapper<RateLimitLogVo> getQueryWrapper(RateLimitLogVo rateLimitLogVo) {
-        QueryWrapper<RateLimitLogVo> queryWrapper = new QueryWrapper<>();
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.rate_limit_log_ip", rateLimitLogVo.getRateLimitLogIp());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.request_uri", rateLimitLogVo.getRequestUri());
-        QueryWrapperUtil.likeRightNotBlank(queryWrapper, "srll.request_method", rateLimitLogVo.getRequestMethod());
-        QueryWrapperUtil.betweenDateAddTimeNotBlank(queryWrapper, "srll.request_time", rateLimitLogVo.getRequestTimeFrom(), rateLimitLogVo.getRequestTimeTo());
-        queryWrapper.orderByDesc("srll.request_time");
+    private QueryWrapper getQueryWrapper(RateLimitLogVo rateLimitLogVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                        RATE_LIMIT_LOG.RATE_LIMIT_LOG_ID,
+                        RATE_LIMIT_LOG.RATE_LIMIT_LOG_IP,
+                        RATE_LIMIT_LOG.REQUEST_URI,
+                        RATE_LIMIT_LOG.REQUEST_METHOD,
+                        RATE_LIMIT_LOG.REQUEST_TIME,
+                        RATE_LIMIT_LOG.LOCATION,
+                        RATE_LIMIT_LOG.CREATE_AT,
+                        RATE_LIMIT_LOG.UPDATE_AT
+                )
+                .where(RATE_LIMIT_LOG.RATE_LIMIT_LOG_IP.likeRight(rateLimitLogVo.getRateLimitLogIp()))
+                .and(RATE_LIMIT_LOG.REQUEST_URI.likeRight(rateLimitLogVo.getRequestUri()))
+                .and(RATE_LIMIT_LOG.REQUEST_METHOD.likeRight(rateLimitLogVo.getRequestMethod()))
+                .and(RATE_LIMIT_LOG.REQUEST_TIME.between(rateLimitLogVo.getRequestTimeFrom(), rateLimitLogVo.getRequestTimeTo()))
+                .orderBy(RATE_LIMIT_LOG.REQUEST_TIME.desc())
+        ;
         return queryWrapper;
     }
 

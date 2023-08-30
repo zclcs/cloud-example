@@ -32,6 +32,7 @@ buildscript {
         easyexcelVersion = "3.3.2"
         tikaVersion = "2.8.0"
         mybatisFlexVersion = "1.6.1"
+        mybatisVersion = "3.0.2"
     }
 }
 

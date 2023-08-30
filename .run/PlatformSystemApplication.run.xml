@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PlatformSystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
-      <env name="DATASOURCE_DB_TYPE" value="p6spy:mysql" />
-      <env name="DATASOURCE_DRIVER" value="com.p6spy.engine.spy.P6SpyDriver" />
+      <env name="DATASOURCE_DB_TYPE" value="mysql" />
+      <env name="DATASOURCE_DRIVER" value="com.mysql.cj.jdbc.Driver" />
       <env name="DATASOURCE_HOST" value="192.168.33.10" />
       <env name="DATASOURCE_PASSWORD" value="123456" />
       <env name="GATEWAY_HOST" value="127.0.0.1" />

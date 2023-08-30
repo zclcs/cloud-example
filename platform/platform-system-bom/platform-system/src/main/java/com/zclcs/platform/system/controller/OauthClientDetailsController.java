@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.OauthClientDetailsTableDef.OAUTH_CLIENT_DETAILS;
+
 /**
  * 终端信息
  *
@@ -88,7 +90,7 @@ public class OauthClientDetailsController {
     @GetMapping(value = "/findByClientId/{clientId}")
     @Inner
     public OauthClientDetailsCacheBean findByClientId(@PathVariable String clientId) {
-        return OauthClientDetailsCacheBean.convertToOauthClientDetailsCacheBean(oauthClientDetailsService.lambdaQuery().eq(OauthClientDetails::getClientId, clientId).one());
+        return oauthClientDetailsService.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).oneAs(OauthClientDetailsCacheBean.class);
     }
 
     /**

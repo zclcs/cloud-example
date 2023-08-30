@@ -36,7 +36,7 @@ public class MinioBucket extends BaseEntity implements Serializable {
     /**
      * 桶id
      */
-    @Id(value = "id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

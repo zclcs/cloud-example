@@ -45,7 +45,7 @@ public class UserCacheBean implements Serializable {
     /**
      * 部门id
      */
-    private String deptId;
+    private Long deptId;
 
     /**
      * 邮箱

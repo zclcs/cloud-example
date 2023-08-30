@@ -48,7 +48,7 @@ public interface RateLimitLogService extends IService<RateLimitLog> {
      * @param rateLimitLogVo rateLimitLogVo
      * @return RateLimitLogVo
      */
-    Integer countRateLimitLog(RateLimitLogVo rateLimitLogVo);
+    Long countRateLimitLog(RateLimitLogVo rateLimitLogVo);
 
     /**
      * 新增

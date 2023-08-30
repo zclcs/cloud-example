@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.MenuTableDef.MENU;
+
 /**
  * 菜单
  *
@@ -106,7 +108,7 @@ public class MenuController {
     @GetMapping(value = "/findByMenuId/{menuId}")
     @Inner
     public MenuCacheBean findByMenuId(@PathVariable Long menuId) {
-        return MenuCacheBean.convertToMenuCacheBean(this.menuService.lambdaQuery().eq(Menu::getMenuId, menuId).one());
+        return this.menuService.queryChain().where(MENU.MENU_ID.eq(menuId)).oneAs(MenuCacheBean.class);
     }
 
     /**
@@ -120,11 +122,11 @@ public class MenuController {
     @Inner
     public Map<Long, MenuCacheBean> findByMenuIds(@PathVariable List<Long> menuIds) {
         Map<Long, MenuCacheBean> menuMap = new HashMap<>();
-        List<Menu> list = this.menuService.lambdaQuery().in(Menu::getMenuId, menuIds).list();
-        if (CollectionUtil.isNotEmpty(list)) {
+        List<MenuCacheBean> menuCacheBeans = this.menuService.queryChain().where(MENU.MENU_ID.in(menuIds)).listAs(MenuCacheBean.class);
+        if (CollectionUtil.isNotEmpty(menuCacheBeans)) {
             for (Long menuId : menuIds) {
-                Menu menu = CollectionUtil.findOneByField(list, "menuId", menuId);
-                menuMap.put(menuId, MenuCacheBean.convertToMenuCacheBean(menu));
+                MenuCacheBean menu = CollectionUtil.findOneByField(menuCacheBeans, "menuId", menuId);
+                menuMap.put(menuId, menu);
             }
         }
         return menuMap;

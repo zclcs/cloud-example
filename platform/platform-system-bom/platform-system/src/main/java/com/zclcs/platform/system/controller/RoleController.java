@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.RoleTableDef.ROLE;
+
 /**
  * 角色
  *
@@ -88,7 +90,7 @@ public class RoleController {
     @GetMapping(value = "/findByRoleId/{roleId}")
     @Inner
     public RoleCacheBean findByRoleId(@PathVariable Long roleId) {
-        return RoleCacheBean.convertToRoleCacheBean(this.roleService.lambdaQuery().eq(Role::getRoleId, roleId).one());
+        return this.roleService.queryChain().where(ROLE.ROLE_ID.eq(roleId)).oneAs(RoleCacheBean.class);
     }
 
     /**

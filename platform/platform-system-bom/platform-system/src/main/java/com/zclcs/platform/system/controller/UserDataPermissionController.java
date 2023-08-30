@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
-import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.service.UserDataPermissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.zclcs.platform.system.api.bean.entity.table.UserDataPermissionTableDef.USER_DATA_PERMISSION;
 
 /**
  * 用户角色关联
@@ -37,6 +37,6 @@ public class UserDataPermissionController {
     @GetMapping("/findByUserId/{userId}")
     @Inner
     public List<Long> findByUserId(@PathVariable Long userId) {
-        return userDataPermissionService.lambdaQuery().eq(UserDataPermission::getUserId, userId).list().stream().map(UserDataPermission::getDeptId).collect(Collectors.toList());
+        return userDataPermissionService.queryChain().select(USER_DATA_PERMISSION.DEPT_ID).where(USER_DATA_PERMISSION.USER_ID.eq(userId)).listAs(Long.class);
     }
 }

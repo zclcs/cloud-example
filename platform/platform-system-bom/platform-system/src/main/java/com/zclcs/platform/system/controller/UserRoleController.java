@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
-import com.zclcs.platform.system.api.bean.entity.UserRole;
 import com.zclcs.platform.system.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.zclcs.platform.system.api.bean.entity.table.UserRoleTableDef.USER_ROLE;
 
 /**
  * 用户角色关联
@@ -37,6 +37,6 @@ public class UserRoleController {
     @GetMapping("/findByUserId/{userId}")
     @Inner
     public List<Long> findByUserId(@PathVariable Long userId) {
-        return userRoleService.lambdaQuery().eq(UserRole::getUserId, userId).list().stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        return userRoleService.queryChain().select(USER_ROLE.ROLE_ID).where(USER_ROLE.USER_ID.eq(userId)).listAs(Long.class);
     }
 }

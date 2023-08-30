@@ -49,7 +49,7 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @param rateLimitRuleVo rateLimitRuleVo
      * @return RateLimitRuleVo
      */
-    Integer countRateLimitRule(RateLimitRuleVo rateLimitRuleVo);
+    Long countRateLimitRule(RateLimitRuleVo rateLimitRuleVo);
 
     /**
      * 缓存所有限流规则

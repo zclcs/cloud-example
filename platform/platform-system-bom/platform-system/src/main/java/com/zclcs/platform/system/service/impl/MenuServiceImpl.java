@@ -7,7 +7,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
-import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
@@ -209,7 +208,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         this.removeByIds(distinct);
         SystemCacheUtil.deleteMenuByMenuIds(menuIds);
-        roleMenuService.remove(QueryCondition.create(ROLE_MENU.MENU_ID, distinct));
+        roleMenuService.updateChain().where(ROLE_MENU.MENU_ID.in(distinct));
         if (ArrayUtil.isNotEmpty(roleIds)) {
             SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
         }
@@ -289,7 +288,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<String> findUserPermissions(String username) {
-        List<MenuCacheBean> menus = this.mapper.findMenuCacheBeanByUsername(username);
+        List<MenuCacheBean> menus = this.findUserMenus(username);
         return menus.stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
                 .filter(StrUtil::isNotBlank).toList();
     }
@@ -321,14 +320,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .innerJoin(USER).on(USER_ROLE.USER_ID.eq(USER.USER_ID))
                 .where(USER.USERNAME.eq(username))
         ;
-        queryWrapper.ex
-        return null;
+        List<MenuCacheBean> menuCacheBeans = mapper.selectListByQueryAs(queryWrapper, MenuCacheBean.class);
+        return menuCacheBeans;
     }
 
     @Override
     public List<VueRouter<MenuVo>> findUserRouters(String username) {
         List<VueRouter<MenuVo>> routes = new ArrayList<>();
-        List<MenuCacheBean> menus = this.mapper.findMenuCacheBeanByUsername(username);
+        List<MenuCacheBean> menus = this.findUserMenus(username);
         List<MenuCacheBean> userMenus = menus.stream().filter(Objects::nonNull)
                 .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
                 .sorted(Comparator.comparing(MenuCacheBean::getOrderNum)).toList();

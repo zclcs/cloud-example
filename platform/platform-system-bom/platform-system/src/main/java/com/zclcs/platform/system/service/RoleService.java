@@ -48,7 +48,7 @@ public interface RoleService extends IService<Role> {
      * @param roleVo roleVo
      * @return RoleVo
      */
-    Integer countRole(RoleVo roleVo);
+    Long countRole(RoleVo roleVo);
 
     /**
      * 新增

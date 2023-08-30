@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableMyFeignClients
 @EnableDiscoveryClient
-@MapperScan("com.zclcs.test.test.mapper")
 @SpringBootApplication
+@MapperScan("com.zclcs.test.test.mapper")
 public class TestTestApplication {
 
     public static void main(String[] args) {

@@ -29,7 +29,7 @@ public class GeneratorConfig extends BaseEntity {
     /**
      * 主键
      */
-    @Id(value = "ID", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

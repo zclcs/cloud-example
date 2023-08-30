@@ -27,7 +27,7 @@ spring:
       - nacos:hikari.yaml
       - nacos:rabbitmq.yaml
       - nacos:redis.yaml
-      - nacos:mybatis-plus.yaml
+      - nacos:mybatis-flex.yaml
       - nacos:jasypt.yaml
       - nacos:system-dict.yaml
       - nacos:minio.yaml
@@ -37,16 +37,8 @@ spring:
   aop:
     proxy-target-class: true
 
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
     url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_test_test?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
-
-mybatis-plus:
-  type-aliases-package: com.zclcs.test.test.api.entity
-  mapper-locations: classpath:com/zclcs/test/test/biz/mapper/*.xml

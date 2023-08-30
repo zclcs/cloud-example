@@ -36,7 +36,7 @@ public class OauthClientDetails extends BaseEntity implements Serializable {
     /**
      * 客户端ID
      */
-    @Id(value = "client_id", keyType = KeyType.None)
+    @Id(keyType = KeyType.None)
     private String clientId;
 
     /**

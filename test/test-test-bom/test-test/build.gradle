@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-db-merge-starter"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
-    implementation(project(":cloud-lib:cloud-lib-mybatis-plus"))
+    implementation(project(":cloud-lib:cloud-lib-mybatis-flex"))
     implementation(project(":cloud-lib:cloud-lib-security-lite"))
     implementation(project(":cloud-lib:cloud-lib-fegin"))
     implementation(project(":cloud-lib:cloud-lib-dict"))

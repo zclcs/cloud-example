@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
-import com.zclcs.platform.system.api.bean.entity.RoleMenu;
 import com.zclcs.platform.system.service.RoleMenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.zclcs.platform.system.api.bean.entity.table.RoleMenuTableDef.ROLE_MENU;
 
 /**
  * 用户角色关联
@@ -37,6 +37,6 @@ public class RoleMenuController {
     @GetMapping("/findByRoleId/{roleId}")
     @Inner
     public List<Long> findByRoleId(@PathVariable Long roleId) {
-        return roleMenuService.lambdaQuery().eq(RoleMenu::getRoleId, roleId).list().stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+        return this.roleMenuService.queryChain().select(ROLE_MENU.MENU_ID).where(ROLE_MENU.ROLE_ID.eq(roleId)).listAs(Long.class);
     }
 }

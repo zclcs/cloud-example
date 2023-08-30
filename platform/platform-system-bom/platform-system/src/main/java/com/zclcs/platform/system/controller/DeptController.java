@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.DeptTableDef.DEPT;
+
 /**
  * 部门
  *
@@ -116,7 +118,7 @@ public class DeptController {
     @GetMapping(value = "/findByDeptId/{deptId}")
     @Inner
     public DeptCacheBean findByDeptId(@PathVariable Long deptId) {
-        return DeptCacheBean.convertToDeptCacheBean(this.deptService.lambdaQuery().eq(Dept::getDeptId, deptId).one());
+        return this.deptService.queryChain().where(DEPT.DEPT_ID.eq(deptId)).oneAs(DeptCacheBean.class);
     }
 
     /**

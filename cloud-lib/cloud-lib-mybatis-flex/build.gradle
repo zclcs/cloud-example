@@ -1,5 +1,8 @@
 dependencies {
     api project(":cloud-lib:cloud-lib-sa-token")
     api runtimeOnly("com.mysql:mysql-connector-j")
-    api "com.mybatis-flex:mybatis-flex-spring-boot-starter"
+    api("com.mybatis-flex:mybatis-flex-spring-boot-starter") {
+        exclude(module: "mybatis-spring")
+    }
+    api "org.mybatis:mybatis-spring"
 }

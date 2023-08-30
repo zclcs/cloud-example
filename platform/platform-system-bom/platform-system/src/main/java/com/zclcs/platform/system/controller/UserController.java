@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.zclcs.platform.system.api.bean.entity.table.UserTableDef.USER;
+
 /**
  * 用户
  *
@@ -107,7 +109,7 @@ public class UserController {
     @GetMapping("/findByUsername/{username}")
     @Inner
     public UserCacheBean findByUsername(@PathVariable String username) {
-        return UserCacheBean.convertToUserCacheBean(userService.lambdaQuery().eq(User::getUsername, username).one());
+        return userService.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserCacheBean.class);
     }
 
     /**
@@ -120,7 +122,7 @@ public class UserController {
     @GetMapping("/findByMobile/{mobile}")
     @Inner
     public String findByMobile(@PathVariable String mobile) {
-        return userService.lambdaQuery().eq(User::getMobile, mobile).one().getUsername();
+        return userService.queryChain().select(USER.MOBILE).where(USER.MOBILE.eq(mobile)).oneAs(String.class);
     }
 
     /**
