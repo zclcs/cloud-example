@@ -10,6 +10,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.cloud.lib.mybatis.flex.annotation.DataDesensitization;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
@@ -56,6 +57,7 @@ public class UserController {
      */
     @GetMapping
     @SaCheckPermission("user:view")
+    @DataDesensitization({"mobile"})
     public BaseRsp<BasePage<UserVo>> findUserPage(@Validated BasePageAo basePageAo, @Validated UserVo userVo) {
         BasePage<UserVo> page = this.userService.findUserPage(basePageAo, userVo);
         return RspUtil.data(page);

@@ -42,3 +42,8 @@ spring:
     url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_test_test?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
+
+mybatis-flex:
+  mapper-locations:
+    - "classpath*:/mapper/**/*.xml"
+  type-aliases-package: com.zclcs.test.test.api.bean.entity

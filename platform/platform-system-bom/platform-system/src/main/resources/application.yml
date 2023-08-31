@@ -51,3 +51,7 @@ spring:
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
+mybatis-flex:
+  mapper-locations:
+    - "classpath*:/mapper/**/*.xml"
+  type-aliases-package: com.zclcs.platform.system.api.bean.entity

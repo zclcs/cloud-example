@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,11 +74,13 @@ public class LogVo extends BaseEntity implements Serializable {
     /**
      * 创建时间-开始
      */
+    @Column(ignore = true)
     private LocalDate createAtFrom;
 
     /**
      * 创建时间-结束
      */
+    @Column(ignore = true)
     private LocalDate createAtTo;
 
 

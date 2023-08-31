@@ -7,6 +7,12 @@ import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 新增做的处理
+ *
+ * @author zclcs
+ * @since 2023-08-31
+ */
 public class MyInsertListener implements InsertListener {
 
     @Override

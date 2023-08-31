@@ -9,6 +9,7 @@ import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.entity.Log;
 import com.zclcs.platform.system.api.bean.vo.LogVo;
@@ -17,7 +18,6 @@ import com.zclcs.platform.system.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.LogTableDef.LOG;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
@@ -81,7 +80,11 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
                 .where(LOG.USERNAME.eq(logVo.getUsername(), If::hasText))
                 .and(LOG.OPERATION.likeRight(logVo.getOperation(), If::hasText))
                 .and(LOG.LOCATION.likeRight(logVo.getLocation(), If::hasText))
-                .and(LOG.CREATE_AT.between(logVo.getCreateAtFrom(), logVo.getCreateAtTo()))
+                .and(LOG.CREATE_AT.between(
+                        logVo.getCreateAtFrom(),
+                        logVo.getCreateAtTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(LOG.CREATE_AT.desc())
         ;
         return queryWrapper;

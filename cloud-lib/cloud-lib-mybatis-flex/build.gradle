@@ -5,4 +5,5 @@ dependencies {
         exclude(module: "mybatis-spring")
     }
     api "org.mybatis:mybatis-spring"
+    api "org.springframework.boot:spring-boot-starter-aop"
 }

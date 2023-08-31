@@ -8,6 +8,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.api.bean.entity.BlockLog;
@@ -17,7 +18,6 @@ import com.zclcs.platform.system.service.BlockLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.R
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> implements BlockLogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
@@ -80,7 +79,11 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
                 .where(BLOCK_LOG.BLOCK_IP.likeRight(blockLogVo.getBlockIp(), If::hasText))
                 .and(BLOCK_LOG.REQUEST_URI.likeRight(blockLogVo.getRequestUri(), If::hasText))
                 .and(BLOCK_LOG.REQUEST_METHOD.eq(blockLogVo.getRequestMethod(), If::hasText))
-                .and(ROUTE_LOG.REQUEST_TIME.between(blockLogVo.getRequestTimeFrom(), blockLogVo.getRequestTimeTo()))
+                .and(ROUTE_LOG.REQUEST_TIME.between(
+                        blockLogVo.getRequestTimeFrom(),
+                        blockLogVo.getRequestTimeTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(ROUTE_LOG.REQUEST_TIME.desc())
         ;
         return queryWrapper;

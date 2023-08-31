@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 
@@ -50,7 +49,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.TableInfoTableDef.
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GeneratorServiceImpl implements GeneratorService {
 
     private final GeneratorMapper generatorMapper;
@@ -81,7 +79,8 @@ public class GeneratorServiceImpl implements GeneratorService {
                         TABLE_INFO.REMARK,
                         TABLE_INFO.TABLE_COLLATION
                 )
-                .where(TABLE_INFO.DATASOURCE.eq(schemaName, If::hasText))
+                .where(TABLE_INFO.DATASOURCE.notIn("information_schema", "mysql", "sys", "performance_schema"))
+                .and(TABLE_INFO.DATASOURCE.eq(schemaName, If::hasText))
                 .and(TABLE_INFO.NAME.eq(tableName, If::hasText))
                 .orderBy(TABLE_INFO.CREATE_AT.desc(), TABLE_INFO.UPDATE_AT.desc())
         ;
@@ -94,10 +93,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
                         COLUMN_INFO.NAME,
+                        COLUMN_INFO.KEY,
                         case_()
                                 .when(COLUMN_INFO.KEY.eq("PRI")).then("1")
                                 .else_("0")
                                 .end().as("isKey"),
+                        COLUMN_INFO.NULLABLE,
                         case_()
                                 .when(COLUMN_INFO.NULLABLE.eq("YES")).then("1")
                                 .else_("0")
@@ -109,7 +110,10 @@ public class GeneratorServiceImpl implements GeneratorService {
                                 .end().as("isCharMaxLength"),
                         COLUMN_INFO.CHAR_MAX_LENGTH,
                         COLUMN_INFO.REMARK,
-                        COLUMN_INFO.DEFAULT_VALUE
+                        case_()
+                                .when(COLUMN_INFO.DEFAULT_VALUE.isNull()).then("")
+                                .else_(COLUMN_INFO.DEFAULT_VALUE)
+                                .end().as("COLUMN_DEFAULT")
                 )
                 .where(COLUMN_INFO.TABLE_SCHEMA.eq(schemaName, If::hasText))
                 .and(COLUMN_INFO.TABLE_NAME.eq(tableName, If::hasText))

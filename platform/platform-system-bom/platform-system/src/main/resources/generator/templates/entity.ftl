@@ -26,6 +26,9 @@ import java.io.Serializable;
 * @since ${date}
 */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @Table("${tableName}")

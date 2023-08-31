@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.Array;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
@@ -40,11 +41,6 @@ public class MenuVo extends BaseEntity implements Serializable {
      * 目录/菜单/按钮编码（唯一值）
      */
     private String menuCode;
-
-    /**
-     * 目录/菜单/按钮id集合
-     */
-    private List<Long> menuIds;
 
     /**
      * 上级目录/菜单编码
@@ -93,12 +89,6 @@ public class MenuVo extends BaseEntity implements Serializable {
     private String type;
 
     /**
-     * 菜单类型集合 @@system_menu.type
-     */
-    @DictText(value = "system_menu.type", array = @Array(toText = false))
-    private List<String> types;
-
-    /**
      * 是否隐藏菜单 @@yes_no
      */
     @DictText(value = "yes_no")
@@ -131,6 +121,19 @@ public class MenuVo extends BaseEntity implements Serializable {
      * 排序
      */
     private Double orderNum;
+
+    /**
+     * 目录/菜单/按钮id集合
+     */
+    @Column(ignore = true)
+    private List<Long> menuIds;
+
+    /**
+     * 菜单类型集合 @@system_menu.type
+     */
+    @Column(ignore = true)
+    @DictText(value = "system_menu.type", array = @Array(toText = false))
+    private List<String> types;
 
 
 }

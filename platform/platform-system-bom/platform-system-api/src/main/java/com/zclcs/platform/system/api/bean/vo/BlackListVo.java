@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.AllArgsConstructor;
@@ -36,11 +37,6 @@ public class BlackListVo extends BaseEntity implements Serializable {
     private Long blackId;
 
     /**
-     * 黑名单id集合
-     */
-    private List<Long> blackIds;
-
-    /**
      * 黑名单ip
      */
     private String blackIp;
@@ -75,6 +71,12 @@ public class BlackListVo extends BaseEntity implements Serializable {
      */
     @DictText(value = "enable_disable")
     private String blackStatus;
+
+    /**
+     * 黑名单id集合
+     */
+    @Column(ignore = true)
+    private List<Long> blackIds;
 
 
 }

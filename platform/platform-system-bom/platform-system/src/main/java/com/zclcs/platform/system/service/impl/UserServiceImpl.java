@@ -58,7 +58,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.UserTableDef.USER;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final UserRoleService userRoleService;
@@ -68,21 +67,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo) {
-//        QueryWrapper queryWrapper = getQueryWrapper(userVo);
-//        Page<User> pageVo = this.mapper.paginate(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper);
-//        BasePage<UserVo> userVoBasePage = new BasePage<>(pageVo.getPageNumber(), pageVo.getPageSize(), pageVo.getTotalRow(), pageVo.getTotalPage(), UserVo.convertToList(pageVo.getRecords()));
-//        userVoBasePage.getList().forEach(vo -> {
-//            Long userId = vo.getUserId();
-//            List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userId);
-//            if (CollectionUtil.isNotEmpty(roles)) {
-//                vo.setRoleIds(roles.stream().map(RoleCacheBean::getRoleId).toList());
-//                List<String> roleNames = roles.stream().map(RoleCacheBean::getRoleName).toList();
-//                vo.setRoleNames(roleNames);
-//                vo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
-//            }
-//            vo.setDeptIds(SystemCacheUtil.getDeptIdsByUserId(userId));
-//        });
-//        return userVoBasePage;
         QueryWrapper queryWrapper = getQueryWrapper(userVo);
         Page<UserVo> pageVo = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, UserVo.class);
         pageVo.getRecords().forEach(vo -> {

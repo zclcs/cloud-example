@@ -40,17 +40,18 @@ public class BasePage<T> {
     protected Long pages;
 
     public BasePage(Page<T> page) {
-        this.total = page.getTotalRow();
-        this.pageSize = page.getPageSize();
         this.pageNum = page.getPageNumber();
+        this.pageSize = page.getPageSize();
+        this.total = page.getTotalRow();
         this.pages = page.getTotalPage();
+        this.list = page.getRecords();
     }
 
     public BasePage() {
-        this.list = Collections.emptyList();
-        this.total = 0L;
-        this.pageSize = 10L;
         this.pageNum = 1L;
+        this.pageSize = 10L;
+        this.total = 0L;
+        this.list = Collections.emptyList();
     }
 
     public BasePage(long pageNum, long pageSize) {
@@ -58,18 +59,18 @@ public class BasePage<T> {
     }
 
     public BasePage(long pageNum, long pageSize, long total) {
-        this.list = Collections.emptyList();
-        this.total = total;
-        this.pageSize = Math.max(pageSize, 1L);
         this.pageNum = pageNum;
+        this.pageSize = Math.max(pageSize, 1L);
+        this.total = total;
+        this.list = Collections.emptyList();
     }
 
     public BasePage(Long pageNum, Long pageSize, Long total, Long pages, List<T> list) {
-        this.list = list;
-        this.total = total;
-        this.pageSize = pageSize;
         this.pageNum = pageNum;
+        this.pageSize = pageSize;
+        this.total = total;
         this.pages = pages;
+        this.list = list;
     }
 
     public void setTotal(Long total) {

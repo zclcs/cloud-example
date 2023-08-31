@@ -24,7 +24,6 @@ import com.zclcs.platform.system.service.DictItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import static com.mybatisflex.core.query.QueryMethods.max;
 import static com.zclcs.cloud.lib.dict.bean.entity.table.DictItemTableDef.DICT_ITEM;
-import static com.zclcs.platform.system.api.bean.entity.table.DeptTableDef.DEPT;
 
 /**
  * 字典项 Service实现
@@ -43,7 +41,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.DeptTableDef.DEPT;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> implements DictItemService {
 
     @Override
@@ -132,7 +129,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
                 .and(DICT_ITEM.PARENT_VALUE.likeRight(dictItemVo.getParentValue(), If::hasText))
                 .and(DICT_ITEM.TITLE.likeRight(dictItemVo.getTitle(), If::hasText))
                 .and(DICT_ITEM.ID.eq(dictItemVo.getId()))
-                .orderBy(DEPT.ORDER_NUM.asc())
+                .orderBy(DICT_ITEM.SORTED.asc())
         ;
         return queryWrapper;
     }
@@ -144,7 +141,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
                         DICT_ITEM.DICT_NAME.as("name")
                 ).groupBy(DICT_ITEM.DICT_NAME)
                 .where(DICT_ITEM.DICT_NAME.likeRight(dictVo.getDictName(), If::hasText))
-                .orderBy(DEPT.ORDER_NUM.asc())
+                .orderBy(DICT_ITEM.SORTED.asc())
         ;
         return queryWrapper;
     }

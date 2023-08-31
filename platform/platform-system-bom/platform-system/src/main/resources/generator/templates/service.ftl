@@ -48,7 +48,7 @@ public interface ${className}Service extends IService<${className}> {
      * @param ${className?uncap_first}Vo {@link ${className}Vo}
      * @return 统计值
      */
-    Integer count${className}(${className}Vo ${className?uncap_first}Vo);
+    Long count${className}(${className}Vo ${className?uncap_first}Vo);
 
     /**
      * 新增

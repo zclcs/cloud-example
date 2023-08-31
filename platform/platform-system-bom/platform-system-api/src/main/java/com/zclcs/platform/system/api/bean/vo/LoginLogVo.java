@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.AllArgsConstructor;
@@ -47,16 +48,6 @@ public class LoginLogVo extends BaseEntity implements Serializable {
     private LocalDateTime loginTime;
 
     /**
-     * 登录时间起
-     */
-    private LocalDate loginTimeFrom;
-
-    /**
-     * 登录时间止
-     */
-    private LocalDate loginTimeTo;
-
-    /**
      * 登录地点
      */
     private String location;
@@ -81,6 +72,18 @@ public class LoginLogVo extends BaseEntity implements Serializable {
      */
     @DictText(value = "system_login_log.type")
     private String loginType;
+
+    /**
+     * 登录时间起
+     */
+    @Column(ignore = true)
+    private LocalDate loginTimeFrom;
+
+    /**
+     * 登录时间止
+     */
+    @Column(ignore = true)
+    private LocalDate loginTimeTo;
 
 
 }

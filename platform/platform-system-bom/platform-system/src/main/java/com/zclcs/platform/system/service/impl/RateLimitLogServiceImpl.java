@@ -7,6 +7,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.bean.entity.RateLimitLog;
@@ -16,7 +17,6 @@ import com.zclcs.platform.system.service.RateLimitLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.RateLimitLogTableD
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, RateLimitLog> implements RateLimitLogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
@@ -78,7 +77,11 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
                 .where(RATE_LIMIT_LOG.RATE_LIMIT_LOG_IP.likeRight(rateLimitLogVo.getRateLimitLogIp()))
                 .and(RATE_LIMIT_LOG.REQUEST_URI.likeRight(rateLimitLogVo.getRequestUri()))
                 .and(RATE_LIMIT_LOG.REQUEST_METHOD.likeRight(rateLimitLogVo.getRequestMethod()))
-                .and(RATE_LIMIT_LOG.REQUEST_TIME.between(rateLimitLogVo.getRequestTimeFrom(), rateLimitLogVo.getRequestTimeTo()))
+                .and(RATE_LIMIT_LOG.REQUEST_TIME.between(
+                        rateLimitLogVo.getRequestTimeFrom(),
+                        rateLimitLogVo.getRequestTimeTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(RATE_LIMIT_LOG.REQUEST_TIME.desc())
         ;
         return queryWrapper;

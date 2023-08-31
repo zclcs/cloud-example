@@ -13,6 +13,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
@@ -25,7 +26,6 @@ import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.UserDataPermission
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
 
     private final UserDataPermissionService userDataPermissionService;
@@ -109,7 +108,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                         DEPT.UPDATE_AT
                 )
                 .where(DEPT.DEPT_NAME.likeRight(deptVo.getDeptName(), If::hasText))
-                .and(DEPT.CREATE_AT.between(deptVo.getCreateTimeFrom(), deptVo.getCreateTimeTo()))
+                .and(DEPT.CREATE_AT.between(
+                        deptVo.getCreateTimeFrom(),
+                        deptVo.getCreateTimeTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(DEPT.ORDER_NUM.asc())
         ;
         return queryWrapper;

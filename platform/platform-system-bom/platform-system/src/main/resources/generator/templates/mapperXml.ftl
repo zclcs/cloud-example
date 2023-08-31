@@ -17,7 +17,7 @@
     <select id="findOneVo" resultType="${basePackage}.${voPackage}.${className}Vo">
         <include refid="baseSql"/>
     </select>
-    <select id="countVo" resultType="java.lang.Integer">
+    <select id="countVo" resultType="java.lang.Long">
         <include refid="baseCountSql"/>
     </select>
 </mapper>

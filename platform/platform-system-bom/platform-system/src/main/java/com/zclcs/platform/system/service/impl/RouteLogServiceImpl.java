@@ -12,6 +12,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -29,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +48,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.R
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> implements RouteLogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
@@ -144,7 +143,11 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
                 .where(ROUTE_LOG.ROUTE_IP.likeRight(routeLogVo.getRouteIp(), If::hasText))
                 .and(ROUTE_LOG.TARGET_SERVER.likeRight(routeLogVo.getTargetServer(), If::hasText))
                 .and(ROUTE_LOG.REQUEST_METHOD.likeRight(routeLogVo.getRequestMethod(), If::hasText))
-                .and(ROUTE_LOG.REQUEST_TIME.between(routeLogVo.getRequestTimeFrom(), routeLogVo.getRequestTimeTo()))
+                .and(ROUTE_LOG.REQUEST_TIME.between(
+                        routeLogVo.getRequestTimeFrom(),
+                        routeLogVo.getRequestTimeTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(ROUTE_LOG.REQUEST_TIME.desc())
         ;
         return queryWrapper;

@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -87,6 +88,7 @@ public class OauthClientDetailsVo extends BaseEntity implements Serializable {
     /**
      * 菜单id集合
      */
+    @Column(ignore = true)
     private List<Long> menuIds;
 
 

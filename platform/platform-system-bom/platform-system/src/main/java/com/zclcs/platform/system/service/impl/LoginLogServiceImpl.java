@@ -7,6 +7,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.platform.system.api.bean.ao.LoginLogAo;
 import com.zclcs.platform.system.api.bean.entity.LoginLog;
@@ -16,7 +17,6 @@ import com.zclcs.platform.system.service.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.LoginLogTableDef.L
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements LoginLogService {
 
     private final Ip2regionSearcher ip2regionSearcher;
@@ -78,7 +77,11 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
                 .where(LOGIN_LOG.IP.likeRight(loginLogVo.getIp(), If::hasText))
                 .and(LOGIN_LOG.USERNAME.likeRight(loginLogVo.getUsername(), If::hasText))
                 .and(LOGIN_LOG.LOGIN_TYPE.eq(loginLogVo.getLoginType(), If::hasText))
-                .and(LOGIN_LOG.LOGIN_TIME.between(loginLogVo.getLoginTimeFrom(), loginLogVo.getLoginTimeTo()))
+                .and(LOGIN_LOG.LOGIN_TIME.between(
+                        loginLogVo.getLoginTimeFrom(),
+                        loginLogVo.getLoginTimeTo(),
+                        PredicateUtil.localDateBothNotNull
+                ))
                 .orderBy(LOGIN_LOG.LOGIN_TIME.desc());
         ;
         return queryWrapper;

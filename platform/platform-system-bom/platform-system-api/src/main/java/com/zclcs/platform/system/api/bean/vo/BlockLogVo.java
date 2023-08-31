@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -63,11 +64,13 @@ public class BlockLogVo extends BaseEntity implements Serializable {
     /**
      * 拦截时间起
      */
+    @Column(ignore = true)
     private LocalDate requestTimeFrom;
 
     /**
      * 拦截时间起终
      */
+    @Column(ignore = true)
     private LocalDate requestTimeTo;
 
 

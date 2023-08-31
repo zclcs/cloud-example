@@ -16,7 +16,6 @@ import com.zclcs.platform.system.service.GeneratorConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,7 +28,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.GeneratorConfigTab
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMapper, GeneratorConfig> implements GeneratorConfigService {
 
     @Override
@@ -101,6 +99,7 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
                         GENERATOR_CONFIG.MAPPER_PACKAGE,
                         GENERATOR_CONFIG.MAPPER_XML_PACKAGE,
                         GENERATOR_CONFIG.SERVICE_PACKAGE,
+                        GENERATOR_CONFIG.SERVICE_IMPL_PACKAGE,
                         GENERATOR_CONFIG.CONTROLLER_PACKAGE,
                         GENERATOR_CONFIG.IS_TRIM,
                         GENERATOR_CONFIG.TRIM_VALUE,

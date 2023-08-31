@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,18 +35,20 @@ public class RoleMenuVo extends BaseEntity implements Serializable {
     private Long roleId;
 
     /**
-     * 角色名称
-     */
-    private String roleName;
-
-    /**
      * 菜单id
      */
     private Long menuId;
 
     /**
+     * 角色名称
+     */
+    @Column(ignore = true)
+    private String roleName;
+
+    /**
      * 菜单名称
      */
+    @Column(ignore = true)
     private String menuName;
 
 

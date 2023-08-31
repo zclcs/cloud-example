@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,18 +35,20 @@ public class UserDataPermissionVo extends BaseEntity implements Serializable {
     private Long userId;
 
     /**
-     * 用户名称
-     */
-    private String username;
-
-    /**
      * 部门id
      */
     private Long deptId;
 
     /**
+     * 用户名称
+     */
+    @Column(ignore = true)
+    private String username;
+
+    /**
      * 部门名称
      */
+    @Column(ignore = true)
     private String deptName;
 
 

@@ -2,6 +2,7 @@ package com.zclcs.platform.system.api.bean.vo;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.*;
@@ -107,38 +108,45 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
      * java文件路径，固定值
      */
     @Builder.Default
+    @Column(ignore = true)
     private String javaPath = "/src/main/java/";
 
     /**
      * 配置文件存放路径，固定值
      */
     @Builder.Default
+    @Column(ignore = true)
     private String resourcesPath = "src/main/resources";
 
     /**
      * 文件生成日期
      */
     @Builder.Default
+    @Column(ignore = true)
     private String date = DateUtil.date().toString(DatePattern.NORM_DATETIME_MS_PATTERN);
 
     /**
      * 表名
      */
+    @Column(ignore = true)
     private String tableName;
 
     /**
      * 表注释
      */
+    @Column(ignore = true)
     private String tableComment;
 
     /**
      * 数据表对应的类名
      */
+    @Column(ignore = true)
     private String className;
 
     /**
      * 数据表对应的主键字段名
      */
+    @Column(ignore = true)
     private String keyName;
 
 }

@@ -10,6 +10,7 @@ import com.zclcs.platform.system.api.bean.ao.GenerateAo;
 import com.zclcs.platform.system.api.bean.entity.TableInfo;
 import com.zclcs.platform.system.service.GeneratorService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -65,7 +66,7 @@ public class GeneratorController {
     @GetMapping("/tables")
     @SaCheckPermission("gen:generate")
     public BaseRsp<BasePage<TableInfo>> tablesInfo(String name,
-                                                   String datasource,
+                                                   @NotBlank(message = "{required}") String datasource,
                                                    BasePageAo basePageAo) {
         BasePage<TableInfo> tables = generatorService.getTables(name, basePageAo, Generator.DATABASE_TYPE, datasource);
         return RspUtil.data(tables);
