@@ -88,7 +88,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
                         ROLE.ROLE_ID,
-                        ROLE.ROLE_CODE
+                        ROLE.ROLE_NAME,
+                        ROLE.ROLE_CODE,
+                        ROLE.REMARK,
+                        ROLE.CREATE_AT
                 )
                 .where(ROLE.ROLE_NAME.likeRight(roleVo.getRoleName(), If::hasText))
                 .and(ROLE.ROLE_ID.eq(roleVo.getRoleId()))
