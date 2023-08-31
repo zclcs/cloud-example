@@ -239,7 +239,7 @@ public class XxlJobController {
     }
 
     private String getXxlJobCookie() {
-        String cookie = (String) redisService.get(RedisCachePrefix.XXL_JOB_COOKIE);
+        String cookie = (String) redisService.get(RedisCachePrefix.XXL_JOB_COOKIE_PREFIX);
         if (cookie == null) {
             Map<String, Object> params = new HashMap<>();
             params.put("userName", myXxlJobProperties.getAdminUsername());
@@ -252,7 +252,7 @@ public class XxlJobController {
                 XxlJobBaseResultVo<Object> xxlJobBaseResultVo = objectMapper.readValue(body, typeReference);
                 if (xxlJobBaseResultVo.success()) {
                     HttpCookie xxlJobLoginIdentity = execute.getCookie("XXL_JOB_LOGIN_IDENTITY");
-                    redisService.set(RedisCachePrefix.XXL_JOB_COOKIE, xxlJobLoginIdentity.getValue(), 7L * 24L * 60L * 60L);
+                    redisService.set(RedisCachePrefix.XXL_JOB_COOKIE_PREFIX, xxlJobLoginIdentity.getValue(), 7L * 24L * 60L * 60L);
                     return xxlJobLoginIdentity.getValue();
                 }
             } catch (Exception e) {

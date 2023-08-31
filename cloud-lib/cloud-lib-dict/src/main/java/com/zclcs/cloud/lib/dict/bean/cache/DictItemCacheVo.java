@@ -4,8 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,9 +17,7 @@ import java.util.List;
  * @since 2023-03-06 10:56:41.301
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class DictItemCacheBean implements Serializable {
+public class DictItemCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -51,22 +47,22 @@ public class DictItemCacheBean implements Serializable {
      */
     private Boolean disabled;
 
-    public static List<DictItemCacheBean> convertToDictItemCacheBeanList(List<DictItem> dictItems) {
-        List<DictItemCacheBean> dictItemCacheBeans = new ArrayList<>();
+    public static List<DictItemCacheVo> convertToDictItemCacheBeanList(List<DictItem> dictItems) {
+        List<DictItemCacheVo> dictItemCacheVos = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(dictItems)) {
             for (DictItem dictItem : dictItems) {
-                dictItemCacheBeans.add(convertToDictItemCacheBean(dictItem));
+                dictItemCacheVos.add(convertToDictItemCacheBean(dictItem));
             }
-            return dictItemCacheBeans;
+            return dictItemCacheVos;
         }
-        return dictItemCacheBeans;
+        return dictItemCacheVos;
     }
 
-    public static DictItemCacheBean convertToDictItemCacheBean(DictItem item) {
+    public static DictItemCacheVo convertToDictItemCacheBean(DictItem item) {
         if (item == null) {
             return null;
         }
-        DictItemCacheBean result = new DictItemCacheBean();
+        DictItemCacheVo result = new DictItemCacheVo();
         result.setDictName(item.getDictName());
         result.setParentValue(item.getParentValue());
         result.setValue(item.getValue());

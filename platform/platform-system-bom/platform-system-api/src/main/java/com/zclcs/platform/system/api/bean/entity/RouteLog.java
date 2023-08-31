@@ -43,7 +43,7 @@ public class RouteLog extends BaseEntity implements Serializable {
     /**
      * 请求ip
      */
-    @Column("route_id")
+    @Column("route_ip")
     private String routeIp;
 
     /**

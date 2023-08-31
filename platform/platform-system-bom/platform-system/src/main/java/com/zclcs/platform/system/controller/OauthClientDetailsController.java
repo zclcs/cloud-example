@@ -11,7 +11,7 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
-import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
+import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheVo;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 import com.zclcs.platform.system.service.OauthClientDetailsService;
@@ -89,8 +89,8 @@ public class OauthClientDetailsController {
      */
     @GetMapping(value = "/findByClientId/{clientId}")
     @Inner
-    public OauthClientDetailsCacheBean findByClientId(@PathVariable String clientId) {
-        return oauthClientDetailsService.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).oneAs(OauthClientDetailsCacheBean.class);
+    public OauthClientDetailsCacheVo findByClientId(@PathVariable String clientId) {
+        return oauthClientDetailsService.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).oneAs(OauthClientDetailsCacheVo.class);
     }
 
     /**

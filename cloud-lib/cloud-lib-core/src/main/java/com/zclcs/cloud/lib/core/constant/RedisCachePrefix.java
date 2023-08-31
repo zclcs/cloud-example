@@ -13,29 +13,29 @@ public interface RedisCachePrefix {
 
     String RATE_LIMIT_COUNT_KEY_PREFIX = "my:route:rate-limit:count:";
 
-    String NACOS_TOKEN = "nacos";
+    String NACOS_TOKEN_PREFIX = "nacos";
 
-    String XXL_JOB_COOKIE = "xxl-job";
-
-    /**
-     * 字典 redis key
-     */
-    String REFRESH_TOKEN = "%s:login:refresh:%s";
+    String XXL_JOB_COOKIE_PREFIX = "xxl-job";
 
     /**
      * 字典 redis key
      */
-    String DICT = "dict:%s";
+    String REFRESH_TOKEN_PREFIX = "%s:login:refresh:%s";
+
+    /**
+     * 字典 redis key
+     */
+    String DICT_PREFIX = "dict:%s";
 
     /**
      * 字典项 redis key
      */
-    String DICT_ITEM = "dict:%s:item:%s";
+    String DICT_ITEM_PREFIX = "dict:%s:item:%s";
 
     /**
      * 子级字典 redis key
      */
-    String DICT_CHILDREN = "dict:%s:children:%s";
+    String DICT_CHILDREN_PREFIX = "dict:%s:children:%s";
 
     /**
      * 验证码 key前缀
@@ -45,86 +45,71 @@ public interface RedisCachePrefix {
     /**
      * client redis key
      */
-    String CLIENT_DETAILS = "client_details:%s";
+    String CLIENT_DETAILS_PREFIX = "client_details:%s";
 
     /**
      * 用户 redis key
      */
-    String USER = "user:%s";
+    String USER_PREFIX = "user:%s";
 
     /**
      * 用户 权限 redis key
      */
-    String USER_PERMISSIONS = "user:permissions:%s";
+    String USER_PERMISSIONS_PREFIX = "user:permissions:%s";
 
     /**
      * 用户 路由 redis key
      */
-    String USER_ROUTERS = "user:routers:%s";
+    String USER_ROUTERS_PREFIX = "user:routers:%s";
 
     /**
      * 用户-手机号 redis key
      */
-    String USER_MOBILE = "user:mobile:%s";
+    String USER_MOBILE_PREFIX = "user:mobile:%s";
 
     /**
      * 用户-角色 redis key
      */
-    String USER_ROLE = "user:role:%s";
-
-    /**
-     * 用户-角色缓存key布隆过滤器
-     */
-    String BLOOM_FILTER_USER_ROLE = "{bloom_filter_user_role}";
+    String USER_ROLE_PREFIX = "user:role:%s";
 
     /**
      * 用户-数据权限 redis key
      */
-    String USER_DATA_PERMISSION = "user:data:permission:%s";
-
-    /**
-     * 用户-数据权限缓存key布隆过滤器
-     */
-    String BLOOM_FILTER_USER_DATA_PERMISSION = "{bloom_filter_user_data_permission}";
+    String USER_DATA_PERMISSION_PREFIX = "user:data:permission:%s";
 
     /**
      * 角色redis key
      */
-    String ROLE = "role:%s";
-
-    /**
-     * 角色缓存key布隆过滤器
-     */
-    String BLOOM_FILTER_ROLE = "{bloom_filter_role}";
+    String ROLE_PREFIX = "role:%s";
 
     /**
      * 角色-菜单 redis key
      */
-    String ROLE_MENU = "role:menu:%s";
-
-    /**
-     * 角色-菜单缓存key布隆过滤器
-     */
-    String BLOOM_FILTER_ROLE_MENU = "{bloom_filter_role_menu}";
+    String ROLE_MENU_PREFIX = "role:menu:%s";
 
     /**
      * 菜单 redis key
      */
-    String MENU = "menu:%s";
-
-    /**
-     * 菜单缓存key布隆过滤器
-     */
-    String BLOOM_FILTER_MENU = "{bloom_filter_menu}";
+    String MENU_PREFIX = "menu:%s";
 
     /**
      * 部门 redis key
      */
-    String DEPT = "dept:%s";
+    String DEPT_PREFIX = "dept:%s";
+
+    /**
+     * 角色缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_ROLE_PREFIX = "{bloom_filter_role}";
+
+    /**
+     * 菜单缓存key布隆过滤器
+     */
+    String BLOOM_FILTER_MENU_PREFIX = "{bloom_filter_menu}";
 
     /**
      * 部门缓存key布隆过滤器
      */
-    String BLOOM_FILTER_DEPT = "{bloom_filter_dept}";
+    String BLOOM_FILTER_DEPT_PREFIX = "{bloom_filter_dept}";
 
 }

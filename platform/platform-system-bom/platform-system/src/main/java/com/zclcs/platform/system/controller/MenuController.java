@@ -12,7 +12,7 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
@@ -107,8 +107,8 @@ public class MenuController {
      */
     @GetMapping(value = "/findByMenuId/{menuId}")
     @Inner
-    public MenuCacheBean findByMenuId(@PathVariable Long menuId) {
-        return this.menuService.queryChain().where(MENU.MENU_ID.eq(menuId)).oneAs(MenuCacheBean.class);
+    public MenuCacheVo findByMenuId(@PathVariable Long menuId) {
+        return this.menuService.queryChain().where(MENU.MENU_ID.eq(menuId)).oneAs(MenuCacheVo.class);
     }
 
     /**
@@ -120,12 +120,12 @@ public class MenuController {
      */
     @GetMapping(value = "/findByMenuIds/{menuIds}")
     @Inner
-    public Map<Long, MenuCacheBean> findByMenuIds(@PathVariable List<Long> menuIds) {
-        Map<Long, MenuCacheBean> menuMap = new HashMap<>();
-        List<MenuCacheBean> menuCacheBeans = this.menuService.queryChain().where(MENU.MENU_ID.in(menuIds)).listAs(MenuCacheBean.class);
-        if (CollectionUtil.isNotEmpty(menuCacheBeans)) {
+    public Map<Long, MenuCacheVo> findByMenuIds(@PathVariable List<Long> menuIds) {
+        Map<Long, MenuCacheVo> menuMap = new HashMap<>();
+        List<MenuCacheVo> menuCacheVos = this.menuService.queryChain().where(MENU.MENU_ID.in(menuIds)).listAs(MenuCacheVo.class);
+        if (CollectionUtil.isNotEmpty(menuCacheVos)) {
             for (Long menuId : menuIds) {
-                MenuCacheBean menu = CollectionUtil.findOneByField(menuCacheBeans, "menuId", menuId);
+                MenuCacheVo menu = CollectionUtil.findOneByField(menuCacheVos, "menuId", menuId);
                 menuMap.put(menuId, menu);
             }
         }

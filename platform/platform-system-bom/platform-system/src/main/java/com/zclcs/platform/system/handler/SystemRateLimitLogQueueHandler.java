@@ -60,6 +60,10 @@ public class SystemRateLimitLogQueueHandler {
                 }
             }
         }
-        rateLimitLogService.createRateLimitLogBatch(batch);
+        try {
+            rateLimitLogService.createRateLimitLogBatch(batch);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

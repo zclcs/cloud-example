@@ -50,7 +50,7 @@ public class SystemCacheUtil {
     private final UserPermissionsCache userPermissionsCache;
     private final UserRoutersCache userRoutersCache;
 
-    public static OauthClientDetailsCacheBean getOauthClientDetailsCache(String clientId) {
+    public static OauthClientDetailsCacheVo getOauthClientDetailsCache(String clientId) {
         return OAUTH_CLIENT_DETAILS_CACHE.findCache(clientId);
     }
 
@@ -62,7 +62,7 @@ public class SystemCacheUtil {
         OAUTH_CLIENT_DETAILS_CACHE.deleteCache(clientId);
     }
 
-    public static UserCacheBean getUserCache(String username) {
+    public static UserCacheVo getUserCache(String username) {
         return USER_CACHE.findCache(username);
     }
 
@@ -110,7 +110,7 @@ public class SystemCacheUtil {
         USER_DATA_PERMISSION_CACHE.deleteCache(userIds);
     }
 
-    public static RoleCacheBean getRoleByRoleId(Long roleId) {
+    public static RoleCacheVo getRoleByRoleId(Long roleId) {
         return ROLE_CACHE.findCache(roleId);
     }
 
@@ -158,11 +158,11 @@ public class SystemCacheUtil {
         USER_ROUTERS_CACHE.deleteCache(usernames);
     }
 
-    public static MenuCacheBean getMenuByMenuId(Long menuId) {
+    public static MenuCacheVo getMenuByMenuId(Long menuId) {
         return MENU_CACHE.findCache(menuId);
     }
 
-    public static List<MenuCacheBean> getMenusByMenuIds(List<Long> menuIds) {
+    public static List<MenuCacheVo> getMenusByMenuIds(List<Long> menuIds) {
         return MENU_CACHE.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).toList();
     }
 
@@ -174,7 +174,7 @@ public class SystemCacheUtil {
         MENU_CACHE.deleteCache(menuIds);
     }
 
-    public static DeptCacheBean getDeptByDeptId(Long deptId) {
+    public static DeptCacheVo getDeptByDeptId(Long deptId) {
         return DEPT_CACHE.findCache(deptId);
     }
 
@@ -186,8 +186,8 @@ public class SystemCacheUtil {
         DEPT_CACHE.deleteCache(deptIds);
     }
 
-    public static List<RoleCacheBean> getRolesByUserId(Long userId) {
-        List<RoleCacheBean> roles = new ArrayList<>();
+    public static List<RoleCacheVo> getRolesByUserId(Long userId) {
+        List<RoleCacheVo> roles = new ArrayList<>();
         List<Long> roleIds = getRoleIdsByUserId(userId);
         if (CollectionUtil.isNotEmpty(roleIds)) {
             for (Long roleId : roleIds) {
@@ -198,13 +198,13 @@ public class SystemCacheUtil {
     }
 
     public static List<String> getRoleCodesByUsername(String username) {
-        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
-        List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
-        return roles.stream().map(RoleCacheBean::getRoleCode).toList();
+        UserCacheVo userCache = SystemCacheUtil.getUserCache(username);
+        List<RoleCacheVo> roles = SystemCacheUtil.getRolesByUserId(userCache.getUserId());
+        return roles.stream().map(RoleCacheVo::getRoleCode).toList();
     }
 
     public static LoginVo getLoginVoByUsername(String username) {
-        UserCacheBean userCache = getUserCache(username);
+        UserCacheVo userCache = getUserCache(username);
         if (userCache == null || StrUtil.isBlank(userCache.getUsername())) {
             return null;
         }
@@ -222,8 +222,8 @@ public class SystemCacheUtil {
     }
 
     public static String getDeptIdStringByUsername(String username) {
-        UserCacheBean userCacheBean = getUserCache(username);
-        List<Long> deptIdsByUserId = getDeptIdsByUserId(userCacheBean.getUserId());
+        UserCacheVo userCacheVo = getUserCache(username);
+        List<Long> deptIdsByUserId = getDeptIdsByUserId(userCacheVo.getUserId());
         String deptIdString = "";
         if (CollectionUtil.isNotEmpty(deptIdsByUserId)) {
             deptIdString = deptIdsByUserId.stream().map(String::valueOf).collect(Collectors.joining(Strings.COMMA));

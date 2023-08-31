@@ -11,7 +11,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
 import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
@@ -139,7 +139,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     }
 
     private void setAuthorities(List<Long> menuIds, OauthClientDetails oauthClientDetails) {
-        String permissions = SystemCacheUtil.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms).collect(Collectors.joining(StrUtil.COMMA));
+        String permissions = SystemCacheUtil.getMenusByMenuIds(menuIds).stream().filter(Objects::nonNull).map(MenuCacheVo::getPerms).collect(Collectors.joining(StrUtil.COMMA));
         oauthClientDetails.setAuthorities(permissions);
     }
 

@@ -60,6 +60,10 @@ public class SystemLoginLogQueueHandler {
                 }
             }
         }
-        loginLogService.createLoginLogBatch(batch);
+        try {
+            loginLogService.createLoginLogBatch(batch);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

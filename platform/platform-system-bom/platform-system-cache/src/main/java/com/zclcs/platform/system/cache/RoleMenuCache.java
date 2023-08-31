@@ -19,7 +19,7 @@ public class RoleMenuCache extends CacheService<List<Long>> {
     private RemoteRoleMenuService remoteRoleMenuService;
 
     public RoleMenuCache() {
-        super(RedisCachePrefix.ROLE_MENU);
+        super(RedisCachePrefix.ROLE_MENU_PREFIX);
     }
 
     @Autowired

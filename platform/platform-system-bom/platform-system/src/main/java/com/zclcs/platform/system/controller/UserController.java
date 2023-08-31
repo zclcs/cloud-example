@@ -14,7 +14,7 @@ import com.zclcs.cloud.lib.mybatis.flex.annotation.DataDesensitization;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
-import com.zclcs.platform.system.api.bean.cache.UserCacheBean;
+import com.zclcs.platform.system.api.bean.cache.UserCacheVo;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.LoginVo;
@@ -110,8 +110,8 @@ public class UserController {
      */
     @GetMapping("/findByUsername/{username}")
     @Inner
-    public UserCacheBean findByUsername(@PathVariable String username) {
-        return userService.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserCacheBean.class);
+    public UserCacheVo findByUsername(@PathVariable String username) {
+        return userService.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserCacheVo.class);
     }
 
     /**
@@ -263,7 +263,7 @@ public class UserController {
     @GetMapping("/checkMinePassword/{password}")
     public BaseRsp<Boolean> checkMyPassword(@NotBlank(message = "{required}") @PathVariable String password) {
         String currentUsername = LoginHelper.getUsername();
-        UserCacheBean userCache = SystemCacheUtil.getUserCache(currentUsername);
+        UserCacheVo userCache = SystemCacheUtil.getUserCache(currentUsername);
         return RspUtil.data(userCache != null && !BCrypt.checkpw(password, userCache.getPassword()));
     }
 
@@ -293,7 +293,7 @@ public class UserController {
     @SaCheckPermission("user:updatePassword")
     public BaseRsp<Boolean> checkPassword(@NotBlank(message = "{required}") @PathVariable String username,
                                           @NotBlank(message = "{required}") @PathVariable String password) {
-        UserCacheBean userCache = SystemCacheUtil.getUserCache(username);
+        UserCacheVo userCache = SystemCacheUtil.getUserCache(username);
         return RspUtil.data(userCache != null && !BCrypt.checkpw(password, userCache.getPassword()));
     }
 

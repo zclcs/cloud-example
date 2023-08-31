@@ -60,6 +60,10 @@ public class SystemRouteLogQueueHandler {
                 }
             }
         }
-//        routeLogService.createRouteLogBatch(batch);
+//        try {
+//            routeLogService.createRouteLogBatch(batch);
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//        }
     }
 }

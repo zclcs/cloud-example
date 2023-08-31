@@ -14,7 +14,7 @@ import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
-import com.zclcs.platform.system.api.bean.cache.BlackListCacheBean;
+import com.zclcs.platform.system.api.bean.cache.BlackListCacheVo;
 import com.zclcs.platform.system.api.bean.entity.BlackList;
 import com.zclcs.platform.system.api.bean.vo.BlackListVo;
 import com.zclcs.platform.system.mapper.BlackListMapper;
@@ -73,7 +73,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         List<BlackList> list = this.list();
         list.forEach(black -> {
             try {
-                redisService.sSet(getCacheKey(black), objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(black)));
+                redisService.sSet(getCacheKey(black), objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(black)));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -110,8 +110,8 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
         this.save(blackList);
-        BlackListCacheBean blackListCacheBean = BlackListCacheBean.convertToBlackListCacheBean(blackList);
-        redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(blackListCacheBean));
+        BlackListCacheVo blackListCacheVo = BlackListCacheVo.convertToBlackListCacheBean(blackList);
+        redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(blackListCacheVo));
         return blackList;
     }
 
@@ -125,8 +125,8 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         this.updateById(blackList);
         String oldKey = getCacheKey(old);
         String newKey = getCacheKey(blackList);
-        redisService.setRemove(oldKey, objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(old)));
-        redisService.sSet(newKey, objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(blackList)));
+        redisService.setRemove(oldKey, objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(old)));
+        redisService.sSet(newKey, objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         return blackList;
     }
 
@@ -136,7 +136,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         List<BlackList> list = this.listByIds(ids);
         this.removeByIds(ids);
         for (BlackList blackList : list) {
-            redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(BlackListCacheBean.convertToBlackListCacheBean(blackList)));
+            redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         }
     }
 

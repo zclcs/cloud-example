@@ -19,8 +19,8 @@ import com.zclcs.platform.gateway.utils.GatewayUtil;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
-import com.zclcs.platform.system.api.bean.cache.BlackListCacheBean;
-import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheBean;
+import com.zclcs.platform.system.api.bean.cache.BlackListCacheVo;
+import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.Route;
@@ -65,7 +65,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                 HttpMethod httpMethod = request.getMethod();
                 String requestMethod = httpMethod.name();
                 AtomicBoolean forbid = new AtomicBoolean(false);
-                Set<BlackListCacheBean> blackList = routeEnhanceCacheService.getBlackList(requestIp);
+                Set<BlackListCacheVo> blackList = routeEnhanceCacheService.getBlackList(requestIp);
                 blackList.addAll(routeEnhanceCacheService.getBlackList());
 
                 doBlackListCheck(forbid, blackList, originUri, requestMethod);
@@ -96,7 +96,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                 HttpMethod httpMethod = request.getMethod();
                 String requestMethod = httpMethod.name();
                 AtomicBoolean limit = new AtomicBoolean(false);
-                RateLimitRuleCacheBean rule = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), METHOD_ALL);
+                RateLimitRuleCacheVo rule = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), METHOD_ALL);
                 if (rule == null) {
                     rule = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), requestMethod);
                 }
@@ -192,8 +192,8 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         }
     }
 
-    private void doBlackListCheck(AtomicBoolean forbid, Set<BlackListCacheBean> blackList, URI uri, String requestMethod) {
-        for (BlackListCacheBean b : blackList) {
+    private void doBlackListCheck(AtomicBoolean forbid, Set<BlackListCacheVo> blackList, URI uri, String requestMethod) {
+        for (BlackListCacheVo b : blackList) {
             if (pathMatcher.match(b.getRequestUri(), uri.getPath()) && Dict.OPEN.equals(b.getBlackStatus())) {
                 if (Params.METHOD_ALL.equalsIgnoreCase(b.getRequestMethod())
                         || StrUtil.equalsIgnoreCase(requestMethod, b.getRequestMethod())) {
@@ -206,7 +206,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
         }
     }
 
-    private Mono<Void> doRateLimitCheck(AtomicBoolean limit, RateLimitRuleCacheBean rule, URI uri,
+    private Mono<Void> doRateLimitCheck(AtomicBoolean limit, RateLimitRuleCacheVo rule, URI uri,
                                         String requestIp, String requestMethod, ServerHttpResponse response) {
         boolean isRateLimitRuleHit = Dict.OPEN.equals(rule.getRuleStatus())
                 && (Params.METHOD_ALL.equalsIgnoreCase(rule.getRequestMethod())

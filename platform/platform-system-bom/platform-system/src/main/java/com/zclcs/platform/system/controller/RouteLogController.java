@@ -10,7 +10,6 @@ import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.api.bean.entity.RouteLog;
 import com.zclcs.platform.system.api.bean.vo.RouteLogVo;
-import com.zclcs.platform.system.mapper.RouteLogMapper;
 import com.zclcs.platform.system.service.RouteLogService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,6 @@ import java.util.stream.Collectors;
 public class RouteLogController {
 
     private final RouteLogService routeLogService;
-
-    private final RouteLogMapper routeLogMapper;
 
     /**
      * 网关转发日志查询（分页）

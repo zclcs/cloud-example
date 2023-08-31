@@ -179,7 +179,7 @@ public class NacosController {
     }
 
     private String getNacosToken() {
-        String token = (String) redisService.get(RedisCachePrefix.NACOS_TOKEN);
+        String token = (String) redisService.get(RedisCachePrefix.NACOS_TOKEN_PREFIX);
         if (token == null) {
             Map<String, Object> params = new HashMap<>();
             params.put("username", myNacosProperties.getUsername());
@@ -187,7 +187,7 @@ public class NacosController {
             try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint("/nacos/v1/auth/users/login")).form(params).execute()) {
                 String body = execute.body();
                 NacosTokenVo nacosTokenVo = objectMapper.readValue(body, NacosTokenVo.class);
-                redisService.set(RedisCachePrefix.NACOS_TOKEN, nacosTokenVo.getAccessToken(), nacosTokenVo.getTokenTtl() - 30L * 60L);
+                redisService.set(RedisCachePrefix.NACOS_TOKEN_PREFIX, nacosTokenVo.getAccessToken(), nacosTokenVo.getTokenTtl() - 30L * 60L);
                 return nacosTokenVo.getAccessToken();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);

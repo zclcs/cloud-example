@@ -1,9 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
-import com.zclcs.platform.system.api.bean.entity.Menu;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,9 +12,7 @@ import java.io.Serializable;
  * @since 2023-01-10 10:39:18.238
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class MenuCacheBean implements Serializable {
+public class MenuCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -106,31 +101,6 @@ public class MenuCacheBean implements Serializable {
      * 排序
      */
     private Double orderNum;
-
-    public static MenuCacheBean convertToMenuCacheBean(Menu item) {
-        if (item == null) {
-            return null;
-        }
-        MenuCacheBean result = new MenuCacheBean();
-        result.setMenuId(item.getMenuId());
-        result.setMenuCode(item.getMenuCode());
-        result.setParentCode(item.getParentCode());
-        result.setMenuName(item.getMenuName());
-        result.setKeepAliveName(item.getKeepAliveName());
-        result.setPath(item.getPath());
-        result.setComponent(item.getComponent());
-        result.setRedirect(item.getRedirect());
-        result.setPerms(item.getPerms());
-        result.setIcon(item.getIcon());
-        result.setType(item.getType());
-        result.setHideMenu(item.getHideMenu());
-        result.setIgnoreKeepAlive(item.getIgnoreKeepAlive());
-        result.setHideBreadcrumb(item.getHideBreadcrumb());
-        result.setHideChildrenInMenu(item.getHideChildrenInMenu());
-        result.setCurrentActiveMenu(item.getCurrentActiveMenu());
-        result.setOrderNum(item.getOrderNum());
-        return result;
-    }
 
 
 }

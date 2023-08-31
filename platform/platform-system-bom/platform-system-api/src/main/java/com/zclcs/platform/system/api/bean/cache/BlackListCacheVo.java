@@ -2,8 +2,6 @@ package com.zclcs.platform.system.api.bean.cache;
 
 import com.zclcs.platform.system.api.bean.entity.BlackList;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,9 +13,7 @@ import java.io.Serializable;
  * @since 2023-01-10 10:40:14.628
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class BlackListCacheBean implements Serializable {
+public class BlackListCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -52,11 +48,11 @@ public class BlackListCacheBean implements Serializable {
      */
     private String blackStatus;
 
-    public static BlackListCacheBean convertToBlackListCacheBean(BlackList item) {
+    public static BlackListCacheVo convertToBlackListCacheBean(BlackList item) {
         if (item == null) {
             return null;
         }
-        BlackListCacheBean result = new BlackListCacheBean();
+        BlackListCacheVo result = new BlackListCacheVo();
         result.setBlackIp(item.getBlackIp());
         result.setRequestUri(item.getRequestUri());
         result.setRequestMethod(item.getRequestMethod());

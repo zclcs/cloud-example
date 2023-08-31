@@ -16,7 +16,7 @@ import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.entity.RoleMenu;
 import com.zclcs.platform.system.api.bean.entity.User;
@@ -286,13 +286,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<String> findUserPermissions(String username) {
-        List<MenuCacheBean> menus = this.findUserMenus(username);
-        return menus.stream().filter(Objects::nonNull).map(MenuCacheBean::getPerms)
+        List<MenuCacheVo> menus = this.findUserMenus(username);
+        return menus.stream().filter(Objects::nonNull).map(MenuCacheVo::getPerms)
                 .filter(StrUtil::isNotBlank).toList();
     }
 
     @Override
-    public List<MenuCacheBean> findUserMenus(String username) {
+    public List<MenuCacheVo> findUserMenus(String username) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
                         MENU.MENU_ID,
@@ -318,17 +318,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .innerJoin(USER).on(USER_ROLE.USER_ID.eq(USER.USER_ID))
                 .where(USER.USERNAME.eq(username))
         ;
-        List<MenuCacheBean> menuCacheBeans = mapper.selectListByQueryAs(queryWrapper, MenuCacheBean.class);
-        return menuCacheBeans;
+        List<MenuCacheVo> menuCacheVos = mapper.selectListByQueryAs(queryWrapper, MenuCacheVo.class);
+        return menuCacheVos;
     }
 
     @Override
     public List<VueRouter<MenuVo>> findUserRouters(String username) {
         List<VueRouter<MenuVo>> routes = new ArrayList<>();
-        List<MenuCacheBean> menus = this.findUserMenus(username);
-        List<MenuCacheBean> userMenus = menus.stream().filter(Objects::nonNull)
+        List<MenuCacheVo> menus = this.findUserMenus(username);
+        List<MenuCacheVo> userMenus = menus.stream().filter(Objects::nonNull)
                 .filter(menu -> !menu.getType().equals(Dict.MENU_TYPE_1))
-                .sorted(Comparator.comparing(MenuCacheBean::getOrderNum)).toList();
+                .sorted(Comparator.comparing(MenuCacheVo::getOrderNum)).toList();
         userMenus.forEach(menu -> {
             VueRouter<MenuVo> route = new VueRouter<>();
             route.setId(menu.getMenuId());

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.fegin.RemoteMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class MenuCache extends CacheService<MenuCacheBean> {
+public class MenuCache extends CacheService<MenuCacheVo> {
 
     private RemoteMenuService remoteMenuService;
 
     public MenuCache(RedisService redisService) {
-        super(RedisCachePrefix.MENU, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU), 10000, 0.03);
+        super(RedisCachePrefix.MENU_PREFIX, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU_PREFIX), 10000, 0.03);
     }
 
     @Autowired
@@ -34,17 +34,17 @@ public class MenuCache extends CacheService<MenuCacheBean> {
     }
 
     @Override
-    protected MenuCacheBean findByKey(Object... key) {
+    protected MenuCacheVo findByKey(Object... key) {
         return remoteMenuService.findByMenuId((Long) key[0]);
     }
 
     @Override
-    protected MenuCacheBean serialization(String json) throws JsonProcessingException {
-        return super.getObjectMapper().readValue(json, MenuCacheBean.class);
+    protected MenuCacheVo serialization(String json) throws JsonProcessingException {
+        return super.getObjectMapper().readValue(json, MenuCacheVo.class);
     }
 
-    public List<MenuCacheBean> getMenusByMenuIds(List<Long> menuIds) {
-        List<MenuCacheBean> cacheMenu = new ArrayList<>();
+    public List<MenuCacheVo> getMenusByMenuIds(List<Long> menuIds) {
+        List<MenuCacheVo> cacheMenu = new ArrayList<>();
         List<Long> needCacheMenuId = new ArrayList<>();
         List<Long> alreadyCacheMenuId = new ArrayList<>();
         for (Long menuId : menuIds) {
@@ -55,8 +55,8 @@ public class MenuCache extends CacheService<MenuCacheBean> {
             }
         }
         if (CollectionUtil.isNotEmpty(needCacheMenuId)) {
-            Map<Long, MenuCacheBean> byMenuIds = remoteMenuService.findByMenuIds(needCacheMenuId);
-            for (Map.Entry<Long, MenuCacheBean> longMenuEntry : byMenuIds.entrySet()) {
+            Map<Long, MenuCacheVo> byMenuIds = remoteMenuService.findByMenuIds(needCacheMenuId);
+            for (Map.Entry<Long, MenuCacheVo> longMenuEntry : byMenuIds.entrySet()) {
                 cacheMenu.add(cacheKey(longMenuEntry.getValue(), longMenuEntry.getKey()));
             }
         }

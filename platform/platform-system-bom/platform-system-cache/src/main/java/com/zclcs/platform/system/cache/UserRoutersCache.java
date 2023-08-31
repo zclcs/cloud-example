@@ -21,7 +21,7 @@ public class UserRoutersCache extends CacheService<List<VueRouter<MenuVo>>> {
     private RemoteMenuService remoteMenuService;
 
     public UserRoutersCache() {
-        super(RedisCachePrefix.USER_ROUTERS);
+        super(RedisCachePrefix.USER_ROUTERS_PREFIX);
     }
 
     @Autowired

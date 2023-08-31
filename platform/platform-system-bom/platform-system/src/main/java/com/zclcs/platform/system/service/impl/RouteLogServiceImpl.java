@@ -132,6 +132,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
                         ROUTE_LOG.ROUTE_ID,
                         ROUTE_LOG.ROUTE_IP,
                         ROUTE_LOG.REQUEST_URI,
+                        ROUTE_LOG.TARGET_URI,
                         ROUTE_LOG.REQUEST_METHOD,
                         ROUTE_LOG.REQUEST_TIME,
                         ROUTE_LOG.TARGET_SERVER,

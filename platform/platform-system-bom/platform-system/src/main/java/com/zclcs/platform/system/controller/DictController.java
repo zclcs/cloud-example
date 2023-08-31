@@ -3,7 +3,7 @@ package com.zclcs.platform.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,8 @@ public class DictController {
      * @return 字典缓存集合
      */
     @GetMapping(value = "/dictQuery")
-    public BaseRsp<List<DictItemCacheBean>> dictTypeQuery(@RequestParam(required = true) final String dictName,
-                                                          @RequestParam(required = false) final String parentCode) {
+    public BaseRsp<List<DictItemCacheVo>> dictTypeQuery(@RequestParam(required = true) final String dictName,
+                                                        @RequestParam(required = false) final String parentCode) {
         if (StrUtil.isNotBlank(parentCode)) {
             return RspUtil.data(DictCacheUtil.getDictByDictNameAndParentValue(dictName, parentCode));
         }
@@ -53,7 +53,7 @@ public class DictController {
      */
     @GetMapping(value = "/dictTextQuery")
     public BaseRsp<String> dictTextQuery(@RequestParam String dictName, @RequestParam String value) {
-        DictItemCacheBean dict = DictCacheUtil.getDict(dictName, value);
+        DictItemCacheVo dict = DictCacheUtil.getDict(dictName, value);
         return RspUtil.data(dict == null ? null : dict.getTitle());
     }
 }

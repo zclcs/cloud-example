@@ -9,7 +9,7 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
@@ -88,10 +88,10 @@ public class DictItemController {
      * @param dictName 字典唯一值
      * @return 所有字典项
      */
-    @GetMapping("/findByDictName/{dictName}")
+    @GetMapping("/findByDictName")
     @Inner
-    public List<DictItemCacheBean> findByDictName(@PathVariable String dictName) {
-        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName)).listAs(DictItemCacheBean.class);
+    public List<DictItemCacheVo> findByDictName(@RequestParam @NotBlank(message = "{required}") String dictName) {
+        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName)).listAs(DictItemCacheVo.class);
     }
 
     /**
@@ -101,13 +101,14 @@ public class DictItemController {
      * @param value    字典项唯一值
      * @return 字典项
      */
-    @GetMapping("/findByDictNameAndValue/{dictName}/{value}")
+    @GetMapping("/findByDictNameAndValue")
     @Inner
-    public DictItemCacheBean findByDictNameAndValue(@PathVariable String dictName, @PathVariable String value) {
+    public DictItemCacheVo findByDictNameAndValue(@RequestParam @NotBlank(message = "{required}") String dictName,
+                                                  @RequestParam @NotBlank(message = "{required}") String value) {
         return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.VALUE.eq(value))
                 .orderBy(DICT_ITEM.SORTED.asc())
-                .oneAs(DictItemCacheBean.class);
+                .oneAs(DictItemCacheVo.class);
     }
 
     /**
@@ -117,13 +118,14 @@ public class DictItemController {
      * @param parentValue 父级字典项唯一值
      * @return 字典项
      */
-    @GetMapping("/findByDictNameAndParentValue/{dictName}/{parentValue}")
+    @GetMapping("/findByDictNameAndParentValue")
     @Inner
-    public List<DictItemCacheBean> findByDictNameAndParentValue(@PathVariable String dictName, @PathVariable String parentValue) {
+    public List<DictItemCacheVo> findByDictNameAndParentValue(@RequestParam @NotBlank(message = "{required}") String dictName,
+                                                              @RequestParam @NotBlank(message = "{required}") String parentValue) {
         return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
                 .orderBy(DICT_ITEM.SORTED.asc())
-                .listAs(DictItemCacheBean.class);
+                .listAs(DictItemCacheVo.class);
     }
 
     /**

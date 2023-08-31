@@ -1,15 +1,10 @@
 package com.zclcs.platform.system.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
-import com.zclcs.platform.system.api.bean.vo.UserVo;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 用户 Vo
@@ -18,11 +13,6 @@ import java.util.List;
  * @since 2023-01-10 10:39:34.182
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
 public class UserExcelVo implements Serializable {
 
     @Serial
@@ -63,34 +53,6 @@ public class UserExcelVo implements Serializable {
      */
     @ExcelProperty(value = "性别")
     private String gender;
-
-    public static UserExcelVo convertToUserExcelVo(UserVo item) {
-        if (item == null) {
-            return null;
-        }
-        return UserExcelVo.builder()
-                .username(item.getUsername())
-                .realName(item.getRealName())
-                .email(item.getEmail())
-                .mobile(item.getMobile())
-                .status(DictCacheUtil.getDictTitle("system_user.status", item.getStatus()))
-                .gender(DictCacheUtil.getDictTitle("system_user.gender", item.getGender()))
-                .build();
-    }
-
-    public static List<UserExcelVo> convertToList(List<UserVo> items) {
-        if (items == null) {
-            return null;
-        }
-        List<UserExcelVo> result = new ArrayList<>();
-        for (UserVo item : items) {
-            UserExcelVo userExcelVo = convertToUserExcelVo(item);
-            if (userExcelVo != null) {
-                result.add(userExcelVo);
-            }
-        }
-        return result;
-    }
 
 
 }

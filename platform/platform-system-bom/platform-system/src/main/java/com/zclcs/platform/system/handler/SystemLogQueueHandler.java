@@ -60,6 +60,10 @@ public class SystemLogQueueHandler {
                 }
             }
         }
-        logService.createLogBatch(batch);
+        try {
+            logService.createLogBatch(batch);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

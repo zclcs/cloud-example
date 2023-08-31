@@ -3,7 +3,7 @@ package com.zclcs.platform.system.api.fegin;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
-import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheBean;
+import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheVo;
 import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +21,10 @@ public interface RemoteClientDetailsService {
      * 通过clientId 查询客户端信息单个
      *
      * @param clientId 客户端id
-     * @return {@link OauthClientDetailsCacheBean}
+     * @return {@link OauthClientDetailsCacheVo}
      */
     @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}", headers = Security.HEADER_FROM_IN)
-    OauthClientDetailsCacheBean findByClientId(@PathVariable("clientId") String clientId);
+    OauthClientDetailsCacheVo findByClientId(@PathVariable("clientId") String clientId);
 
     /**
      * 查询全部客户端

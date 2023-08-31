@@ -20,7 +20,7 @@ import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.service.ExportExcelService;
 import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
-import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
 import com.zclcs.platform.system.api.bean.entity.User;
 import com.zclcs.platform.system.api.bean.entity.UserDataPermission;
 import com.zclcs.platform.system.api.bean.entity.UserRole;
@@ -71,10 +71,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Page<UserVo> pageVo = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, UserVo.class);
         pageVo.getRecords().forEach(vo -> {
             Long userId = vo.getUserId();
-            List<RoleCacheBean> roles = SystemCacheUtil.getRolesByUserId(userId);
+            List<RoleCacheVo> roles = SystemCacheUtil.getRolesByUserId(userId);
             if (CollectionUtil.isNotEmpty(roles)) {
-                vo.setRoleIds(roles.stream().map(RoleCacheBean::getRoleId).toList());
-                List<String> roleNames = roles.stream().map(RoleCacheBean::getRoleName).toList();
+                vo.setRoleIds(roles.stream().map(RoleCacheVo::getRoleId).toList());
+                List<String> roleNames = roles.stream().map(RoleCacheVo::getRoleName).toList();
                 vo.setRoleNames(roleNames);
                 vo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
             }

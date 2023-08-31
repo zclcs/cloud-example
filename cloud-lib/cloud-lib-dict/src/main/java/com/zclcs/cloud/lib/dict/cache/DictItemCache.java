@@ -2,7 +2,7 @@ package com.zclcs.cloud.lib.dict.cache;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
-import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
 import com.zclcs.common.redis.starter.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
  * @author zclcs
  */
 @Service
-public class DictItemCache extends CacheService<DictItemCacheBean> {
+public class DictItemCache extends CacheService<DictItemCacheVo> {
 
     private RemoteDictItemService remoteDictItemService;
 
     public DictItemCache() {
-        super(RedisCachePrefix.DICT_ITEM, true);
+        super(RedisCachePrefix.DICT_ITEM_PREFIX, true);
     }
 
     @Autowired(required = false)
@@ -26,13 +26,13 @@ public class DictItemCache extends CacheService<DictItemCacheBean> {
     }
 
     @Override
-    protected DictItemCacheBean findByKey(Object... key) {
+    protected DictItemCacheVo findByKey(Object... key) {
         return remoteDictItemService.findByDictNameAndValue((String) key[0], (String) key[1]);
     }
 
     @Override
-    protected DictItemCacheBean serialization(String json) throws JsonProcessingException {
-        return super.getObjectMapper().readValue(json, DictItemCacheBean.class);
+    protected DictItemCacheVo serialization(String json) throws JsonProcessingException {
+        return super.getObjectMapper().readValue(json, DictItemCacheVo.class);
     }
 
 }

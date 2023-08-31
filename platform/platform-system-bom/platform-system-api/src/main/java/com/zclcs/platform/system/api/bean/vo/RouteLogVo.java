@@ -66,16 +66,6 @@ public class RouteLogVo extends BaseEntity implements Serializable {
     private LocalDateTime requestTime;
 
     /**
-     * 请求时间起
-     */
-    private LocalDate requestTimeFrom;
-
-    /**
-     * 请求时间起终
-     */
-    private LocalDate requestTimeTo;
-
-    /**
      * 响应code
      */
     private String code;
@@ -89,6 +79,16 @@ public class RouteLogVo extends BaseEntity implements Serializable {
      * ip对应地址
      */
     private String location;
+
+    /**
+     * 请求时间起
+     */
+    private LocalDate requestTimeFrom;
+
+    /**
+     * 请求时间起终
+     */
+    private LocalDate requestTimeTo;
 
 
 }

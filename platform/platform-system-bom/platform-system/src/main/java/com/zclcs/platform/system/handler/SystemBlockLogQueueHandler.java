@@ -60,6 +60,10 @@ public class SystemBlockLogQueueHandler {
                 }
             }
         }
-        blockLogService.createBlockLogBatch(batch);
+        try {
+            blockLogService.createBlockLogBatch(batch);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

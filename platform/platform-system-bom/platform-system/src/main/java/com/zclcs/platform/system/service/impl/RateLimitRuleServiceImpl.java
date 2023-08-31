@@ -13,7 +13,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.ao.RateLimitRuleAo;
-import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheVo;
 import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import com.zclcs.platform.system.api.bean.vo.RateLimitRuleVo;
 import com.zclcs.platform.system.mapper.RateLimitRuleMapper;
@@ -72,7 +72,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
         list.forEach(rateLimitRule -> {
             String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
             try {
-                redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
+                redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -108,7 +108,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
         setRateLimitRule(rateLimitRule);
         this.save(rateLimitRule);
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
+        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
         return rateLimitRule;
     }
 
@@ -120,7 +120,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
         setRateLimitRule(rateLimitRule);
         this.updateById(rateLimitRule);
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheBean.convertToRateLimitRuleCacheBean(rateLimitRule)));
+        redisService.set(key, objectMapper.writeValueAsString(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
         return rateLimitRule;
     }
 

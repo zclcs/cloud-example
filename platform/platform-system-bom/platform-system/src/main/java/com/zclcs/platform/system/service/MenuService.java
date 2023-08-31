@@ -4,7 +4,7 @@ import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
-import com.zclcs.platform.system.api.bean.cache.MenuCacheBean;
+import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuTreeVo;
@@ -106,7 +106,7 @@ public interface MenuService extends IService<Menu> {
      * @param username 用户名
      * @return 权限
      */
-    List<MenuCacheBean> findUserMenus(String username);
+    List<MenuCacheVo> findUserMenus(String username);
 
     /**
      * 查询用户路由

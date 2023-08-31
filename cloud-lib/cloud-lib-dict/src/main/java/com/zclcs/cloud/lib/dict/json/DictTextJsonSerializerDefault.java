@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.enums.DictEnum;
-import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.json.annotation.Array;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import com.zclcs.cloud.lib.dict.json.annotation.DictTypeKeyHandler;
@@ -259,11 +259,11 @@ public class DictTextJsonSerializerDefault extends JsonSerializer<Object> {
             final List<String> values = new LinkedList<>();
             String value = dictValue;
             do {
-                DictItemCacheBean dictItemCacheBean = DictCacheUtil.getDict(dictTypeKey, value);
-                if (dictItemCacheBean != null) {
-                    values.add(0, dictItemCacheBean.getTitle());
+                DictItemCacheVo dictItemCacheVo = DictCacheUtil.getDict(dictTypeKey, value);
+                if (dictItemCacheVo != null) {
+                    values.add(0, dictItemCacheVo.getTitle());
                 }
-                DictItemCacheBean dict = DictCacheUtil.getDict(dictTypeKey, value);
+                DictItemCacheVo dict = DictCacheUtil.getDict(dictTypeKey, value);
                 value = dict == null ? null : dict.getParentValue();
             } while (value != null && !CommonCore.TOP_PARENT_CODE.equals(value));
             if (values.isEmpty()) {
@@ -271,7 +271,7 @@ public class DictTextJsonSerializerDefault extends JsonSerializer<Object> {
             }
             return String.join("/", values);
         }
-        DictItemCacheBean dict = DictCacheUtil.getDict(dictTypeKey, dictValue);
+        DictItemCacheVo dict = DictCacheUtil.getDict(dictTypeKey, dictValue);
         return dict == null ? null : dict.getTitle();
     }
 

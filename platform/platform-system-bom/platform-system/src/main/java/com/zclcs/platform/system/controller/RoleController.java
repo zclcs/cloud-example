@@ -11,7 +11,7 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
-import com.zclcs.platform.system.api.bean.cache.RoleCacheBean;
+import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Role;
 import com.zclcs.platform.system.api.bean.vo.RoleVo;
 import com.zclcs.platform.system.service.RoleService;
@@ -89,8 +89,8 @@ public class RoleController {
      */
     @GetMapping(value = "/findByRoleId/{roleId}")
     @Inner
-    public RoleCacheBean findByRoleId(@PathVariable Long roleId) {
-        return this.roleService.queryChain().where(ROLE.ROLE_ID.eq(roleId)).oneAs(RoleCacheBean.class);
+    public RoleCacheVo findByRoleId(@PathVariable Long roleId) {
+        return this.roleService.queryChain().where(ROLE.ROLE_ID.eq(roleId)).oneAs(RoleCacheVo.class);
     }
 
     /**

@@ -19,7 +19,7 @@ public class UserRoleCache extends CacheService<List<Long>> {
     private RemoteUserRoleService remoteUserRoleService;
 
     public UserRoleCache() {
-        super(RedisCachePrefix.USER_ROLE);
+        super(RedisCachePrefix.USER_ROLE_PREFIX);
     }
 
     @Autowired

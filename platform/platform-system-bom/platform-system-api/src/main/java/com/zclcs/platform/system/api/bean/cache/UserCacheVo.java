@@ -1,9 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
-import com.zclcs.platform.system.api.bean.entity.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,9 +12,7 @@ import java.io.Serializable;
  * @since 2023-01-10 10:39:34.182
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class UserCacheBean implements Serializable {
+public class UserCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -86,27 +81,6 @@ public class UserCacheBean implements Serializable {
      * 描述
      */
     private String description;
-
-    public static UserCacheBean convertToUserCacheBean(User item) {
-        if (item == null) {
-            return null;
-        }
-        UserCacheBean result = new UserCacheBean();
-        result.setUserId(item.getUserId());
-        result.setUsername(item.getUsername());
-        result.setRealName(item.getRealName());
-        result.setPassword(item.getPassword());
-        result.setDeptId(item.getDeptId());
-        result.setEmail(item.getEmail());
-        result.setMobile(item.getMobile());
-        result.setStatus(item.getStatus());
-        result.setGender(item.getGender());
-        result.setIsTab(item.getIsTab());
-        result.setTheme(item.getTheme());
-        result.setAvatar(item.getAvatar());
-        result.setDescription(item.getDescription());
-        return result;
-    }
 
 
 }

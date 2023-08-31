@@ -11,7 +11,7 @@ import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
-import com.zclcs.platform.system.api.bean.cache.DeptCacheBean;
+import com.zclcs.platform.system.api.bean.cache.DeptCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.vo.DeptTreeVo;
 import com.zclcs.platform.system.api.bean.vo.DeptVo;
@@ -117,8 +117,8 @@ public class DeptController {
      */
     @GetMapping(value = "/findByDeptId/{deptId}")
     @Inner
-    public DeptCacheBean findByDeptId(@PathVariable Long deptId) {
-        return this.deptService.queryChain().where(DEPT.DEPT_ID.eq(deptId)).oneAs(DeptCacheBean.class);
+    public DeptCacheVo findByDeptId(@PathVariable Long deptId) {
+        return this.deptService.queryChain().where(DEPT.DEPT_ID.eq(deptId)).oneAs(DeptCacheVo.class);
     }
 
     /**

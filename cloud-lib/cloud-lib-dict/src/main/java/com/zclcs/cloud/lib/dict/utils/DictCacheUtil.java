@@ -1,7 +1,7 @@
 package com.zclcs.cloud.lib.dict.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheBean;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.cache.DictCache;
 import com.zclcs.cloud.lib.dict.cache.DictChildrenCache;
 import com.zclcs.cloud.lib.dict.cache.DictItemCache;
@@ -23,7 +23,7 @@ public class DictCacheUtil {
     private DictItemCache dictItemCache;
     private DictChildrenCache dictChildrenCache;
 
-    public static List<DictItemCacheBean> getDictByDictName(String dictName) {
+    public static List<DictItemCacheVo> getDictByDictName(String dictName) {
         return DICT_CACHE.findCache(dictName);
     }
 
@@ -35,7 +35,7 @@ public class DictCacheUtil {
         DICT_CACHE.deleteCache(dictNames);
     }
 
-    private static DictItemCacheBean getDictItemByDictNameAndValue(String dictName, String value) {
+    private static DictItemCacheVo getDictItemByDictNameAndValue(String dictName, String value) {
         return DICT_ITEM_CACHE.findCache(dictName, value);
     }
 
@@ -47,7 +47,7 @@ public class DictCacheUtil {
         DICT_ITEM_CACHE.deleteCache(keys);
     }
 
-    public static List<DictItemCacheBean> getDictByDictNameAndParentValue(String dictName, String parentValue) {
+    public static List<DictItemCacheVo> getDictByDictNameAndParentValue(String dictName, String parentValue) {
         return DICT_CHILDREN_CACHE.findCache(dictName, parentValue);
     }
 
@@ -59,7 +59,7 @@ public class DictCacheUtil {
         DICT_CHILDREN_CACHE.deleteCache(keys);
     }
 
-    public static DictItemCacheBean getDict(String dictName, String value) {
+    public static DictItemCacheVo getDict(String dictName, String value) {
         if (StrUtil.isBlank(value)) {
             return null;
         }
@@ -70,7 +70,7 @@ public class DictCacheUtil {
         if (StrUtil.isBlank(value)) {
             return "";
         }
-        DictItemCacheBean dictItemByDictNameAndValue = getDictItemByDictNameAndValue(dictName, value);
+        DictItemCacheVo dictItemByDictNameAndValue = getDictItemByDictNameAndValue(dictName, value);
         return dictItemByDictNameAndValue == null ? "" : dictItemByDictNameAndValue.getTitle();
     }
 

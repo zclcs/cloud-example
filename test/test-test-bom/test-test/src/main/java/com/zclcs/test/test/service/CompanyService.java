@@ -6,6 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.test.test.api.bean.ao.CompanyAo;
 import com.zclcs.test.test.api.bean.entity.Company;
 import com.zclcs.test.test.api.bean.vo.CompanyVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +34,20 @@ public interface CompanyService extends IService<Company> {
      * @return {@link CompanyVo}
      */
     List<CompanyVo> findCompanyList(CompanyVo companyVo);
+
+    /**
+     * 导出
+     *
+     * @param companyVo {@link CompanyVo}
+     */
+    void exportExcel(CompanyVo companyVo);
+
+    /**
+     * 导入
+     *
+     * @param file 文件
+     */
+    void importExcel(MultipartFile file);
 
     /**
      * 查询（单个）
