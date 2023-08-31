@@ -142,7 +142,6 @@ public class BaseExceptionHandler {
         for (ConstraintViolation<?> violation : violations) {
             Path path = violation.getPropertyPath();
             String s = StrUtil.subAfter(path.toString(), ".", true);
-            List<String> split = StrUtil.split(path.toString(), ".");
             message.append(s).append(violation.getMessage()).append(Strings.COMMA);
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));
