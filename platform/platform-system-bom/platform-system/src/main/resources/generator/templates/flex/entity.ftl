@@ -46,7 +46,7 @@ public class ${className} extends BaseEntity implements Serializable {
      * ${column.remark}
      */
     <#if column.isKey = true>
-    @Id(value = "${column.name}", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     <#else>
     @Column("${column.name}")
     </#if>

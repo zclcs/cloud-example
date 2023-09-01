@@ -14,40 +14,40 @@ import java.util.List;
  * 部门 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:10.151
+ * @since 2023-09-01 19:53:38.826
  */
 public interface DeptService extends IService<Dept> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param deptVo     deptVo
-     * @return BasePage<DeptVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param deptVo     {@link DeptVo}
+     * @return {@link DeptVo}
      */
     BasePage<DeptVo> findDeptPage(BasePageAo basePageAo, DeptVo deptVo);
 
     /**
      * 查询（所有）
      *
-     * @param deptVo deptVo
-     * @return List<DeptVo>
+     * @param deptVo {@link DeptVo}
+     * @return {@link DeptVo}
      */
     List<DeptVo> findDeptList(DeptVo deptVo);
 
     /**
      * 查询（单个）
      *
-     * @param deptVo deptVo
-     * @return DeptVo
+     * @param deptVo {@link DeptVo}
+     * @return {@link DeptVo}
      */
     DeptVo findDept(DeptVo deptVo);
 
     /**
      * 统计
      *
-     * @param deptVo deptVo
-     * @return DeptVo
+     * @param deptVo {@link DeptVo}
+     * @return 统计值
      */
     Long countDept(DeptVo deptVo);
 
@@ -70,23 +70,23 @@ public interface DeptService extends IService<Dept> {
     /**
      * 新增
      *
-     * @param deptAo deptAo
-     * @return Dept
+     * @param deptAo {@link DeptAo}
+     * @return {@link Dept}
      */
     Dept createDept(DeptAo deptAo);
 
     /**
      * 修改
      *
-     * @param deptAo deptAo
-     * @return Dept
+     * @param deptAo {@link DeptAo}
+     * @return {@link Dept}
      */
     Dept updateDept(DeptAo deptAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteDept(List<Long> ids);
 

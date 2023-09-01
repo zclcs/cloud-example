@@ -13,48 +13,48 @@ import java.util.List;
  * 限流拦截日志 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:53.040
+ * @since 2023-09-01 19:53:54.652
  */
 public interface RateLimitLogService extends IService<RateLimitLog> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo     basePageAo
-     * @param rateLimitLogVo rateLimitLogVo
-     * @return BasePage<RateLimitLogVo>
+     * @param basePageAo     {@link BasePageAo}
+     * @param rateLimitLogVo {@link RateLimitLogVo}
+     * @return {@link RateLimitLogVo}
      */
     BasePage<RateLimitLogVo> findRateLimitLogPage(BasePageAo basePageAo, RateLimitLogVo rateLimitLogVo);
 
     /**
      * 查询（所有）
      *
-     * @param rateLimitLogVo rateLimitLogVo
-     * @return List<RateLimitLogVo>
+     * @param rateLimitLogVo {@link RateLimitLogVo}
+     * @return {@link RateLimitLogVo}
      */
     List<RateLimitLogVo> findRateLimitLogList(RateLimitLogVo rateLimitLogVo);
 
     /**
      * 查询（单个）
      *
-     * @param rateLimitLogVo rateLimitLogVo
-     * @return RateLimitLogVo
+     * @param rateLimitLogVo {@link RateLimitLogVo}
+     * @return {@link RateLimitLogVo}
      */
     RateLimitLogVo findRateLimitLog(RateLimitLogVo rateLimitLogVo);
 
     /**
      * 统计
      *
-     * @param rateLimitLogVo rateLimitLogVo
-     * @return RateLimitLogVo
+     * @param rateLimitLogVo {@link RateLimitLogVo}
+     * @return 统计值
      */
     Long countRateLimitLog(RateLimitLogVo rateLimitLogVo);
 
     /**
      * 新增
      *
-     * @param rateLimitLogAo rateLimitLogAo
-     * @return RateLimitLog
+     * @param rateLimitLogAo {@link RateLimitLogAo}
+     * @return {@link RateLimitLog}
      */
     RateLimitLog createRateLimitLog(RateLimitLogAo rateLimitLogAo);
 
@@ -68,7 +68,7 @@ public interface RateLimitLogService extends IService<RateLimitLog> {
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteRateLimitLog(List<Long> ids);
 

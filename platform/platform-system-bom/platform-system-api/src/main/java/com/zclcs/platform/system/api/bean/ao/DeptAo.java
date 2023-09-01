@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 部门 Ao
  *
  * @author zclcs
- * @since 2023-01-10 10:39:10.151
+ * @since 2023-09-01 19:53:38.826
  */
 @Data
 @AllArgsConstructor
@@ -29,25 +29,29 @@ public class DeptAo implements Serializable {
 
     /**
      * 部门id
+     * 默认值：
      */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private Long deptId;
 
     /**
      * 部门编码
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String deptCode;
 
     /**
-     * 上级部门编码 不填默认顶级
+     * 上级部门编码
+     * 默认值：0
      */
     @Size(max = 100, message = "{noMoreThan}")
     private String parentCode;
 
     /**
      * 部门名称
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
@@ -55,6 +59,7 @@ public class DeptAo implements Serializable {
 
     /**
      * 排序
+     * 默认值：1
      */
     private Double orderNum;
 

@@ -12,43 +12,43 @@ import com.zclcs.platform.system.api.bean.vo.DictVo;
 import java.util.List;
 
 /**
- * 字典项 Service接口
+ * 字典 Service接口
  *
  * @author zclcs
- * @since 2023-03-06 10:56:41.301
+ * @since 2023-09-01 20:03:54.686
  */
 public interface DictItemService extends IService<DictItem> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param dictItemVo dictItemVo
-     * @return BasePage<DictItemVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param dictItemVo {@link DictItemVo}
+     * @return {@link DictItemVo}
      */
     BasePage<DictItemVo> findDictItemPage(BasePageAo basePageAo, DictItemVo dictItemVo);
 
     /**
      * 查询（所有）
      *
-     * @param dictItemVo dictItemVo
-     * @return List<DictItemVo>
+     * @param dictItemVo {@link DictItemVo}
+     * @return {@link DictItemVo}
      */
     List<DictItemVo> findDictItemList(DictItemVo dictItemVo);
 
     /**
      * 查询（单个）
      *
-     * @param dictItemVo dictItemVo
-     * @return DictItemVo
+     * @param dictItemVo {@link DictItemVo}
+     * @return {@link DictItemVo}
      */
     DictItemVo findDictItem(DictItemVo dictItemVo);
 
     /**
      * 统计
      *
-     * @param dictItemVo dictItemVo
-     * @return DictItemVo
+     * @param dictItemVo {@link DictItemVo}
+     * @return 统计值
      */
     Long countDictItem(DictItemVo dictItemVo);
 
@@ -96,23 +96,23 @@ public interface DictItemService extends IService<DictItem> {
     /**
      * 新增
      *
-     * @param dictItemAo dictItemAo
-     * @return DictItem
+     * @param dictItemAo {@link DictItemAo}
+     * @return {@link DictItem}
      */
     DictItem createDictItem(DictItemAo dictItemAo);
 
     /**
      * 修改
      *
-     * @param dictItemAo dictItemAo
-     * @return DictItem
+     * @param dictItemAo {@link DictItemAo}
+     * @return {@link DictItem}
      */
     DictItem updateDictItem(DictItemAo dictItemAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteDictItem(List<Long> ids);
 

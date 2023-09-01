@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.bean.Tree;
-import com.zclcs.cloud.lib.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -28,14 +28,30 @@ public class DictItemTreeVo extends Tree<DictItemVo> implements Serializable {
     /**
      * 字典类型 @@system_dict_item.type
      */
-    @DictText(value = "system_dict_item.type")
     private String type;
+
+    /**
+     * 字典类型 @@system_dict_item.type
+     */
+    private String typeText;
+
+    public String getTypeText() {
+        return DictCacheUtil.getDictTitle("system_dict_item.type", this.type);
+    }
 
     /**
      * 是否系统字典 @@yes_no
      */
-    @DictText(value = "yes_no")
     private String whetherSystemDict;
+
+    /**
+     * 是否系统字典 @@yes_no
+     */
+    private String whetherSystemDictText;
+
+    public String getWhetherSystemDictText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.whetherSystemDictText);
+    }
 
     /**
      * 描述

@@ -13,63 +13,63 @@ import java.util.List;
  * 角色 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:28.842
+ * @since 2023-09-01 19:53:33.519
  */
 public interface RoleService extends IService<Role> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param roleVo     roleVo
-     * @return BasePage<RoleVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param roleVo     {@link RoleVo}
+     * @return {@link RoleVo}
      */
     BasePage<RoleVo> findRolePage(BasePageAo basePageAo, RoleVo roleVo);
 
     /**
      * 查询（所有）
      *
-     * @param roleVo roleVo
-     * @return List<RoleVo>
+     * @param roleVo {@link RoleVo}
+     * @return {@link RoleVo}
      */
     List<RoleVo> findRoleList(RoleVo roleVo);
 
     /**
      * 查询（单个）
      *
-     * @param roleVo roleVo
-     * @return RoleVo
+     * @param roleVo {@link RoleVo}
+     * @return {@link RoleVo}
      */
     RoleVo findRole(RoleVo roleVo);
 
     /**
      * 统计
      *
-     * @param roleVo roleVo
-     * @return RoleVo
+     * @param roleVo {@link RoleVo}
+     * @return 统计值
      */
     Long countRole(RoleVo roleVo);
 
     /**
      * 新增
      *
-     * @param roleAo roleAo
-     * @return Role
+     * @param roleAo {@link RoleAo}
+     * @return {@link Role}
      */
     Role createRole(RoleAo roleAo);
 
     /**
      * 修改
      *
-     * @param roleAo roleAo
-     * @return Role
+     * @param roleAo {@link RoleAo}
+     * @return {@link Role}
      */
     Role updateRole(RoleAo roleAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteRole(List<Long> ids);
 

@@ -1,15 +1,16 @@
 package com.zclcs.platform.system.api.bean.cache;
 
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 部门缓存
+ * 部门 CacheVo
  *
  * @author zclcs
- * @since 2023-01-10 10:39:10.151
+ * @since 2023-09-01 19:53:38.826
  */
 @Data
 public class DeptCacheVo implements Serializable {
@@ -41,5 +42,6 @@ public class DeptCacheVo implements Serializable {
      * 排序
      */
     private Double orderNum;
+
 
 }

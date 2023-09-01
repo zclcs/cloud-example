@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 角色 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:39:28.842
+ * @since 2023-09-01 19:53:33.519
  */
 @Data
 @AllArgsConstructor
@@ -40,16 +40,16 @@ public class Role extends BaseEntity implements Serializable {
     private Long roleId;
 
     /**
-     * 角色名称
-     */
-    @Column("role_name")
-    private String roleName;
-
-    /**
      * 角色编码（唯一值）
      */
     @Column("role_code")
     private String roleCode;
+
+    /**
+     * 角色名称
+     */
+    @Column("role_name")
+    private String roleName;
 
     /**
      * 角色描述

@@ -14,40 +14,40 @@ import java.util.List;
  * 限流规则 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:49.113
+ * @since 2023-09-01 19:53:43.828
  */
 public interface RateLimitRuleService extends IService<RateLimitRule> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo      basePageAo
-     * @param rateLimitRuleVo rateLimitRuleVo
-     * @return BasePage<RateLimitRuleVo>
+     * @param basePageAo      {@link BasePageAo}
+     * @param rateLimitRuleVo {@link RateLimitRuleVo}
+     * @return {@link RateLimitRuleVo}
      */
     BasePage<RateLimitRuleVo> findRateLimitRulePage(BasePageAo basePageAo, RateLimitRuleVo rateLimitRuleVo);
 
     /**
      * 查询（所有）
      *
-     * @param rateLimitRuleVo rateLimitRuleVo
-     * @return List<RateLimitRuleVo>
+     * @param rateLimitRuleVo {@link RateLimitRuleVo}
+     * @return {@link RateLimitRuleVo}
      */
     List<RateLimitRuleVo> findRateLimitRuleList(RateLimitRuleVo rateLimitRuleVo);
 
     /**
      * 查询（单个）
      *
-     * @param rateLimitRuleVo rateLimitRuleVo
-     * @return RateLimitRuleVo
+     * @param rateLimitRuleVo {@link RateLimitRuleVo}
+     * @return {@link RateLimitRuleVo}
      */
     RateLimitRuleVo findRateLimitRule(RateLimitRuleVo rateLimitRuleVo);
 
     /**
      * 统计
      *
-     * @param rateLimitRuleVo rateLimitRuleVo
-     * @return RateLimitRuleVo
+     * @param rateLimitRuleVo {@link RateLimitRuleVo}
+     * @return 统计值
      */
     Long countRateLimitRule(RateLimitRuleVo rateLimitRuleVo);
 
@@ -59,23 +59,23 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
     /**
      * 新增
      *
-     * @param rateLimitRuleAo rateLimitRuleAo
-     * @return RateLimitRule
+     * @param rateLimitRuleAo {@link RateLimitRuleAo}
+     * @return {@link RateLimitRule}
      */
     RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
 
     /**
      * 修改
      *
-     * @param rateLimitRuleAo rateLimitRuleAo
-     * @return RateLimitRule
+     * @param rateLimitRuleAo {@link RateLimitRuleAo}
+     * @return {@link RateLimitRule}
      */
     RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteRateLimitRule(List<Long> ids);
 

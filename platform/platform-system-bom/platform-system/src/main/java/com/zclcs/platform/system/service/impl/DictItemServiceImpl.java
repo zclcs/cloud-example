@@ -72,24 +72,19 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     public BasePage<DictVo> findDictPage(BasePageAo basePageAo, DictVo dictVo) {
         QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
         Page<DictVo> dictVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, DictVo.class);
-        dictVoPage.getRecords().forEach(this::setDict);
         return new BasePage<>(dictVoPage);
     }
 
     @Override
     public List<DictVo> findDictList(DictVo dictVo) {
         QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
-        List<DictVo> listDictVo = this.mapper.selectListByQueryAs(queryWrapper, DictVo.class);
-        listDictVo.forEach(this::setDict);
-        return listDictVo;
+        return this.mapper.selectListByQueryAs(queryWrapper, DictVo.class);
     }
 
     @Override
     public DictVo findDict(DictVo dictVo) {
         QueryWrapper queryWrapper = getDictQueryWrapper(dictVo);
-        DictVo oneDictVo = this.mapper.selectOneByQueryAs(queryWrapper, DictVo.class);
-        setDict(oneDictVo);
-        return oneDictVo;
+        return this.mapper.selectOneByQueryAs(queryWrapper, DictVo.class);
     }
 
     @Override
@@ -138,7 +133,8 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
                         max(DICT_ITEM.ID).as("id"),
-                        DICT_ITEM.DICT_NAME.as("name")
+                        DICT_ITEM.DICT_NAME.as("name"),
+                        DICT_ITEM.DICT_NAME.as("dictName")
                 ).groupBy(DICT_ITEM.DICT_NAME)
                 .where(DICT_ITEM.DICT_NAME.likeRight(dictVo.getDictName(), If::hasText))
                 .orderBy(DICT_ITEM.SORTED.asc())
@@ -226,9 +222,5 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         if (dictItem.getType().equals(Dict.DICT_TYPE_0)) {
             dictItem.setParentValue(CommonCore.TOP_PARENT_CODE);
         }
-    }
-
-    private void setDict(DictVo dictVo) {
-        dictVo.setDictName(dictVo.getName());
     }
 }

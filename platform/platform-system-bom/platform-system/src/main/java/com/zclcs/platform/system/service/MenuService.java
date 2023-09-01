@@ -16,40 +16,40 @@ import java.util.List;
  * 菜单 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:18.238
+ * @since 2023-09-01 20:05:00.313
  */
 public interface MenuService extends IService<Menu> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param menuVo     menuVo
-     * @return BasePage<MenuVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param menuVo     {@link MenuVo}
+     * @return {@link MenuVo}
      */
     BasePage<MenuVo> findMenuPage(BasePageAo basePageAo, MenuVo menuVo);
 
     /**
      * 查询（所有）
      *
-     * @param menuVo menuVo
-     * @return List<MenuVo>
+     * @param menuVo {@link MenuVo}
+     * @return {@link MenuVo}
      */
     List<MenuVo> findMenuList(MenuVo menuVo);
 
     /**
      * 查询（单个）
      *
-     * @param menuVo menuVo
-     * @return MenuVo
+     * @param menuVo {@link MenuVo}
+     * @return {@link MenuVo}
      */
     MenuVo findMenu(MenuVo menuVo);
 
     /**
      * 统计
      *
-     * @param menuVo menuVo
-     * @return MenuVo
+     * @param menuVo {@link MenuVo}
+     * @return 统计值
      */
     Long countMenu(MenuVo menuVo);
 
@@ -64,23 +64,23 @@ public interface MenuService extends IService<Menu> {
     /**
      * 新增
      *
-     * @param menuAo menuAo
-     * @return Menu
+     * @param menuAo {@link MenuAo}
+     * @return {@link Menu}
      */
     Menu createMenu(MenuAo menuAo);
 
     /**
      * 修改
      *
-     * @param menuAo menuAo
-     * @return Menu
+     * @param menuAo {@link MenuAo}
+     * @return {@link Menu}
      */
     Menu updateMenu(MenuAo menuAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteMenu(List<Long> ids);
 

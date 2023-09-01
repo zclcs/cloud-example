@@ -10,7 +10,10 @@ import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 import java.util.List;
 
 /**
+ * 代码生成配置 Service接口
+ *
  * @author zclcs
+ * @since 2023-09-01 20:04:43.904
  */
 public interface GeneratorConfigService extends IService<GeneratorConfig> {
 
@@ -19,7 +22,7 @@ public interface GeneratorConfigService extends IService<GeneratorConfig> {
      *
      * @param basePageAo        {@link BasePageAo}
      * @param generatorConfigVo {@link GeneratorConfigVo}
-     * @return {@link BasePageAo}
+     * @return {@link GeneratorConfigVo}
      */
     BasePage<GeneratorConfigVo> findGeneratorConfigPage(BasePageAo basePageAo, GeneratorConfigVo generatorConfigVo);
 
@@ -40,15 +43,15 @@ public interface GeneratorConfigService extends IService<GeneratorConfig> {
     GeneratorConfigVo findGeneratorConfig(GeneratorConfigVo generatorConfigVo);
 
     /**
-     * 查询
+     * 统计
      *
-     * @param id 配置id
-     * @return {@link GeneratorConfigVo}
+     * @param generatorConfigVo {@link GeneratorConfigVo}
+     * @return 统计值
      */
-    GeneratorConfigVo findGeneratorConfig(Long id);
+    Long countGeneratorConfig(GeneratorConfigVo generatorConfigVo);
 
     /**
-     * 添加
+     * 新增
      *
      * @param generatorConfigAo {@link GeneratorConfigAo}
      * @return {@link GeneratorConfig}

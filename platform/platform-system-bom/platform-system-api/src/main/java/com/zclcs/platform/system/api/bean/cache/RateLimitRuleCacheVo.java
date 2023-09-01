@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.platform.system.api.bean.entity.RateLimitRule;
 import lombok.Data;
 
@@ -7,16 +8,21 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 限流规则 Entity
+ * 限流规则 CacheVo
  *
  * @author zclcs
- * @since 2023-01-10 10:39:49.113
+ * @since 2023-09-01 19:53:43.828
  */
 @Data
 public class RateLimitRuleCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 限流规则id
+     */
+    private Long rateLimitRuleId;
 
     /**
      * 请求uri（不支持通配符）
@@ -53,6 +59,15 @@ public class RateLimitRuleCacheVo implements Serializable {
      */
     private String ruleStatus;
 
+    /**
+     * 规则状态 默认 1 @@enable_disable
+     */
+    private String ruleStatusText;
+
+    public String getRuleStatusText() {
+        return DictCacheUtil.getDictTitle("enable_disable", this.ruleStatus);
+    }
+
 
     public static RateLimitRuleCacheVo convertToRateLimitRuleCacheBean(RateLimitRule item) {
         if (item == null) {
@@ -68,4 +83,6 @@ public class RateLimitRuleCacheVo implements Serializable {
         result.setRuleStatus(item.getRuleStatus());
         return result;
     }
+
+
 }

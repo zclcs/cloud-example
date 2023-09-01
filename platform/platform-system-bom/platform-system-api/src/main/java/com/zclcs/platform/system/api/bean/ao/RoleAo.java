@@ -15,7 +15,7 @@ import java.util.List;
  * 角色 Ao
  *
  * @author zclcs
- * @since 2023-01-10 10:39:28.842
+ * @since 2023-09-01 19:53:33.519
  */
 @Data
 @AllArgsConstructor
@@ -30,26 +30,30 @@ public class RoleAo implements Serializable {
 
     /**
      * 角色id
+     * 默认值：
      */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private Long roleId;
 
     /**
-     * 角色名称
-     */
-    @Size(max = 10, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
-    private String roleName;
-
-    /**
-     * 角色编码
+     * 角色编码（唯一值）
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String roleCode;
 
     /**
+     * 角色名称
+     * 默认值：
+     */
+    @Size(max = 10, message = "{noMoreThan}")
+    @NotBlank(message = "{required}")
+    private String roleName;
+
+    /**
      * 角色描述
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     private String remark;

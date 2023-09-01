@@ -14,24 +14,24 @@ import java.util.List;
  * 网关转发日志 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:40:09.958
+ * @since 2023-09-01 20:09:35.391
  */
 public interface RouteLogService extends IService<RouteLog> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param routeLogVo routeLogVo
-     * @return BasePage<RouteLogVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param routeLogVo {@link RouteLogVo}
+     * @return {@link RouteLogVo}
      */
     BasePage<RouteLogVo> findRouteLogPage(BasePageAo basePageAo, RouteLogVo routeLogVo);
 
     /**
      * 查询（所有）
      *
-     * @param routeLogVo routeLogVo
-     * @return List<RouteLogVo>
+     * @param routeLogVo {@link RouteLogVo}
+     * @return {@link RouteLogVo}
      */
     List<RouteLogVo> findRouteLogList(RouteLogVo routeLogVo);
 
@@ -52,24 +52,24 @@ public interface RouteLogService extends IService<RouteLog> {
     /**
      * 查询（单个）
      *
-     * @param routeLogVo routeLogVo
-     * @return RouteLogVo
+     * @param routeLogVo {@link RouteLogVo}
+     * @return {@link RouteLogVo}
      */
     RouteLogVo findRouteLog(RouteLogVo routeLogVo);
 
     /**
      * 统计
      *
-     * @param routeLogVo routeLogVo
-     * @return RouteLogVo
+     * @param routeLogVo {@link RouteLogVo}
+     * @return 统计值
      */
     Long countRouteLog(RouteLogVo routeLogVo);
 
     /**
      * 新增
      *
-     * @param routeLogAo routeLogAo
-     * @return RouteLog
+     * @param routeLogAo {@link RouteLogAo}
+     * @return {@link RouteLog}
      */
     RouteLog createRouteLog(RouteLogAo routeLogAo);
 
@@ -83,7 +83,7 @@ public interface RouteLogService extends IService<RouteLog> {
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteRouteLog(List<Long> ids);
 

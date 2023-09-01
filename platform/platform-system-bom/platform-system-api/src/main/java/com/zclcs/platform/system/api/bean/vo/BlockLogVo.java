@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
  * 黑名单拦截日志 Vo
  *
  * @author zclcs
- * @since 2023-01-10 10:40:05.798
+ * @since 2023-09-01 19:53:49.983
  */
 @Data
 @AllArgsConstructor
@@ -33,44 +32,48 @@ public class BlockLogVo extends BaseEntity implements Serializable {
 
     /**
      * 拦截日志id
+     * 默认值：
      */
     private Long blockId;
 
     /**
      * 拦截ip
+     * 默认值：
      */
     private String blockIp;
 
     /**
      * 被拦截请求URI
+     * 默认值：
      */
     private String requestUri;
 
     /**
      * 被拦截请求方法
+     * 默认值：
      */
     private String requestMethod;
 
     /**
-     * IP对应地址
-     */
-    private String location;
-
-    /**
      * 拦截时间
+     * 默认值：CURRENT_TIMESTAMP
      */
     private LocalDateTime requestTime;
 
     /**
+     * IP对应地址
+     * 默认值：
+     */
+    private String location;
+
+    /**
      * 拦截时间起
      */
-    @Column(ignore = true)
     private LocalDate requestTimeFrom;
 
     /**
      * 拦截时间起终
      */
-    @Column(ignore = true)
     private LocalDate requestTimeTo;
 
 

@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +16,7 @@ import java.util.List;
  * 终端信息 Vo
  *
  * @author zclcs
- * @since 2023-01-30 16:48:03.522
+ * @since 2023-09-01 19:54:03.427
  */
 @Data
 @AllArgsConstructor
@@ -32,63 +31,73 @@ public class OauthClientDetailsVo extends BaseEntity implements Serializable {
 
     /**
      * 客户端ID
+     * 默认值：
      */
     private String clientId;
 
     /**
      * 资源列表
+     * 默认值：
      */
     private String resourceIds;
 
     /**
      * 客户端密钥
+     * 默认值：
      */
     private String clientSecret;
 
     /**
      * 域
+     * 默认值：
      */
     private String scope;
 
     /**
      * 认证类型
+     * 默认值：
      */
     private String authorizedGrantTypes;
 
     /**
      * 重定向地址
+     * 默认值：
      */
     private String webServerRedirectUri;
 
     /**
      * 角色列表
+     * 默认值：
      */
     private String authorities;
 
     /**
      * token 有效期
+     * 默认值：86400
      */
     private Integer accessTokenValidity;
 
     /**
      * 刷新令牌有效期
+     * 默认值：86400
      */
     private Integer refreshTokenValidity;
 
     /**
      * 令牌扩展字段JSON
+     * 默认值：
      */
     private String additionalInformation;
 
     /**
      * 是否自动放行
+     * 默认值：true
      */
     private String autoapprove;
 
     /**
      * 菜单id集合
      */
-    @Column(ignore = true)
     private List<Long> menuIds;
 
 

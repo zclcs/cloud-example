@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.api.bean.cache;
 
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.platform.system.api.bean.entity.BlackList;
 import lombok.Data;
 
@@ -7,16 +8,21 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 黑名单 Entity
+ * 黑名单 CacheVo
  *
  * @author zclcs
- * @since 2023-01-10 10:40:14.628
+ * @since 2023-09-01 19:53:59.035
  */
 @Data
 public class BlackListCacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 黑名单id
+     */
+    private Long blackId;
 
     /**
      * 黑名单ip
@@ -44,9 +50,23 @@ public class BlackListCacheVo implements Serializable {
     private String limitTo;
 
     /**
+     * ip对应地址
+     */
+    private String location;
+
+    /**
      * 黑名单状态 默认 1 @@enable_disable
      */
     private String blackStatus;
+
+    /**
+     * 黑名单状态 默认 1 @@enable_disable
+     */
+    private String blackStatusText;
+
+    public String getBlackStatusText() {
+        return DictCacheUtil.getDictTitle("enable_disable", this.blackStatus);
+    }
 
     public static BlackListCacheVo convertToBlackListCacheBean(BlackList item) {
         if (item == null) {
@@ -61,4 +81,6 @@ public class BlackListCacheVo implements Serializable {
         result.setBlackStatus(item.getBlackStatus());
         return result;
     }
+
+
 }

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 网关转发日志 Vo
  *
  * @author zclcs
- * @since 2023-01-10 10:40:09.958
+ * @since 2023-09-01 20:09:35.391
  */
 @Data
 @AllArgsConstructor
@@ -32,51 +32,61 @@ public class RouteLogVo extends BaseEntity implements Serializable {
 
     /**
      * 网关转发日志id
+     * 默认值：
      */
     private Long routeId;
 
     /**
      * 请求ip
+     * 默认值：
      */
     private String routeIp;
 
     /**
      * 请求uri
+     * 默认值：
      */
     private String requestUri;
 
     /**
      * 目标uri
+     * 默认值：
      */
     private String targetUri;
 
     /**
      * 请求方法
+     * 默认值：
      */
     private String requestMethod;
 
     /**
-     * 目标服务
-     */
-    private String targetServer;
-
-    /**
      * 请求时间
+     * 默认值：CURRENT_TIMESTAMP
      */
     private LocalDateTime requestTime;
 
     /**
-     * 响应code
+     * 目标服务
+     * 默认值：
+     */
+    private String targetServer;
+
+    /**
+     * 响应码
+     * 默认值：
      */
     private String code;
 
     /**
      * 响应时间
+     * 默认值：0
      */
     private Long time;
 
     /**
      * ip对应地址
+     * 默认值：
      */
     private String location;
 

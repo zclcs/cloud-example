@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 黑名单 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:40:14.628
+ * @since 2023-09-01 19:53:59.035
  */
 @Data
 @AllArgsConstructor

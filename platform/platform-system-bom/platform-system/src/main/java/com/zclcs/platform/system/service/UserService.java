@@ -15,26 +15,24 @@ import java.util.List;
  * 用户 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:34.182
+ * @since 2023-09-01 19:55:21.249
  */
 public interface UserService extends IService<User> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo BasePageAo
-     * @param userVo     UserVo
-     * @return BasePage<UserVo>
-     * @see BasePageAo
-     * @see UserVo
+     * @param basePageAo {@link BasePageAo}
+     * @param userVo     {@link UserVo}
+     * @return {@link UserVo}
      */
     BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo);
 
     /**
      * 查询（所有）
      *
-     * @param userVo userVo
-     * @return List<UserVo>
+     * @param userVo {@link UserVo}
+     * @return {@link UserVo}
      */
     List<UserVo> findUserList(UserVo userVo);
 
@@ -48,16 +46,16 @@ public interface UserService extends IService<User> {
     /**
      * 查询（单个）
      *
-     * @param userVo userVo
-     * @return UserVo
+     * @param userVo {@link UserVo}
+     * @return {@link UserVo}
      */
     UserVo findUser(UserVo userVo);
 
     /**
      * 统计
      *
-     * @param userVo userVo
-     * @return UserVo
+     * @param userVo {@link UserVo}
+     * @return 统计值
      */
     Long countUser(UserVo userVo);
 
@@ -96,23 +94,23 @@ public interface UserService extends IService<User> {
     /**
      * 新增
      *
-     * @param userAo userAo
-     * @return User
+     * @param userAo {@link UserAo}
+     * @return {@link User}
      */
     User createUser(UserAo userAo);
 
     /**
      * 修改
      *
-     * @param userAo userAo
-     * @return User
+     * @param userAo {@link UserAo}
+     * @return {@link User}
      */
     User updateUser(UserAo userAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteUser(List<Long> ids);
 

@@ -20,7 +20,7 @@ import java.math.BigDecimal;
  * 用户操作日志 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:40:01.346
+ * @since 2023-09-01 19:55:02.695
  */
 @Data
 @AllArgsConstructor

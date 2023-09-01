@@ -29,7 +29,6 @@ spring:
       - nacos:redis.yaml
       - nacos:mybatis-flex.yaml
       - nacos:jasypt.yaml
-      - nacos:system-dict.yaml
       - nacos:minio.yaml
       - nacos:db-merge.yaml
       - nacos:sa-token.yaml

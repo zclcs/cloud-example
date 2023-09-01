@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +41,6 @@ public class DictVo extends BaseEntity implements Serializable {
     /**
      * 数据key（唯一值）
      */
-    @Column(ignore = true)
     private String dictName;
 
 

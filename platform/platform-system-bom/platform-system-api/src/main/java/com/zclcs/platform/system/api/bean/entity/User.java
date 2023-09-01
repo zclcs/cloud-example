@@ -1,12 +1,10 @@
 package com.zclcs.platform.system.api.bean.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import com.zclcs.platform.system.api.bean.ao.UserAo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +20,7 @@ import java.time.LocalDateTime;
  * 用户 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:39:34.182
+ * @since 2023-09-01 19:55:21.249
  */
 @Data
 @AllArgsConstructor
@@ -57,7 +55,6 @@ public class User extends BaseEntity implements Serializable {
     /**
      * 密码
      */
-    @JsonIgnore
     @Column("password")
     private String password;
 
@@ -120,28 +117,6 @@ public class User extends BaseEntity implements Serializable {
      */
     @Column("description")
     private String description;
-
-    public static User convertToUser(UserAo item) {
-        if (item == null) {
-            return null;
-        }
-        User result = new User();
-        result.setUserId(item.getUserId());
-        result.setUsername(item.getUsername());
-        result.setRealName(item.getRealName());
-        result.setPassword(item.getPassword());
-        result.setDeptId(item.getDeptId());
-        result.setEmail(item.getEmail());
-        result.setMobile(item.getMobile());
-        result.setStatus(item.getStatus());
-        result.setLastLoginTime(item.getLastLoginTime());
-        result.setGender(item.getGender());
-        result.setIsTab(item.getIsTab());
-        result.setTheme(item.getTheme());
-        result.setAvatar(item.getAvatar());
-        result.setDescription(item.getDescription());
-        return result;
-    }
 
 
 }

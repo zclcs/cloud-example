@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 菜单 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:39:18.238
+ * @since 2023-09-01 20:05:00.313
  */
 @Data
 @AllArgsConstructor

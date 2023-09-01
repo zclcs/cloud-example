@@ -89,11 +89,12 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createLoginLog(LoginLogAo loginLogAo) {
+    public LoginLog createLoginLog(LoginLogAo loginLogAo) {
         LoginLog loginLog = new LoginLog();
         BeanUtil.copyProperties(loginLogAo, loginLog);
         loginLog.setLocation(ip2regionSearcher.getAddress(loginLogAo.getIp()));
         this.save(loginLog);
+        return loginLog;
     }
 
     @Override

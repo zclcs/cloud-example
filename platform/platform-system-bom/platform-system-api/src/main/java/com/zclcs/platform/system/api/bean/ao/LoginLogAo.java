@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.dict.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  * 登录日志 Ao
  *
  * @author zclcs
- * @since 2023-01-10 10:39:57.150
+ * @since 2023-09-01 20:07:45.093
  */
 @Data
 @AllArgsConstructor
@@ -29,13 +30,15 @@ public class LoginLogAo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键
+     * id
+     * 默认值：
      */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private Long id;
 
     /**
      * 用户名
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
@@ -43,51 +46,46 @@ public class LoginLogAo implements Serializable {
 
     /**
      * 登录时间
+     * 默认值：CURRENT_TIMESTAMP
      */
     @NotNull(message = "{required}")
     private LocalDateTime loginTime;
 
     /**
      * 登录地点
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
     private String location;
 
     /**
      * ip地址
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
     private String ip;
 
     /**
      * 操作系统
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
     private String system;
 
     /**
-     * 浏览器
+     * 登录类型 @@system_login_log.type
+     * 默认值：01
      */
-    @Size(max = 50, message = "{noMoreThan}")
-    private String browser;
-
-    /**
-     * 登录类型 01 成功 02 失败 03 登出
-     */
-    @Size(max = 2, message = "{noMoreThan}")
+    @DictValid(value = "system_login_log.type", message = "{dict}")
+    @Size(max = 255, message = "{noMoreThan}")
     private String loginType;
 
     /**
-     * 创建人
+     * 浏览器
+     * 默认值：
      */
-    @Size(max = 100, message = "{noMoreThan}")
-    private String createBy;
-
-    /**
-     * 编辑人
-     */
-    @Size(max = 100, message = "{noMoreThan}")
-    private String updateBy;
+    @Size(max = 50, message = "{noMoreThan}")
+    private String browser;
 
 
 }

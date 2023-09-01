@@ -7,7 +7,7 @@ import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
  * 终端信息 Mapper
  *
  * @author zclcs
- * @since 2023-01-30 16:48:03.522
+ * @since 2023-09-01 19:54:03.427
  */
 public interface OauthClientDetailsMapper extends BaseMapper<OauthClientDetails> {
 

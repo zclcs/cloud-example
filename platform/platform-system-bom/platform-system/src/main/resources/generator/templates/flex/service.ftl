@@ -56,7 +56,7 @@ public interface ${className}Service extends IService<${className}> {
      * @param ${className?uncap_first}Ao {@link ${className}Ao}
      * @return {@link ${className}}
      */
-     ${className} create${className}(${className}Ao ${className?uncap_first}Ao);
+    ${className} create${className}(${className}Ao ${className?uncap_first}Ao);
 
     /**
      * 修改
@@ -64,7 +64,7 @@ public interface ${className}Service extends IService<${className}> {
      * @param ${className?uncap_first}Ao {@link ${className}Ao}
      * @return {@link ${className}}
      */
-     ${className} update${className}(${className}Ao ${className?uncap_first}Ao);
+    ${className} update${className}(${className}Ao ${className?uncap_first}Ao);
 
     /**
      * 删除

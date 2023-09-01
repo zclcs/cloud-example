@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.AddStrategy;
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +14,7 @@ import java.io.Serializable;
  * minio桶 Ao
  *
  * @author zclcs
- * @since 2021-10-21 16:45:35.202
+ * @since 2023-09-01 19:54:44.135
  */
 @Data
 @AllArgsConstructor
@@ -30,22 +29,24 @@ public class MinioBucketAo implements Serializable {
 
     /**
      * 桶id
+     * 默认值：
      */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private Long id;
 
     /**
      * 桶名称
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
-    @NotBlank(message = "{required}", groups = AddStrategy.class)
+    @NotBlank(message = "{required}")
     private String bucketName;
 
     /**
      * 桶权限
+     * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
     private String bucketPolicy;
 
 

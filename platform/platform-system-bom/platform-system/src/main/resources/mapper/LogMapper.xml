@@ -2,34 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zclcs.platform.system.mapper.LogMapper">
 
-    <sql id="baseSql">
-        select sl.id,
-               sl.username,
-               sl.operation,
-               sl.time,
-               sl.method,
-               sl.params,
-               sl.ip,
-               sl.create_at,
-               sl.location
-        from system_log sl
-            ${ew.customSqlSegment}
-    </sql>
-    <sql id="baseCountSql">
-        select count(*)
-        from system_log sl
-            ${ew.customSqlSegment}
-    </sql>
-    <select id="findPageVo" resultType="com.zclcs.platform.system.api.bean.vo.LogVo">
-        <include refid="baseSql"/>
-    </select>
-    <select id="findListVo" resultType="com.zclcs.platform.system.api.bean.vo.LogVo">
-        <include refid="baseSql"/>
-    </select>
-    <select id="findOneVo" resultType="com.zclcs.platform.system.api.bean.vo.LogVo">
-        <include refid="baseSql"/>
-    </select>
-    <select id="countVo" resultType="java.lang.Integer">
-        <include refid="baseCountSql"/>
-    </select>
 </mapper>

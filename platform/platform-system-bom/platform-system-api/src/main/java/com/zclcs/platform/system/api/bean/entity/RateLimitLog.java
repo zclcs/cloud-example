@@ -14,12 +14,13 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 限流拦截日志 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:39:53.040
+ * @since 2023-09-01 19:53:54.652
  */
 @Data
 @AllArgsConstructor
@@ -61,7 +62,7 @@ public class RateLimitLog extends BaseEntity implements Serializable {
      * 拦截时间
      */
     @Column("request_time")
-    private String requestTime;
+    private LocalDateTime requestTime;
 
     /**
      * IP对应地址

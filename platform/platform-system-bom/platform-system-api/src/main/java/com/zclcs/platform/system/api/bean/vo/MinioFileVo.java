@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +12,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 文件 Vo
+ * minio文件 Vo
  *
  * @author zclcs
- * @since 2021-10-18 10:37:21.262
+ * @since 2023-09-01 19:54:40.426
  */
 @Data
 @AllArgsConstructor
@@ -31,38 +30,43 @@ public class MinioFileVo extends BaseEntity implements Serializable {
 
     /**
      * 文件id
+     * 默认值：
      */
     private String id;
 
     /**
      * 桶id
+     * 默认值：0
      */
     private Long bucketId;
 
     /**
      * 文件名称
+     * 默认值：
      */
     private String fileName;
 
     /**
      * 原文件名称
+     * 默认值：
      */
     private String originalFileName;
 
     /**
      * 文件路径
+     * 默认值：
      */
     private String filePath;
 
     /**
      * 内容类型
+     * 默认值：
      */
     private String contentType;
 
     /**
      * 桶名称
      */
-    @Column(ignore = true)
     private String bucketName;
 
 

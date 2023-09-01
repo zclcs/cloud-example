@@ -17,91 +17,96 @@ public interface MinioService {
     /**
      * 查询（分页）
      *
-     * @param basePageAo    basePageAo
-     * @param minioBucketVo minioBucketVo
-     * @return BasePage<MinioBucketVo>
+     * @param basePageAo    {@link BasePageAo}
+     * @param minioBucketVo {@link MinioBucketVo}
+     * @return {@link MinioBucketVo}
      */
     BasePage<MinioBucketVo> findMinioBucketPage(BasePageAo basePageAo, MinioBucketVo minioBucketVo);
 
     /**
      * 查询（所有）
      *
-     * @param minioBucketVo minioBucketVo
-     * @return List<MinioBucketVo>
+     * @param minioBucketVo {@link MinioBucketVo}
+     * @return {@link MinioBucketVo}
      */
     List<MinioBucketVo> findMinioBucketList(MinioBucketVo minioBucketVo);
 
     /**
      * 查询（单个）
      *
-     * @param minioBucketVo minioBucketVo
-     * @return MinioBucketVo
+     * @param minioBucketVo {@link MinioBucketVo}
+     * @return {@link MinioBucketVo}
      */
     MinioBucketVo findMinioBucket(MinioBucketVo minioBucketVo);
 
     /**
      * 新增
      *
-     * @param minioBucketAo MinioBucketAo
-     * @return 桶
+     * @param minioBucketAo {@link MinioBucketAo}
+     * @return {@link MinioBucket}
      */
     MinioBucket createMinioBucket(MinioBucketAo minioBucketAo);
 
     /**
      * 修改
      *
-     * @param minioBucketAo MinioBucketAo
-     * @return 桶
+     * @param minioBucketAo {@link MinioBucketAo}
+     * @return {@link MinioBucket}
      */
     MinioBucket updateMinioBucket(MinioBucketAo minioBucketAo);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteMinioBucket(List<Long> ids);
 
+    /**
+     * 校验桶名称
+     *
+     * @param bucketName 桶名称
+     * @param bucketId   桶id
+     */
     void validateBucketName(String bucketName, Long bucketId);
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo  basePageAo
-     * @param minioFileVo minioFileVo
-     * @return BasePage<MinioFileVo>
+     * @param basePageAo  {@link BasePageAo}
+     * @param minioFileVo {@link MinioFileVo}
+     * @return {@link MinioFileVo}
      */
     BasePage<MinioFileVo> findMinioFilePage(BasePageAo basePageAo, MinioFileVo minioFileVo);
 
     /**
      * 查询（所有）
      *
-     * @param minioFileVo minioFileVo
-     * @return List<MinioFileVo>
+     * @param minioFileVo {@link MinioFileVo}
+     * @return {@link MinioFileVo}
      */
     List<MinioFileVo> findMinioFileList(MinioFileVo minioFileVo);
 
     /**
      * 查询（单个）
      *
-     * @param minioFileVo minioFileVo
-     * @return MinioFileVo
+     * @param minioFileVo {@link MinioFileVo}
+     * @return {@link MinioFileVo}
      */
     MinioFileVo findMinioFile(MinioFileVo minioFileVo);
 
     /**
      * 新增
      *
-     * @param multipartFile file
-     * @param bucketName    桶名称
-     * @return 文件
+     * @param bucketName 桶名称
+     * @return {@link MinioFile}
      */
     MinioFile createMinioFile(MultipartFile multipartFile, String bucketName) throws IOException;
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteMinioFile(List<String> ids);
 }

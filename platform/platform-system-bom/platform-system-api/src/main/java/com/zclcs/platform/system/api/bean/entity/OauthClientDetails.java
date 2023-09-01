@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 终端信息 Entity
  *
  * @author zclcs
- * @since 2023-01-30 16:48:03.522
+ * @since 2023-09-01 19:54:03.427
  */
 @Data
 @AllArgsConstructor

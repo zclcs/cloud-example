@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  * 登录日志 Entity
  *
  * @author zclcs
- * @since 2023-01-10 10:39:57.150
+ * @since 2023-09-01 20:07:45.093
  */
 @Data
 @AllArgsConstructor
@@ -71,15 +71,16 @@ public class LoginLog extends BaseEntity implements Serializable {
     private String system;
 
     /**
+     * 登录类型 @@system_login_log.type
+     */
+    @Column("login_type")
+    private String loginType;
+
+    /**
      * 浏览器
      */
     @Column("browser")
     private String browser;
 
-    /**
-     * 登录类型 @@system_login_log.type
-     */
-    @Column("login_type")
-    private String loginType;
 
 }

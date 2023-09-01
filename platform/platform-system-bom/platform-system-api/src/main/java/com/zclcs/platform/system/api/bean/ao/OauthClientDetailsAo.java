@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import java.util.List;
  * 终端信息 Ao
  *
  * @author zclcs
- * @since 2023-01-30 16:48:03.522
+ * @since 2023-09-01 19:54:03.427
  */
 @Data
 @AllArgsConstructor
@@ -29,65 +29,76 @@ public class OauthClientDetailsAo implements Serializable {
 
     /**
      * 客户端ID
+     * 默认值：
      */
-    @NotBlank(message = "{required}", groups = UpdateStrategy.class)
     @Size(max = 64, message = "{noMoreThan}")
+    @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private String clientId;
 
     /**
      * 资源列表
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String resourceIds;
 
     /**
      * 客户端密钥
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String clientSecret;
 
     /**
      * 域
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String scope;
 
     /**
      * 认证类型
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String authorizedGrantTypes;
 
     /**
      * 重定向地址
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String webServerRedirectUri;
 
     /**
      * 角色列表
+     * 默认值：
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String authorities;
 
     /**
      * token 有效期
+     * 默认值：86400
      */
     private Integer accessTokenValidity;
 
     /**
      * 刷新令牌有效期
+     * 默认值：86400
      */
     private Integer refreshTokenValidity;
 
     /**
      * 令牌扩展字段JSON
+     * 默认值：
      */
     @Size(max = 4096, message = "{noMoreThan}")
     private String additionalInformation;
 
     /**
      * 是否自动放行
+     * 默认值：true
      */
     @Size(max = 256, message = "{noMoreThan}")
     private String autoapprove;

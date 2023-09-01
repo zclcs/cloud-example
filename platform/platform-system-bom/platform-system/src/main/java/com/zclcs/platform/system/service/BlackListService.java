@@ -14,7 +14,7 @@ import java.util.List;
  * 黑名单 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:40:14.628
+ * @since 2023-09-01 19:53:59.035
  */
 public interface BlackListService extends IService<BlackList> {
 
@@ -47,7 +47,7 @@ public interface BlackListService extends IService<BlackList> {
      * 统计
      *
      * @param blackListVo {@link BlackListVo}
-     * @return 数量
+     * @return 统计值
      */
     Long countBlackList(BlackListVo blackListVo);
 
@@ -59,23 +59,23 @@ public interface BlackListService extends IService<BlackList> {
     /**
      * 新增
      *
-     * @param blackListAo blackListAo
-     * @return BlackList
+     * @param blackListAo {@link BlackListAo}
+     * @return {@link BlackList}
      */
     BlackList createBlackList(BlackListAo blackListAo) throws JsonProcessingException;
 
     /**
      * 修改
      *
-     * @param blackListAo blackListAo
-     * @return BlackList
+     * @param blackListAo {@link BlackListAo}
+     * @return {@link BlackList}
      */
     BlackList updateBlackList(BlackListAo blackListAo) throws JsonProcessingException;
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteBlackList(List<Long> ids) throws JsonProcessingException;
 

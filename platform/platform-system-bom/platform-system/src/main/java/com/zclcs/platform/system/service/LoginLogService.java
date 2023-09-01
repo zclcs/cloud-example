@@ -13,40 +13,40 @@ import java.util.List;
  * 登录日志 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:39:57.150
+ * @since 2023-09-01 20:07:45.093
  */
 public interface LoginLogService extends IService<LoginLog> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param loginLogVo loginLogVo
-     * @return BasePage<LoginLogVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param loginLogVo {@link LoginLogVo}
+     * @return {@link LoginLogVo}
      */
     BasePage<LoginLogVo> findLoginLogPage(BasePageAo basePageAo, LoginLogVo loginLogVo);
 
     /**
      * 查询（所有）
      *
-     * @param loginLogVo loginLogVo
-     * @return List<LoginLogVo>
+     * @param loginLogVo {@link LoginLogVo}
+     * @return {@link LoginLogVo}
      */
     List<LoginLogVo> findLoginLogList(LoginLogVo loginLogVo);
 
     /**
      * 查询（单个）
      *
-     * @param loginLogVo loginLogVo
-     * @return LoginLogVo
+     * @param loginLogVo {@link LoginLogVo}
+     * @return {@link LoginLogVo}
      */
     LoginLogVo findLoginLog(LoginLogVo loginLogVo);
 
     /**
      * 统计
      *
-     * @param loginLogVo loginLogVo
-     * @return LoginLogVo
+     * @param loginLogVo {@link LoginLogVo}
+     * @return 统计值
      */
     Long countLoginLog(LoginLogVo loginLogVo);
 
@@ -54,11 +54,12 @@ public interface LoginLogService extends IService<LoginLog> {
      * 新增
      *
      * @param loginLogAo {@link LoginLogAo}
+     * @return {@link LoginLog}
      */
-    void createLoginLog(LoginLogAo loginLogAo);
+    LoginLog createLoginLog(LoginLogAo loginLogAo);
 
     /**
-     * 新增
+     * 批量新增
      *
      * @param loginLogAos {@link LoginLogAo}
      */
@@ -67,7 +68,7 @@ public interface LoginLogService extends IService<LoginLog> {
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteLoginLog(List<Long> ids);
 

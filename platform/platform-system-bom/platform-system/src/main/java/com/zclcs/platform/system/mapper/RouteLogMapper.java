@@ -7,7 +7,7 @@ import com.zclcs.platform.system.api.bean.entity.RouteLog;
  * 网关转发日志 Mapper
  *
  * @author zclcs
- * @since 2023-01-10 10:40:09.958
+ * @since 2023-09-01 20:09:35.391
  */
 public interface RouteLogMapper extends BaseMapper<RouteLog> {
 

@@ -7,7 +7,7 @@ import com.zclcs.platform.system.api.bean.entity.BlockLog;
  * 黑名单拦截日志 Mapper
  *
  * @author zclcs
- * @since 2023-01-10 10:40:05.798
+ * @since 2023-09-01 19:53:49.983
  */
 public interface BlockLogMapper extends BaseMapper<BlockLog> {
 

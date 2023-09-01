@@ -1,15 +1,16 @@
 package com.zclcs.platform.system.api.bean.cache;
 
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 终端信息缓存
+ * 终端信息 CacheVo
  *
  * @author zclcs
- * @since 2023-01-30 16:48:03.522
+ * @since 2023-09-01 19:54:03.427
  */
 @Data
 public class OauthClientDetailsCacheVo implements Serializable {

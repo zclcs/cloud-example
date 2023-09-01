@@ -21,7 +21,6 @@ import com.zclcs.platform.system.api.bean.entity.Menu;
 import com.zclcs.platform.system.api.bean.entity.TableInfo;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
 import com.zclcs.platform.system.mapper.ColumnInfoMapper;
-import com.zclcs.platform.system.mapper.GeneratorMapper;
 import com.zclcs.platform.system.mapper.TableInfoMapper;
 import com.zclcs.platform.system.service.GeneratorConfigService;
 import com.zclcs.platform.system.service.GeneratorService;
@@ -51,7 +50,6 @@ import static com.zclcs.platform.system.api.bean.entity.table.TableInfoTableDef.
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
-    private final GeneratorMapper generatorMapper;
     private final TableInfoMapper tableInfoMapper;
     private final ColumnInfoMapper columnInfoMapper;
     private final GeneratorConfigService generatorConfigService;
@@ -127,7 +125,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     public void generate(GenerateAo generateAo, HttpServletResponse response) {
         String name = generateAo.getName();
         String remark = generateAo.getRemark();
-        GeneratorConfigVo generatorConfigVo = generatorConfigService.findGeneratorConfig(generateAo.getGeneratorConfigId());
+        GeneratorConfigVo generatorConfigVo = generatorConfigService.findGeneratorConfig(GeneratorConfigVo.builder().id(generateAo.getGeneratorConfigId()).build());
         if (generatorConfigVo == null) {
             throw new MyException("代码生成配置为空");
         }

@@ -16,10 +16,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 字典项 Entity
+ * 字典 Entity
  *
  * @author zclcs
- * @since 2023-03-06 10:56:41.301
+ * @since 2023-09-01 20:03:54.686
  */
 @Data
 @AllArgsConstructor
@@ -36,7 +36,7 @@ public class DictItem extends BaseEntity implements Serializable {
     /**
      * 主键
      */
-    @Id(value = "id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

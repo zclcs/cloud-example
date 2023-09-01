@@ -17,10 +17,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 文件 Entity
+ * minio文件 Entity
  *
  * @author zclcs
- * @since 2021-10-18 10:37:21.262
+ * @since 2023-09-01 19:54:40.426
  */
 @Data
 @AllArgsConstructor
@@ -37,7 +37,7 @@ public class MinioFile extends BaseEntity implements Serializable {
     /**
      * 文件id
      */
-    @Id(value = KeyGenerators.uuid, keyType = KeyType.Generator)
+    @Id(keyType = KeyType.Generator, value = KeyGenerators.uuid)
     private String id;
 
     /**
@@ -69,5 +69,6 @@ public class MinioFile extends BaseEntity implements Serializable {
      */
     @Column("content_type")
     private String contentType;
+
 
 }

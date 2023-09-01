@@ -2,7 +2,7 @@ package com.zclcs.platform.system.api.bean.vo;
 
 
 import com.zclcs.cloud.lib.core.bean.Tree;
-import com.zclcs.cloud.lib.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -54,33 +54,78 @@ public class MenuTreeVo extends Tree<MenuVo> implements Serializable {
 
     /**
      * 类型 @@system_menu.type
+     * 默认值：0
      */
-    @DictText(value = "system_menu.type")
     private String type;
 
     /**
-     * 是否隐藏菜单 @@yes_no 默认否
+     * 类型 @@system_menu.type
      */
-    @DictText(value = "yes_no")
+    private String typeText;
+
+    public String getTypeText() {
+        return DictCacheUtil.getDictTitle("system_menu.type", this.type);
+    }
+
+    /**
+     * 是否隐藏菜单 @@yes_no
+     * 默认值：0
+     */
     private String hideMenu;
 
     /**
-     * 是否忽略KeepAlive缓存 @@yes_no 默认否
+     * 是否隐藏菜单 @@yes_no
      */
-    @DictText(value = "yes_no")
+    private String hideMenuText;
+
+    public String getHideMenuText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.hideMenu);
+    }
+
+    /**
+     * 是否忽略KeepAlive缓存 @@yes_no
+     * 默认值：0
+     */
     private String ignoreKeepAlive;
 
     /**
-     * 隐藏该路由在面包屑上面的显示 @@yes_no 默认否
+     * 是否忽略KeepAlive缓存 @@yes_no
      */
-    @DictText(value = "yes_no")
+    private String ignoreKeepAliveText;
+
+    public String getIgnoreKeepAliveText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.ignoreKeepAlive);
+    }
+
+    /**
+     * 隐藏该路由在面包屑上面的显示 @@yes_no
+     * 默认值：0
+     */
     private String hideBreadcrumb;
 
     /**
-     * 隐藏所有子菜单 @@yes_no 默认否
+     * 隐藏该路由在面包屑上面的显示 @@yes_no
      */
-    @DictText(value = "yes_no")
+    private String hideBreadcrumbText;
+
+    public String getHideBreadcrumbText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.hideBreadcrumb);
+    }
+
+    /**
+     * 隐藏所有子菜单 @@yes_no
+     * 默认值：0
+     */
     private String hideChildrenInMenu;
+
+    /**
+     * 隐藏所有子菜单 @@yes_no
+     */
+    private String hideChildrenInMenuText;
+
+    public String getHideChildrenInMenuText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.hideChildrenInMenu);
+    }
 
     /**
      * 当前激活的菜单。用于配置详情页时左侧激活的菜单路径

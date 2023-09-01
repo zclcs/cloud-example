@@ -13,61 +13,63 @@ import java.util.List;
  * 用户操作日志 Service接口
  *
  * @author zclcs
- * @since 2023-01-10 10:40:01.346
+ * @since 2023-09-01 19:55:02.695
  */
 public interface LogService extends IService<Log> {
 
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param logVo      logVo
-     * @return BasePage<LogVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param logVo      {@link LogVo}
+     * @return {@link LogVo}
      */
     BasePage<LogVo> findLogPage(BasePageAo basePageAo, LogVo logVo);
 
     /**
      * 查询（所有）
      *
-     * @param logVo logVo
-     * @return List<LogVo>
+     * @param logVo {@link LogVo}
+     * @return {@link LogVo}
      */
     List<LogVo> findLogList(LogVo logVo);
 
     /**
      * 查询（单个）
      *
-     * @param logVo logVo
-     * @return LogVo
+     * @param logVo {@link LogVo}
+     * @return {@link LogVo}
      */
     LogVo findLog(LogVo logVo);
 
     /**
      * 统计
      *
-     * @param logVo logVo
-     * @return LogVo
+     * @param logVo {@link LogVo}
+     * @return 统计值
      */
     Long countLog(LogVo logVo);
 
     /**
-     * 新增日志
+     * 新增
      *
-     * @param logAo
+     * @param logAo {@link LogAo}
+     * @return {@link Log}
      */
-    void createLog(LogAo logAo);
+    Log createLog(LogAo logAo);
 
     /**
-     * 批量新增日志
+     * 批量新增
      *
      * @param logAos {@link LogAo}
+     * @return {@link Log}
      */
     void createLogBatch(List<LogAo> logAos);
 
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteLog(List<Long> ids);
 

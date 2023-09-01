@@ -1,6 +1,7 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * minio桶 Vo
  *
  * @author zclcs
- * @since 2021-10-21 16:45:35.202
+ * @since 2023-09-01 19:54:44.135
  */
 @Data
 @AllArgsConstructor
@@ -30,16 +31,19 @@ public class MinioBucketVo extends BaseEntity implements Serializable {
 
     /**
      * 桶id
+     * 默认值：
      */
     private Long id;
 
     /**
      * 桶名称
+     * 默认值：
      */
     private String bucketName;
 
     /**
      * 桶权限
+     * 默认值：
      */
     private String bucketPolicy;
 

@@ -20,46 +20,46 @@ public interface BlockLogService extends IService<BlockLog> {
     /**
      * 查询（分页）
      *
-     * @param basePageAo basePageAo
-     * @param blockLogVo blockLogVo
-     * @return BasePage<BlockLogVo>
+     * @param basePageAo {@link BasePageAo}
+     * @param blockLogVo {@link BlockLogVo}
+     * @return {@link BlockLogVo}
      */
     BasePage<BlockLogVo> findBlockLogPage(BasePageAo basePageAo, BlockLogVo blockLogVo);
 
     /**
      * 查询（所有）
      *
-     * @param blockLogVo blockLogVo
-     * @return List<BlockLogVo>
+     * @param blockLogVo {@link BlockLogVo}
+     * @return {@link BlockLogVo}
      */
     List<BlockLogVo> findBlockLogList(BlockLogVo blockLogVo);
 
     /**
      * 查询（单个）
      *
-     * @param blockLogVo blockLogVo
-     * @return BlockLogVo
+     * @param blockLogVo {@link BlockLogVo}
+     * @return {@link BlockLogVo}
      */
     BlockLogVo findBlockLog(BlockLogVo blockLogVo);
 
     /**
      * 统计
      *
-     * @param blockLogVo blockLogVo
-     * @return BlockLogVo
+     * @param blockLogVo {@link BlockLogVo}
+     * @return 统计值
      */
     Long countBlockLog(BlockLogVo blockLogVo);
 
     /**
      * 新增
      *
-     * @param blockLogAo blockLogAo
-     * @return BlockLog
+     * @param blockLogAo {@link BlockLogAo}
+     * @return {@link BlockLog}
      */
     BlockLog createBlockLog(BlockLogAo blockLogAo);
 
     /**
-     * 批量新增
+     * 批量添加
      *
      * @param blockLogAos {@link BlockLogAo}
      */
@@ -68,7 +68,7 @@ public interface BlockLogService extends IService<BlockLog> {
     /**
      * 删除
      *
-     * @param ids ids
+     * @param ids 表id集合
      */
     void deleteBlockLog(List<Long> ids);
 

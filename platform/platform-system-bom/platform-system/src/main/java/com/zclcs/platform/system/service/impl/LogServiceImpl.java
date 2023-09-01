@@ -92,8 +92,10 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createLog(LogAo logAo) {
-        this.save(genLog(logAo));
+    public Log createLog(LogAo logAo) {
+        Log log = genLog(logAo);
+        this.save(log);
+        return log;
     }
 
     @Override

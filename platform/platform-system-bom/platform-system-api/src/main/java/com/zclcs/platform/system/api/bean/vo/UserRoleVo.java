@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +15,7 @@ import java.io.Serializable;
  * 用户角色关联 Vo
  *
  * @author zclcs
- * @since 2023-01-10 10:39:38.682
+ * @since 2023-09-01 19:54:58.035
  */
 @Data
 @AllArgsConstructor
@@ -31,24 +30,24 @@ public class UserRoleVo extends BaseEntity implements Serializable {
 
     /**
      * 用户id
+     * 默认值：
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 角色id
+     * 默认值：
      */
     private Long roleId;
 
     /**
      * 用户名称
      */
-    @Column(ignore = true)
     private String username;
 
     /**
      * 角色名称
      */
-    @Column(ignore = true)
     private String roleName;
 
 

@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
  * 部门 Vo
  *
  * @author zclcs
- * @since 2023-01-10 10:39:10.151
+ * @since 2023-09-01 19:53:38.826
  */
 @Data
 @AllArgsConstructor
@@ -32,39 +31,42 @@ public class DeptVo extends BaseEntity implements Serializable {
 
     /**
      * 部门id
+     * 默认值：
      */
     private Long deptId;
 
     /**
      * 部门编码
+     * 默认值：
      */
     private String deptCode;
 
     /**
      * 上级部门编码
+     * 默认值：0
      */
     private String parentCode;
 
     /**
      * 部门名称
+     * 默认值：
      */
     private String deptName;
 
     /**
      * 排序
+     * 默认值：1
      */
     private Double orderNum;
 
     /**
      * 创建时间-开始
      */
-    @Column(ignore = true)
     private LocalDate createTimeFrom;
 
     /**
      * 创建时间-结束
      */
-    @Column(ignore = true)
     private LocalDate createTimeTo;
 
 

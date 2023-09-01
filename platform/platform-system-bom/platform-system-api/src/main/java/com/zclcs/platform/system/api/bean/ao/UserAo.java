@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.bean.ao;
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
+import com.zclcs.cloud.lib.dict.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,7 +17,7 @@ import java.util.List;
  * 用户 Ao
  *
  * @author zclcs
- * @since 2023-01-10 10:39:34.182
+ * @since 2023-09-01 19:55:21.249
  */
 @Data
 @AllArgsConstructor
@@ -32,26 +32,30 @@ public class UserAo implements Serializable {
 
     /**
      * 用户id
+     * 默认值：
      */
     @NotNull(message = "{required}", groups = UpdateStrategy.class)
     private Long userId;
 
     /**
      * 用户名
+     * 默认值：
      */
-    @Size(max = 50, message = "{noMoreThan}")
+    @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String username;
 
     /**
      * 用户昵称
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String realName;
 
     /**
-     * 密码 不填使用默认密码
+     * 密码
+     * 默认值：默认密码
      */
     @Size(max = 128, message = "{noMoreThan}")
 //    @NotBlank(message = "{required}")
@@ -59,61 +63,73 @@ public class UserAo implements Serializable {
 
     /**
      * 部门id
+     * 默认值：0
      */
+    @NotNull(message = "{required}")
     private Long deptId;
 
     /**
      * 邮箱
+     * 默认值：
      */
     @Size(max = 128, message = "{noMoreThan}")
     private String email;
 
     /**
      * 联系电话
+     * 默认值：
      */
     @Size(max = 20, message = "{noMoreThan}")
     private String mobile;
 
     /**
-     * 状态 @@system_user.status 默认有效
+     * 状态 @@system_user.status
+     * 默认值：1
      */
+    @DictValid(value = "system_user.status", message = "{dict}")
     @Size(max = 1, message = "{noMoreThan}")
-    @DictValid(value = "system_user.status")
+    @NotBlank(message = "{required}")
     private String status;
 
     /**
      * 最近访问时间
+     * 默认值：CURRENT_TIMESTAMP
      */
     private LocalDateTime lastLoginTime;
 
     /**
      * 性别 @@system_user.gender
+     * 默认值：
      */
+    @DictValid(value = "system_user.gender", message = "{dict}")
     @Size(max = 1, message = "{noMoreThan}")
-    @DictValid(value = "system_user.gender")
     private String gender;
 
     /**
      * 是否开启tab @@yes_no
+     * 默认值：
      */
+    @DictValid(value = "yes_no", message = "{dict}")
     @Size(max = 1, message = "{noMoreThan}")
-    @DictValid(value = "yes_no")
     private String isTab;
 
     /**
      * 主题
+     * 默认值：
      */
     @Size(max = 10, message = "{noMoreThan}")
     private String theme;
 
     /**
      * 头像
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     private String avatar;
 
     /**
      * 描述
+     * 默认值：
      */
     @Size(max = 100, message = "{noMoreThan}")
     private String description;

@@ -50,8 +50,9 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
     }
 
     @Override
-    public GeneratorConfigVo findGeneratorConfig(Long id) {
-        return this.findGeneratorConfig(GeneratorConfigVo.builder().id(id).build());
+    public Long countGeneratorConfig(GeneratorConfigVo generatorConfigVo) {
+        QueryWrapper queryWrapper = getQueryWrapper(generatorConfigVo);
+        return this.mapper.selectCountByQuery(queryWrapper);
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.io.Serializable;
  * minio桶 Entity
  *
  * @author zclcs
- * @since 2021-10-21 16:45:35.202
+ * @since 2023-09-01 19:54:44.135
  */
 @Data
 @AllArgsConstructor
@@ -50,5 +50,6 @@ public class MinioBucket extends BaseEntity implements Serializable {
      */
     @Column("bucket_policy")
     private String bucketPolicy;
+
 
 }

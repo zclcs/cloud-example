@@ -105,8 +105,6 @@ public class CustomSaTokenListener implements SaTokenListener {
         loginLog.setBrowser(ua.getBrowser().getName());
         loginLog.setUsername(username);
         // 发送异步日志事件
-        loginLog.setCreateBy(username);
-        loginLog.setUpdateBy(username);
         return loginLog;
     }
 }

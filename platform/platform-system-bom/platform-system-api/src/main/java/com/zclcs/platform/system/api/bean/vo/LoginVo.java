@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zclcs.cloud.lib.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,77 +32,115 @@ public class LoginVo implements Serializable {
 
     /**
      * 用户id
+     * 默认值：
      */
     private Long userId;
 
     /**
      * 用户名
+     * 默认值：
      */
     private String username;
 
     /**
      * 用户昵称
+     * 默认值：
      */
     private String realName;
 
     /**
      * 密码
+     * 默认值：
      */
     @JsonIgnore
     private String password;
 
     /**
+     * 部门id
+     * 默认值：0
+     */
+    private Long deptId;
+
+    /**
      * 邮箱
+     * 默认值：
      */
     private String email;
 
     /**
      * 联系电话
+     * 默认值：
      */
     private String mobile;
 
     /**
      * 状态 @@system_user.status
+     * 默认值：1
      */
-    @DictText(value = "system_user.status")
     private String status;
 
     /**
+     * 状态 @@system_user.status
+     */
+    private String statusText;
+
+    public String getStatusText() {
+        return DictCacheUtil.getDictTitle("system_user.status", this.status);
+    }
+
+    /**
      * 最近访问时间
+     * 默认值：CURRENT_TIMESTAMP
      */
     private LocalDateTime lastLoginTime;
 
     /**
      * 性别 @@system_user.gender
+     * 默认值：
      */
-    @DictText(value = "system_user.gender")
     private String gender;
+
+    /**
+     * 性别 @@system_user.gender
+     */
+    private String genderText;
+
+    public String getGenderText() {
+        return DictCacheUtil.getDictTitle("system_user.gender", this.gender);
+    }
+
+    /**
+     * 是否开启tab @@yes_no
+     * 默认值：
+     */
+    private String isTab;
 
     /**
      * 是否开启tab @@yes_no
      */
-    @DictText(value = "yes_no")
-    private String isTab;
+    private String isTabText;
+
+    public String getIsTabText() {
+        return DictCacheUtil.getDictTitle("yes_no", this.isTab);
+    }
 
     /**
      * 主题
+     * 默认值：
      */
     private String theme;
 
     /**
      * 头像
+     * 默认值：
      */
     private String avatar;
 
     /**
      * 描述
+     * 默认值：
      */
     private String description;
-
-    /**
-     * 部门id
-     */
-    private Long deptId;
 
 
 }

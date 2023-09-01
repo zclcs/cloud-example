@@ -12,10 +12,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 代码生成配置 Entity
  *
  * @author zclcs
+ * @since 2023-09-01 20:04:43.904
  */
 @Data
 @AllArgsConstructor
@@ -24,7 +28,10 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @Table("system_generator_config")
-public class GeneratorConfig extends BaseEntity {
+public class GeneratorConfig extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键
@@ -43,13 +50,6 @@ public class GeneratorConfig extends BaseEntity {
      */
     @Column("author")
     private String author;
-
-    /**
-     * 版本 @@generate.version
-     * 默认 02
-     */
-    @Column("gen_version")
-    private String genVersion;
 
     /**
      * 基础包名
@@ -76,18 +76,6 @@ public class GeneratorConfig extends BaseEntity {
     private String voPackage;
 
     /**
-     * 缓存实体
-     */
-    @Column("cache_vo_package")
-    private String cacheVoPackage;
-
-    /**
-     * excel实体
-     */
-    @Column("excel_vo_package")
-    private String excelVoPackage;
-
-    /**
      * mapper文件存放路径
      */
     @Column("mapper_package")
@@ -100,7 +88,7 @@ public class GeneratorConfig extends BaseEntity {
     private String mapperXmlPackage;
 
     /**
-     * servcie文件存放路径
+     * service文件存放路径
      */
     @Column("service_package")
     private String servicePackage;
@@ -118,7 +106,7 @@ public class GeneratorConfig extends BaseEntity {
     private String controllerPackage;
 
     /**
-     * 是否去除前缀
+     * 是否去除前缀 @@yes_no
      */
     @Column("is_trim")
     private String isTrim;
@@ -134,5 +122,24 @@ public class GeneratorConfig extends BaseEntity {
      */
     @Column("exclude_columns")
     private String excludeColumns;
+
+    /**
+     * 版本 @@generate.version
+     */
+    @Column("gen_version")
+    private String genVersion;
+
+    /**
+     * 缓存实体
+     */
+    @Column("cache_vo_package")
+    private String cacheVoPackage;
+
+    /**
+     * excel实体
+     */
+    @Column("excel_vo_package")
+    private String excelVoPackage;
+
 
 }
