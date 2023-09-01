@@ -6,12 +6,13 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
- * 企业信息 Cache
+ * 企业信息 CacheVo
  *
  * @author zclcs
- * @since 2023-08-16 14:53:29.133
+ * @since 2023-09-01 16:25:49.782
  */
 @Data
 public class CompanyCacheVo implements Serializable {
@@ -45,9 +46,13 @@ public class CompanyCacheVo implements Serializable {
     private String companyType;
 
     /**
-     * 企业登记注册类型 @@company_type 字典值
+     * 企业登记注册类型 @@company_type
      */
     private String companyTypeText;
+
+    public String getCompanyTypeText() {
+        return DictCacheUtil.getDictTitle("company_type", this.companyType);
+    }
 
     /**
      * 工商营业执照注册号
@@ -58,11 +63,15 @@ public class CompanyCacheVo implements Serializable {
      * 注册地区编码 array @@area_code
      */
     private String areaCode;
-
+    
     /**
-     * 注册地区编码 array @@area_code 字典值
+     * 注册地区编码 array @@area_code
      */
     private String areaCodeText;
+
+    public String getAreaCodeText() {
+        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
+    }
 
     /**
      * 企业营业地址
@@ -100,9 +109,13 @@ public class CompanyCacheVo implements Serializable {
     private String legalManIdCardType;
 
     /**
-     * 法定代表人证件类型 @@id_card_type 字典值
+     * 法定代表人证件类型 @@id_card_type
      */
     private String legalManIdCardTypeText;
+
+    public String getLegalManIdCardTypeText() {
+        return DictCacheUtil.getDictTitle("id_card_type", this.legalManIdCardType);
+    }
 
     /**
      * 法定代表人证件号码
@@ -125,9 +138,13 @@ public class CompanyCacheVo implements Serializable {
     private String capitalCurrencyType;
 
     /**
-     * 资本币种 @@currency_type 字典值
+     * 资本币种 @@currency_type
      */
     private String capitalCurrencyTypeText;
+
+    public String getCapitalCurrencyTypeText() {
+        return DictCacheUtil.getDictTitle("currency_type", this.capitalCurrencyType);
+    }
 
     /**
      * 注册日期
@@ -178,22 +195,6 @@ public class CompanyCacheVo implements Serializable {
      * 企业备注
      */
     private String remark;
-
-    public String getCompanyTypeText() {
-        return DictCacheUtil.getDictTitle("company_type", this.companyType);
-    }
-
-    public String getAreaCodeText() {
-        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
-    }
-
-    public String getLegalManIdCardTypeText() {
-        return DictCacheUtil.getDictTitle("id_card_type", this.legalManIdCardType);
-    }
-
-    public String getCapitalCurrencyTypeText() {
-        return DictCacheUtil.getDictTitle("currency_type", this.capitalCurrencyType);
-    }
 
 
 }

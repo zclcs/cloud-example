@@ -39,6 +39,7 @@ public class ${className}Ao implements Serializable {
     <#list columns as column>
     /**
      * ${column.remark}
+     * 默认值：${column.defaultValue}
      */
     <#if column.hasDict = true>
     @DictValid(value = "${column.remarkDict}", message = "{dict}")

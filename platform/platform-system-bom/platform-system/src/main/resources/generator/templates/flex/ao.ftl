@@ -19,11 +19,11 @@ import java.math.BigDecimal;
 </#if>
 
 /**
-* ${tableComment} Ao
-*
-* @author ${author}
-* @since ${date}
-*/
+ * ${tableComment} Ao
+ *
+ * @author ${author}
+ * @since ${date}
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,9 +38,9 @@ public class ${className}Ao implements Serializable {
 <#if columns??>
     <#list columns as column>
     /**
-    * ${column.remark}
-    * 默认值：${column.defaultValue}
-    */
+     * ${column.remark}
+     * 默认值：${column.defaultValue}
+     */
     <#if column.hasDict = true && column.isArray = true && column.isTree = false>
     @DictValid(value = "${column.remarkDict}", isArray = true, message = "{dict}")
     </#if>

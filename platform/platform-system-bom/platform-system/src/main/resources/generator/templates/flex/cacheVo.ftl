@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 </#if>
 
 /**
-* ${tableComment} CacheVo
-*
-* @author ${author}
-* @since ${date}
-*/
+ * ${tableComment} CacheVo
+ *
+ * @author ${author}
+ * @since ${date}
+ */
 @Data
-public class ${className}CacheVo extends BaseEntity implements Serializable {
+public class ${className}CacheVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,8 +28,8 @@ public class ${className}CacheVo extends BaseEntity implements Serializable {
 <#if columns??>
     <#list columns as column>
     /**
-    * ${column.remark}
-    */
+     * ${column.remark}
+     */
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
     || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
@@ -59,11 +59,11 @@ public class ${className}CacheVo extends BaseEntity implements Serializable {
     <#if column.type = 'decimal' || column.type = 'numeric'>
     private BigDecimal ${column.field?uncap_first};
     </#if>
+    <#if column.hasDict = true && column.isArray = false>
 
     /**
-    * ${column.remark}
-    */
-    <#if column.hasDict = true && column.isArray = false>
+     * ${column.remark}
+     */
     private String ${column.field?uncap_first}Text;
 
     public String get${column.field?cap_first}Text() {
@@ -71,6 +71,10 @@ public class ${className}CacheVo extends BaseEntity implements Serializable {
     }
     </#if>
     <#if column.hasDict = true && column.isArray = true>
+    
+    /**
+     * ${column.remark}
+     */
     private String ${column.field?uncap_first}Text;
 
     public String get${column.field?cap_first}Text() {

@@ -95,18 +95,18 @@ public class GeneratorServiceImpl implements GeneratorService {
                         COLUMN_INFO.NAME,
                         COLUMN_INFO.KEY,
                         case_()
-                                .when(COLUMN_INFO.KEY.eq("PRI")).then("1")
-                                .else_("0")
+                                .when(COLUMN_INFO.KEY.eq("PRI")).then("true")
+                                .else_("false")
                                 .end().as("isKey"),
                         COLUMN_INFO.NULLABLE,
                         case_()
-                                .when(COLUMN_INFO.NULLABLE.eq("YES")).then("1")
-                                .else_("0")
+                                .when(COLUMN_INFO.NULLABLE.eq("YES")).then("true")
+                                .else_("false")
                                 .end().as("isNullable"),
                         COLUMN_INFO.TYPE,
                         case_()
-                                .when(COLUMN_INFO.CHAR_MAX_LENGTH.isNull()).then("1")
-                                .else_("0")
+                                .when(COLUMN_INFO.CHAR_MAX_LENGTH.isNotNull()).then("true")
+                                .else_("false")
                                 .end().as("isCharMaxLength"),
                         COLUMN_INFO.CHAR_MAX_LENGTH,
                         COLUMN_INFO.REMARK,

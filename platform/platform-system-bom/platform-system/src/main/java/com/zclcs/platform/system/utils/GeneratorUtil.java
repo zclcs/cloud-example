@@ -65,14 +65,14 @@ public class GeneratorUtil {
     }
 
     public void generateCacheVoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
-        String suffix = Generator.CACHE_VO_TEMPLATE;
+        String suffix = Generator.CACHE_VO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getCacheVoPackage(), suffix, false);
         String templateName = Generator.CACHE_VO_TEMPLATE;
         getDao(columnInfos, configure, path, templateName);
     }
 
     public void generateExcelVoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
-        String suffix = Generator.EXCEL_VO_TEMPLATE;
+        String suffix = Generator.EXCEL_VO_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getExcelVoPackage(), suffix, false);
         String templateName = Generator.EXCEL_VO_TEMPLATE;
         getDao(columnInfos, configure, path, templateName);

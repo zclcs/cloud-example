@@ -15,13 +15,13 @@ import java.math.BigDecimal;
 </#if>
 
 /**
-* ${tableComment} ExcelVo
-*
-* @author ${author}
-* @since ${date}
-*/
+ * ${tableComment} ExcelVo
+ *
+ * @author ${author}
+ * @since ${date}
+ */
 @Data
-public class ${className}ExcelVo extends BaseEntity implements Serializable {
+public class ${className}ExcelVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,8 +29,8 @@ public class ${className}ExcelVo extends BaseEntity implements Serializable {
 <#if columns??>
     <#list columns as column>
     /**
-    * ${column.remark}
-    */
+     * ${column.remark}
+     */
     @ExcelProperty(value = "${column.remark}")
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
@@ -61,18 +61,16 @@ public class ${className}ExcelVo extends BaseEntity implements Serializable {
     <#if column.type = 'decimal' || column.type = 'numeric'>
     private BigDecimal ${column.field?uncap_first};
     </#if>
-
-    /**
-    * ${column.remark}
-    */
     <#if column.hasDict = true && column.isArray = false>
+
     public void set${column.field?cap_first}(String ${column.field?uncap_first}) {
-        this.this.${column.field?uncap_first} = DictCacheUtil.getDictTitle("${column.remarkDict}", ${column.field?uncap_first});
+        this.${column.field?uncap_first} = DictCacheUtil.getDictTitle("${column.remarkDict}", ${column.field?uncap_first});
     }
     </#if>
     <#if column.hasDict = true && column.isArray = true>
+    
     public void set${column.field?cap_first}(String ${column.field?uncap_first}) {
-        this.this.${column.field?uncap_first} = DictCacheUtil.getDictTitleArray("${column.remarkDict}", ${column.field?uncap_first});
+        this.${column.field?uncap_first} = DictCacheUtil.getDictTitleArray("${column.remarkDict}", ${column.field?uncap_first});
     }
     </#if>
 

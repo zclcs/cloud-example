@@ -22,7 +22,7 @@ import java.util.List;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-08-16 14:53:29.133
+ * @since 2023-09-01 16:25:49.782
  */
 @Slf4j
 @Service
@@ -32,8 +32,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Override
     public BasePage<CompanyVo> findCompanyPage(BasePageAo basePageAo, CompanyVo companyVo) {
         QueryWrapper queryWrapper = getQueryWrapper(companyVo);
-        Page<CompanyVo> companyVoPage = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, CompanyVo.class);
-        return new BasePage<>(companyVoPage);
+        Page<CompanyVo> page = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, CompanyVo.class);
+        return new BasePage<>(page);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     @Override
     public Long countCompany(CompanyVo companyVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(companyVo);
+    QueryWrapper queryWrapper = getQueryWrapper(companyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -58,7 +58,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         QueryWrapper queryWrapper = new QueryWrapper();
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

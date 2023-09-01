@@ -7,12 +7,13 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
- * 企业信息 Excel
+ * 企业信息 ExcelVo
  *
  * @author zclcs
- * @since 2023-08-16 14:53:29.133
+ * @since 2023-09-01 16:25:49.782
  */
 @Data
 public class CompanyExcelVo implements Serializable {
@@ -47,8 +48,12 @@ public class CompanyExcelVo implements Serializable {
     /**
      * 企业登记注册类型 @@company_type
      */
-    @ExcelProperty(value = "企业登记注册类型")
+    @ExcelProperty(value = "企业登记注册类型 @@company_type")
     private String companyType;
+
+    public void setCompanyType(String companyType) {
+        this.companyType = DictCacheUtil.getDictTitle("company_type", companyType);
+    }
 
     /**
      * 工商营业执照注册号
@@ -59,8 +64,12 @@ public class CompanyExcelVo implements Serializable {
     /**
      * 注册地区编码 array @@area_code
      */
-    @ExcelProperty(value = "注册地区编码")
+    @ExcelProperty(value = "注册地区编码 array @@area_code")
     private String areaCode;
+    
+    public void setAreaCode(String areaCode) {
+        this.areaCode = DictCacheUtil.getDictTitleArray("area_code", areaCode);
+    }
 
     /**
      * 企业营业地址
@@ -101,8 +110,12 @@ public class CompanyExcelVo implements Serializable {
     /**
      * 法定代表人证件类型 @@id_card_type
      */
-    @ExcelProperty(value = "法定代表人证件类型")
+    @ExcelProperty(value = "法定代表人证件类型 @@id_card_type")
     private String legalManIdCardType;
+
+    public void setLegalManIdCardType(String legalManIdCardType) {
+        this.legalManIdCardType = DictCacheUtil.getDictTitle("id_card_type", legalManIdCardType);
+    }
 
     /**
      * 法定代表人证件号码
@@ -125,8 +138,12 @@ public class CompanyExcelVo implements Serializable {
     /**
      * 资本币种 @@currency_type
      */
-    @ExcelProperty(value = "资本币种")
+    @ExcelProperty(value = "资本币种 @@currency_type")
     private String capitalCurrencyType;
+
+    public void setCapitalCurrencyType(String capitalCurrencyType) {
+        this.capitalCurrencyType = DictCacheUtil.getDictTitle("currency_type", capitalCurrencyType);
+    }
 
     /**
      * 注册日期
@@ -179,7 +196,7 @@ public class CompanyExcelVo implements Serializable {
     /**
      * 企业网址
      */
-    @ExcelProperty(value = "营业执照扫描件")
+    @ExcelProperty(value = "企业网址")
     private String webSite;
 
     /**
@@ -187,22 +204,6 @@ public class CompanyExcelVo implements Serializable {
      */
     @ExcelProperty(value = "企业备注")
     private String remark;
-
-    public void setCompanyType(String companyType) {
-        this.companyType = DictCacheUtil.getDictTitle("company_type", companyType);
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = DictCacheUtil.getDictTitleArray("area_code", areaCode);
-    }
-
-    public void setLegalManIdCardType(String legalManIdCardType) {
-        this.legalManIdCardType = DictCacheUtil.getDictTitle("id_card_type", legalManIdCardType);
-    }
-
-    public void setCapitalCurrencyType(String capitalCurrencyType) {
-        this.capitalCurrencyType = DictCacheUtil.getDictTitle("currency_type", capitalCurrencyType);
-    }
 
 
 }

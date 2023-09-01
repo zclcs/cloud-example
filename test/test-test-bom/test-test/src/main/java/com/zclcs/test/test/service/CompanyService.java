@@ -13,7 +13,7 @@ import java.util.List;
  * 企业信息 Service接口
  *
  * @author zclcs
- * @since 2023-08-16 14:53:29.133
+ * @since 2023-09-01 16:25:49.782
  */
 public interface CompanyService extends IService<Company> {
 
@@ -21,7 +21,7 @@ public interface CompanyService extends IService<Company> {
      * 查询（分页）
      *
      * @param basePageAo {@link BasePageAo}
-     * @param companyVo  {@link CompanyVo}
+     * @param companyVo {@link CompanyVo}
      * @return {@link CompanyVo}
      */
     BasePage<CompanyVo> findCompanyPage(BasePageAo basePageAo, CompanyVo companyVo);
@@ -56,7 +56,7 @@ public interface CompanyService extends IService<Company> {
      * @param companyAo {@link CompanyAo}
      * @return {@link Company}
      */
-    Company createCompany(CompanyAo companyAo);
+     Company createCompany(CompanyAo companyAo);
 
     /**
      * 修改
@@ -64,7 +64,7 @@ public interface CompanyService extends IService<Company> {
      * @param companyAo {@link CompanyAo}
      * @return {@link Company}
      */
-    Company updateCompany(CompanyAo companyAo);
+     Company updateCompany(CompanyAo companyAo);
 
     /**
      * 删除

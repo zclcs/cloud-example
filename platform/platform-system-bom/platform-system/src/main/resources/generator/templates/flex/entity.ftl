@@ -23,11 +23,11 @@ import java.math.BigDecimal;
 </#if>
 
 /**
-* ${tableComment} Entity
-*
-* @author ${author}
-* @since ${date}
-*/
+ * ${tableComment} Entity
+ *
+ * @author ${author}
+ * @since ${date}
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,8 +43,8 @@ public class ${className} extends BaseEntity implements Serializable {
 <#if columns??>
     <#list columns as column>
     /**
-    * ${column.remark}
-    */
+     * ${column.remark}
+     */
     <#if column.isKey = true>
     @Id(value = "${column.name}", keyType = KeyType.Auto)
     <#else>
