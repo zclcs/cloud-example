@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
 import lombok.AllArgsConstructor;
@@ -110,31 +109,26 @@ public class UserVo extends BaseEntity implements Serializable {
     /**
      * 角色id集合
      */
-    @Column(ignore = true)
     private List<Long> roleIds;
 
     /**
      * 数据权限id集合
      */
-    @Column(ignore = true)
     private List<Long> deptIds;
 
     /**
      * 用户角色名称集合
      */
-    @Column(ignore = true)
     private List<String> roleNames;
 
     /**
      * 用户角色名称集合String
      */
-    @Column(ignore = true)
     private String roleNameString;
 
     /**
      * 用户权限集合
      */
-    @Column(ignore = true)
     private List<String> permissions;
 
 
