@@ -168,6 +168,10 @@ public class GeneratorServiceImpl implements GeneratorService {
             GeneratorUtil.generateServiceFile(columnInfos, generatorConfigVo);
             GeneratorUtil.generateServiceImplFile(columnInfos, generatorConfigVo);
             GeneratorUtil.generateControllerFile(columnInfos, generatorConfigVo);
+            if ("02".equals(generatorConfigVo.getGenVersion())) {
+                GeneratorUtil.generateCacheVoFile(columnInfos, generatorConfigVo);
+                GeneratorUtil.generateExcelVoFile(columnInfos, generatorConfigVo);
+            }
             // 打包
             String zipFile = System.currentTimeMillis() + Params.SUFFIX;
             FileUtil.compress(Generator.TEMP_PATH + "src", zipFile);

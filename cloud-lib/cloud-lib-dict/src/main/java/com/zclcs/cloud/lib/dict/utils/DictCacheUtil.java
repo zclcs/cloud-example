@@ -1,6 +1,7 @@
 package com.zclcs.cloud.lib.dict.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.cache.DictCache;
 import com.zclcs.cloud.lib.dict.cache.DictChildrenCache;
@@ -72,6 +73,35 @@ public class DictCacheUtil {
         }
         DictItemCacheVo dictItemByDictNameAndValue = getDictItemByDictNameAndValue(dictName, value);
         return dictItemByDictNameAndValue == null ? "" : dictItemByDictNameAndValue.getTitle();
+    }
+
+    public static String getDictTitleArray(String dictName, String value) {
+        return getDictTitleArray(dictName, value, Strings.COMMA, Strings.SLASH, false);
+    }
+
+    /**
+     * @param dictName   字典名称
+     * @param value      字典code
+     * @param separator  字典code分隔符
+     * @param join       字典文本分隔符
+     * @param ignoreNull 是否忽略字典文本为 null 的数据。true：忽略，跳过；false：不忽略，输出 '' 字符串
+     * @return 字典文本
+     */
+    public static String getDictTitleArray(String dictName, String value, String separator, String join, boolean ignoreNull) {
+        if (StrUtil.isBlank(value)) {
+            return "";
+        }
+        List<String> split = StrUtil.split(value, separator);
+        StringBuilder sb = new StringBuilder();
+        for (String s : split) {
+            String dictTitle = getDictTitle(dictName, s);
+            if (StrUtil.isBlank(dictTitle) && ignoreNull) {
+                continue;
+            }
+            sb.append(dictTitle).append(join);
+        }
+        String finalDictTitle = sb.toString();
+        return StrUtil.isBlank(finalDictTitle) ? finalDictTitle : finalDictTitle.substring(0, finalDictTitle.length() - 1);
     }
 
     @Autowired(required = false)

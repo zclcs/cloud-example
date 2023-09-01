@@ -70,21 +70,21 @@ CREATE TABLE IF NOT EXISTS `system_dept`
 CREATE TABLE IF NOT EXISTS `system_dict_item`
 (
     `id`                  bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `dict_name`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典key',
-    `parent_value`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '父级字典值',
-    `value`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '值',
-    `title`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '标签',
-    `type`                char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NOT NULL DEFAULT '0' COMMENT '字典类型 @@system.dict_item.type',
-    `whether_system_dict` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NOT NULL DEFAULT '1' COMMENT '是否系统字典 @@yes_no',
-    `description`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT '' COMMENT '描述',
+    `dict_name`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '字典key',
+    `parent_value`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '父级字典值',
+    `value`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '值',
+    `title`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标签',
+    `type`                char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NOT NULL DEFAULT '0' COMMENT '字典类型 @@system.dict_item.type',
+    `whether_system_dict` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NOT NULL DEFAULT '1' COMMENT '是否系统字典 @@yes_no',
+    `description`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT '' COMMENT '描述',
     `sorted`              int(11)                                                       NOT NULL DEFAULT 0 COMMENT '排序（升序）',
-    `is_disabled`         char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL     DEFAULT '0' COMMENT '是否禁用 @@yes_no',
+    `is_disabled`         char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL     DEFAULT '0' COMMENT '是否禁用 @@yes_no',
     `version`             bigint(20)                                                    NULL     DEFAULT 1 COMMENT '版本',
     `tenant_id`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT '' COMMENT '租户id',
     `create_at`           datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_at`           datetime                                                      NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `create_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT '' COMMENT '创建人',
-    `update_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT '' COMMENT '修改人',
+    `create_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT '' COMMENT '创建人',
+    `update_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT '' COMMENT '修改人',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uk_system_dict_item_value_dict_name` (`dict_name`, `value`) USING BTREE COMMENT '字典项表名code唯一索引',
     INDEX `nk_system_dict_item_value` (`value`) USING BTREE COMMENT '字典项value索引',
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `system_dict_item`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '字典项'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '字典项'
   ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `system_generator_config`

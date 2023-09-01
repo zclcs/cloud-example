@@ -1,5 +1,6 @@
 package com.zclcs.test.test.api.bean.cache;
 
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
 import java.io.Serial;
@@ -44,6 +45,11 @@ public class CompanyCacheVo implements Serializable {
     private String companyType;
 
     /**
+     * 企业登记注册类型 @@company_type 字典值
+     */
+    private String companyTypeText;
+
+    /**
      * 工商营业执照注册号
      */
     private String licenseNum;
@@ -52,6 +58,11 @@ public class CompanyCacheVo implements Serializable {
      * 注册地区编码 array @@area_code
      */
     private String areaCode;
+
+    /**
+     * 注册地区编码 array @@area_code 字典值
+     */
+    private String areaCodeText;
 
     /**
      * 企业营业地址
@@ -89,6 +100,11 @@ public class CompanyCacheVo implements Serializable {
     private String legalManIdCardType;
 
     /**
+     * 法定代表人证件类型 @@id_card_type 字典值
+     */
+    private String legalManIdCardTypeText;
+
+    /**
      * 法定代表人证件号码
      */
     private String legalManIdCardNumber;
@@ -107,6 +123,11 @@ public class CompanyCacheVo implements Serializable {
      * 资本币种 @@currency_type
      */
     private String capitalCurrencyType;
+
+    /**
+     * 资本币种 @@currency_type 字典值
+     */
+    private String capitalCurrencyTypeText;
 
     /**
      * 注册日期
@@ -157,6 +178,22 @@ public class CompanyCacheVo implements Serializable {
      * 企业备注
      */
     private String remark;
+
+    public String getCompanyTypeText() {
+        return DictCacheUtil.getDictTitle("company_type", this.companyType);
+    }
+
+    public String getAreaCodeText() {
+        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
+    }
+
+    public String getLegalManIdCardTypeText() {
+        return DictCacheUtil.getDictTitle("id_card_type", this.legalManIdCardType);
+    }
+
+    public String getCapitalCurrencyTypeText() {
+        return DictCacheUtil.getDictTitle("currency_type", this.capitalCurrencyType);
+    }
 
 
 }

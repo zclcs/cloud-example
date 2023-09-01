@@ -31,4 +31,6 @@ public @interface DictValid {
      * @return 数据字典代码
      */
     String value();
+
+    boolean isArray() default false;
 }

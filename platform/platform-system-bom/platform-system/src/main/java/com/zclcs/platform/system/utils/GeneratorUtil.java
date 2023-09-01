@@ -64,6 +64,20 @@ public class GeneratorUtil {
         getDao(columnInfos, configure, path, templateName);
     }
 
+    public void generateCacheVoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
+        String suffix = Generator.CACHE_VO_TEMPLATE;
+        String path = getFilePath(configure, configure.getCacheVoPackage(), suffix, false);
+        String templateName = Generator.CACHE_VO_TEMPLATE;
+        getDao(columnInfos, configure, path, templateName);
+    }
+
+    public void generateExcelVoFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {
+        String suffix = Generator.EXCEL_VO_TEMPLATE;
+        String path = getFilePath(configure, configure.getExcelVoPackage(), suffix, false);
+        String templateName = Generator.EXCEL_VO_TEMPLATE;
+        getDao(columnInfos, configure, path, templateName);
+    }
+
     public void getDao(List<ColumnInfo> columnInfos, GeneratorConfigVo configure, String path, String templateName) throws Exception {
         File entityFile = new File(path);
         Map<String, Object> map = BeanUtil.beanToMap(configure);
@@ -126,8 +140,10 @@ public class GeneratorUtil {
     }
 
     @SuppressWarnings("all")
-    public void generateFileByTemplate(String templateName, File file, Object data) throws Exception {
-        Template template = getTemplate(templateName);
+    public void generateFileByTemplate(String templateName, File file, Map<String, Object> data) throws Exception {
+        String genVersion = (String) data.get("genVersion");
+        String templateLocation = genVersion.equals("01") ? "generator/templates/plus/" : "generator/templates/flex/";
+        Template template = getTemplate(templateLocation, templateName);
         Files.createParentDirs(file);
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8), 10240)) {
@@ -139,13 +155,13 @@ public class GeneratorUtil {
         }
     }
 
-    private Template getTemplate(String templateName) throws Exception {
+    private Template getTemplate(String templateLocation, String templateName) throws Exception {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
-        String templatePath = Objects.requireNonNull(GeneratorUtil.class.getResource("/generator/templates/")).getPath();
+        String templatePath = Objects.requireNonNull(GeneratorUtil.class.getResource("/" + templateLocation)).getPath();
         File file = new File(templatePath);
         if (!file.exists()) {
             templatePath = System.getProperties().getProperty(CommonCore.JAVA_TEMP_DIR);
-            FileUtil.copy(Objects.requireNonNull(GeneratorUtil.class.getClassLoader().getResource("classpath:generator/templates/" + templateName)).getPath(), templatePath + File.separator + templateName, true);
+            FileUtil.copy(Objects.requireNonNull(GeneratorUtil.class.getClassLoader().getResource("classpath:" + templateLocation + templateName)).getPath(), templatePath + File.separator + templateName, true);
         }
         configuration.setDirectoryForTemplateLoading(new File(templatePath));
         configuration.setDefaultEncoding(CommonCore.UTF8);

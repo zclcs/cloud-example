@@ -45,6 +45,13 @@ public class GeneratorConfig extends BaseEntity {
     private String author;
 
     /**
+     * 版本 @@generate.version
+     * 默认 02
+     */
+    @Column("gen_version")
+    private String genVersion;
+
+    /**
      * 基础包名
      */
     @Column("base_package")
@@ -67,6 +74,18 @@ public class GeneratorConfig extends BaseEntity {
      */
     @Column("vo_package")
     private String voPackage;
+
+    /**
+     * 缓存实体
+     */
+    @Column("cache_vo_package")
+    private String cacheVoPackage;
+
+    /**
+     * excel实体
+     */
+    @Column("excel_vo_package")
+    private String excelVoPackage;
 
     /**
      * mapper文件存放路径

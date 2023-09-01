@@ -40,6 +40,15 @@ public class GeneratorConfigAo {
     private String author;
 
     /**
+     * 版本 @@generate.version
+     * 默认 02
+     */
+    @NotBlank(message = "{required}")
+    @Size(max = 2, message = "{noMoreThan}")
+    @DictValid("generate.version")
+    private String genVersion;
+
+    /**
      * 基础包名
      */
     @NotBlank(message = "{required}")
@@ -66,6 +75,20 @@ public class GeneratorConfigAo {
     @NotBlank(message = "{required}")
     @Size(max = 50, message = "{noMoreThan}")
     private String voPackage;
+
+    /**
+     * 缓存实体
+     */
+    @NotBlank(message = "{required}")
+    @Size(max = 50, message = "{noMoreThan}")
+    private String cacheVoPackage;
+
+    /**
+     * excel实体
+     */
+    @NotBlank(message = "{required}")
+    @Size(max = 50, message = "{noMoreThan}")
+    private String excelVoPackage;
 
     /**
      * mapper包名

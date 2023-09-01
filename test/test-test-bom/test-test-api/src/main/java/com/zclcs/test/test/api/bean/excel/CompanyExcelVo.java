@@ -1,6 +1,7 @@
 package com.zclcs.test.test.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
 import java.io.Serial;
@@ -186,6 +187,22 @@ public class CompanyExcelVo implements Serializable {
      */
     @ExcelProperty(value = "企业备注")
     private String remark;
+
+    public void setCompanyType(String companyType) {
+        this.companyType = DictCacheUtil.getDictTitle("company_type", companyType);
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = DictCacheUtil.getDictTitleArray("area_code", areaCode);
+    }
+
+    public void setLegalManIdCardType(String legalManIdCardType) {
+        this.legalManIdCardType = DictCacheUtil.getDictTitle("id_card_type", legalManIdCardType);
+    }
+
+    public void setCapitalCurrencyType(String capitalCurrencyType) {
+        this.capitalCurrencyType = DictCacheUtil.getDictTitle("currency_type", capitalCurrencyType);
+    }
 
 
 }

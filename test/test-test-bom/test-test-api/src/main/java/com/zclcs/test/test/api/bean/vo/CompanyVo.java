@@ -1,8 +1,7 @@
 package com.zclcs.test.test.api.bean.vo;
 
 import com.zclcs.cloud.lib.core.base.BaseEntity;
-import com.zclcs.cloud.lib.dict.json.annotation.Array;
-import com.zclcs.cloud.lib.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,8 +53,12 @@ public class CompanyVo extends BaseEntity implements Serializable {
     /**
      * 企业登记注册类型 @@company_type
      */
-    @DictText(value = "company_type")
     private String companyType;
+
+    /**
+     * 企业登记注册类型 @@company_type 字典值
+     */
+    private String companyTypeText;
 
     /**
      * 工商营业执照注册号
@@ -65,8 +68,12 @@ public class CompanyVo extends BaseEntity implements Serializable {
     /**
      * 注册地区编码 array @@area_code
      */
-    @DictText(value = "area_code", array = @Array)
     private String areaCode;
+
+    /**
+     * 注册地区编码 array @@area_code 字典值
+     */
+    private String areaCodeText;
 
     /**
      * 企业营业地址
@@ -101,8 +108,12 @@ public class CompanyVo extends BaseEntity implements Serializable {
     /**
      * 法定代表人证件类型 @@id_card_type
      */
-    @DictText(value = "id_card_type")
     private String legalManIdCardType;
+
+    /**
+     * 法定代表人证件类型 @@id_card_type 字典值
+     */
+    private String legalManIdCardTypeText;
 
     /**
      * 法定代表人证件号码
@@ -122,8 +133,12 @@ public class CompanyVo extends BaseEntity implements Serializable {
     /**
      * 资本币种 @@currency_type
      */
-    @DictText(value = "currency_type")
     private String capitalCurrencyType;
+
+    /**
+     * 资本币种 @@currency_type 字典值
+     */
+    private String capitalCurrencyTypeText;
 
     /**
      * 注册日期
@@ -174,6 +189,22 @@ public class CompanyVo extends BaseEntity implements Serializable {
      * 企业备注
      */
     private String remark;
+
+    public String getCompanyTypeText() {
+        return DictCacheUtil.getDictTitle("company_type", this.companyType);
+    }
+
+    public String getAreaCodeText() {
+        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
+    }
+
+    public String getLegalManIdCardTypeText() {
+        return DictCacheUtil.getDictTitle("id_card_type", this.legalManIdCardType);
+    }
+
+    public String getCapitalCurrencyTypeText() {
+        return DictCacheUtil.getDictTitle("currency_type", this.capitalCurrencyType);
+    }
 
 
 }

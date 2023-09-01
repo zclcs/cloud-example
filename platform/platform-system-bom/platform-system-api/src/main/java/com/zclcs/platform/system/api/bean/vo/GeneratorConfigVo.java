@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import com.mybatisflex.annotation.Column;
 import com.zclcs.cloud.lib.core.base.BaseEntity;
 import com.zclcs.cloud.lib.dict.json.annotation.DictText;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
@@ -44,6 +45,19 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
     private String author;
 
     /**
+     * 版本 @@generate.version
+     * 默认 02
+     */
+    @DictText("generate.version")
+    private String genVersion;
+
+    /**
+     * 版本 @@generate.version
+     * 默认 02
+     */
+    private String genVersionText;
+
+    /**
      * 基础包名
      */
     private String basePackage;
@@ -62,6 +76,16 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
      * 出参包名
      */
     private String voPackage;
+
+    /**
+     * 缓存实体
+     */
+    private String cacheVoPackage;
+
+    /**
+     * excel实体
+     */
+    private String excelVoPackage;
 
     /**
      * mapper包名
@@ -149,4 +173,7 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
     @Column(ignore = true)
     private String keyName;
 
+    public String getGenVersionText() {
+        return DictCacheUtil.getDictTitle("generate.version", this.genVersion);
+    }
 }

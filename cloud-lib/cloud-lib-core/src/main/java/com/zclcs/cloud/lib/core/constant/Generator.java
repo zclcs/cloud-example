@@ -30,6 +30,14 @@ public interface Generator {
      */
     String VO_FILE_SUFFIX = "Vo.java";
     /**
+     * java类型文件后缀
+     */
+    String CACHE_VO_FILE_SUFFIX = "CacheVo.java";
+    /**
+     * java类型文件后缀
+     */
+    String EXCEL_VO_FILE_SUFFIX = "ExcelVo.java";
+    /**
      * mapper文件类型后缀
      */
     String MAPPER_FILE_SUFFIX = "Mapper.java";
@@ -61,6 +69,14 @@ public interface Generator {
      * 出参
      */
     String VO_TEMPLATE = "vo.ftl";
+    /**
+     * 缓存
+     */
+    String CACHE_VO_TEMPLATE = "cacheVo.ftl";
+    /**
+     * excel
+     */
+    String EXCEL_VO_TEMPLATE = "excelVo.ftl";
     /**
      * mapper模板
      */
