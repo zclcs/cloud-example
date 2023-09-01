@@ -88,11 +88,13 @@ public class GenerateSqlRunner implements ApplicationRunner {
                     "'%s'," +
                     "'%s'," +
                     "'%s');";
-            String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
+            String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
             String values = String.format(valuesFill, getValue(generatorConfig.getServerName())
-                    , getValue(generatorConfig.getAuthor()), getValue(generatorConfig.getBasePackage())
+                    , getValue(generatorConfig.getAuthor()), getValue(generatorConfig.getGenVersion())
+                    , getValue(generatorConfig.getBasePackage())
                     , getValue(generatorConfig.getEntityPackage()), getValue(generatorConfig.getAoPackage())
-                    , getValue(generatorConfig.getVoPackage()), getValue(generatorConfig.getMapperPackage())
+                    , getValue(generatorConfig.getVoPackage()), getValue(generatorConfig.getCacheVoPackage())
+                    , getValue(generatorConfig.getExcelVoPackage()), getValue(generatorConfig.getMapperPackage())
                     , getValue(generatorConfig.getMapperXmlPackage()), getValue(generatorConfig.getServicePackage())
                     , getValue(generatorConfig.getServiceImplPackage()), getValue(generatorConfig.getControllerPackage())
                     , getValue(generatorConfig.getIsTrim()), getValue(generatorConfig.getTrimValue())
@@ -101,7 +103,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
             String uniqueSqlFill = "server_name=%s";
             String uniqueSql = String.format(uniqueSqlFill, getValue(generatorConfig.getServerName()));
             String sql = String.format(sqlFill, "system_generator_config",
-                    "server_name,author,base_package,entity_package,ao_package,vo_package,mapper_package,mapper_xml_package," +
+                    "server_name,author,gen_version,base_package,entity_package,ao_package,vo_package,cache_vo_package,excel_vo_package,mapper_package,mapper_xml_package," +
                             "service_package,service_impl_package,controller_package,is_trim,trim_value,exclude_columns,create_at,create_by", values, uniqueSql);
             sqlBuilder.append(sql).append("\n");
         }
