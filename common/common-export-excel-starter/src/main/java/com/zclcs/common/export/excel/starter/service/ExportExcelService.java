@@ -18,9 +18,10 @@ public interface ExportExcelService<T, K> {
     /**
      * 手动分页查询
      *
-     * @param t          入参泛型
-     * @param startIndex 开始
-     * @param endIndex   结束
+     * @param t         入参泛型
+     * @param pageNum   页码
+     * @param pageSize  页数
+     * @param totalRows 数据总量
      * @return 出参泛型
      */
     List<K> getDataPaginateAs(T t, Long pageNum, Long pageSize, Long totalRows);

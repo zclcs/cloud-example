@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * 企业信息 Entity
  *
  * @author zclcs
- * @since 2023-09-01 16:25:49.782
+ * @since 2023-09-02 17:12:18.866
  */
 @Data
 @AllArgsConstructor
@@ -38,7 +38,7 @@ public class Company extends BaseEntity implements Serializable {
     /**
      * 企业id
      */
-    @Id(value = "company_id", keyType = KeyType.Auto)
+    @Id(keyType = KeyType.Auto)
     private Long companyId;
 
     /**

@@ -13,10 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author zclcs
+ */
 @Slf4j
 public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, String>> {
 
-    private ImportExcelService<T> importExcelService;
+    private final ImportExcelService<T> importExcelService;
 
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收

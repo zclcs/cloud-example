@@ -40,7 +40,7 @@ public class SimpleExportListener<T, K> {
      */
     private Long batchLimit = 100000L;
 
-    private ExportExcelService<T, K> exportExcelService;
+    private final ExportExcelService<T, K> exportExcelService;
 
     public SimpleExportListener(ExportExcelService<T, K> exportExcelService) {
         this.exportExcelService = exportExcelService;

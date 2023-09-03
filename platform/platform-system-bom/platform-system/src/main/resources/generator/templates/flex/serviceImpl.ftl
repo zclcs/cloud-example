@@ -32,7 +32,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
     @Override
     public BasePage<${className}Vo> find${className}Page(BasePageAo basePageAo, ${className}Vo ${className?uncap_first}Vo) {
         QueryWrapper queryWrapper = getQueryWrapper(${className?uncap_first}Vo);
-        Page<CompanyVo> page = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, ${className}Vo.class);
+        Page<${className}Vo> page = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, ${className}Vo.class);
         return new BasePage<>(page);
     }
 

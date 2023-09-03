@@ -1,7 +1,7 @@
 package ${basePackage}.${aoPackage};
 
 import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
-import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
+import com.zclcs.cloud.lib.dict.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

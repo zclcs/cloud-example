@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("${className?uncap_first}")
+@RequestMapping("/${className?uncap_first}")
 @RequiredArgsConstructor
 public class ${className}Controller {
 
@@ -55,7 +55,7 @@ public class ${className}Controller {
      *
      * @see ${className}Service#find${className}List(${className}Vo)
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @SaCheckPermission("${className?uncap_first}:view")
     public BaseRsp<List<${className}Vo>> find${className}List(@Validated ${className}Vo ${className?uncap_first}Vo) {
         List<${className}Vo> list = this.${className?uncap_first}Service.find${className}List(${className?uncap_first}Vo);
@@ -68,7 +68,7 @@ public class ${className}Controller {
      *
      * @see ${className}Service#find${className}(${className}Vo)
      */
-    @GetMapping("one")
+    @GetMapping("/one")
     @SaCheckPermission("${className?uncap_first}:view")
     public BaseRsp<${className}Vo> find${className}(@Validated ${className}Vo ${className?uncap_first}Vo) {
         ${className}Vo ${className?uncap_first} = this.${className?uncap_first}Service.find${className}(${className?uncap_first}Vo);
