@@ -14,7 +14,7 @@ import java.util.List;
  * 企业信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-02 17:12:18.866
+ * @since 2023-09-04 17:20:33.823
  */
 public interface CompanyService extends IService<Company> {
 
@@ -22,7 +22,7 @@ public interface CompanyService extends IService<Company> {
      * 查询（分页）
      *
      * @param basePageAo {@link BasePageAo}
-     * @param companyVo  {@link CompanyVo}
+     * @param companyVo {@link CompanyVo}
      * @return {@link CompanyVo}
      */
     BasePage<CompanyVo> findCompanyPage(BasePageAo basePageAo, CompanyVo companyVo);
@@ -74,8 +74,18 @@ public interface CompanyService extends IService<Company> {
      */
     void deleteCompany(List<Long> ids);
 
+    /**
+     * excel导出
+     *
+     * @param companyVo {@link CompanyVo}
+     */
     void exportExcel(CompanyVo companyVo);
 
+    /**
+     * excel导入
+     *
+     * @param multipartFile excel文件
+     */
     void importExcel(MultipartFile multipartFile);
 
 }

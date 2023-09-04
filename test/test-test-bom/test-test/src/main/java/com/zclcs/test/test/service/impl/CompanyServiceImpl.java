@@ -2,6 +2,7 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
@@ -27,16 +28,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
-import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
 
 /**
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-02 17:12:18.866
+ * @since 2023-09-04 17:20:33.823
  */
 @Slf4j
 @Service
@@ -71,7 +71,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     private QueryWrapper getQueryWrapper(CompanyVo companyVo) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
-                COMPANY.COMPANY_ID
+
         );
         // TODO 设置公共查询条件
         return queryWrapper;
@@ -127,6 +127,33 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             public Company toBean(Map<String, String> cellData) {
                 Company company = new Company();
                 company.setCompanyId(Long.valueOf(cellData.get("companyId")));
+                company.setCompanyCode(cellData.get("companyCode"));
+                company.setCompanyAttachment(cellData.get("companyAttachment"));
+                company.setCompanyName(cellData.get("companyName"));
+                company.setCompanyType(cellData.get("companyType"));
+                company.setLicenseNum(cellData.get("licenseNum"));
+                company.setAreaCode(cellData.get("areaCode"));
+                company.setAddress(cellData.get("address"));
+                company.setZipCode(cellData.get("zipCode"));
+                company.setLegalMan(cellData.get("legalMan"));
+                company.setLegalManPhone(cellData.get("legalManPhone"));
+                company.setLegalManDuty(cellData.get("legalManDuty"));
+                company.setLegalManProTitle(cellData.get("legalManProTitle"));
+                company.setLegalManIdCardType(cellData.get("legalManIdCardType"));
+                company.setLegalManIdCardNumber(cellData.get("legalManIdCardNumber"));
+                company.setRegCapital(cellData.get("regCapital"));
+                company.setFactRegCapital(cellData.get("factRegCapital"));
+                company.setCapitalCurrencyType(cellData.get("capitalCurrencyType"));
+                company.setRegisterDate(LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER));
+                company.setEstablishDate(LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER));
+                company.setOfficePhone(cellData.get("officePhone"));
+                company.setFaxNumber(cellData.get("faxNumber"));
+                company.setLinkMan(cellData.get("linkMan"));
+                company.setLinkDuty(cellData.get("linkDuty"));
+                company.setLinkPhone(cellData.get("linkPhone"));
+                company.setEmail(cellData.get("email"));
+                company.setWebSite(cellData.get("webSite"));
+                company.setRemark(cellData.get("remark"));
                 return company;
             }
 

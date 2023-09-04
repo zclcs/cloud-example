@@ -139,6 +139,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         createMenu(generateAo, underscoreToCamel, tableName);
         generatorConfigVo.setTableName(name);
         generatorConfigVo.setClassName(underscoreToCamel);
+        generatorConfigVo.setClassNameUpperCase(generatorConfigVo.getTableName().toUpperCase(Locale.ROOT));
         generatorConfigVo.setTableComment(remark);
         // 生成代码到临时目录
         List<ColumnInfo> columnInfos = this.getColumns(Generator.DATABASE_TYPE, generateAo.getDatasource(), name, StrUtil.split(generatorConfigVo.getExcludeColumns(), StrUtil.COMMA));

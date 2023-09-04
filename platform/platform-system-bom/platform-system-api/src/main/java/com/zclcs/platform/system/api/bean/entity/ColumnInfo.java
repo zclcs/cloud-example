@@ -99,6 +99,12 @@ public class ColumnInfo {
     private String field;
 
     /**
+     * 属性名称
+     */
+    @Column(ignore = true)
+    private String fieldUpperCase;
+
+    /**
      * 注释中带的字典
      */
     @Column(ignore = true)

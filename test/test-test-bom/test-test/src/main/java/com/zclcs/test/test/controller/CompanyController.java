@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +27,11 @@ import java.util.stream.Collectors;
  * 企业信息
  *
  * @author zclcs
- * @since 2023-09-02 17:12:18.866
+ * @since 2023-09-04 17:20:33.823
  */
 @Slf4j
 @RestController
-@RequestMapping("company")
+@RequestMapping("/company")
 @RequiredArgsConstructor
 public class CompanyController {
 
@@ -55,7 +56,7 @@ public class CompanyController {
      *
      * @see CompanyService#findCompanyList(CompanyVo)
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @SaCheckPermission("company:view")
     public BaseRsp<List<CompanyVo>> findCompanyList(@Validated CompanyVo companyVo) {
         List<CompanyVo> list = this.companyService.findCompanyList(companyVo);
@@ -68,7 +69,7 @@ public class CompanyController {
      *
      * @see CompanyService#findCompany(CompanyVo)
      */
-    @GetMapping("one")
+    @GetMapping("/one")
     @SaCheckPermission("company:view")
     public BaseRsp<CompanyVo> findCompany(@Validated CompanyVo companyVo) {
         CompanyVo company = this.companyService.findCompany(companyVo);
@@ -115,5 +116,30 @@ public class CompanyController {
     @ControllerEndpoint(operation = "修改企业信息")
     public BaseRsp<Company> updateCompany(@RequestBody @Validated(UpdateStrategy.class) CompanyAo companyAo) {
         return RspUtil.data(this.companyService.updateCompany(companyAo));
+    }
+
+    /**
+     * 导出企业信息
+     * 权限: company:export
+     *
+     * @see CompanyService#exportExcel(CompanyVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("company:export")
+    public void exportExcel(@Validated CompanyVo companyVo) {
+        companyService.exportExcel(companyVo);
+    }
+
+    /**
+     * 导入企业信息
+     * 权限: company:import
+     *
+     * @see CompanyService#importExcel(MultipartFile)
+     */
+    @PostMapping("/import/excel")
+    @SaCheckPermission("company:import")
+    public BaseRsp<String> importExcel(MultipartFile file) {
+        companyService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }

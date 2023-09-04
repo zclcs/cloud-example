@@ -85,6 +85,7 @@ public class GeneratorUtil {
         map.put("hasBigDecimal", false);
         columnInfos.forEach(c -> {
             c.setField(BaseUtil.underscoreToCamel(c.getName().toLowerCase(Locale.ROOT)));
+            c.setFieldUpperCase(c.getName().toUpperCase(Locale.ROOT));
             if (StrUtil.containsAny(c.getType(), FieldType.DATE, FieldType.DATETIME, FieldType.TIMESTAMP)) {
                 map.put("hasDate", true);
             }
@@ -116,8 +117,7 @@ public class GeneratorUtil {
         String suffix = Generator.SERVICE_IMPL_FILE_SUFFIX;
         String path = getFilePath(configure, configure.getServiceImplPackage(), suffix, false);
         String templateName = Generator.SERVICE_IMPL_TEMPLATE;
-        File serviceImplFile = new File(path);
-        generateFileByTemplate(templateName, serviceImplFile, BeanUtil.beanToMap(configure));
+        getDao(columnInfos, configure, path, templateName);
     }
 
     public void generateControllerFile(List<ColumnInfo> columnInfos, GeneratorConfigVo configure) throws Exception {

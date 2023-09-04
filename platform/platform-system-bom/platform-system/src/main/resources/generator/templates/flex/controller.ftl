@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -115,5 +116,30 @@ public class ${className}Controller {
     @ControllerEndpoint(operation = "修改${tableComment}")
     public BaseRsp<${className}> update${className}(@RequestBody @Validated(UpdateStrategy.class) ${className}Ao ${className?uncap_first}Ao) {
         return RspUtil.data(this.${className?uncap_first}Service.update${className}(${className?uncap_first}Ao));
+    }
+
+    /**
+     * 导出${tableComment}
+     * 权限: ${className?uncap_first}:export
+     *
+     * @see ${className}Service#exportExcel(${className}Vo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("${className?uncap_first}:export")
+    public void exportExcel(@Validated ${className}Vo ${className?uncap_first}Vo) {
+        ${className?uncap_first}Service.exportExcel(${className?uncap_first}Vo);
+    }
+
+    /**
+     * 导入${tableComment}
+     * 权限: ${className?uncap_first}:import
+     *
+     * @see ${className}Service#importExcel(MultipartFile)
+     */
+    @PostMapping("/import/excel")
+    @SaCheckPermission("${className?uncap_first}:import")
+    public BaseRsp<String> importExcel(MultipartFile file) {
+        ${className?uncap_first}Service.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }

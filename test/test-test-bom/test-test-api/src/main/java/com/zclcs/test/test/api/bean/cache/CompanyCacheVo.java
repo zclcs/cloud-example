@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * 企业信息 CacheVo
  *
  * @author zclcs
- * @since 2023-09-02 17:12:18.866
+ * @since 2023-09-04 17:16:14.570
  */
 @Data
 public class CompanyCacheVo implements Serializable {

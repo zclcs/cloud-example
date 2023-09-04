@@ -188,6 +188,11 @@ public class GeneratorConfigVo extends BaseEntity implements Serializable {
     private String className;
 
     /**
+     * 大写类名
+     */
+    private String classNameUpperCase;
+
+    /**
      * 数据表对应的主键字段名
      */
     private String keyName;

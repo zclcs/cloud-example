@@ -6,6 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import ${basePackage}.${aoPackage}.${className}Ao;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${voPackage}.${className}Vo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -72,5 +73,19 @@ public interface ${className}Service extends IService<${className}> {
      * @param ids 表id集合
      */
     void delete${className}(List<Long> ids);
+
+    /**
+     * excel导出
+     *
+     * @param ${className?uncap_first}Vo {@link ${className}Vo}
+     */
+    void exportExcel(${className}Vo ${className?uncap_first}Vo);
+
+    /**
+     * excel导入
+     *
+     * @param multipartFile excel文件
+     */
+    void importExcel(MultipartFile multipartFile);
 
 }
