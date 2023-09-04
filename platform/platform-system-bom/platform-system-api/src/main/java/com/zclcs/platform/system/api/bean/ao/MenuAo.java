@@ -116,7 +116,6 @@ public class MenuAo implements Serializable {
      */
     @DictValid(value = "yes_no", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
     private String hideMenu;
 
     /**
@@ -125,7 +124,6 @@ public class MenuAo implements Serializable {
      */
     @DictValid(value = "yes_no", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
     private String ignoreKeepAlive;
 
     /**
@@ -134,7 +132,6 @@ public class MenuAo implements Serializable {
      */
     @DictValid(value = "yes_no", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
     private String hideBreadcrumb;
 
     /**
@@ -143,7 +140,6 @@ public class MenuAo implements Serializable {
      */
     @DictValid(value = "yes_no", message = "{dict}")
     @Size(max = 40, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
     private String hideChildrenInMenu;
 
     /**

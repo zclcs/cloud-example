@@ -1,11 +1,7 @@
 package com.zclcs.platform.system.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * 部门 ExcelVo
@@ -14,10 +10,7 @@ import java.io.Serializable;
  * @since 2023-09-01 19:53:38.826
  */
 @Data
-public class DeptExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class DeptExcelVo {
 
     /**
      * 部门id

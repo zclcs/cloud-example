@@ -4,9 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * 黑名单 ExcelVo
  *
@@ -14,10 +11,7 @@ import java.io.Serializable;
  * @since 2023-09-01 19:53:59.035
  */
 @Data
-public class BlackListExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class BlackListExcelVo {
 
     /**
      * 黑名单id

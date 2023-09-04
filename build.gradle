@@ -30,7 +30,6 @@ buildscript {
         janinoVersion = "3.1.9"
         saTokenVersion = "1.35.0.RC"
         easyexcelVersion = "3.3.2"
-        tikaVersion = "2.8.0"
         mybatisFlexVersion = "1.6.3"
         mybatisVersion = "3.0.2"
     }
@@ -103,7 +102,6 @@ configure(commons) {
         management platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         management platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         management platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion")
-        management platform("org.apache.tika:tika-bom:$tikaVersion")
 //        management platform("com.mybatis-flex:mybatis-flex-dependencies:$mybatisFlexVersion")
         management platform("cn.hutool:hutool-bom:$hutoolVersion")
         management platform("com.baomidou:mybatis-plus-bom:$mybatisPlusVersion")
@@ -112,6 +110,7 @@ configure(commons) {
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok-mapstruct-binding"
         annotationProcessor "com.mybatis-flex:mybatis-flex-processor:$mybatisFlexVersion"
     }
 

@@ -4,9 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * 限流规则 ExcelVo
  *
@@ -14,10 +11,7 @@ import java.io.Serializable;
  * @since 2023-09-01 19:53:43.828
  */
 @Data
-public class RateLimitRuleExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class RateLimitRuleExcelVo {
 
     /**
      * 限流规则id

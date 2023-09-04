@@ -9,6 +9,7 @@ import com.zclcs.common.export.excel.starter.service.ImportExcelService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
 
     private final ImportExcelService<T> importExcelService;
 
+    private final Field[] declaredFields;
+
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收
      */
@@ -29,12 +32,14 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     @Getter
     private Map<Integer, CellData<?>> error = new HashMap<>();
 
-    public SimpleImportListener(ImportExcelService<T> importExcelService) {
+    public SimpleImportListener(ImportExcelService<T> importExcelService, Field[] declaredFields) {
         this.importExcelService = importExcelService;
+        this.declaredFields = declaredFields;
     }
 
-    public SimpleImportListener(ImportExcelService<T> importExcelService, int batchSize) {
+    public SimpleImportListener(ImportExcelService<T> importExcelService, Field[] declaredFields, int batchSize) {
         this.importExcelService = importExcelService;
+        this.declaredFields = declaredFields;
         this.batchSize = batchSize;
     }
 
@@ -49,7 +54,12 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     @Override
     public void invoke(Map<Integer, String> data, AnalysisContext context) {
         log.debug("解析到一行数据 {}", data.toString());
-        T bean = this.importExcelService.toBean(data);
+        Map<String, String> beanMap = new HashMap<>(declaredFields.length + 1);
+        for (int i = 0; i < declaredFields.length; i++) {
+            Field declaredField = declaredFields[i];
+            beanMap.put(declaredField.getName(), data.get(i));
+        }
+        T bean = this.importExcelService.toBean(beanMap);
         cachedDataList.add(bean);
         if (cachedDataList.size() >= batchSize) {
             this.importExcelService.saveBeans(cachedDataList);

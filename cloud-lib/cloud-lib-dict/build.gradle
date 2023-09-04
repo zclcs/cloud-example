@@ -1,7 +1,6 @@
 dependencies {
     api project(":cloud-lib:cloud-lib-core")
     api project(":common:common-redis-starter")
-    api annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     api "org.springframework.cloud:spring-cloud-openfeign-core"
     api "org.javassist:javassist"
 }

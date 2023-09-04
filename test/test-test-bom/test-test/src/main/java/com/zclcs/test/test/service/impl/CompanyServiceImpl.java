@@ -2,7 +2,6 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
@@ -28,9 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
 
 /**
  * 企业信息 Service实现
@@ -70,6 +70,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     private QueryWrapper getQueryWrapper(CompanyVo companyVo) {
         QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(
+                COMPANY.COMPANY_ID
+        );
         // TODO 设置公共查询条件
         return queryWrapper;
     }
@@ -119,36 +122,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Override
     public void importExcel(MultipartFile multipartFile) {
         SimpleImportListener<Company> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+
             @Override
-            public Company toBean(Map<Integer, String> cellData) {
+            public Company toBean(Map<String, String> cellData) {
                 Company company = new Company();
-                company.setCompanyId(Long.valueOf(cellData.get(0)));
-                company.setCompanyCode(cellData.get(1));
-                company.setCompanyAttachment(cellData.get(2));
-                company.setCompanyName(cellData.get(3));
-                company.setCompanyType(cellData.get(4));
-                company.setLicenseNum(cellData.get(5));
-                company.setAreaCode(cellData.get(6));
-                company.setZipCode(cellData.get(7));
-                company.setLegalMan(cellData.get(8));
-                company.setLegalManPhone(cellData.get(9));
-                company.setLegalManDuty(cellData.get(10));
-                company.setLegalManProTitle(cellData.get(11));
-                company.setLegalManIdCardType(cellData.get(12));
-                company.setLegalManIdCardNumber(cellData.get(13));
-                company.setRegCapital(cellData.get(14));
-                company.setFactRegCapital(cellData.get(15));
-                company.setCapitalCurrencyType(cellData.get(16));
-                company.setRegisterDate(LocalDate.parse(cellData.get(17), DatePattern.NORM_DATE_FORMATTER));
-                company.setEstablishDate(LocalDate.parse(cellData.get(18), DatePattern.NORM_DATE_FORMATTER));
-                company.setOfficePhone(cellData.get(19));
-                company.setFaxNumber(cellData.get(20));
-                company.setLinkMan(cellData.get(21));
-                company.setLinkDuty(cellData.get(22));
-                company.setLinkMan(cellData.get(23));
-                company.setEmail(cellData.get(24));
-                company.setWebSite(cellData.get(25));
-                company.setRemark(cellData.get(26));
+                company.setCompanyId(Long.valueOf(cellData.get("companyId")));
                 return company;
             }
 
@@ -156,7 +134,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             public void saveBeans(List<Company> t) {
                 saveBatch(t);
             }
-        });
+        }, CompanyExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();
         Map<Integer, CellData<?>> error = simpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {

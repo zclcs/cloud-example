@@ -4,9 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -16,10 +13,7 @@ import java.time.LocalDateTime;
  * @since 2023-09-01 19:55:21.249
  */
 @Data
-public class UserExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class UserExcelVo {
 
     /**
      * 用户id

@@ -4,9 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * 字典 ExcelVo
  *
@@ -14,10 +11,7 @@ import java.io.Serializable;
  * @since 2023-09-01 20:03:54.686
  */
 @Data
-public class DictItemExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class DictItemExcelVo {
 
     /**
      * 主键

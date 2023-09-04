@@ -4,9 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * 代码生成配置 ExcelVo
  *
@@ -14,10 +11,7 @@ import java.io.Serializable;
  * @since 2023-09-01 20:04:43.904
  */
 @Data
-public class GeneratorConfigExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class GeneratorConfigExcelVo {
 
     /**
      * 主键

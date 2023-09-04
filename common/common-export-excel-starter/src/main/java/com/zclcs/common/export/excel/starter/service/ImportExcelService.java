@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public interface ImportExcelService<T> {
 
-    T toBean(Map<Integer, String> cellData);
+    T toBean(Map<String, String> cellData);
 
     void saveBeans(List<T> t);
 

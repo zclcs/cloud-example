@@ -87,18 +87,19 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
     @Override
     public void importExcel(MultipartFile file) {
         SimpleImportListener<RouteLog> routeLogSimpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+
             @Override
-            public RouteLog toBean(Map<Integer, String> cellData) {
+            public RouteLog toBean(Map<String, String> cellData) {
                 RouteLog routeLog = new RouteLog();
-                routeLog.setRouteIp(cellData.get(0));
-                routeLog.setRequestUri(cellData.get(1));
-                routeLog.setTargetUri(cellData.get(2));
-                routeLog.setRequestMethod(cellData.get(3));
-                routeLog.setTargetServer(cellData.get(4));
-                routeLog.setRequestTime(DateUtil.parseLocalDateTime(cellData.get(5)));
-                routeLog.setCode(cellData.get(6));
-                routeLog.setTime(Long.valueOf(cellData.get(7)));
-                routeLog.setLocation(cellData.get(8));
+                routeLog.setRouteIp(cellData.get("routeIp"));
+                routeLog.setRequestUri(cellData.get("requestUri"));
+                routeLog.setTargetUri(cellData.get("targetUri"));
+                routeLog.setRequestMethod(cellData.get("requestMethod"));
+                routeLog.setTargetServer(cellData.get("targetServer"));
+                routeLog.setRequestTime(DateUtil.parseLocalDateTime(cellData.get("requestTime")));
+                routeLog.setCode(cellData.get("code"));
+                routeLog.setTime(Long.valueOf(cellData.get("time")));
+                routeLog.setLocation(cellData.get("location"));
                 return routeLog;
             }
 
@@ -106,7 +107,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
             public void saveBeans(List<RouteLog> t) {
                 saveBatch(t);
             }
-        }, 200);
+        }, RouteLogExcelVo.class.getDeclaredFields(), 200);
         EasyExcel.read(file.getInputStream(), routeLogSimpleImportListener).sheet().doRead();
         Map<Integer, CellData<?>> error = routeLogSimpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {

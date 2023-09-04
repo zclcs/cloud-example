@@ -1,12 +1,8 @@
 package com.zclcs.platform.system.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -16,10 +12,7 @@ import java.time.LocalDateTime;
  * @since 2023-09-01 20:09:35.391
  */
 @Data
-public class RouteLogExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class RouteLogExcelVo {
 
     /**
      * 网关转发日志id

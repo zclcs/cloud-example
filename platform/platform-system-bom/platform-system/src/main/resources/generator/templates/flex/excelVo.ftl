@@ -4,8 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
 <#if hasDate = true>
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,10 +19,7 @@ import java.math.BigDecimal;
  * @since ${date}
  */
 @Data
-public class ${className}ExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class ${className}ExcelVo {
 
 <#if columns??>
     <#list columns as column>

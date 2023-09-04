@@ -1,11 +1,8 @@
 package com.zclcs.platform.system.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -15,10 +12,7 @@ import java.math.BigDecimal;
  * @since 2023-09-01 19:55:02.695
  */
 @Data
-public class LogExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class LogExcelVo {
 
     /**
      * 日志id
