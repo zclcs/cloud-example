@@ -32,11 +32,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
+
 /**
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 17:20:33.823
+ * @since 2023-09-04 20:02:29.605
  */
 @Slf4j
 @Service
@@ -71,7 +73,34 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     private QueryWrapper getQueryWrapper(CompanyVo companyVo) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(
-
+                COMPANY.COMPANY_ID,
+                COMPANY.COMPANY_CODE,
+                COMPANY.COMPANY_ATTACHMENT,
+                COMPANY.COMPANY_NAME,
+                COMPANY.COMPANY_TYPE,
+                COMPANY.LICENSE_NUM,
+                COMPANY.AREA_CODE,
+                COMPANY.ADDRESS,
+                COMPANY.ZIP_CODE,
+                COMPANY.LEGAL_MAN,
+                COMPANY.LEGAL_MAN_PHONE,
+                COMPANY.LEGAL_MAN_DUTY,
+                COMPANY.LEGAL_MAN_PRO_TITLE,
+                COMPANY.LEGAL_MAN_ID_CARD_TYPE,
+                COMPANY.LEGAL_MAN_ID_CARD_NUMBER,
+                COMPANY.REG_CAPITAL,
+                COMPANY.FACT_REG_CAPITAL,
+                COMPANY.CAPITAL_CURRENCY_TYPE,
+                COMPANY.REGISTER_DATE,
+                COMPANY.ESTABLISH_DATE,
+                COMPANY.OFFICE_PHONE,
+                COMPANY.FAX_NUMBER,
+                COMPANY.LINK_MAN,
+                COMPANY.LINK_DUTY,
+                COMPANY.LINK_PHONE,
+                COMPANY.EMAIL,
+                COMPANY.WEB_SITE,
+                COMPANY.REMARK
         );
         // TODO 设置公共查询条件
         return queryWrapper;

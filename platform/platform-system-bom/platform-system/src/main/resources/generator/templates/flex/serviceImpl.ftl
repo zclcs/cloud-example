@@ -31,7 +31,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static ${basePackage}.${entityPackage}.table.${className}TableDef.${className.upper_case};
+import static ${basePackage}.${entityPackage}.table.${className}TableDef.${classNameUpperCase};
 
 /**
  * ${tableComment} Service实现
@@ -74,8 +74,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
         queryWrapper.select(
                 <#if columns??>
                 <#list columns as column>
-                ${classNameUpperCase}.${column.fieldUpperCase}
-                <#if column_has_next>,</#if>
+                ${classNameUpperCase}.${column.fieldUpperCase}<#if column_has_next>,</#if>
                 </#list>
                 </#if>
         );
