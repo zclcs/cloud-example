@@ -4,8 +4,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,13 +11,10 @@ import java.time.LocalDateTime;
  * 工程信息 ExcelVo
  *
  * @author zclcs
- * @since 2023-09-02 17:12:22.752
+ * @since 2023-09-04 20:04:57.706
  */
 @Data
-public class ChildProjectExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class ChildProjectExcelVo {
 
     /**
      * 工程id

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +27,11 @@ import java.util.stream.Collectors;
  * 项目参建单位信息数据
  *
  * @author zclcs
- * @since 2023-09-02 17:12:10.514
+ * @since 2023-09-04 20:04:43.968
  */
 @Slf4j
 @RestController
-@RequestMapping("projectCompany")
+@RequestMapping("/projectCompany")
 @RequiredArgsConstructor
 public class ProjectCompanyController {
 
@@ -55,7 +56,7 @@ public class ProjectCompanyController {
      *
      * @see ProjectCompanyService#findProjectCompanyList(ProjectCompanyVo)
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @SaCheckPermission("projectCompany:view")
     public BaseRsp<List<ProjectCompanyVo>> findProjectCompanyList(@Validated ProjectCompanyVo projectCompanyVo) {
         List<ProjectCompanyVo> list = this.projectCompanyService.findProjectCompanyList(projectCompanyVo);
@@ -68,7 +69,7 @@ public class ProjectCompanyController {
      *
      * @see ProjectCompanyService#findProjectCompany(ProjectCompanyVo)
      */
-    @GetMapping("one")
+    @GetMapping("/one")
     @SaCheckPermission("projectCompany:view")
     public BaseRsp<ProjectCompanyVo> findProjectCompany(@Validated ProjectCompanyVo projectCompanyVo) {
         ProjectCompanyVo projectCompany = this.projectCompanyService.findProjectCompany(projectCompanyVo);
@@ -115,5 +116,30 @@ public class ProjectCompanyController {
     @ControllerEndpoint(operation = "修改项目参建单位信息数据")
     public BaseRsp<ProjectCompany> updateProjectCompany(@RequestBody @Validated(UpdateStrategy.class) ProjectCompanyAo projectCompanyAo) {
         return RspUtil.data(this.projectCompanyService.updateProjectCompany(projectCompanyAo));
+    }
+
+    /**
+     * 导出项目参建单位信息数据
+     * 权限: projectCompany:export
+     *
+     * @see ProjectCompanyService#exportExcel(ProjectCompanyVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("projectCompany:export")
+    public void exportExcel(@Validated ProjectCompanyVo projectCompanyVo) {
+        projectCompanyService.exportExcel(projectCompanyVo);
+    }
+
+    /**
+     * 导入项目参建单位信息数据
+     * 权限: projectCompany:import
+     *
+     * @see ProjectCompanyService#importExcel(MultipartFile)
+     */
+    @PostMapping("/import/excel")
+    @SaCheckPermission("projectCompany:import")
+    public BaseRsp<String> importExcel(MultipartFile file) {
+        projectCompanyService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }

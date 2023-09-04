@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +27,11 @@ import java.util.stream.Collectors;
  * 项目信息
  *
  * @author zclcs
- * @since 2023-09-02 17:12:14.267
+ * @since 2023-09-04 20:04:49.084
  */
 @Slf4j
 @RestController
-@RequestMapping("project")
+@RequestMapping("/project")
 @RequiredArgsConstructor
 public class ProjectController {
 
@@ -55,7 +56,7 @@ public class ProjectController {
      *
      * @see ProjectService#findProjectList(ProjectVo)
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @SaCheckPermission("project:view")
     public BaseRsp<List<ProjectVo>> findProjectList(@Validated ProjectVo projectVo) {
         List<ProjectVo> list = this.projectService.findProjectList(projectVo);
@@ -68,7 +69,7 @@ public class ProjectController {
      *
      * @see ProjectService#findProject(ProjectVo)
      */
-    @GetMapping("one")
+    @GetMapping("/one")
     @SaCheckPermission("project:view")
     public BaseRsp<ProjectVo> findProject(@Validated ProjectVo projectVo) {
         ProjectVo project = this.projectService.findProject(projectVo);
@@ -115,5 +116,30 @@ public class ProjectController {
     @ControllerEndpoint(operation = "修改项目信息")
     public BaseRsp<Project> updateProject(@RequestBody @Validated(UpdateStrategy.class) ProjectAo projectAo) {
         return RspUtil.data(this.projectService.updateProject(projectAo));
+    }
+
+    /**
+     * 导出项目信息
+     * 权限: project:export
+     *
+     * @see ProjectService#exportExcel(ProjectVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("project:export")
+    public void exportExcel(@Validated ProjectVo projectVo) {
+        projectService.exportExcel(projectVo);
+    }
+
+    /**
+     * 导入项目信息
+     * 权限: project:import
+     *
+     * @see ProjectService#importExcel(MultipartFile)
+     */
+    @PostMapping("/import/excel")
+    @SaCheckPermission("project:import")
+    public BaseRsp<String> importExcel(MultipartFile file) {
+        projectService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }

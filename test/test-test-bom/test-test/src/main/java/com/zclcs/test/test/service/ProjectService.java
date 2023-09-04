@@ -6,6 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.test.test.api.bean.ao.ProjectAo;
 import com.zclcs.test.test.api.bean.entity.Project;
 import com.zclcs.test.test.api.bean.vo.ProjectVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * 项目信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-02 17:12:14.267
+ * @since 2023-09-04 20:04:49.084
  */
 public interface ProjectService extends IService<Project> {
 
@@ -72,5 +73,19 @@ public interface ProjectService extends IService<Project> {
      * @param ids 表id集合
      */
     void deleteProject(List<Long> ids);
+
+    /**
+     * excel导出
+     *
+     * @param projectVo {@link ProjectVo}
+     */
+    void exportExcel(ProjectVo projectVo);
+
+    /**
+     * excel导入
+     *
+     * @param multipartFile excel文件
+     */
+    void importExcel(MultipartFile multipartFile);
 
 }

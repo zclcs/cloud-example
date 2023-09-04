@@ -7,7 +7,7 @@ import com.zclcs.test.test.api.bean.entity.ChildProject;
  * 工程信息 Mapper
  *
  * @author zclcs
- * @since 2023-09-02 17:12:22.752
+ * @since 2023-09-04 20:04:57.706
  */
 public interface ChildProjectMapper extends BaseMapper<ChildProject> {
 

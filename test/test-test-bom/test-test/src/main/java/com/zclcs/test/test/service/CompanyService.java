@@ -14,7 +14,7 @@ import java.util.List;
  * 企业信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-04 20:02:29.605
+ * @since 2023-09-04 20:04:53.080
  */
 public interface CompanyService extends IService<Company> {
 

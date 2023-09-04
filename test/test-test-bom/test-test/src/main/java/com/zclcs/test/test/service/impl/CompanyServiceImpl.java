@@ -15,6 +15,7 @@ import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
 import com.zclcs.common.export.excel.starter.service.ExportExcelService;
 import com.zclcs.common.export.excel.starter.service.ImportExcelService;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import com.zclcs.test.test.api.bean.ao.CompanyAo;
 import com.zclcs.test.test.api.bean.entity.Company;
 import com.zclcs.test.test.api.bean.excel.CompanyExcelVo;
@@ -38,7 +39,7 @@ import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 20:02:29.605
+ * @since 2023-09-04 20:16:44.686
  */
 @Slf4j
 @Service
@@ -66,7 +67,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     @Override
     public Long countCompany(CompanyVo companyVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(companyVo);
+    QueryWrapper queryWrapper = getQueryWrapper(companyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -104,7 +105,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -145,6 +146,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 return excelVoPage.getRecords();
             }
         });
+        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "企业信息", CompanyExcelVo.class, companyVo);
     }
 
     @SneakyThrows

@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 项目参建单位信息数据 Entity
  *
  * @author zclcs
- * @since 2023-09-02 17:12:10.514
+ * @since 2023-09-04 20:04:43.968
  */
 @Data
 @AllArgsConstructor

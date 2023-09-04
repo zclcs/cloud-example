@@ -4,20 +4,15 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * 项目参建单位信息数据 ExcelVo
  *
  * @author zclcs
- * @since 2023-09-02 17:12:10.514
+ * @since 2023-09-04 20:04:43.968
  */
 @Data
-public class ProjectCompanyExcelVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class ProjectCompanyExcelVo {
 
     /**
      * 参建单位id

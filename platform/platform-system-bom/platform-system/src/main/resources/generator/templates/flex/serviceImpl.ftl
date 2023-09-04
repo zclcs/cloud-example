@@ -15,8 +15,10 @@ import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
 import com.zclcs.common.export.excel.starter.service.ExportExcelService;
 import com.zclcs.common.export.excel.starter.service.ImportExcelService;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import ${basePackage}.${aoPackage}.${className}Ao;
 import ${basePackage}.${entityPackage}.${className};
+import ${basePackage}.${excelVoPackage}.${className}ExcelVo;
 import ${basePackage}.${voPackage}.${className}Vo;
 import ${basePackage}.${mapperPackage}.${className}Mapper;
 import ${basePackage}.${servicePackage}.${className}Service;
@@ -27,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -121,6 +125,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 return excelVoPage.getRecords();
             }
         });
+        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "${tableComment}", ${className}ExcelVo.class, ${className?uncap_first}Vo);
     }
 
     @SneakyThrows

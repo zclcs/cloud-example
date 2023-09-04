@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +27,11 @@ import java.util.stream.Collectors;
  * 工程信息
  *
  * @author zclcs
- * @since 2023-09-02 17:12:22.752
+ * @since 2023-09-04 20:04:57.706
  */
 @Slf4j
 @RestController
-@RequestMapping("childProject")
+@RequestMapping("/childProject")
 @RequiredArgsConstructor
 public class ChildProjectController {
 
@@ -55,7 +56,7 @@ public class ChildProjectController {
      *
      * @see ChildProjectService#findChildProjectList(ChildProjectVo)
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @SaCheckPermission("childProject:view")
     public BaseRsp<List<ChildProjectVo>> findChildProjectList(@Validated ChildProjectVo childProjectVo) {
         List<ChildProjectVo> list = this.childProjectService.findChildProjectList(childProjectVo);
@@ -68,7 +69,7 @@ public class ChildProjectController {
      *
      * @see ChildProjectService#findChildProject(ChildProjectVo)
      */
-    @GetMapping("one")
+    @GetMapping("/one")
     @SaCheckPermission("childProject:view")
     public BaseRsp<ChildProjectVo> findChildProject(@Validated ChildProjectVo childProjectVo) {
         ChildProjectVo childProject = this.childProjectService.findChildProject(childProjectVo);
@@ -115,5 +116,30 @@ public class ChildProjectController {
     @ControllerEndpoint(operation = "修改工程信息")
     public BaseRsp<ChildProject> updateChildProject(@RequestBody @Validated(UpdateStrategy.class) ChildProjectAo childProjectAo) {
         return RspUtil.data(this.childProjectService.updateChildProject(childProjectAo));
+    }
+
+    /**
+     * 导出工程信息
+     * 权限: childProject:export
+     *
+     * @see ChildProjectService#exportExcel(ChildProjectVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("childProject:export")
+    public void exportExcel(@Validated ChildProjectVo childProjectVo) {
+        childProjectService.exportExcel(childProjectVo);
+    }
+
+    /**
+     * 导入工程信息
+     * 权限: childProject:import
+     *
+     * @see ChildProjectService#importExcel(MultipartFile)
+     */
+    @PostMapping("/import/excel")
+    @SaCheckPermission("childProject:import")
+    public BaseRsp<String> importExcel(MultipartFile file) {
+        childProjectService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }
