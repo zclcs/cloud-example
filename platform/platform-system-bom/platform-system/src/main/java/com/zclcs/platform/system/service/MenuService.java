@@ -78,6 +78,14 @@ public interface MenuService extends IService<Menu> {
     Menu updateMenu(MenuAo menuAo);
 
     /**
+     * 根据菜单编码新增或修改
+     *
+     * @param menuAo {@link MenuAo}
+     * @return {@link Menu}
+     */
+    Menu createOrUpdateMenu(MenuAo menuAo);
+
+    /**
      * 删除
      *
      * @param ids 表id集合

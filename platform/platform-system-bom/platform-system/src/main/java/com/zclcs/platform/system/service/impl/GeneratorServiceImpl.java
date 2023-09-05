@@ -183,14 +183,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
     }
 
-    private void createMenu(GenerateAo generateAo, String className, String tableName) {
+    public void createMenu(GenerateAo generateAo, String className, String tableName) {
         className = StrUtil.lowerFirst(className);
         String isCreateMenuNew = Optional.ofNullable(generateAo.getIsCreateMenu()).filter(StrUtil::isNotBlank).orElse(Dict.YES_NO_0);
         String isCreateDirNew = Optional.ofNullable(generateAo.getIsCreateDir()).filter(StrUtil::isNotBlank).orElse(Dict.YES_NO_0);
         if (Dict.YES_NO_1.equals(isCreateDirNew)) {
             MenuAo dir = new MenuAo();
             setDir(dir, generateAo);
-            Menu dirMenu = menuService.createMenu(dir);
+            Menu dirMenu = menuService.createOrUpdateMenu(dir);
             MenuAo menu = new MenuAo();
             setMenu(menu, generateAo, tableName, className, dirMenu.getMenuCode());
             addMenuAndButton(menu, className);
@@ -201,8 +201,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
     }
 
-    private void addMenuAndButton(MenuAo menuAo, String className) {
-        Menu parentMenu = menuService.createMenu(menuAo);
+    public void addMenuAndButton(MenuAo menuAo, String className) {
+        Menu parentMenu = menuService.createOrUpdateMenu(menuAo);
         for (int i = 0; i < Params.AUTHS.length; i++) {
             String auth = Params.AUTHS[i];
             String parentMenuCode = parentMenu.getMenuCode();
@@ -213,7 +213,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             button.setParentCode(parentMenuCode);
             button.setType(Dict.MENU_TYPE_1);
             button.setPerms(className + StrUtil.COLON + auth);
-            menuService.createMenu(button);
+            menuService.createOrUpdateMenu(button);
         }
     }
 

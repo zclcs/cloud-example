@@ -16,6 +16,7 @@ import jakarta.validation.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -182,6 +183,21 @@ public class BaseExceptionHandler {
     public BaseRsp<Object> handleFileUploadException(FileUploadException e) {
         log.error("FileUploadException", e);
         return RspUtil.message(e.getMessage());
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseRsp<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String message = e.getMessage();
+        log.error(message, e);
+        if (StrUtil.containsIgnoreCase(message, "java.time.LocalDate")) {
+            message = "请传入正确的日期格式, 例：2000-02-12";
+        } else if (StrUtil.containsIgnoreCase(message, "java.time.LocalDateTime")) {
+            message = "请传入正确的日期格式, 例：2000-02-12 10:00:00";
+        } else {
+            log.error(message, e);
+        }
+        return RspUtil.message(message);
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)

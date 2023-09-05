@@ -8,6 +8,7 @@ import com.zclcs.test.test.api.bean.entity.Company;
 import com.zclcs.test.test.api.bean.vo.CompanyVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public interface CompanyService extends IService<Company> {
      * 查询（分页）
      *
      * @param basePageAo {@link BasePageAo}
-     * @param companyVo {@link CompanyVo}
+     * @param companyVo  {@link CompanyVo}
      * @return {@link CompanyVo}
      */
     BasePage<CompanyVo> findCompanyPage(BasePageAo basePageAo, CompanyVo companyVo);
@@ -66,6 +67,41 @@ public interface CompanyService extends IService<Company> {
      * @return {@link Company}
      */
     Company updateCompany(CompanyAo companyAo);
+
+    /**
+     * 新增或修改
+     *
+     * @param companyAo {@link CompanyAo}
+     * @return {@link Company}
+     */
+    Company createOrUpdateCompany(CompanyAo companyAo);
+
+    /**
+     * 批量新增
+     *
+     * @param companyAos {@link CompanyAo}
+     * @return {@link Company}
+     */
+    List<Company> createCompanyBatch(List<CompanyAo> companyAos);
+
+    /**
+     * 批量修改
+     *
+     * @param companyAos {@link CompanyAo}
+     * @return {@link Company}
+     */
+    List<Company> updateCompanyBatch(List<CompanyAo> companyAos);
+
+    /**
+     * 批量新增或修改
+     * id为空则新增，不为空则修改
+     * 可以自行重写
+     *
+     * @param companyAos {@link CompanyAo}
+     * @return {@link Company}
+     * @see IService#saveOrUpdateBatch(Collection)
+     */
+    List<Company> createOrUpdateCompanyBatch(List<CompanyAo> companyAos);
 
     /**
      * 删除

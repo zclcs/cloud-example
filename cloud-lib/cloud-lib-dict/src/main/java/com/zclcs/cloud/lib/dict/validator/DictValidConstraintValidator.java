@@ -29,13 +29,14 @@ public class DictValidConstraintValidator implements ConstraintValidator<DictVal
             if (!StrUtil.contains(dictValue, Strings.COMMA)) {
                 return false;
             } else {
-                List<String> split = StrUtil.split(dictValue, Strings.COMMA);
+                List<String> split = StrUtil.splitTrim(dictValue, Strings.COMMA);
                 for (String s : split) {
                     boolean b = DictCacheUtil.getDict(name, s) == null;
                     if (b) {
                         return false;
                     }
                 }
+                return true;
             }
         }
         return DictCacheUtil.getDict(name, dictValue) != null;

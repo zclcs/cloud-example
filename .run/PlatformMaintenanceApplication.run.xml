@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PlatformMaintenanceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
+      <env name="DATASOURCE_DB_TYPE" value="mysql" />
+      <env name="DATASOURCE_DRIVER" value="com.mysql.cj.jdbc.Driver" />
       <env name="DATASOURCE_HOST" value="192.168.33.10" />
-      <env name="DATASOURCE_ROOT_PASSWORD" value="123456" />
+      <env name="DATASOURCE_PASSWORD" value="123456" />
       <env name="GATEWAY_HOST" value="127.0.0.1" />
       <env name="LOG_CONTROLLER_PARAMS" value="false" />
       <env name="LOG_SQL_ENABLED" value="true" />

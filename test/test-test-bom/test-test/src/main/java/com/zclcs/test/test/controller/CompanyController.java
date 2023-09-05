@@ -5,6 +5,7 @@ import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.bean.ValidatedList;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
@@ -43,7 +44,7 @@ public class CompanyController {
      *
      * @see CompanyService#findCompanyPage(BasePageAo, CompanyVo)
      */
-    @GetMapping
+    @GetMapping("/page")
     @SaCheckPermission("company:view")
     public BaseRsp<BasePage<CompanyVo>> findCompanyPage(@Validated BasePageAo basePageAo, @Validated CompanyVo companyVo) {
         BasePage<CompanyVo> page = this.companyService.findCompanyPage(basePageAo, companyVo);
@@ -85,8 +86,34 @@ public class CompanyController {
     @PostMapping
     @SaCheckPermission("company:add")
     @ControllerEndpoint(operation = "新增企业信息")
-    public BaseRsp<Company> addCompany(@RequestBody @Validated CompanyAo companyAo) {
+    public BaseRsp<Company> createCompany(@RequestBody @Validated CompanyAo companyAo) {
         return RspUtil.data(this.companyService.createCompany(companyAo));
+    }
+
+    /**
+     * 修改企业信息
+     * 权限: company:update
+     *
+     * @see CompanyService#updateCompany(CompanyAo)
+     */
+    @PutMapping
+    @SaCheckPermission("company:update")
+    @ControllerEndpoint(operation = "修改企业信息")
+    public BaseRsp<Company> updateCompany(@RequestBody @Validated({ValidGroups.Crud.Update.class}) CompanyAo companyAo) {
+        return RspUtil.data(this.companyService.updateCompany(companyAo));
+    }
+
+    /**
+     * 新增或修改企业信息
+     * 权限: company:createOrUpdate
+     *
+     * @see CompanyService#createOrUpdateCompany(CompanyAo)
+     */
+    @PutMapping
+    @SaCheckPermission("company:createOrUpdate")
+    @ControllerEndpoint(operation = "新增或修改企业信息")
+    public BaseRsp<Company> createOrUpdateCompany(@RequestBody @Validated CompanyAo companyAo) {
+        return RspUtil.data(this.companyService.createOrUpdateCompany(companyAo));
     }
 
     /**
@@ -106,16 +133,43 @@ public class CompanyController {
     }
 
     /**
-     * 修改企业信息
-     * 权限: company:update
+     * 批量新增企业信息
+     * 权限: company:add:batch
      *
-     * @see CompanyService#updateCompany(CompanyAo)
+     * @see CompanyService#createCompanyBatch(List)
      */
-    @PutMapping
-    @SaCheckPermission("company:update")
-    @ControllerEndpoint(operation = "修改企业信息")
-    public BaseRsp<Company> updateCompany(@RequestBody @Validated({ValidGroups.Crud.Update.class}) CompanyAo companyAo) {
-        return RspUtil.data(this.companyService.updateCompany(companyAo));
+    @PostMapping("/batch")
+    @SaCheckPermission("company:add:batch")
+    @ControllerEndpoint(operation = "批量新增企业信息")
+    public BaseRsp<List<Company>> createCompanyBatch(@RequestBody @Validated ValidatedList<CompanyAo> companyAos) {
+        return RspUtil.data(this.companyService.createCompanyBatch(companyAos));
+    }
+
+    /**
+     * 批量修改企业信息
+     * 权限: company:update:batch
+     *
+     * @see CompanyService#createOrUpdateCompanyBatch(List)
+     */
+    @PutMapping("/batch")
+    @SaCheckPermission("company:update:batch")
+    @ControllerEndpoint(operation = "批量修改企业信息")
+    public BaseRsp<List<Company>> updateCompanyBatch(@RequestBody @Validated({ValidGroups.Crud.Update.class}) ValidatedList<CompanyAo> companyAos) {
+        return RspUtil.data(this.companyService.updateCompanyBatch(companyAos));
+    }
+
+    /**
+     * 批量新增或修改企业信息
+     * id为空则新增，不为空则修改
+     * 权限: company:createOrUpdate:batch
+     *
+     * @see CompanyService#createOrUpdateCompanyBatch(List)
+     */
+    @PostMapping("/createOrUpdate/batch")
+    @SaCheckPermission("company:createOrUpdate:batch")
+    @ControllerEndpoint(operation = "批量新增或修改企业信息")
+    public BaseRsp<List<Company>> createOrUpdateCompanyBatch(@RequestBody @Validated ValidatedList<CompanyAo> companyAos) {
+        return RspUtil.data(this.companyService.createOrUpdateCompanyBatch(companyAos));
     }
 
     /**

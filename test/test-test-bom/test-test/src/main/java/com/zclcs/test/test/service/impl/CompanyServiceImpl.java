@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     @Override
     public Long countCompany(CompanyVo companyVo) {
-    QueryWrapper queryWrapper = getQueryWrapper(companyVo);
+        QueryWrapper queryWrapper = getQueryWrapper(companyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -105,7 +106,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-   }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -123,6 +124,50 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         BeanUtil.copyProperties(companyAo, company);
         this.updateById(company);
         return company;
+    }
+
+    @Override
+    public Company createOrUpdateCompany(CompanyAo companyAo) {
+        Company company = new Company();
+        BeanUtil.copyProperties(companyAo, company);
+        this.saveOrUpdate(company);
+        return company;
+    }
+
+    @Override
+    public List<Company> createCompanyBatch(List<CompanyAo> companyAos) {
+        List<Company> companyList = new ArrayList<>();
+        for (CompanyAo companyAo : companyAos) {
+            Company company = new Company();
+            BeanUtil.copyProperties(companyAo, company);
+            companyList.add(company);
+        }
+        saveBatch(companyList);
+        return companyList;
+    }
+
+    @Override
+    public List<Company> updateCompanyBatch(List<CompanyAo> companyAos) {
+        List<Company> companyList = new ArrayList<>();
+        for (CompanyAo companyAo : companyAos) {
+            Company company = new Company();
+            BeanUtil.copyProperties(companyAo, company);
+            companyList.add(company);
+        }
+        updateBatch(companyList);
+        return companyList;
+    }
+
+    @Override
+    public List<Company> createOrUpdateCompanyBatch(List<CompanyAo> companyAos) {
+        List<Company> companyList = new ArrayList<>();
+        for (CompanyAo companyAo : companyAos) {
+            Company company = new Company();
+            BeanUtil.copyProperties(companyAo, company);
+            companyList.add(company);
+        }
+        saveOrUpdateBatch(companyList);
+        return companyList;
     }
 
     @Override

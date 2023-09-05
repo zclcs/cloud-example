@@ -184,6 +184,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public Menu createOrUpdateMenu(MenuAo menuAo) {
+        Menu one = this.queryChain().select(MENU.MENU_ID).where(MENU.MENU_CODE.eq(menuAo.getMenuCode())).one();
+        if (one == null) {
+            return createMenu(menuAo);
+        } else {
+            menuAo.setMenuId(one.getMenuId());
+            return updateMenu(menuAo);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteMenu(List<Long> ids) {
         List<Long> allMenuIds = new ArrayList<>(ids);
         for (Long id : ids) {
