@@ -20,12 +20,12 @@ public interface Params {
     /**
      * 代码生成权限集合
      */
-    String[] AUTHS = new String[]{"page", "list", "one", "add", "add:batch", "delete", "update", "update:batch", "createOrUpdate:batch"};
+    String[] AUTHS = new String[]{"page", "list", "one", "add", "add:batch", "delete", "update", "update:batch", "createOrUpdate", "createOrUpdate:batch"};
 
     /**
      * 按钮文字
      */
-    String[] BUTTON_TEXT = new String[]{"分页", "集合", "单个", "新增", "批量新增", "删除", "修改", "批量修改", "批量新增或修改"};
+    String[] BUTTON_TEXT = new String[]{"分页", "集合", "单个", "新增", "批量新增", "删除", "修改", "批量修改", "新增或修改", "批量新增或修改"};
 
     /**
      * 代码压缩包后缀
