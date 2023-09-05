@@ -8,10 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.csp.sentinel.Tracer;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.exception.FileDownloadException;
-import com.zclcs.cloud.lib.core.exception.FileUploadException;
-import com.zclcs.cloud.lib.core.exception.MyException;
-import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
+import com.zclcs.cloud.lib.core.exception.*;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -99,7 +96,13 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<Object> handleMyException(MyException e) {
         log.error("系统业务异常 ex={}", e.getMessage(), e);
-        return RspUtil.message("系统业务异常");
+        return RspUtil.message(e.getMessage());
+    }
+
+    @ExceptionHandler(value = FieldException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseRsp<Object> handleFieldException(FieldException e) {
+        return RspUtil.message(e.getMessage());
     }
 
     @ExceptionHandler(value = ValidateCodeException.class)
@@ -176,7 +179,7 @@ public class BaseExceptionHandler {
 
     @ExceptionHandler(value = FileUploadException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public BaseRsp<Object> handleINTERNAL_SERVER_ERROR(FileUploadException e) {
+    public BaseRsp<Object> handleFileUploadException(FileUploadException e) {
         log.error("FileUploadException", e);
         return RspUtil.message(e.getMessage());
     }

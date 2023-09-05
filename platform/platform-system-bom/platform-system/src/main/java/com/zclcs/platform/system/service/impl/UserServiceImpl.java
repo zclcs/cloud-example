@@ -13,7 +13,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Security;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
@@ -311,7 +311,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void validateUsername(String username, Long userId) {
         UserVo userVo = this.findByName(username);
         if (userVo != null && !userVo.getUserId().equals(userId)) {
-            throw new MyException("用户名重复");
+            throw new FieldException("用户名重复");
         }
     }
 
@@ -320,7 +320,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StrUtil.isNotBlank(mobile)) {
             UserVo userVo = this.findByMobile(mobile);
             if (userVo != null && !userVo.getUserId().equals(userId)) {
-                throw new MyException("手机号重复");
+                throw new FieldException("手机号重复");
             }
         }
     }

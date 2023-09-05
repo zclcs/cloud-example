@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -32,7 +32,7 @@ public class OauthClientDetailsAo implements Serializable {
      * 默认值：
      */
     @Size(max = 64, message = "{noMoreThan}")
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private String clientId;
 
     /**

@@ -6,7 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.test.test.api.bean.ao.ChildProjectAo;
 import com.zclcs.test.test.api.bean.entity.ChildProject;
@@ -114,7 +114,7 @@ public class ChildProjectController {
     @PutMapping
     @SaCheckPermission("childProject:update")
     @ControllerEndpoint(operation = "修改工程信息")
-    public BaseRsp<ChildProject> updateChildProject(@RequestBody @Validated(UpdateStrategy.class) ChildProjectAo childProjectAo) {
+    public BaseRsp<ChildProject> updateChildProject(@RequestBody @Validated({ValidGroups.Crud.Update.class}) ChildProjectAo childProjectAo) {
         return RspUtil.data(this.childProjectService.updateChildProject(childProjectAo));
     }
 

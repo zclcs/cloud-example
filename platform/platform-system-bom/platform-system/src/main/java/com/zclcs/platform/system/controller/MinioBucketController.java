@@ -7,8 +7,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.AddStrategy;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.MinioBucketAo;
 import com.zclcs.platform.system.api.bean.entity.MinioBucket;
@@ -102,7 +101,7 @@ public class MinioBucketController {
     @PostMapping
     @SaCheckPermission("bucket:add")
     @ControllerEndpoint(operation = "新增桶")
-    public BaseRsp<MinioBucket> addMinioBucket(@RequestBody @Validated(AddStrategy.class) MinioBucketAo minioBucketAo) {
+    public BaseRsp<MinioBucket> addMinioBucket(@RequestBody @Validated MinioBucketAo minioBucketAo) {
         return RspUtil.data(this.minioService.createMinioBucket(minioBucketAo));
     }
 
@@ -130,7 +129,7 @@ public class MinioBucketController {
     @PutMapping
     @SaCheckPermission("bucket:update")
     @ControllerEndpoint(operation = "修改桶")
-    public BaseRsp<MinioBucket> updateMinioBucket(@RequestBody @Validated(UpdateStrategy.class) MinioBucketAo minioBucketAo) {
+    public BaseRsp<MinioBucket> updateMinioBucket(@RequestBody @Validated({ValidGroups.Crud.Update.class}) MinioBucketAo minioBucketAo) {
         return RspUtil.data(this.minioService.updateMinioBucket(minioBucketAo));
     }
 

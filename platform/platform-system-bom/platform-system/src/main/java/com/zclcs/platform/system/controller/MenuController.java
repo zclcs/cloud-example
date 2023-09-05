@@ -8,7 +8,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
@@ -212,7 +212,7 @@ public class MenuController {
     @PutMapping
     @SaCheckPermission("menu:update")
     @ControllerEndpoint(operation = "修改菜单")
-    public BaseRsp<Menu> updateMenu(@RequestBody @Validated(UpdateStrategy.class) MenuAo menuAo) {
+    public BaseRsp<Menu> updateMenu(@RequestBody @Validated({ValidGroups.Crud.Update.class}) MenuAo menuAo) {
         return RspUtil.data(this.menuService.updateMenu(menuAo));
     }
 }

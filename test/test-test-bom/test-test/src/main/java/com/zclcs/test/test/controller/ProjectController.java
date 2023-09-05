@@ -6,7 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.test.test.api.bean.ao.ProjectAo;
 import com.zclcs.test.test.api.bean.entity.Project;
@@ -114,7 +114,7 @@ public class ProjectController {
     @PutMapping
     @SaCheckPermission("project:update")
     @ControllerEndpoint(operation = "修改项目信息")
-    public BaseRsp<Project> updateProject(@RequestBody @Validated(UpdateStrategy.class) ProjectAo projectAo) {
+    public BaseRsp<Project> updateProject(@RequestBody @Validated({ValidGroups.Crud.Update.class}) ProjectAo projectAo) {
         return RspUtil.data(this.projectService.updateProject(projectAo));
     }
 
@@ -138,7 +138,7 @@ public class ProjectController {
      */
     @PostMapping("/import/excel")
     @SaCheckPermission("project:import")
-    public BaseRsp<String> importExcel(MultipartFile file) {
+    public BaseRsp<String> importExcel(@RequestParam MultipartFile file) {
         projectService.importExcel(file);
         return RspUtil.message("导入成功");
     }

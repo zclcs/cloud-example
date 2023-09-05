@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,7 +31,7 @@ public class MinioBucketAo implements Serializable {
      * 桶id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long id;
 
     /**

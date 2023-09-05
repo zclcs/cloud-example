@@ -8,7 +8,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.mybatis.flex.annotation.DataDesensitization;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
@@ -220,7 +220,7 @@ public class UserController {
     @PostMapping
     @SaCheckPermission("user:add")
     @ControllerEndpoint(operation = "新增用户")
-    public BaseRsp<User> addUser(@RequestBody @Validated UserAo userAo) {
+    public BaseRsp<User> addUser(@Validated @RequestBody UserAo userAo) {
         return RspUtil.data(this.userService.createUser(userAo));
     }
 
@@ -249,7 +249,7 @@ public class UserController {
     @PutMapping
     @SaCheckPermission("user:update")
     @ControllerEndpoint(operation = "修改用户")
-    public BaseRsp<User> updateUser(@RequestBody @Validated(UpdateStrategy.class) UserAo userAo) {
+    public BaseRsp<User> updateUser(@Validated({ValidGroups.Crud.Update.class}) @RequestBody UserAo userAo) {
         return RspUtil.data(this.userService.updateUser(userAo));
     }
 

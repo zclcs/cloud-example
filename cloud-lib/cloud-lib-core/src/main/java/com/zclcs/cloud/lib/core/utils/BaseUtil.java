@@ -3,7 +3,6 @@ package com.zclcs.cloud.lib.core.utils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.Regexp;
-import com.zclcs.cloud.lib.core.constant.Strings;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.env.Environment;
 
@@ -40,14 +39,10 @@ public class BaseUtil {
      * @return 结果
      */
     public String underscoreToCamel(String value) {
-        StringBuilder result = new StringBuilder();
-        String[] arr = value.split(Strings.UNDER_LINE);
-        for (String s : arr) {
-            if (StrUtil.isNotBlank(s)) {
-                result.append((String.valueOf(s.charAt(0))).toUpperCase()).append(s.substring(1));
-            }
+        if (StrUtil.isBlank(value)) {
+            return value;
         }
-        return result.toString();
+        return StrUtil.toCamelCase(value);
     }
 
     /**

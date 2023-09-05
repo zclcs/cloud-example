@@ -13,7 +13,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
@@ -276,11 +276,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public void validateMenuCode(String menuCode, Long menuId) {
         if (CommonCore.TOP_PARENT_CODE.equals(menuCode)) {
-            throw new MyException("菜单编码输入非法值");
+            throw new FieldException("菜单编码输入非法值");
         }
         Menu one = this.queryChain().where(MENU.MENU_CODE.eq(menuCode)).one();
         if (one != null && !one.getMenuId().equals(menuId)) {
-            throw new MyException("菜单编码重复");
+            throw new FieldException("菜单编码重复");
         }
     }
 

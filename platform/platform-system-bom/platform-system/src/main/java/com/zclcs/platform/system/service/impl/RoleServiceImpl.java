@@ -9,7 +9,7 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
 import com.zclcs.platform.system.api.bean.entity.Role;
 import com.zclcs.platform.system.api.bean.entity.RoleMenu;
@@ -179,11 +179,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public void validateRoleCode(String roleCode, Long roleId) {
         if (CommonCore.TOP_PARENT_CODE.equals(roleCode)) {
-            throw new MyException("角色编码输入非法值");
+            throw new FieldException("角色编码输入非法值");
         }
         Role one = this.queryChain().where(ROLE.ROLE_CODE.eq(roleCode)).one();
         if (one != null && !one.getRoleId().equals(roleId)) {
-            throw new MyException("角色编码重复");
+            throw new FieldException("角色编码重复");
         }
     }
 
@@ -191,7 +191,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void validateRoleName(String roleName, Long roleId) {
         Role one = this.queryChain().where(ROLE.ROLE_NAME.eq(roleName)).one();
         if (one != null && !one.getRoleId().equals(roleId)) {
-            throw new MyException("角色名称重复");
+            throw new FieldException("角色名称重复");
         }
     }
 }

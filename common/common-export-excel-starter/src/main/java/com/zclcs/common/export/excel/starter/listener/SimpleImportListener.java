@@ -5,7 +5,9 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.data.CellData;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.util.ListUtils;
+import com.zclcs.common.export.excel.starter.kit.Validators;
 import com.zclcs.common.export.excel.starter.service.ImportExcelService;
+import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zclcs
@@ -60,6 +63,7 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
             beanMap.put(declaredField.getName(), data.get(i));
         }
         T bean = this.importExcelService.toBean(beanMap);
+        Set<ConstraintViolation<T>> validate = Validators.validate(bean);
         cachedDataList.add(bean);
         if (cachedDataList.size() >= batchSize) {
             this.importExcelService.saveBeans(cachedDataList);

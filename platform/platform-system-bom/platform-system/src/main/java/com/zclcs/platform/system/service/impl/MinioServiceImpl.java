@@ -9,6 +9,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.Minio;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.exception.FileUploadException;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
@@ -125,7 +126,7 @@ public class MinioServiceImpl implements MinioService {
     public void validateBucketName(String bucketName, Long bucketId) {
         MinioBucket one = minioBucketService.queryChain().where(MINIO_BUCKET.BUCKET_NAME.eq(bucketName)).one();
         if (one != null && !one.getId().equals(bucketId)) {
-            throw new MyException("桶名称重复");
+            throw new FieldException("桶名称重复");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -29,14 +29,14 @@ public class RoleMenuAo implements Serializable {
      * 角色id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long roleId;
 
     /**
      * 菜单id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long menuId;
 
 

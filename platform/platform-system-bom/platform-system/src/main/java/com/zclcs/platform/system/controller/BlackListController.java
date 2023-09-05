@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
 import com.zclcs.platform.system.api.bean.entity.BlackList;
@@ -114,7 +114,7 @@ public class BlackListController {
     @PutMapping
     @SaCheckPermission("blackList:update")
     @ControllerEndpoint(operation = "修改黑名单")
-    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated(UpdateStrategy.class) BlackListAo blackListAo) throws JsonProcessingException {
+    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated({ValidGroups.Crud.Update.class}) BlackListAo blackListAo) throws JsonProcessingException {
         return RspUtil.data(this.blackListService.updateBlackList(blackListAo));
     }
 }

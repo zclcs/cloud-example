@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.dict.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +32,7 @@ public class GeneratorConfigAo implements Serializable {
      * 主键
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long id;
 
     /**

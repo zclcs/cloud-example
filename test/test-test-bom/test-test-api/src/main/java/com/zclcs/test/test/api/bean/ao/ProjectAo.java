@@ -1,6 +1,5 @@
 package com.zclcs.test.test.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.dict.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,9 +9,9 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.math.BigDecimal;
 
 /**
  * 项目信息 Ao
@@ -35,7 +34,7 @@ public class ProjectAo implements Serializable {
      * 项目id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long projectId;
 
     /**

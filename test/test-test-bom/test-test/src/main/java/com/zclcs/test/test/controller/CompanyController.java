@@ -6,7 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.test.test.api.bean.ao.CompanyAo;
 import com.zclcs.test.test.api.bean.entity.Company;
@@ -114,7 +114,7 @@ public class CompanyController {
     @PutMapping
     @SaCheckPermission("company:update")
     @ControllerEndpoint(operation = "修改企业信息")
-    public BaseRsp<Company> updateCompany(@RequestBody @Validated(UpdateStrategy.class) CompanyAo companyAo) {
+    public BaseRsp<Company> updateCompany(@RequestBody @Validated({ValidGroups.Crud.Update.class}) CompanyAo companyAo) {
         return RspUtil.data(this.companyService.updateCompany(companyAo));
     }
 

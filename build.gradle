@@ -11,7 +11,7 @@ buildscript {
         sentinelVersion = "1.8.6"
         findbugsVersion = "3.0.2"
         lombokVersion = "1.18.24"
-        hutoolVersion = "5.8.11"
+        hutoolVersion = "5.8.21"
         mybatisPlusVersion = "3.5.3.2"
         p6spyVersion = "3.9.1"
         apmToolkitLogbackVersion = "8.7.0"
@@ -30,7 +30,7 @@ buildscript {
         janinoVersion = "3.1.9"
         saTokenVersion = "1.35.0.RC"
         easyexcelVersion = "3.3.2"
-        mybatisFlexVersion = "1.6.3"
+        mybatisFlexVersion = "1.6.4"
         mybatisVersion = "3.0.2"
     }
 }

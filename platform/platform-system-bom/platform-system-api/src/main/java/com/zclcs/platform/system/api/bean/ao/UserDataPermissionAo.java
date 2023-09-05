@@ -1,6 +1,6 @@
 package com.zclcs.platform.system.api.bean.ao;
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -29,14 +29,14 @@ public class UserDataPermissionAo implements Serializable {
      * 用户id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long userId;
 
     /**
      * 部门id
      * 默认值：
      */
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     private Long deptId;
 
 

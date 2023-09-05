@@ -6,7 +6,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import ${basePackage}.${entityPackage}.${className};
 import ${basePackage}.${aoPackage}.${className}Ao;
@@ -84,7 +84,7 @@ public class ${className}Controller {
     @PostMapping
     @SaCheckPermission("${className?uncap_first}:add")
     @ControllerEndpoint(operation = "新增${tableComment}")
-    public BaseRsp<${className}> add${className}(@RequestBody @Validated ${className}Ao ${className?uncap_first}Ao) {
+    public BaseRsp<${className}> add${className}(@Validated @RequestBody ${className}Ao ${className?uncap_first}Ao) {
         return RspUtil.data(this.${className?uncap_first}Service.create${className}(${className?uncap_first}Ao));
     }
 
@@ -113,7 +113,7 @@ public class ${className}Controller {
     @PutMapping
     @SaCheckPermission("${className?uncap_first}:update")
     @ControllerEndpoint(operation = "修改${tableComment}")
-    public BaseRsp<${className}> update${className}(@RequestBody @Validated(UpdateStrategy.class) ${className}Ao ${className?uncap_first}Ao) {
+    public BaseRsp<${className}> update${className}(@Validated({ValidGroups.Crud.Update.class}) @RequestBody ${className}Ao ${className?uncap_first}Ao) {
         return RspUtil.data(this.${className?uncap_first}Service.update${className}(${className?uncap_first}Ao));
     }
 }

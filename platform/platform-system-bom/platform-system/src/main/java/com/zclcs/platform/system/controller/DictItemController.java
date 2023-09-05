@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
@@ -236,7 +236,7 @@ public class DictItemController {
     @PutMapping
     @SaCheckPermission("dictItem:update")
     @ControllerEndpoint(operation = "修改字典项")
-    public BaseRsp<DictItem> updateDictItem(@RequestBody @Validated(UpdateStrategy.class) DictItemAo dictItemAo) {
+    public BaseRsp<DictItem> updateDictItem(@RequestBody @Validated({ValidGroups.Crud.Update.class}) DictItemAo dictItemAo) {
         return RspUtil.data(this.dictItemService.updateDictItem(dictItemAo));
     }
 }

@@ -1,6 +1,6 @@
 package ${basePackage}.${aoPackage};
 
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.dict.json.annotation.DictValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,7 +50,7 @@ public class ${className}Ao implements Serializable {
     @Size(max = ${column.charMaxLength}, message = "{noMoreThan}")
     </#if>
     <#if column.isKey = true>
-    @NotNull(message = "{required}", groups = UpdateStrategy.class)
+    @NotNull(message = "{required}", groups = {ValidGroups.Crud.Update.class})
     </#if>
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'

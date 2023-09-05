@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
@@ -144,7 +144,7 @@ public class OauthClientDetailsController {
     @PutMapping
     @SaCheckPermission("oauthClientDetails:update")
     @ControllerEndpoint(operation = "修改终端信息")
-    public BaseRsp<OauthClientDetails> updateOauthClientDetails(@RequestBody @Validated(UpdateStrategy.class) OauthClientDetailsAo oauthClientDetailsAo) {
+    public BaseRsp<OauthClientDetails> updateOauthClientDetails(@RequestBody @Validated({ValidGroups.Crud.Update.class}) OauthClientDetailsAo oauthClientDetailsAo) {
         return RspUtil.data(this.oauthClientDetailsService.updateOauthClientDetails(oauthClientDetailsAo));
     }
 }

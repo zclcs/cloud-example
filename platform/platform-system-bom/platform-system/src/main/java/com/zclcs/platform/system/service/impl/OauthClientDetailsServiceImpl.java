@@ -9,6 +9,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
@@ -134,7 +135,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Override
     public void validateClientId(String clientId) {
         if (this.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).count() > 0L) {
-            throw new MyException("客户端id重复");
+            throw new FieldException("客户端id重复");
         }
     }
 

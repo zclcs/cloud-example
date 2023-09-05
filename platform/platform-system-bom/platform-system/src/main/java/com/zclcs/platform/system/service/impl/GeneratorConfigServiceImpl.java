@@ -7,7 +7,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.platform.system.api.bean.ao.GeneratorConfigAo;
 import com.zclcs.platform.system.api.bean.entity.GeneratorConfig;
 import com.zclcs.platform.system.api.bean.vo.GeneratorConfigVo;
@@ -83,7 +83,7 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
     public void validateServerName(String serverName, Long id) {
         GeneratorConfig one = this.queryChain().where(GENERATOR_CONFIG.SERVER_NAME.eq(serverName)).one();
         if (one != null && !one.getId().equals(id)) {
-            throw new MyException("服务名重复");
+            throw new FieldException("服务名重复");
         }
     }
 

@@ -11,7 +11,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
@@ -199,7 +199,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
                 .where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.VALUE.eq(value)).one();
         if (one != null && !one.getId().equals(id)) {
-            throw new MyException("字典项重复");
+            throw new FieldException("字典项重复");
         }
     }
 

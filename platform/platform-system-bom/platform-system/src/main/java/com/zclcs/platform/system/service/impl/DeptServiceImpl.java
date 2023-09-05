@@ -11,7 +11,7 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
-import com.zclcs.cloud.lib.core.exception.MyException;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.cloud.lib.mybatis.flex.utils.PredicateUtil;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
@@ -187,11 +187,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public void validateDeptCode(String deptCode, Long deptId) {
         if (CommonCore.TOP_PARENT_CODE.equals(deptCode)) {
-            throw new MyException("部门编码输入非法值");
+            throw new FieldException("部门编码输入非法值");
         }
         Dept one = this.queryChain().where(DEPT.DEPT_CODE.eq(deptCode)).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
-            throw new MyException("部门编码重复");
+            throw new FieldException("部门编码重复");
         }
     }
 
@@ -199,7 +199,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public void validateDeptName(String deptName, Long deptId) {
         Dept one = this.queryChain().where(DEPT.DEPT_NAME.eq(deptName)).one();
         if (one != null && !one.getDeptId().equals(deptId)) {
-            throw new MyException("部门名称重复");
+            throw new FieldException("部门名称重复");
         }
     }
 }

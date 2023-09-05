@@ -7,7 +7,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
+import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
@@ -176,7 +176,7 @@ public class RoleController {
     @PutMapping
     @SaCheckPermission("role:update")
     @ControllerEndpoint(operation = "修改角色")
-    public BaseRsp<Role> updateRole(@RequestBody @Validated(UpdateStrategy.class) RoleAo roleAo) {
+    public BaseRsp<Role> updateRole(@RequestBody @Validated({ValidGroups.Crud.Update.class}) RoleAo roleAo) {
         return RspUtil.data(this.roleService.updateRole(roleAo));
     }
 }

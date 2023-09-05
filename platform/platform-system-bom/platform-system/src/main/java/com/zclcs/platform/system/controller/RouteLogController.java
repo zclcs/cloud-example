@@ -63,31 +63,6 @@ public class RouteLogController {
     }
 
     /**
-     * 导出网关转发日志
-     * 权限: routeLog:export
-     *
-     * @see RouteLogService#exportExcel(RouteLogVo)
-     */
-    @GetMapping("/export/excel")
-    @SaCheckPermission("routeLog:export")
-    public void exportRouteLogList(@Validated RouteLogVo routeLogVo) {
-        routeLogService.exportExcel(routeLogVo);
-    }
-
-    /**
-     * 导入网关转发日志
-     * 权限: routeLog:import
-     *
-     * @see RouteLogService#importExcel(MultipartFile)
-     */
-    @GetMapping("/import/excel")
-    @SaCheckPermission("routeLog:import")
-    public BaseRsp<String> importRouteLogList(MultipartFile file) {
-        routeLogService.importExcel(file);
-        return RspUtil.message("导入成功");
-    }
-
-    /**
      * 网关转发日志查询（单个）
      * 权限: routeLog:view
      *
@@ -127,5 +102,30 @@ public class RouteLogController {
         List<Long> ids = Arrays.stream(routeLogIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.routeLogService.deleteRouteLog(ids);
         return RspUtil.message("删除成功");
+    }
+
+    /**
+     * 导出网关转发日志
+     * 权限: routeLog:export
+     *
+     * @see RouteLogService#exportExcel(RouteLogVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("routeLog:export")
+    public void exportRouteLogList(@Validated RouteLogVo routeLogVo) {
+        routeLogService.exportExcel(routeLogVo);
+    }
+
+    /**
+     * 导入网关转发日志
+     * 权限: routeLog:import
+     *
+     * @see RouteLogService#importExcel(MultipartFile)
+     */
+    @GetMapping("/import/excel")
+    @SaCheckPermission("routeLog:import")
+    public BaseRsp<String> importRouteLogList(@RequestParam MultipartFile file) {
+        routeLogService.importExcel(file);
+        return RspUtil.message("导入成功");
     }
 }

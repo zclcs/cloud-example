@@ -14,7 +14,6 @@ import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
-import com.zclcs.cloud.lib.core.strategy.UpdateStrategy;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.maintenance.bean.ao.NacosConfigAo;
@@ -128,7 +127,7 @@ public class NacosController {
      */
     @PutMapping("/config")
     @SaCheckPermission("nacos:view")
-    public BaseRsp<String> findNacosConfigDetail(@RequestBody @Validated(UpdateStrategy.class) NacosConfigVo.ConfigDetailVo configDetailVo) {
+    public BaseRsp<String> findNacosConfigDetail(@RequestBody @Validated({ValidGroups.Crud.Update.class}) NacosConfigVo.ConfigDetailVo configDetailVo) {
         String nacosToken = getNacosToken();
         Map<String, Object> params = BeanUtil.beanToMap(configDetailVo, false, false);
         params.put("modifyTime", System.currentTimeMillis());
