@@ -114,8 +114,10 @@ public class CascadeWriteHandler implements SheetWriteHandler {
         } else {
             char endPrefix = 'A';
             char endSuffix = 'A';
-            if ((colCount - 25) / 26 == 0 || colCount == 51) {// 26-51之间，包括边界（仅两次字母表计算）
-                if ((colCount - 25) % 26 == 0) {// 边界值
+            // 26-51之间，包括边界（仅两次字母表计算）
+            if ((colCount - 25) / 26 == 0 || colCount == 51) {
+                // 边界值
+                if ((colCount - 25) % 26 == 0) {
                     endSuffix = (char) ('A' + 25);
                 } else {
                     endSuffix = (char) ('A' + (colCount - 25) % 26 - 1);
