@@ -3,6 +3,7 @@ package com.zclcs.common.export.excel.starter.listener;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
@@ -69,6 +70,20 @@ public class SimpleExportListener<T, K> {
 
     /**
      * 使用注解导出
+     * sheetName = fileName
+     * 文件后缀 {@link ExcelTypeEnum#XLSX}
+     *
+     * @param response 返回
+     * @param fileName 文件名称
+     * @param clazz    类路径
+     * @param t        入参泛型
+     */
+    public void exportWithEntity(HttpServletResponse response, String fileName, Class<K> clazz, T t, WriteHandler dropDownWrite) {
+        exportWithEntity(response, fileName, fileName, clazz, t, defaultWriteHandler(), ExcelTypeEnum.XLSX, dropDownWrite, null);
+    }
+
+    /**
+     * 使用注解导出
      * 使用默认的表格样式策略
      *
      * @param response      返回
@@ -81,7 +96,7 @@ public class SimpleExportListener<T, K> {
     public void exportWithEntity(HttpServletResponse response, String fileName, String sheetName,
                                  Class<K> clazz, T t,
                                  ExcelTypeEnum excelTypeEnum) {
-        exportWithEntity(response, fileName, sheetName, clazz, t, defaultWriteHandler(), excelTypeEnum);
+        exportWithEntity(response, fileName, sheetName, clazz, t, defaultWriteHandler(), excelTypeEnum, null, null);
     }
 
     /**
@@ -99,12 +114,18 @@ public class SimpleExportListener<T, K> {
     public void exportWithEntity(HttpServletResponse response, String fileName, String sheetName,
                                  Class<K> clazz, T t,
                                  WriteHandler writeHandler,
-                                 ExcelTypeEnum excelTypeEnum) {
+                                 ExcelTypeEnum excelTypeEnum, WriteHandler dropDownWrite, WriteHandler cascadeWrite) {
         Long count = checkSize(t);
-        ExcelWriter excelWriter = EasyExcel
+        ExcelWriterBuilder excelWriterBuilder = EasyExcel
                 .write(response.getOutputStream(), clazz)
-                .registerWriteHandler(writeHandler)
-                .build();
+                .registerWriteHandler(writeHandler);
+        if (dropDownWrite != null) {
+            excelWriterBuilder.registerWriteHandler(dropDownWrite);
+        }
+        if (cascadeWrite != null) {
+            excelWriterBuilder.registerWriteHandler(cascadeWrite);
+        }
+        ExcelWriter excelWriter = excelWriterBuilder.build();
         responseExcel(sheetName, t, count, excelWriter);
         ExcelUtil.setResponse(response, fileName, excelTypeEnum);
         excelWriter.finish();

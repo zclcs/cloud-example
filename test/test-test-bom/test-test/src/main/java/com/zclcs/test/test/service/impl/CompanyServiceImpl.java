@@ -11,6 +11,7 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
+import com.zclcs.cloud.lib.excel.handler.DropDownWriteHandler;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -192,7 +193,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 return excelVoPage.getRecords();
             }
         });
-        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "企业信息", CompanyExcelVo.class, companyVo);
+        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "企业信息", CompanyExcelVo.class, companyVo, new DropDownWriteHandler(CompanyExcelVo.class.getDeclaredFields()));
     }
 
     @SneakyThrows

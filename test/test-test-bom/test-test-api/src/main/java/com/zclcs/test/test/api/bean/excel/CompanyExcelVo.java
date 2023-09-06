@@ -2,6 +2,7 @@ package com.zclcs.test.test.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
+import com.zclcs.cloud.lib.excel.annotation.ExcelDict;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class CompanyExcelVo {
     /**
      * 企业登记注册类型 @@company_type
      */
+    @ExcelDict(value = "company_type")
     @ExcelProperty(value = "企业登记注册类型 @@company_type")
     private String companyType;
 

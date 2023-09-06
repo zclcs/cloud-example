@@ -9,7 +9,6 @@ dependencies {
     implementation(project(":common:common-jackson-starter"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-db-merge-starter"))
-    implementation(project(":common:common-export-excel-starter"))
     implementation(project(":common:common-validation-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
@@ -18,6 +17,7 @@ dependencies {
     implementation(project(":cloud-lib:cloud-lib-fegin"))
     implementation(project(":cloud-lib:cloud-lib-dict"))
     implementation(project(":cloud-lib:cloud-lib-aop"))
+    implementation(project(":cloud-lib:cloud-lib-excel"))
     implementation(project(":test:test-test-bom:test-test-api"))
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"

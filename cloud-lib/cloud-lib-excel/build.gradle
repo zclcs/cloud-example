@@ -1,0 +1,5 @@
+dependencies {
+    api project(":cloud-lib:cloud-lib-core")
+    api project(":cloud-lib:cloud-lib-dict")
+    api project(":common:common-export-excel-starter")
+}
