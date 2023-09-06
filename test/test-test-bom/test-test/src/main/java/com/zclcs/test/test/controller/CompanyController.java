@@ -109,7 +109,7 @@ public class CompanyController {
      *
      * @see CompanyService#createOrUpdateCompany(CompanyAo)
      */
-    @PutMapping
+    @PostMapping("/createOrUpdate")
     @SaCheckPermission("company:createOrUpdate")
     @ControllerEndpoint(operation = "新增或修改企业信息")
     public BaseRsp<Company> createOrUpdateCompany(@RequestBody @Validated CompanyAo companyAo) {
