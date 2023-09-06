@@ -86,9 +86,8 @@ CREATE TABLE IF NOT EXISTS `system_dict_item`
     `create_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT '' COMMENT '创建人',
     `update_by`           varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT '' COMMENT '修改人',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `uk_system_dict_item_value_dict_name` (`dict_name`, `value`) USING BTREE COMMENT '字典项表名code唯一索引',
-    INDEX `nk_system_dict_item_value` (`value`) USING BTREE COMMENT '字典项value索引',
-    INDEX `nk_system_dict_item_title` (`title`) USING BTREE COMMENT '字典项title索引',
+    UNIQUE INDEX `uk_system_dict_item_dict_name_value` (`dict_name`, `value`) USING BTREE COMMENT '字典项表名code唯一索引',
+    UNIQUE INDEX `uk_system_dict_item_dict_name_parent_value_title` (`dict_name`, `parent_value`, `title`) USING BTREE COMMENT '字典项表名文本值唯一索引',
     INDEX `nk_system_dict_item_parent_value` (`parent_value`) USING BTREE COMMENT '字典项父value索引'
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1

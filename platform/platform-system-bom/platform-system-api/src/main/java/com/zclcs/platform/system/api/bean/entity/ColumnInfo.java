@@ -105,6 +105,12 @@ public class ColumnInfo {
     private String fieldUpperCase;
 
     /**
+     * 去掉注释中带的字典
+     */
+    @Column(ignore = true)
+    private String remarkSpiltDict;
+
+    /**
      * 注释中带的字典
      */
     @Column(ignore = true)

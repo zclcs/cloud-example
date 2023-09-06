@@ -5,7 +5,6 @@ import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 企业信息 ExcelVo
@@ -61,7 +60,7 @@ public class CompanyExcelVo {
      */
     @ExcelProperty(value = "注册地区编码 array @@area_code")
     private String areaCode;
-    
+
     public void setAreaCode(String areaCode) {
         this.areaCode = DictCacheUtil.getDictTitleArray("area_code", areaCode);
     }

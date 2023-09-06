@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
  * @author zclcs
  */
 @Service
-public class DictItemCache extends CacheService<DictItemCacheVo> {
+public class DictTitleCache extends CacheService<DictItemCacheVo> {
 
     private RemoteDictItemService remoteDictItemService;
 
-    public DictItemCache() {
-        super(RedisCachePrefix.DICT_ITEM_PREFIX, true);
+    public DictTitleCache() {
+        super(RedisCachePrefix.DICT_TITLE_PREFIX, true);
     }
 
     @Autowired(required = false)
@@ -27,7 +27,7 @@ public class DictItemCache extends CacheService<DictItemCacheVo> {
 
     @Override
     protected DictItemCacheVo findByKey(Object... key) {
-        return remoteDictItemService.findByDictNameAndValue((String) key[0], (String) key[1]);
+        return remoteDictItemService.findByDictNameAndParentValueAndTitle((String) key[0], (String) key[1], (String) key[2]);
     }
 
     @Override

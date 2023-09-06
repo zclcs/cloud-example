@@ -151,7 +151,8 @@ public class GeneratorServiceImpl implements GeneratorService {
             if (StrUtil.contains(columnRemark, CommonCore.DICT_REMARK)) {
                 columnInfo.setHasDict(true);
                 List<String> strings = StrUtil.splitTrim(columnRemark, CommonCore.DICT_REMARK);
-                columnInfo.setRemarkDict(strings.get(strings.size() - 1));
+                columnInfo.setRemarkSpiltDict(strings.get(0));
+                columnInfo.setRemarkDict(strings.get(1));
             } else {
                 columnInfo.setHasDict(false);
             }

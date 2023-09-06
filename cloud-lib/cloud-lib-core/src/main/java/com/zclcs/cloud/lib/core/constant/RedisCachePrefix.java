@@ -28,9 +28,14 @@ public interface RedisCachePrefix {
     String DICT_PREFIX = "dict:%s";
 
     /**
-     * 字典项 redis key
+     * 根据字典code缓存字典项 redis key
      */
-    String DICT_ITEM_PREFIX = "dict:%s:item:%s";
+    String DICT_VALUE_PREFIX = "dict:%s:v:%s";
+
+    /**
+     * 根据字典文本缓存字典项 redis key
+     */
+    String DICT_TITLE_PREFIX = "dict:%s:p:%s:t:%s";
 
     /**
      * 子级字典 redis key

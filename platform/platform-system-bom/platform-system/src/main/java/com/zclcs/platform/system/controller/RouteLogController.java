@@ -124,7 +124,7 @@ public class RouteLogController {
      */
     @GetMapping("/import/excel")
     @SaCheckPermission("routeLog:import")
-    public BaseRsp<String> importRouteLogList(@RequestParam MultipartFile file) {
+    public BaseRsp<String> importRouteLogList(MultipartFile file) {
         routeLogService.importExcel(file);
         return RspUtil.message("导入成功");
     }

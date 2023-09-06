@@ -35,6 +35,19 @@ public interface RemoteDictItemService {
     DictItemCacheVo findByDictNameAndValue(@RequestParam String dictName, @RequestParam String value);
 
     /**
+     * 根据字典唯一值、字典值查询字典项
+     * 重复值根据 sorted 字典正序返回第一条
+     * 权限: 内部调用
+     *
+     * @param dictName    字典唯一值
+     * @param parentValue 父字典code
+     * @param title       字典值
+     * @return 字典项
+     */
+    @GetMapping(value = "/dictItem/findByDictNameAndParentValueAndTitle", headers = Security.HEADER_FROM_IN)
+    DictItemCacheVo findByDictNameAndParentValueAndTitle(@RequestParam String dictName, @RequestParam String parentValue, @RequestParam String title);
+
+    /**
      * 根据字典唯一值、父级字典项唯一值查询所有子级字典项
      *
      * @param dictName    字典唯一值

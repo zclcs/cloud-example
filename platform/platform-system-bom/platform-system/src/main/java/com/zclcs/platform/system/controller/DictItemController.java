@@ -84,6 +84,7 @@ public class DictItemController {
 
     /**
      * 根据字典唯一值查询所有字典项
+     * 权限: 内部调用
      *
      * @param dictName 字典唯一值
      * @return 所有字典项
@@ -96,6 +97,7 @@ public class DictItemController {
 
     /**
      * 根据字典唯一值、字典项唯一值查询字典项
+     * 权限: 内部调用
      *
      * @param dictName 字典唯一值
      * @param value    字典项唯一值
@@ -107,12 +109,34 @@ public class DictItemController {
                                                   @RequestParam @NotBlank(message = "{required}") String value) {
         return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.VALUE.eq(value))
-                .orderBy(DICT_ITEM.SORTED.asc())
+                .oneAs(DictItemCacheVo.class);
+    }
+
+    /**
+     * 根据字典唯一值、字典值查询字典项
+     * 重复值根据 sorted 字典正序返回第一条
+     * 权限: 内部调用
+     *
+     * @param dictName    字典唯一值
+     * @param parentValue 父字典code
+     * @param title       字典值
+     * @return 字典项
+     */
+    @GetMapping("/findByDictNameAndParentValueAndTitle")
+    @Inner
+    public DictItemCacheVo findByDictNameAndParentValueAndTitle(@RequestParam @NotBlank(message = "{required}") String dictName,
+                                                                @RequestParam @NotBlank(message = "{required}") String parentValue,
+                                                                @RequestParam @NotBlank(message = "{required}") String title) {
+        return this.dictItemService.queryChain()
+                .where(DICT_ITEM.DICT_NAME.eq(dictName))
+                .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
+                .and(DICT_ITEM.TITLE.eq(title))
                 .oneAs(DictItemCacheVo.class);
     }
 
     /**
      * 根据字典唯一值、父级字典项唯一值查询所有子级字典项
+     * 权限: 内部调用
      *
      * @param dictName    字典唯一值
      * @param parentValue 父级字典项唯一值

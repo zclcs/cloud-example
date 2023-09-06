@@ -14,6 +14,7 @@ import com.zclcs.test.test.api.bean.entity.Company;
 import com.zclcs.test.test.api.bean.vo.CompanyVo;
 import com.zclcs.test.test.service.CompanyService;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -192,7 +193,7 @@ public class CompanyController {
      */
     @PostMapping("/import/excel")
     @SaCheckPermission("company:import")
-    public BaseRsp<String> importExcel(MultipartFile file) {
+    public BaseRsp<String> importExcel(@NotNull(message = "{required}") MultipartFile file) {
         companyService.importExcel(file);
         return RspUtil.message("导入成功");
     }

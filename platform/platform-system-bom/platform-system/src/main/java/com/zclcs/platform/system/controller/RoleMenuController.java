@@ -30,6 +30,7 @@ public class RoleMenuController {
 
     /**
      * 根据角色id查询菜单id集合
+     * 权限: 内部调用
      *
      * @param roleId 角色id
      * @return 菜单id集合

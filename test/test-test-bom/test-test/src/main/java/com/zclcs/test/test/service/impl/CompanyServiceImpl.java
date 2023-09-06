@@ -10,6 +10,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -208,7 +209,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 company.setCompanyName(cellData.get("companyName"));
                 company.setCompanyType(cellData.get("companyType"));
                 company.setLicenseNum(cellData.get("licenseNum"));
-                company.setAreaCode(cellData.get("areaCode"));
+                company.setAreaCode(DictCacheUtil.getDictValueArray("area_code", cellData.get("areaCode")));
                 company.setAddress(cellData.get("address"));
                 company.setZipCode(cellData.get("zipCode"));
                 company.setLegalMan(cellData.get("legalMan"));
@@ -220,8 +221,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 company.setRegCapital(cellData.get("regCapital"));
                 company.setFactRegCapital(cellData.get("factRegCapital"));
                 company.setCapitalCurrencyType(cellData.get("capitalCurrencyType"));
-                company.setRegisterDate(LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER));
-                company.setEstablishDate(LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER));
+                company.setRegisterDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                company.setEstablishDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER) : null);
                 company.setOfficePhone(cellData.get("officePhone"));
                 company.setFaxNumber(cellData.get("faxNumber"));
                 company.setLinkMan(cellData.get("linkMan"));
