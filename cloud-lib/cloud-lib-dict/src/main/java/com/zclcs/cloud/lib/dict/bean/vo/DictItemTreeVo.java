@@ -1,4 +1,4 @@
-package com.zclcs.platform.system.api.bean.vo;
+package com.zclcs.cloud.lib.dict.bean.vo;
 
 import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;

@@ -3,6 +3,7 @@ package com.zclcs.cloud.lib.dict.fegin;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,4 +57,13 @@ public interface RemoteDictItemService {
      */
     @GetMapping(value = "/dictItem/findByDictNameAndParentValue", headers = Security.HEADER_FROM_IN)
     List<DictItemCacheVo> findByDictNameAndParentValue(@RequestParam String dictName, @RequestParam String parentValue);
+
+    /**
+     * 字典树查询
+     *
+     * @param dictName 字典名称
+     * @return 字典树
+     */
+    @GetMapping(value = "/dictItem/inner/tree", headers = Security.HEADER_FROM_IN)
+    List<DictItemTreeVo> tree(@RequestParam String dictName);
 }

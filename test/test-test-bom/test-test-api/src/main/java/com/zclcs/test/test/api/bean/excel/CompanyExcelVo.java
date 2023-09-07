@@ -1,8 +1,13 @@
 package com.zclcs.test.test.api.bean.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
-import com.zclcs.cloud.lib.excel.annotation.ExcelDict;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectAreaHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectCityHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectDictHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectProvinceHandler;
+import com.zclcs.common.export.excel.starter.annotation.ExcelSelect;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -43,7 +48,7 @@ public class CompanyExcelVo {
     /**
      * 企业登记注册类型 @@company_type
      */
-    @ExcelDict(value = "company_type")
+    @ExcelSelect(handler = DynamicSelectDictHandler.class, parameter = "company_type")
     @ExcelProperty(value = "企业登记注册类型 @@company_type")
     private String companyType;
 
@@ -57,14 +62,34 @@ public class CompanyExcelVo {
     @ExcelProperty(value = "工商营业执照注册号")
     private String licenseNum;
 
+    @ExcelSelect(handler = DynamicSelectProvinceHandler.class, parameter = "area_code")
+    @ExcelProperty("省")
+    private String province;
+
+    @ExcelSelect(parentColumn = "省", handler = DynamicSelectCityHandler.class, parameter = "area_code")
+    @ExcelProperty("市")
+    private String city;
+    
     /**
      * 注册地区编码 array @@area_code
      */
+    @ExcelSelect(parentColumn = "市", handler = DynamicSelectAreaHandler.class, parameter = "area_code")
     @ExcelProperty(value = "注册地区编码 array @@area_code")
     private String areaCode;
 
     public void setAreaCode(String areaCode) {
-        this.areaCode = DictCacheUtil.getDictTitleArray("area_code", areaCode);
+        DictItemCacheVo area = DictCacheUtil.getDict("area_code", areaCode);
+        if (area != null) {
+            this.areaCode = area.getTitle();
+            DictItemCacheVo city = DictCacheUtil.getDict("area_code", area.getParentValue());
+            if (city != null) {
+                this.city = city.getTitle();
+                DictItemCacheVo province = DictCacheUtil.getDict("area_code", city.getParentValue());
+                if (province != null) {
+                    this.province = province.getTitle();
+                }
+            }
+        }
     }
 
     /**
@@ -200,6 +225,5 @@ public class CompanyExcelVo {
      */
     @ExcelProperty(value = "企业备注")
     private String remark;
-
 
 }

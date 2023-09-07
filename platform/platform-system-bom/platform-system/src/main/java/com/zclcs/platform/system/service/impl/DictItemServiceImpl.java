@@ -14,10 +14,10 @@ import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
-import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
-import com.zclcs.platform.system.api.bean.vo.DictItemVo;
 import com.zclcs.platform.system.api.bean.vo.DictVo;
 import com.zclcs.platform.system.mapper.DictItemMapper;
 import com.zclcs.platform.system.service.DictItemService;
@@ -88,6 +88,14 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     }
 
     @Override
+    public List<DictItemTreeVo> tree(String dictName) {
+        List<DictItemVo> dictItemList = findDictItemList(DictItemVo.builder().dictName(dictName).build());
+        List<DictItemTreeVo> trees = new ArrayList<>();
+        buildTrees(trees, dictItemList);
+        return (List<DictItemTreeVo>) TreeUtil.build(trees);
+    }
+
+    @Override
     public List<DictItemTreeVo> findDictItemTree(DictItemVo dictItemVo) {
         List<DictItemVo> dictItemList = findDictItemList(dictItemVo);
         List<DictItemTreeVo> trees = new ArrayList<>();
@@ -147,6 +155,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     public DictItem createDictItem(DictItemAo dictItemAo) {
         String dictName = dictItemAo.getDictName();
         String value = dictItemAo.getValue();
+        String title = dictItemAo.getTitle();
         validateDictNameAndValueAndType(dictName, value, dictItemAo.getId());
         DictItem dictItem = new DictItem();
         BeanUtil.copyProperties(dictItemAo, dictItem);
@@ -154,8 +163,10 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         this.save(dictItem);
         String parentValue = dictItem.getParentValue();
         DictCacheUtil.deleteDictByDictName(dictName);
-        DictCacheUtil.deleteDictItemByDictNameAndValue(dictName, value);
         DictCacheUtil.deleteDictByDictNameAndParentValue(dictName, parentValue);
+        DictCacheUtil.deleteDictItemByDictNameAndParentValueAndTitle(dictName, parentValue, title);
+        DictCacheUtil.deleteDictTree(dictName);
+        DictCacheUtil.deleteDictItemByDictNameAndValue(dictName, value);
         return dictItem;
     }
 
@@ -164,6 +175,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     public DictItem updateDictItem(DictItemAo dictItemAo) {
         String dictName = dictItemAo.getDictName();
         String value = dictItemAo.getValue();
+        String title = dictItemAo.getTitle();
         validateDictNameAndValueAndType(dictName, value, dictItemAo.getId());
         DictItem dictItem = new DictItem();
         BeanUtil.copyProperties(dictItemAo, dictItem);
@@ -171,8 +183,10 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         this.updateById(dictItem);
         String parentValue = dictItem.getParentValue();
         DictCacheUtil.deleteDictByDictName(dictName);
-        DictCacheUtil.deleteDictItemByDictNameAndValue(dictName, value);
         DictCacheUtil.deleteDictByDictNameAndParentValue(dictName, parentValue);
+        DictCacheUtil.deleteDictItemByDictNameAndParentValueAndTitle(dictName, parentValue, title);
+        DictCacheUtil.deleteDictTree(dictName);
+        DictCacheUtil.deleteDictItemByDictNameAndValue(dictName, value);
         return dictItem;
     }
 
@@ -181,16 +195,20 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     public void deleteDictItem(List<Long> ids) {
         List<DictItem> list = this.listByIds(ids);
         Object[] objects = list.stream().map(DictItem::getDictName).distinct().toArray();
-        List<List<Object>> dictItems = new ArrayList<>();
         List<List<Object>> dictParents = new ArrayList<>();
+        List<List<Object>> dictTitles = new ArrayList<>();
+        List<List<Object>> dictValues = new ArrayList<>();
         for (DictItem dictItem : list) {
-            dictItems.add(CollectionUtil.newArrayList(dictItem.getDictName(), dictItem.getValue()));
             dictParents.add(CollectionUtil.newArrayList(dictItem.getDictName(), dictItem.getParentValue()));
+            dictTitles.add(CollectionUtil.newArrayList(dictItem.getDictName(), dictItem.getParentValue(), dictItem.getTitle()));
+            dictValues.add(CollectionUtil.newArrayList(dictItem.getDictName(), dictItem.getValue()));
         }
         this.removeByIds(ids);
         DictCacheUtil.deleteDictByDictNames(objects);
-        DictCacheUtil.deleteDictItemByDictNamesAndValues(dictItems);
         DictCacheUtil.deleteDictByDictNamesAndParentValues(dictParents);
+        DictCacheUtil.deleteDictItemByDictNameAndParentValueAndTitles(dictTitles);
+        DictCacheUtil.deleteDictItemByDictNamesAndValues(dictValues);
+        DictCacheUtil.deleteDictTrees(objects);
     }
 
     @Override
@@ -203,7 +221,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         }
     }
 
-    private void buildTrees(List<DictItemTreeVo> trees, List<DictItemVo> dictItemVos) {
+    public void buildTrees(List<DictItemTreeVo> trees, List<DictItemVo> dictItemVos) {
         dictItemVos.forEach(dictItemVo -> {
             DictItemTreeVo tree = new DictItemTreeVo();
             tree.setId(dictItemVo.getId());

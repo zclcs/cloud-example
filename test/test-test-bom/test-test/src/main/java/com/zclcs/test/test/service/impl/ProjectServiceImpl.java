@@ -149,7 +149,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 Page<ProjectExcelVo> excelVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, ProjectExcelVo.class);
                 return excelVoPage.getRecords();
             }
-        });
+        }, ProjectExcelVo.class.getDeclaredFields());
         simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "项目信息", ProjectExcelVo.class, projectVo);
     }
 

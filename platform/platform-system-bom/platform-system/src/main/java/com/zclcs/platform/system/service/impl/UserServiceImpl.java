@@ -103,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 Page<UserExcelVo> pageVo = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, UserExcelVo.class);
                 return pageVo.getRecords();
             }
-        });
+        }, UserExcelVo.class.getDeclaredFields());
         routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
     }
 

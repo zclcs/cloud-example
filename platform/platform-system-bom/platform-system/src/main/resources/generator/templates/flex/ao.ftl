@@ -41,10 +41,7 @@ public class ${className}Ao implements Serializable {
      * ${column.remark}
      * 默认值：${column.defaultValue}
      */
-    <#if column.hasDict = true && column.isArray = true && column.isTree = false>
-    @DictValid(value = "${column.remarkDict}", isArray = true, message = "{dict}")
-    </#if>
-    <#if column.hasDict = true && column.isArray = false && column.isTree = false>
+    <#if column.hasDict = true>
     @DictValid(value = "${column.remarkDict}", message = "{dict}")
     </#if>
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
@@ -58,13 +55,13 @@ public class ${className}Ao implements Serializable {
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
     || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
-        <#if column.isNullable = false && column.isKey = false>
+    <#if column.isNullable = false && column.isKey = false>
     @NotBlank(message = "{required}")
-        </#if>
+    </#if>
     <#else>
-        <#if column.isNullable = false && column.isKey = false>
+    <#if column.isNullable = false && column.isKey = false>
     @NotNull(message = "{required}")
-        </#if>
+    </#if>
     </#if>
     <#if column.isNullable = true && column.isKey = false>
     </#if>

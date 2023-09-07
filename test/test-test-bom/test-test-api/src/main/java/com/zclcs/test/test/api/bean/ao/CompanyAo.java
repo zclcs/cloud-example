@@ -78,7 +78,7 @@ public class CompanyAo implements Serializable {
      * 注册地区编码 array @@area_code
      * 默认值：
      */
-    @DictValid(value = "area_code", isArray = true, message = "{dict}")
+    @DictValid(value = "area_code", message = "{dict}")
     @Size(max = 150, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String areaCode;

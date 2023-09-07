@@ -10,8 +10,8 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
-import com.zclcs.cloud.lib.excel.handler.DropDownWriteHandler;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -192,15 +192,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 Page<CompanyExcelVo> excelVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, CompanyExcelVo.class);
                 return excelVoPage.getRecords();
             }
-        });
-        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "企业信息", CompanyExcelVo.class, companyVo, new DropDownWriteHandler(CompanyExcelVo.class.getDeclaredFields()));
+        }, CompanyExcelVo.class.getDeclaredFields());
+        simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "企业信息", CompanyExcelVo.class, companyVo);
     }
 
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
         SimpleImportListener<Company> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
-
             @Override
             public Company toBean(Map<String, String> cellData) {
                 Company company = new Company();
@@ -208,9 +207,21 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 company.setCompanyCode(cellData.get("companyCode"));
                 company.setCompanyAttachment(cellData.get("companyAttachment"));
                 company.setCompanyName(cellData.get("companyName"));
-                company.setCompanyType(cellData.get("companyType"));
+                company.setCompanyType(DictCacheUtil.getDictValue("company_type", cellData.get("companyType")));
                 company.setLicenseNum(cellData.get("licenseNum"));
-                company.setAreaCode(DictCacheUtil.getDictValueArray("area_code", cellData.get("areaCode")));
+                String areaCodeDictName = "area_code";
+                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
+                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
+//                if (province == null) {
+//                    throw new FieldException("省输入非法值");
+//                }
+                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
+                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
+//                if (city == null) {
+//                    throw new FieldException("市输入非法值");
+//                }
+                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
+                company.setAreaCode(area);
                 company.setAddress(cellData.get("address"));
                 company.setZipCode(cellData.get("zipCode"));
                 company.setLegalMan(cellData.get("legalMan"));

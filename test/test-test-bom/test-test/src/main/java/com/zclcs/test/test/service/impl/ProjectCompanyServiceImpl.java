@@ -2,7 +2,6 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +65,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
 
     @Override
     public Long countProjectCompany(ProjectCompanyVo projectCompanyVo) {
-    QueryWrapper queryWrapper = getQueryWrapper(projectCompanyVo);
+        QueryWrapper queryWrapper = getQueryWrapper(projectCompanyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -85,7 +83,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-   }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -125,7 +123,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
                 Page<ProjectCompanyExcelVo> excelVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, ProjectCompanyExcelVo.class);
                 return excelVoPage.getRecords();
             }
-        });
+        }, ProjectCompanyExcelVo.class.getDeclaredFields());
         simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "项目参建单位信息数据", ProjectCompanyExcelVo.class, projectCompanyVo);
     }
 

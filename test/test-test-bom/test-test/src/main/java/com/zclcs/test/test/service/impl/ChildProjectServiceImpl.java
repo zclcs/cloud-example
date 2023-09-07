@@ -67,7 +67,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
 
     @Override
     public Long countChildProject(ChildProjectVo childProjectVo) {
-    QueryWrapper queryWrapper = getQueryWrapper(childProjectVo);
+        QueryWrapper queryWrapper = getQueryWrapper(childProjectVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -105,7 +105,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-   }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -145,7 +145,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
                 Page<ChildProjectExcelVo> excelVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, ChildProjectExcelVo.class);
                 return excelVoPage.getRecords();
             }
-        });
+        }, ChildProjectExcelVo.class.getDeclaredFields());
         simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "工程信息", ChildProjectExcelVo.class, childProjectVo);
     }
 

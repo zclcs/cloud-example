@@ -4,9 +4,9 @@ import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
-import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
-import com.zclcs.platform.system.api.bean.vo.DictItemVo;
 import com.zclcs.platform.system.api.bean.vo.DictVo;
 
 import java.util.List;
@@ -78,10 +78,17 @@ public interface DictItemService extends IService<DictItem> {
     DictVo findDict(DictVo dictVo);
 
     /**
-     * 获取字典列表树
+     * 获取字典树
+     *
+     * @return 字典树
+     */
+    List<DictItemTreeVo> tree(String dictName);
+
+    /**
+     * 获取字典树
      *
      * @param dictItemVo dictItemVo
-     * @return 字典列表
+     * @return 字典树
      */
     List<DictItemTreeVo> findDictItemTree(DictItemVo dictItemVo);
 

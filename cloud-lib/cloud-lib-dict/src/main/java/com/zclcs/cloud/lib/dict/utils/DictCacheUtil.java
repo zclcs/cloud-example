@@ -4,10 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
-import com.zclcs.cloud.lib.dict.cache.DictCache;
-import com.zclcs.cloud.lib.dict.cache.DictChildrenCache;
-import com.zclcs.cloud.lib.dict.cache.DictTitleCache;
-import com.zclcs.cloud.lib.dict.cache.DictValueCache;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
+import com.zclcs.cloud.lib.dict.cache.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,13 +18,15 @@ import java.util.List;
 @Component
 public class DictCacheUtil {
     private static DictCache DICT_CACHE;
-    private static DictValueCache DICT_ITEM_CACHE;
-    private static DictTitleCache DICT_TITLE_CACHE;
     private static DictChildrenCache DICT_CHILDREN_CACHE;
+    private static DictTitleCache DICT_TITLE_CACHE;
+    private static DictTreeCache DICT_TREE_CACHE;
+    private static DictValueCache DICT_VALUE_CACHE;
     private DictCache dictCache;
-    private DictValueCache dictValueCache;
-    private DictTitleCache dictTitleCache;
     private DictChildrenCache dictChildrenCache;
+    private DictTreeCache dictTreeCache;
+    private DictTitleCache dictTitleCache;
+    private DictValueCache dictValueCache;
 
     public static List<DictItemCacheVo> getDictByDictName(String dictName) {
         return DICT_CACHE.findCache(dictName);
@@ -40,16 +40,16 @@ public class DictCacheUtil {
         DICT_CACHE.deleteCache(dictNames);
     }
 
-    private static DictItemCacheVo getDictItemByDictNameAndValue(String dictName, String value) {
-        return DICT_ITEM_CACHE.findCache(dictName, value);
+    public static List<DictItemCacheVo> getDictByDictNameAndParentValue(String dictName, String parentValue) {
+        return DICT_CHILDREN_CACHE.findCache(dictName, parentValue);
     }
 
-    public static void deleteDictItemByDictNameAndValue(String dictName, String value) {
-        DICT_ITEM_CACHE.deleteCache(dictName, value);
+    public static void deleteDictByDictNameAndParentValue(String dictName, String parentValue) {
+        DICT_CHILDREN_CACHE.deleteCache(dictName, parentValue);
     }
 
-    public static void deleteDictItemByDictNamesAndValues(List<List<Object>> keys) {
-        DICT_ITEM_CACHE.deleteCache(keys);
+    public static void deleteDictByDictNamesAndParentValues(List<List<Object>> keys) {
+        DICT_CHILDREN_CACHE.deleteCache(keys);
     }
 
     public static DictItemCacheVo getDictItemByDictNameAndParentValueAndTitle(String dictName, String parentValue, String title) {
@@ -64,16 +64,28 @@ public class DictCacheUtil {
         DICT_TITLE_CACHE.deleteCache(keys);
     }
 
-    public static List<DictItemCacheVo> getDictByDictNameAndParentValue(String dictName, String parentValue) {
-        return DICT_CHILDREN_CACHE.findCache(dictName, parentValue);
+    public static List<DictItemTreeVo> getDictTree(String dictName) {
+        return DICT_TREE_CACHE.findCache(dictName);
     }
 
-    public static void deleteDictByDictNameAndParentValue(String dictName, String parentValue) {
-        DICT_CHILDREN_CACHE.deleteCache(dictName, parentValue);
+    public static void deleteDictTree(String dictName) {
+        DICT_CACHE.deleteCache(dictName);
     }
 
-    public static void deleteDictByDictNamesAndParentValues(List<List<Object>> keys) {
-        DICT_CHILDREN_CACHE.deleteCache(keys);
+    public static void deleteDictTrees(Object... dictNames) {
+        DICT_CACHE.deleteCache(dictNames);
+    }
+
+    private static DictItemCacheVo getDictItemByDictNameAndValue(String dictName, String value) {
+        return DICT_VALUE_CACHE.findCache(dictName, value);
+    }
+
+    public static void deleteDictItemByDictNameAndValue(String dictName, String value) {
+        DICT_VALUE_CACHE.deleteCache(dictName, value);
+    }
+
+    public static void deleteDictItemByDictNamesAndValues(List<List<Object>> keys) {
+        DICT_VALUE_CACHE.deleteCache(keys);
     }
 
     public static DictItemCacheVo getDict(String dictName, String value) {
@@ -159,8 +171,13 @@ public class DictCacheUtil {
     }
 
     @Autowired(required = false)
-    public void setDictValueCache(DictValueCache dictValueCache) {
-        this.dictValueCache = dictValueCache;
+    public void setDictChildrenCache(DictChildrenCache dictChildrenCache) {
+        this.dictChildrenCache = dictChildrenCache;
+    }
+
+    @Autowired(required = false)
+    public void setDictTreeCache(DictTreeCache dictTreeCache) {
+        this.dictTreeCache = dictTreeCache;
     }
 
     @Autowired(required = false)
@@ -169,15 +186,16 @@ public class DictCacheUtil {
     }
 
     @Autowired(required = false)
-    public void setDictChildrenCache(DictChildrenCache dictChildrenCache) {
-        this.dictChildrenCache = dictChildrenCache;
+    public void setDictValueCache(DictValueCache dictValueCache) {
+        this.dictValueCache = dictValueCache;
     }
 
     @PostConstruct
     public void init() {
         DICT_CACHE = dictCache;
-        DICT_ITEM_CACHE = dictValueCache;
-        DICT_TITLE_CACHE = dictTitleCache;
         DICT_CHILDREN_CACHE = dictChildrenCache;
+        DICT_TITLE_CACHE = dictTitleCache;
+        DICT_TREE_CACHE = dictTreeCache;
+        DICT_VALUE_CACHE = dictValueCache;
     }
 }

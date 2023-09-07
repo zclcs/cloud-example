@@ -28,6 +28,11 @@ public interface RedisCachePrefix {
     String DICT_PREFIX = "dict:%s";
 
     /**
+     * 字典树 redis key
+     */
+    String DICT_TREE_PREFIX = "dict:tree:%s";
+
+    /**
      * 根据字典code缓存字典项 redis key
      */
     String DICT_VALUE_PREFIX = "dict:%s:v:%s";

@@ -11,10 +11,10 @@ import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
+import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
-import com.zclcs.platform.system.api.bean.vo.DictItemTreeVo;
-import com.zclcs.platform.system.api.bean.vo.DictItemVo;
 import com.zclcs.platform.system.api.bean.vo.DictVo;
 import com.zclcs.platform.system.service.DictItemService;
 import jakarta.validation.constraints.NotBlank;
@@ -150,6 +150,18 @@ public class DictItemController {
                 .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
                 .orderBy(DICT_ITEM.SORTED.asc())
                 .listAs(DictItemCacheVo.class);
+    }
+
+    /**
+     * 字典树查询
+     * 权限: 内部调用
+     *
+     * @see DictItemService#tree(String)
+     */
+    @GetMapping("/inner/tree")
+    @Inner
+    public List<DictItemTreeVo> tree(@RequestParam @NotBlank(message = "{required}") String dictName) {
+        return this.dictItemService.tree(dictName);
     }
 
     /**

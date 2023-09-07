@@ -79,7 +79,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
                 Page<RouteLogExcelVo> routeLogVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, RouteLogExcelVo.class);
                 return routeLogVoPage.getRecords();
             }
-        });
+        }, RouteLogExcelVo.class.getDeclaredFields());
         routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "网关转发日志", RouteLogExcelVo.class, routeLogVo);
     }
 

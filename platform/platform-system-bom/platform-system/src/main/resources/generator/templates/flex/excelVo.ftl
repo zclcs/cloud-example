@@ -29,7 +29,8 @@ public class ${className}ExcelVo {
     @ExcelProperty(value = "${column.remark}")
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
-    || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
+    || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') 
+    && column.hasDict = true && column.isTree = true && column.field = 'areaCode'>
     private String ${column.field?uncap_first};
     </#if>
     <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>
@@ -56,13 +57,13 @@ public class ${className}ExcelVo {
     <#if column.type = 'decimal' || column.type = 'numeric'>
     private BigDecimal ${column.field?uncap_first};
     </#if>
-    <#if column.hasDict = true && column.isArray = false>
+    <#if column.hasDict = true && column.isTree = true && column.field = 'areaCode'>
 
     public void set${column.field?cap_first}(String ${column.field?uncap_first}) {
         this.${column.field?uncap_first} = DictCacheUtil.getDictTitle("${column.remarkDict}", ${column.field?uncap_first});
     }
     </#if>
-    <#if column.hasDict = true && column.isArray = true>
+    <#if column.hasDict = true && column.isTree = false>
     
     public void set${column.field?cap_first}(String ${column.field?uncap_first}) {
         this.${column.field?uncap_first} = DictCacheUtil.getDictTitleArray("${column.remarkDict}", ${column.field?uncap_first});
