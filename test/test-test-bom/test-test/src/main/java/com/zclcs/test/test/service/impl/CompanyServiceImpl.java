@@ -10,6 +10,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
@@ -212,14 +213,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 String areaCodeDictName = "area_code";
                 String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
                 DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
-//                if (province == null) {
-//                    throw new FieldException("省输入非法值");
-//                }
+                if (province == null) {
+                    throw new FieldException("省输入非法值");
+                }
                 String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
                 DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
-//                if (city == null) {
-//                    throw new FieldException("市输入非法值");
-//                }
+                if (city == null) {
+                    throw new FieldException("市输入非法值");
+                }
                 String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
                 company.setAreaCode(area);
                 company.setAddress(cellData.get("address"));
