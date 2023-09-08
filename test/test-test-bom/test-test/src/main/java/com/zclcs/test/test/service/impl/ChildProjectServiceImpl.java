@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -194,7 +193,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
             }
         }, ChildProjectExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();
-        Map<Integer, CellData<?>> error = simpleImportListener.getError();
+        Map<Integer, String> error = simpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {
             throw new ExcelReadException("导入发生错误", error);
         }

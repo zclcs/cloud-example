@@ -68,6 +68,41 @@ public interface ${className}Service extends IService<${className}> {
     ${className} update${className}(${className}Ao ${className?uncap_first}Ao);
 
     /**
+     * 新增或修改
+     *
+     * @param ${className?uncap_first}Ao {@link ${className}Ao}
+     * @return {@link ${className}}
+     */
+    ${className} createOrUpdate${className}(${className}Ao ${className?uncap_first}Ao);
+
+    /**
+     * 批量新增
+     *
+     * @param ${className?uncap_first}Aos {@link ${className}Ao}
+     * @return {@link ${className}}
+     */
+    List<${className}> create${className}Batch(List<${className}Ao> ${className?uncap_first}Aos);
+
+    /**
+     * 批量修改
+     *
+     * @param ${className?uncap_first}Aos {@link ${className}Ao}
+     * @return {@link ${className}}
+     */
+    List<${className}> update${className}Batch(List<${className}Ao> ${className?uncap_first}Aos);
+
+    /**
+     * 批量新增或修改
+     * id为空则新增，不为空则修改
+     * 可以自行重写
+     *
+     * @param ${className?uncap_first}Aos {@link ${className}Ao}
+     * @return {@link ${className}}
+     * @see IService#saveOrUpdateBatch(Collection)
+     */
+    List<${className}> createOrUpdate${className}Batch(List<${className}Ao> ${className?uncap_first}Aos);
+
+    /**
      * 删除
      *
      * @param ids 表id集合

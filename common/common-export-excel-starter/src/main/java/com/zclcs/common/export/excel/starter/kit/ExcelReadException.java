@@ -1,7 +1,5 @@
 package com.zclcs.common.export.excel.starter.kit;
 
-import com.alibaba.excel.metadata.data.CellData;
-
 import java.io.Serial;
 import java.util.Map;
 
@@ -14,14 +12,14 @@ public class ExcelReadException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Map<Integer, CellData<?>> error;
+    private final Map<Integer, String> error;
 
-    public ExcelReadException(String message, Map<Integer, CellData<?>> error) {
+    public ExcelReadException(String message, Map<Integer, String> error) {
         super(message);
         this.error = error;
     }
 
-    public Map<Integer, CellData<?>> getError() {
+    public Map<Integer, String> getError() {
         return error;
     }
 }

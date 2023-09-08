@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -109,7 +108,7 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
             }
         }, RouteLogExcelVo.class.getDeclaredFields(), 200);
         EasyExcel.read(file.getInputStream(), routeLogSimpleImportListener).sheet().doRead();
-        Map<Integer, CellData<?>> error = routeLogSimpleImportListener.getError();
+        Map<Integer, String> error = routeLogSimpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {
             throw new ExcelReadException("导入发生错误", error);
         }

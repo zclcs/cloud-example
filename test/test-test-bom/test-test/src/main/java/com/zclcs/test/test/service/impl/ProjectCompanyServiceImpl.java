@@ -3,7 +3,6 @@ package com.zclcs.test.test.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -152,7 +151,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
             }
         }, ProjectCompanyExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();
-        Map<Integer, CellData<?>> error = simpleImportListener.getError();
+        Map<Integer, String> error = simpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {
             throw new ExcelReadException("导入发生错误", error);
         }

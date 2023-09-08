@@ -46,7 +46,7 @@ public class CompanyController {
      * @see CompanyService#findCompanyPage(BasePageAo, CompanyVo)
      */
     @GetMapping("/page")
-    @SaCheckPermission("company:view")
+    @SaCheckPermission("company:page")
     public BaseRsp<BasePage<CompanyVo>> findCompanyPage(@Validated BasePageAo basePageAo, @Validated CompanyVo companyVo) {
         BasePage<CompanyVo> page = this.companyService.findCompanyPage(basePageAo, companyVo);
         return RspUtil.data(page);
@@ -59,7 +59,7 @@ public class CompanyController {
      * @see CompanyService#findCompanyList(CompanyVo)
      */
     @GetMapping("/list")
-    @SaCheckPermission("company:view")
+    @SaCheckPermission("company:list")
     public BaseRsp<List<CompanyVo>> findCompanyList(@Validated CompanyVo companyVo) {
         List<CompanyVo> list = this.companyService.findCompanyList(companyVo);
         return RspUtil.data(list);
@@ -72,7 +72,7 @@ public class CompanyController {
      * @see CompanyService#findCompany(CompanyVo)
      */
     @GetMapping("/one")
-    @SaCheckPermission("company:view")
+    @SaCheckPermission("company:one")
     public BaseRsp<CompanyVo> findCompany(@Validated CompanyVo companyVo) {
         CompanyVo company = this.companyService.findCompany(companyVo);
         return RspUtil.data(company);

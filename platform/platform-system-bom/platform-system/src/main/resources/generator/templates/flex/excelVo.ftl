@@ -1,7 +1,13 @@
 package ${basePackage}.${excelVoPackage};
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectAreaHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectCityHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectDictHandler;
+import com.zclcs.cloud.lib.excel.handler.DynamicSelectProvinceHandler;
+import com.zclcs.common.export.excel.starter.annotation.ExcelSelect;
 import lombok.Data;
 
 <#if hasDate = true>
@@ -25,12 +31,70 @@ public class ${className}ExcelVo {
     <#list columns as column>
     /**
      * ${column.remark}
+     * 默认值：${column.defaultValue}
      */
-    @ExcelProperty(value = "${column.remark}")
+    <#if column.hasDict = true && column.isTree = false>
+    @DictValid(value = "${column.remarkDict}", message = "{dict}")
+    @ExcelSelect(handler = DynamicSelectDictHandler.class, parameter = "${column.remarkDict}")
+    </#if>
+    <#if column.hasDict = true && column.isTree = true>
+    @DictValid(value = "${column.remarkDict}", message = "{dict}")
+    </#if>
+    <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
+    || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
+    || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isCharMaxLength = true>
+    @Size(max = ${column.charMaxLength}, message = "{noMoreThan}")
+    </#if>
+    <#if column.isKey = true>
+    @NotNull(message = "{required}")
+    </#if>
+    <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
+    || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
+    || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
+    <#if column.isNullable = false && column.isKey = false>
+    @NotBlank(message = "{required}")
+    </#if>
+    <#else>
+    <#if column.isNullable = false && column.isKey = false>
+    @NotNull(message = "{required}")
+    </#if>
+    </#if>
+    <#if column.isNullable = true && column.isKey = false>
+    </#if>
+    @ExcelProperty(value = "${column.remarkSpiltDict}")
     <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
     || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
     || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') 
     && column.hasDict = true && column.isTree = true && column.field = 'areaCode'>
+    @ExcelSelect(parentColumn = "市", handler = DynamicSelectAreaHandler.class, parameter = "area_code")
+    private String areaCode;
+
+    @ExcelSelect(handler = DynamicSelectProvinceHandler.class, parameter = "area_code")
+    @ExcelProperty("省")
+    private String province;
+
+    @ExcelSelect(parentColumn = "省", handler = DynamicSelectCityHandler.class, parameter = "area_code")
+    @ExcelProperty("市")
+    private String city;
+
+    public void setAreaCode(String areaCode) {
+        DictItemCacheVo area = DictCacheUtil.getDict("area_code", areaCode);
+        if (area != null) {
+            this.areaCode = area.getTitle();
+            DictItemCacheVo city = DictCacheUtil.getDict("area_code", area.getParentValue());
+            if (city != null) {
+                this.city = city.getTitle();
+                DictItemCacheVo province = DictCacheUtil.getDict("area_code", city.getParentValue());
+                if (province != null) {
+                    this.province = province.getTitle();
+                }
+            }
+        }
+    }
+    </#if>
+    <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
+    || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
+    || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isTree = false>
     private String ${column.field?uncap_first};
     </#if>
     <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>

@@ -1,13 +1,16 @@
 package com.zclcs.common.export.excel.starter.listener;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.metadata.data.CellData;
-import com.alibaba.excel.metadata.data.ReadCellData;
+import com.alibaba.excel.exception.ExcelAnalysisException;
+import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
 import com.alibaba.excel.util.ListUtils;
 import com.zclcs.common.export.excel.starter.kit.Validators;
 import com.zclcs.common.export.excel.starter.service.ImportExcelService;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +36,7 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     private int batchSize = 100;
     private List<T> cachedDataList = ListUtils.newArrayListWithExpectedSize(batchSize);
     @Getter
-    private Map<Integer, CellData<?>> error = new HashMap<>();
+    private Map<Integer, String> error = new HashMap<>();
 
     public SimpleImportListener(ImportExcelService<T> importExcelService, Field[] declaredFields) {
         this.importExcelService = importExcelService;
@@ -49,9 +52,9 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     @Override
     public void onException(Exception exception, AnalysisContext context) {
         log.error("解析失败，但是继续解析下一行:{}", exception.getMessage(), exception);
-        Integer rowIndex = context.readSheetHolder().getRowIndex();
-        ReadCellData<?> tempCellData = context.readSheetHolder().getTempCellData();
-        error.put(rowIndex, tempCellData);
+        ReadRowHolder readRowHolder = context.readRowHolder();
+        Integer rowIndex = readRowHolder.getRowIndex();
+        error.put(rowIndex, exception.getMessage());
     }
 
     @Override
@@ -63,7 +66,17 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
             beanMap.put(declaredField.getName(), data.get(i));
         }
         T bean = this.importExcelService.toBean(beanMap);
-        Set<ConstraintViolation<T>> validate = Validators.validate(bean);
+        Set<ConstraintViolation<T>> violations = Validators.validate(bean);
+        if (CollectionUtil.isNotEmpty(violations)) {
+            StringBuilder message = new StringBuilder();
+            for (ConstraintViolation<?> violation : violations) {
+                Path path = violation.getPropertyPath();
+                String s = StrUtil.subAfter(path.toString(), ".", true);
+                message.append(s).append(violation.getMessage()).append(StrUtil.COMMA);
+            }
+            message = new StringBuilder(message.substring(0, message.length() - 1));
+            throw new ExcelAnalysisException(message.toString());
+        }
         cachedDataList.add(bean);
         if (cachedDataList.size() >= batchSize) {
             this.importExcelService.saveBeans(cachedDataList);
@@ -75,5 +88,5 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     public void doAfterAllAnalysed(AnalysisContext context) {
         this.importExcelService.saveBeans(cachedDataList);
     }
-
+    
 }

@@ -4,12 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.metadata.data.CellData;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -29,9 +31,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
+<#if hasDate = true>
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+</#if>
+<#if hasBigDecimal = true>
+import java.math.BigDecimal;
+</#if>
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,6 +112,50 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
     }
 
     @Override
+    public ${className} createOrUpdate${className}(${className}Ao ${className?uncap_first}Ao) {
+        ${className} ${className?uncap_first} = new ${className}();
+        BeanUtil.copyProperties(${className?uncap_first}Ao, ${className?uncap_first});
+        this.saveOrUpdate(${className?uncap_first});
+        return ${className?uncap_first};
+    }
+
+    @Override
+    public List<${className}> create${className}Batch(List<${className}Ao> ${className?uncap_first}Aos) {
+        List<${className}> ${className?uncap_first}List = new ArrayList<>();
+        for (${className}Ao ${className?uncap_first}Ao : ${className?uncap_first}Aos) {
+            ${className} ${className?uncap_first} = new ${className}();
+            BeanUtil.copyProperties(${className?uncap_first}Ao, ${className?uncap_first});
+            ${className?uncap_first}List.add(${className?uncap_first});
+        }
+        saveBatch(${className?uncap_first}List);
+        return ${className?uncap_first}List;
+    }
+
+    @Override
+    public List<${className}> update${className}Batch(List<${className}Ao> ${className?uncap_first}Aos) {
+        List<${className}> ${className?uncap_first}List = new ArrayList<>();
+        for (${className}Ao ${className?uncap_first}Ao : ${className?uncap_first}Aos) {
+            ${className} ${className?uncap_first} = new ${className}();
+            BeanUtil.copyProperties(${className?uncap_first}Ao, ${className?uncap_first});
+            ${className?uncap_first}List.add(${className?uncap_first});
+        }
+        updateBatch(${className?uncap_first}List);
+        return ${className?uncap_first}List;
+    }
+
+    @Override
+    public List<${className}> createOrUpdate${className}Batch(List<${className}Ao> ${className?uncap_first}Aos) {
+        List<${className}> ${className?uncap_first}List = new ArrayList<>();
+        for (${className}Ao ${className?uncap_first}Ao : ${className?uncap_first}Aos) {
+            ${className} ${className?uncap_first} = new ${className}();
+            BeanUtil.copyProperties(${className?uncap_first}Ao, ${className?uncap_first});
+            ${className?uncap_first}List.add(${className?uncap_first});
+        }
+        saveOrUpdateBatch(${className?uncap_first}List);
+        return ${className?uncap_first}List;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete${className}(List<Long> ids) {
         this.removeByIds(ids);
@@ -124,7 +175,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 Page<${className}ExcelVo> excelVoPage = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, ${className}ExcelVo.class);
                 return excelVoPage.getRecords();
             }
-        });
+        }, ${className}ExcelVo.class.getDeclaredFields());
         simpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "${tableComment}", ${className}ExcelVo.class, ${className?uncap_first}Vo);
     }
 
@@ -140,7 +191,25 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 <#list columns as column>
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
                 || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
-                || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json')>
+                || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') 
+                && column.hasDict = true && column.isTree = true && column.field = 'areaCode'>
+                String areaCodeDictName = "area_code";
+                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
+                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
+                if (province == null) {
+                    throw new FieldException("省输入非法值");
+                }
+                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
+                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
+                if (city == null) {
+                    throw new FieldException("市输入非法值");
+                }
+                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
+                company.setAreaCode(area);
+                </#if>
+                <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
+                || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
+                || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isTree = false>
                 ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}"));
                 </#if>
                 <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>
@@ -178,7 +247,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
             }
         }, ${className}ExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();
-        Map<Integer, CellData<?>> error = simpleImportListener.getError();
+        Map<Integer, String> error = simpleImportListener.getError();
         if (CollectionUtil.isNotEmpty(error)) {
             throw new ExcelReadException("导入发生错误", error);
         }
