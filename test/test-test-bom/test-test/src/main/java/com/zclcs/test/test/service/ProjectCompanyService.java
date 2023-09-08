@@ -14,7 +14,7 @@ import java.util.List;
  * 项目参建单位信息数据 Service接口
  *
  * @author zclcs
- * @since 2023-09-04 20:04:43.968
+ * @since 2023-09-08 16:48:43.853
  */
 public interface ProjectCompanyService extends IService<ProjectCompany> {
 
@@ -66,6 +66,40 @@ public interface ProjectCompanyService extends IService<ProjectCompany> {
      * @return {@link ProjectCompany}
      */
     ProjectCompany updateProjectCompany(ProjectCompanyAo projectCompanyAo);
+
+    /**
+     * 新增或修改
+     *
+     * @param projectCompanyAo {@link ProjectCompanyAo}
+     * @return {@link ProjectCompany}
+     */
+    ProjectCompany createOrUpdateProjectCompany(ProjectCompanyAo projectCompanyAo);
+
+    /**
+     * 批量新增
+     *
+     * @param projectCompanyAos {@link ProjectCompanyAo}
+     * @return {@link ProjectCompany}
+     */
+    List<ProjectCompany> createProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos);
+
+    /**
+     * 批量修改
+     *
+     * @param projectCompanyAos {@link ProjectCompanyAo}
+     * @return {@link ProjectCompany}
+     */
+    List<ProjectCompany> updateProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos);
+
+    /**
+     * 批量新增或修改
+     * id为空则新增，不为空则修改
+     * 可以自行重写
+     *
+     * @param projectCompanyAos {@link ProjectCompanyAo}
+     * @return {@link ProjectCompany}
+     */
+    List<ProjectCompany> createOrUpdateProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos);
 
     /**
      * 删除

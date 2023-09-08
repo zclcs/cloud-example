@@ -2,12 +2,17 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -27,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +42,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ProjectCompanyTableDef.P
  * 项目参建单位信息数据 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 20:16:36.257
+ * @since 2023-09-08 16:48:43.853
  */
 @Slf4j
 @Service
@@ -64,7 +70,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
 
     @Override
     public Long countProjectCompany(ProjectCompanyVo projectCompanyVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(projectCompanyVo);
+    QueryWrapper queryWrapper = getQueryWrapper(projectCompanyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -82,7 +88,7 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -100,6 +106,50 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
         BeanUtil.copyProperties(projectCompanyAo, projectCompany);
         this.updateById(projectCompany);
         return projectCompany;
+    }
+
+    @Override
+    public ProjectCompany createOrUpdateProjectCompany(ProjectCompanyAo projectCompanyAo) {
+        ProjectCompany projectCompany = new ProjectCompany();
+        BeanUtil.copyProperties(projectCompanyAo, projectCompany);
+        this.saveOrUpdate(projectCompany);
+        return projectCompany;
+    }
+
+    @Override
+    public List<ProjectCompany> createProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos) {
+        List<ProjectCompany> projectCompanyList = new ArrayList<>();
+        for (ProjectCompanyAo projectCompanyAo : projectCompanyAos) {
+            ProjectCompany projectCompany = new ProjectCompany();
+            BeanUtil.copyProperties(projectCompanyAo, projectCompany);
+            projectCompanyList.add(projectCompany);
+        }
+        saveBatch(projectCompanyList);
+        return projectCompanyList;
+    }
+
+    @Override
+    public List<ProjectCompany> updateProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos) {
+        List<ProjectCompany> projectCompanyList = new ArrayList<>();
+        for (ProjectCompanyAo projectCompanyAo : projectCompanyAos) {
+            ProjectCompany projectCompany = new ProjectCompany();
+            BeanUtil.copyProperties(projectCompanyAo, projectCompany);
+            projectCompanyList.add(projectCompany);
+        }
+        updateBatch(projectCompanyList);
+        return projectCompanyList;
+    }
+
+    @Override
+    public List<ProjectCompany> createOrUpdateProjectCompanyBatch(List<ProjectCompanyAo> projectCompanyAos) {
+        List<ProjectCompany> projectCompanyList = new ArrayList<>();
+        for (ProjectCompanyAo projectCompanyAo : projectCompanyAos) {
+            ProjectCompany projectCompany = new ProjectCompany();
+            BeanUtil.copyProperties(projectCompanyAo, projectCompany);
+            projectCompanyList.add(projectCompany);
+        }
+        saveOrUpdateBatch(projectCompanyList);
+        return projectCompanyList;
     }
 
     @Override
@@ -133,12 +183,23 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
 
             @Override
             public ProjectCompanyExcelVo toExcelVo(Map<String, String> cellData) {
-                return null;
+                ProjectCompanyExcelVo projectCompanyExcelVo = new ProjectCompanyExcelVo();
+                projectCompanyExcelVo.setProjectCompanyId(cellData.get("projectCompanyId") != null ? Long.valueOf(cellData.get("projectCompanyId")) : null);
+                projectCompanyExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
+                projectCompanyExcelVo.setCompanyId(cellData.get("companyId") != null ? Long.valueOf(cellData.get("companyId")) : null);
+                projectCompanyExcelVo.setCompanyRole(cellData.get("companyRole"));
+                projectCompanyExcelVo.setManagerName(cellData.get("managerName"));
+                projectCompanyExcelVo.setManagerIdCardType(cellData.get("managerIdCardType"));
+                projectCompanyExcelVo.setManagerIdCardNumber(cellData.get("managerIdCardNumber"));
+                projectCompanyExcelVo.setManagerPhone(cellData.get("managerPhone"));
+                return projectCompanyExcelVo;
             }
 
             @Override
             public ProjectCompany toBean(ProjectCompanyExcelVo excelVo) {
-                return null;
+                ProjectCompany projectCompany = new ProjectCompany();
+                BeanUtil.copyProperties(excelVo, projectCompany);
+                return projectCompany;
             }
 
             @Override

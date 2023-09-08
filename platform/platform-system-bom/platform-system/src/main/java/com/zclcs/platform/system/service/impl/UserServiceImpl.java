@@ -69,17 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public BasePage<UserVo> findUserPage(BasePageAo basePageAo, UserVo userVo) {
         QueryWrapper queryWrapper = getQueryWrapper(userVo);
         Page<UserVo> pageVo = this.mapper.paginateAs(basePageAo.getPageNum(), basePageAo.getPageSize(), queryWrapper, UserVo.class);
-        pageVo.getRecords().forEach(vo -> {
-            Long userId = vo.getUserId();
-            List<RoleCacheVo> roles = SystemCacheUtil.getRolesByUserId(userId);
-            if (CollectionUtil.isNotEmpty(roles)) {
-                vo.setRoleIds(roles.stream().map(RoleCacheVo::getRoleId).toList());
-                List<String> roleNames = roles.stream().map(RoleCacheVo::getRoleName).toList();
-                vo.setRoleNames(roleNames);
-                vo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
-            }
-            vo.setDeptIds(SystemCacheUtil.getDeptIdsByUserId(userId));
-        });
+        pageVo.getRecords().forEach(this::setUserVo);
         return new BasePage<>(pageVo);
     }
 
@@ -90,27 +80,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void exportExcel(UserVo userVo) {
-        SimpleExportListener<UserVo, UserExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<>() {
-            @Override
-            public Long count(UserVo userVo) {
-                return countUser(userVo);
-            }
-
-            @Override
-            public List<UserExcelVo> getDataPaginateAs(UserVo userVo, Long pageNum, Long pageSize, Long totalRows) {
-                QueryWrapper queryWrapper = getQueryWrapper(userVo);
-                Page<UserExcelVo> pageVo = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, UserExcelVo.class);
-                return pageVo.getRecords();
-            }
-        }, UserExcelVo.class.getDeclaredFields());
-        routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
-    }
-
-    @Override
     public UserVo findUser(UserVo userVo) {
         QueryWrapper queryWrapper = getQueryWrapper(userVo);
-        return this.mapper.selectOneByQueryAs(queryWrapper, UserVo.class);
+        UserVo one = this.mapper.selectOneByQueryAs(queryWrapper, UserVo.class);
+        setUserVo(one);
+        return one;
     }
 
     @Override
@@ -158,6 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         USER.CREATE_AT
                 )
                 .where(USER.USER_ID.in(deptList.get(), If::isNotEmpty))
+                .and(USER.USER_ID.eq(userVo.getUserId(), If::notNull))
                 .and(USER.USERNAME.likeRight(userVo.getUsername(), If::hasText))
         ;
         return queryWrapper;
@@ -325,6 +300,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    @Override
+    public void exportExcel(UserVo userVo) {
+        SimpleExportListener<UserVo, UserExcelVo> routeLogVoRouteLogExcelVoSimpleExportListener = new SimpleExportListener<>(new ExportExcelService<>() {
+            @Override
+            public Long count(UserVo userVo) {
+                return countUser(userVo);
+            }
+
+            @Override
+            public List<UserExcelVo> getDataPaginateAs(UserVo userVo, Long pageNum, Long pageSize, Long totalRows) {
+                QueryWrapper queryWrapper = getQueryWrapper(userVo);
+                Page<UserExcelVo> pageVo = mapper.paginateAs(pageNum, pageSize, totalRows, queryWrapper, UserExcelVo.class);
+                return pageVo.getRecords();
+            }
+        }, UserExcelVo.class.getDeclaredFields());
+        routeLogVoRouteLogExcelVoSimpleExportListener.exportWithEntity(WebUtil.getHttpServletResponse(), "用户信息", UserExcelVo.class, userVo);
+    }
+
     private void deleteCache(UserAo userAo) {
         deleteUserCache(userAo.getUsername(), userAo.getMobile());
         if (userAo.getUserId() != null) {
@@ -339,4 +332,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             SystemCacheUtil.deleteUsernameByMobile(mobile);
         }
     }
+
+    private void setUserVo(UserVo userVo) {
+        Long userId = userVo.getUserId();
+        List<RoleCacheVo> roles = SystemCacheUtil.getRolesByUserId(userId);
+        if (CollectionUtil.isNotEmpty(roles)) {
+            userVo.setRoleIds(roles.stream().map(RoleCacheVo::getRoleId).toList());
+            List<String> roleNames = roles.stream().map(RoleCacheVo::getRoleName).toList();
+            userVo.setRoleNames(roleNames);
+            userVo.setRoleNameString(String.join(StrUtil.COMMA, roleNames));
+        }
+        userVo.setDeptIds(SystemCacheUtil.getDeptIdsByUserId(userId));
+    }
+
 }

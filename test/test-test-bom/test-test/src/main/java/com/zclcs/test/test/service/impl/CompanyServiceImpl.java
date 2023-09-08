@@ -3,6 +3,7 @@ package com.zclcs.test.test.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-08 15:00:09.827
+ * @since 2023-09-08 16:49:03.555
  */
 @Slf4j
 @Service
@@ -70,7 +72,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     @Override
     public Long countCompany(CompanyVo companyVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(companyVo);
+    QueryWrapper queryWrapper = getQueryWrapper(companyVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -108,7 +110,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

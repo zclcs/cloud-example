@@ -37,13 +37,6 @@ public interface UserService extends IService<User> {
     List<UserVo> findUserList(UserVo userVo);
 
     /**
-     * 导出
-     *
-     * @param userVo {@link UserVo}
-     */
-    void exportExcel(UserVo userVo);
-
-    /**
      * 查询（单个）
      *
      * @param userVo {@link UserVo}
@@ -159,5 +152,12 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     void validateMobile(String mobile, Long userId);
+
+    /**
+     * 导出
+     *
+     * @param userVo {@link UserVo}
+     */
+    void exportExcel(UserVo userVo);
 
 }

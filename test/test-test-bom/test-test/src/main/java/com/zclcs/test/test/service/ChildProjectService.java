@@ -14,7 +14,7 @@ import java.util.List;
  * 工程信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-04 20:04:57.706
+ * @since 2023-09-08 16:48:53.770
  */
 public interface ChildProjectService extends IService<ChildProject> {
 
@@ -66,6 +66,40 @@ public interface ChildProjectService extends IService<ChildProject> {
      * @return {@link ChildProject}
      */
     ChildProject updateChildProject(ChildProjectAo childProjectAo);
+
+    /**
+     * 新增或修改
+     *
+     * @param childProjectAo {@link ChildProjectAo}
+     * @return {@link ChildProject}
+     */
+    ChildProject createOrUpdateChildProject(ChildProjectAo childProjectAo);
+
+    /**
+     * 批量新增
+     *
+     * @param childProjectAos {@link ChildProjectAo}
+     * @return {@link ChildProject}
+     */
+    List<ChildProject> createChildProjectBatch(List<ChildProjectAo> childProjectAos);
+
+    /**
+     * 批量修改
+     *
+     * @param childProjectAos {@link ChildProjectAo}
+     * @return {@link ChildProject}
+     */
+    List<ChildProject> updateChildProjectBatch(List<ChildProjectAo> childProjectAos);
+
+    /**
+     * 批量新增或修改
+     * id为空则新增，不为空则修改
+     * 可以自行重写
+     *
+     * @param childProjectAos {@link ChildProjectAo}
+     * @return {@link ChildProject}
+     */
+    List<ChildProject> createOrUpdateChildProjectBatch(List<ChildProjectAo> childProjectAos);
 
     /**
      * 删除

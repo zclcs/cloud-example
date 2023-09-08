@@ -10,15 +10,15 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 /**
  * 项目信息 Ao
  *
  * @author zclcs
- * @since 2023-09-04 20:04:49.084
+ * @since 2023-09-08 16:48:48.873
  */
 @Data
 @AllArgsConstructor
@@ -61,7 +61,7 @@ public class ProjectAo implements Serializable {
     private String description;
 
     /**
-     * 项目分类 @@project_category
+     * 项目分类@@project_category
      * 默认值：
      */
     @DictValid(value = "project_category", message = "{dict}")
@@ -84,16 +84,16 @@ public class ProjectAo implements Serializable {
     private String childProjectPlanNum;
 
     /**
-     * 项目所在地 array @@area_code
+     * 项目所在地@@area_code@@tree
      * 默认值：
      */
-    @DictValid(value = "area_code", isArray = true, message = "{dict}")
+    @DictValid(value = "area_code", message = "{dict}")
     @Size(max = 150, message = "{noMoreThan}")
     @NotBlank(message = "{required}")
     private String areaCode;
 
     /**
-     * 是否市直管 @@yes_no
+     * 是否市直管@@yes_no
      * 默认值：
      */
     @DictValid(value = "yes_no", message = "{dict}")
@@ -160,7 +160,7 @@ public class ProjectAo implements Serializable {
     private String linkPhone;
 
     /**
-     * 项目状态 @@project_status
+     * 项目状态@@project_status
      * 默认值：
      */
     @DictValid(value = "project_status", message = "{dict}")
@@ -195,7 +195,7 @@ public class ProjectAo implements Serializable {
     private String approvalNum;
 
     /**
-     * 立项级别 @@approval_level
+     * 立项级别@@approval_level
      * 默认值：
      */
     @DictValid(value = "approval_level", message = "{dict}")
@@ -203,7 +203,7 @@ public class ProjectAo implements Serializable {
     private String approvalLevelNum;
 
     /**
-     * 建设规模 @@project_size
+     * 建设规模@@project_size
      * 默认值：
      */
     @DictValid(value = "project_size", message = "{dict}")
@@ -211,7 +211,7 @@ public class ProjectAo implements Serializable {
     private String projectSize;
 
     /**
-     * 建设性质 @@property_num
+     * 建设性质@@property_num
      * 默认值：
      */
     @DictValid(value = "property_num", message = "{dict}")
@@ -219,7 +219,7 @@ public class ProjectAo implements Serializable {
     private String propertyNum;
 
     /**
-     * 工程用途 @@function_num
+     * 工程用途@@function_num
      * 默认值：
      */
     @DictValid(value = "function_num", message = "{dict}")
@@ -227,7 +227,7 @@ public class ProjectAo implements Serializable {
     private String functionNum;
 
     /**
-     * 职能单位 @@functional_unit
+     * 职能单位@@functional_unit
      * 默认值：
      */
     @DictValid(value = "functional_unit", message = "{dict}")
@@ -235,7 +235,7 @@ public class ProjectAo implements Serializable {
     private String functionalUnit;
 
     /**
-     * 是否重点项目 @@yes_no
+     * 是否重点项目@@yes_no
      * 默认值：
      */
     @DictValid(value = "yes_no", message = "{dict}")

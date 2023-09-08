@@ -19,7 +19,7 @@ import java.io.Serializable;
  * 项目参建单位信息数据 Entity
  *
  * @author zclcs
- * @since 2023-09-04 20:04:43.968
+ * @since 2023-09-08 16:48:43.853
  */
 @Data
 @AllArgsConstructor
@@ -52,7 +52,7 @@ public class ProjectCompany extends BaseEntity implements Serializable {
     private Long companyId;
 
     /**
-     * 参建类型 @@company_role
+     * 参建类型@@company_role
      */
     @Column("company_role")
     private String companyRole;
@@ -64,7 +64,7 @@ public class ProjectCompany extends BaseEntity implements Serializable {
     private String managerName;
 
     /**
-     * 项目经理证件类型 @@id_card_type
+     * 项目经理证件类型@@id_card_type
      */
     @Column("manager_id_card_type")
     private String managerIdCardType;

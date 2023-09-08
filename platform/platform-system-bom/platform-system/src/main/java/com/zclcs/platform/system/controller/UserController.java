@@ -77,25 +77,13 @@ public class UserController {
     }
 
     /**
-     * 导出用户信息
-     * 权限: user:excel
-     *
-     * @see UserService#exportExcel(UserVo)
-     */
-    @GetMapping("/export/excel")
-    @SaCheckPermission("user:excel")
-    public void excelUserList(@Validated UserVo userVo) {
-        userService.exportExcel(userVo);
-    }
-
-    /**
      * 用户查询（单个）
      * 权限: user:view
      *
      * @see UserService#findUser(UserVo)
      */
     @GetMapping("/one")
-    @SaCheckPermission("user:view")
+    @SaCheckPermission(value = {"user:one", "user:update"}, mode = SaMode.OR)
     public BaseRsp<UserVo> findUser(@Validated UserVo userVo) {
         UserVo user = this.userService.findUser(userVo);
         return RspUtil.data(user);
@@ -344,5 +332,17 @@ public class UserController {
         usernameList.add(username);
         this.userService.resetPassword(usernameList);
         return RspUtil.message();
+    }
+
+    /**
+     * 导出用户信息
+     * 权限: user:excel
+     *
+     * @see UserService#exportExcel(UserVo)
+     */
+    @GetMapping("/export/excel")
+    @SaCheckPermission("user:excel")
+    public void excelUserList(@Validated UserVo userVo) {
+        userService.exportExcel(userVo);
     }
 }

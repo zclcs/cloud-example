@@ -14,7 +14,7 @@ import java.util.List;
  * 项目信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-04 20:04:49.084
+ * @since 2023-09-08 16:48:48.873
  */
 public interface ProjectService extends IService<Project> {
 
@@ -66,6 +66,40 @@ public interface ProjectService extends IService<Project> {
      * @return {@link Project}
      */
     Project updateProject(ProjectAo projectAo);
+
+    /**
+     * 新增或修改
+     *
+     * @param projectAo {@link ProjectAo}
+     * @return {@link Project}
+     */
+    Project createOrUpdateProject(ProjectAo projectAo);
+
+    /**
+     * 批量新增
+     *
+     * @param projectAos {@link ProjectAo}
+     * @return {@link Project}
+     */
+    List<Project> createProjectBatch(List<ProjectAo> projectAos);
+
+    /**
+     * 批量修改
+     *
+     * @param projectAos {@link ProjectAo}
+     * @return {@link Project}
+     */
+    List<Project> updateProjectBatch(List<ProjectAo> projectAos);
+
+    /**
+     * 批量新增或修改
+     * id为空则新增，不为空则修改
+     * 可以自行重写
+     *
+     * @param projectAos {@link ProjectAo}
+     * @return {@link Project}
+     */
+    List<Project> createOrUpdateProjectBatch(List<ProjectAo> projectAos);
 
     /**
      * 删除

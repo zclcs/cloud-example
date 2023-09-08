@@ -183,11 +183,11 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
-        SimpleImportListener<${className}> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<${className}, ${className}ExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
 
             @Override
-            public ${className} toBean(Map<String, String> cellData) {
-                ${className} ${className?uncap_first} = new ${className}();
+            public ${className}ExcelVo toExcelVo(Map<String, String> cellData) {
+                ${className}ExcelVo ${className?uncap_first}ExcelVo = new ${className}ExcelVo();
                 <#if columns??>
                 <#list columns as column>
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
@@ -205,39 +205,46 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                     throw new FieldException("市输入非法值");
                 }
                 String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
-                company.setAreaCode(area);
+                ${className?uncap_first}ExcelVo.setAreaCode(area);
                 </#if>
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
                 || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
                 || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isTree = false>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}"));
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}"));
                 </#if>
                 <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'date' || column.type = 'DATE'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDate.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATE_FORMATTER) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDate.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATE_FORMATTER) : null);
                 </#if>
                 <#if column.type = 'datetime' || column.type = 'DATETIME'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDateTime.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATETIME_FORMATTER) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDateTime.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATETIME_FORMATTER) : null);
                 </#if>
                 <#if column.type = 'int' || column.type = 'smallint'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Integer.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Integer.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'double'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Double.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Double.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'bigint'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'tinyint'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Byte.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Byte.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'decimal' || column.type = 'numeric'>
-                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? new BigDecimal(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? new BigDecimal(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 </#list>
                 </#if>
+                return ${className?uncap_first}ExcelVo;
+            }
+
+            @Override
+            public ${className} toBean(${className}ExcelVo excelVo) {
+                ${className} ${className?uncap_first} = new ${className}();
+                BeanUtil.copyProperties(excelVo, ${className?uncap_first});
                 return ${className?uncap_first};
             }
 

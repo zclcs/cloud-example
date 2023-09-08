@@ -2,12 +2,17 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -27,6 +32,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +45,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ProjectTableDef.PROJECT;
  * 项目信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 20:16:40.541
+ * @since 2023-09-08 16:48:48.873
  */
 @Slf4j
 @Service
@@ -64,7 +73,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public Long countProject(ProjectVo projectVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(projectVo);
+    QueryWrapper queryWrapper = getQueryWrapper(projectVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -104,7 +113,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -122,6 +131,50 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         BeanUtil.copyProperties(projectAo, project);
         this.updateById(project);
         return project;
+    }
+
+    @Override
+    public Project createOrUpdateProject(ProjectAo projectAo) {
+        Project project = new Project();
+        BeanUtil.copyProperties(projectAo, project);
+        this.saveOrUpdate(project);
+        return project;
+    }
+
+    @Override
+    public List<Project> createProjectBatch(List<ProjectAo> projectAos) {
+        List<Project> projectList = new ArrayList<>();
+        for (ProjectAo projectAo : projectAos) {
+            Project project = new Project();
+            BeanUtil.copyProperties(projectAo, project);
+            projectList.add(project);
+        }
+        saveBatch(projectList);
+        return projectList;
+    }
+
+    @Override
+    public List<Project> updateProjectBatch(List<ProjectAo> projectAos) {
+        List<Project> projectList = new ArrayList<>();
+        for (ProjectAo projectAo : projectAos) {
+            Project project = new Project();
+            BeanUtil.copyProperties(projectAo, project);
+            projectList.add(project);
+        }
+        updateBatch(projectList);
+        return projectList;
+    }
+
+    @Override
+    public List<Project> createOrUpdateProjectBatch(List<ProjectAo> projectAos) {
+        List<Project> projectList = new ArrayList<>();
+        for (ProjectAo projectAo : projectAos) {
+            Project project = new Project();
+            BeanUtil.copyProperties(projectAo, project);
+            projectList.add(project);
+        }
+        saveOrUpdateBatch(projectList);
+        return projectList;
     }
 
     @Override
@@ -155,12 +208,57 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
             @Override
             public ProjectExcelVo toExcelVo(Map<String, String> cellData) {
-                return null;
+                ProjectExcelVo projectExcelVo = new ProjectExcelVo();
+                projectExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
+                projectExcelVo.setProjectCode(cellData.get("projectCode"));
+                projectExcelVo.setProjectName(cellData.get("projectName"));
+                projectExcelVo.setDescription(cellData.get("description"));
+                projectExcelVo.setCategory(cellData.get("category"));
+                projectExcelVo.setBuildPlanNum(cellData.get("buildPlanNum"));
+                projectExcelVo.setChildProjectPlanNum(cellData.get("childProjectPlanNum"));
+                String areaCodeDictName = "area_code";
+                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
+                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
+                if (province == null) {
+                    throw new FieldException("省输入非法值");
+                }
+                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
+                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
+                if (city == null) {
+                    throw new FieldException("市输入非法值");
+                }
+                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
+                projectExcelVo.setAreaCode(area);
+                projectExcelVo.setIsLeadByCity(cellData.get("isLeadByCity"));
+                projectExcelVo.setInvest(cellData.get("invest"));
+                projectExcelVo.setBuildingArea(cellData.get("buildingArea"));
+                projectExcelVo.setBuildingLength(cellData.get("buildingLength"));
+                projectExcelVo.setStartDate(cellData.get("startDate") != null ? LocalDate.parse(cellData.get("startDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                projectExcelVo.setCompleteDate(cellData.get("completeDate") != null ? LocalDate.parse(cellData.get("completeDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                projectExcelVo.setPlannedStartDate(cellData.get("plannedStartDate") != null ? LocalDate.parse(cellData.get("plannedStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                projectExcelVo.setPlannedCompleteDate(cellData.get("plannedCompleteDate") != null ? LocalDate.parse(cellData.get("plannedCompleteDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                projectExcelVo.setLinkMan(cellData.get("linkMan"));
+                projectExcelVo.setLinkPhone(cellData.get("linkPhone"));
+                projectExcelVo.setProjectStatus(cellData.get("projectStatus"));
+                projectExcelVo.setLng(cellData.get("lng") != null ? new BigDecimal(cellData.get("lng")) : null);
+                projectExcelVo.setLat(cellData.get("lat") != null ? new BigDecimal(cellData.get("lat")) : null);
+                projectExcelVo.setAddress(cellData.get("address"));
+                projectExcelVo.setApprovalNum(cellData.get("approvalNum"));
+                projectExcelVo.setApprovalLevelNum(cellData.get("approvalLevelNum"));
+                projectExcelVo.setProjectSize(cellData.get("projectSize"));
+                projectExcelVo.setPropertyNum(cellData.get("propertyNum"));
+                projectExcelVo.setFunctionNum(cellData.get("functionNum"));
+                projectExcelVo.setFunctionalUnit(cellData.get("functionalUnit"));
+                projectExcelVo.setMajorProject(cellData.get("majorProject"));
+                projectExcelVo.setLastAttendTime(cellData.get("lastAttendTime") != null ? LocalDateTime.parse(cellData.get("lastAttendTime"), DatePattern.NORM_DATETIME_FORMATTER) : null);
+                return projectExcelVo;
             }
 
             @Override
             public Project toBean(ProjectExcelVo excelVo) {
-                return null;
+                Project project = new Project();
+                BeanUtil.copyProperties(excelVo, project);
+                return project;
             }
 
             @Override

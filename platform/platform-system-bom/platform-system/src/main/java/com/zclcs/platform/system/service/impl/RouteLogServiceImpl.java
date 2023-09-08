@@ -85,20 +85,27 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile file) {
-        SimpleImportListener<RouteLog> routeLogSimpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<RouteLog, RouteLogExcelVo> routeLogSimpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
 
             @Override
-            public RouteLog toBean(Map<String, String> cellData) {
+            public RouteLogExcelVo toExcelVo(Map<String, String> cellData) {
+                RouteLogExcelVo routeLogExcelVo = new RouteLogExcelVo();
+                routeLogExcelVo.setRouteIp(cellData.get("routeIp"));
+                routeLogExcelVo.setRequestUri(cellData.get("requestUri"));
+                routeLogExcelVo.setTargetUri(cellData.get("targetUri"));
+                routeLogExcelVo.setRequestMethod(cellData.get("requestMethod"));
+                routeLogExcelVo.setTargetServer(cellData.get("targetServer"));
+                routeLogExcelVo.setRequestTime(DateUtil.parseLocalDateTime(cellData.get("requestTime")));
+                routeLogExcelVo.setCode(cellData.get("code"));
+                routeLogExcelVo.setTime(Long.valueOf(cellData.get("time")));
+                routeLogExcelVo.setLocation(cellData.get("location"));
+                return routeLogExcelVo;
+            }
+
+            @Override
+            public RouteLog toBean(RouteLogExcelVo excelVo) {
                 RouteLog routeLog = new RouteLog();
-                routeLog.setRouteIp(cellData.get("routeIp"));
-                routeLog.setRequestUri(cellData.get("requestUri"));
-                routeLog.setTargetUri(cellData.get("targetUri"));
-                routeLog.setRequestMethod(cellData.get("requestMethod"));
-                routeLog.setTargetServer(cellData.get("targetServer"));
-                routeLog.setRequestTime(DateUtil.parseLocalDateTime(cellData.get("requestTime")));
-                routeLog.setCode(cellData.get("code"));
-                routeLog.setTime(Long.valueOf(cellData.get("time")));
-                routeLog.setLocation(cellData.get("location"));
+                BeanUtil.copyProperties(excelVo, routeLog);
                 return routeLog;
             }
 

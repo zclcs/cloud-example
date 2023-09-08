@@ -2,12 +2,17 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
+import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
+import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.kit.ExcelReadException;
 import com.zclcs.common.export.excel.starter.listener.SimpleExportListener;
 import com.zclcs.common.export.excel.starter.listener.SimpleImportListener;
@@ -27,6 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +44,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ChildProjectTableDef.CHI
  * 工程信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 20:16:49.255
+ * @since 2023-09-08 16:48:53.770
  */
 @Slf4j
 @Service
@@ -64,7 +72,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
 
     @Override
     public Long countChildProject(ChildProjectVo childProjectVo) {
-        QueryWrapper queryWrapper = getQueryWrapper(childProjectVo);
+    QueryWrapper queryWrapper = getQueryWrapper(childProjectVo);
         return this.mapper.selectCountByQuery(queryWrapper);
     }
 
@@ -102,7 +110,7 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
         );
         // TODO 设置公共查询条件
         return queryWrapper;
-    }
+   }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -120,6 +128,50 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
         BeanUtil.copyProperties(childProjectAo, childProject);
         this.updateById(childProject);
         return childProject;
+    }
+
+    @Override
+    public ChildProject createOrUpdateChildProject(ChildProjectAo childProjectAo) {
+        ChildProject childProject = new ChildProject();
+        BeanUtil.copyProperties(childProjectAo, childProject);
+        this.saveOrUpdate(childProject);
+        return childProject;
+    }
+
+    @Override
+    public List<ChildProject> createChildProjectBatch(List<ChildProjectAo> childProjectAos) {
+        List<ChildProject> childProjectList = new ArrayList<>();
+        for (ChildProjectAo childProjectAo : childProjectAos) {
+            ChildProject childProject = new ChildProject();
+            BeanUtil.copyProperties(childProjectAo, childProject);
+            childProjectList.add(childProject);
+        }
+        saveBatch(childProjectList);
+        return childProjectList;
+    }
+
+    @Override
+    public List<ChildProject> updateChildProjectBatch(List<ChildProjectAo> childProjectAos) {
+        List<ChildProject> childProjectList = new ArrayList<>();
+        for (ChildProjectAo childProjectAo : childProjectAos) {
+            ChildProject childProject = new ChildProject();
+            BeanUtil.copyProperties(childProjectAo, childProject);
+            childProjectList.add(childProject);
+        }
+        updateBatch(childProjectList);
+        return childProjectList;
+    }
+
+    @Override
+    public List<ChildProject> createOrUpdateChildProjectBatch(List<ChildProjectAo> childProjectAos) {
+        List<ChildProject> childProjectList = new ArrayList<>();
+        for (ChildProjectAo childProjectAo : childProjectAos) {
+            ChildProject childProject = new ChildProject();
+            BeanUtil.copyProperties(childProjectAo, childProject);
+            childProjectList.add(childProject);
+        }
+        saveOrUpdateBatch(childProjectList);
+        return childProjectList;
     }
 
     @Override
@@ -150,19 +202,51 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
     @Override
     public void importExcel(MultipartFile multipartFile) {
         SimpleImportListener<ChildProject, ChildProjectExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+
             @Override
             public ChildProjectExcelVo toExcelVo(Map<String, String> cellData) {
-                return null;
+                ChildProjectExcelVo childProjectExcelVo = new ChildProjectExcelVo();
+                childProjectExcelVo.setChildProjectId(cellData.get("childProjectId") != null ? Long.valueOf(cellData.get("childProjectId")) : null);
+                childProjectExcelVo.setChildProjectName(cellData.get("childProjectName"));
+                childProjectExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
+                childProjectExcelVo.setLocation(cellData.get("location"));
+                childProjectExcelVo.setChildProjectSize(cellData.get("childProjectSize"));
+                childProjectExcelVo.setPrice(cellData.get("price"));
+                childProjectExcelVo.setContractStartDate(cellData.get("contractStartDate") != null ? LocalDate.parse(cellData.get("contractStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setContractEndDate(cellData.get("contractEndDate") != null ? LocalDate.parse(cellData.get("contractEndDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setConstructionPermit(cellData.get("constructionPermit"));
+                childProjectExcelVo.setPermitGrantOrg(cellData.get("permitGrantOrg"));
+                childProjectExcelVo.setPermitGrantDate(cellData.get("permitGrantDate") != null ? LocalDate.parse(cellData.get("permitGrantDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setPermitStatus(cellData.get("permitStatus"));
+                childProjectExcelVo.setPermitAttachment(cellData.get("permitAttachment"));
+                childProjectExcelVo.setPermitRemark(cellData.get("permitRemark"));
+                childProjectExcelVo.setChildProjectStatus(cellData.get("childProjectStatus"));
+                childProjectExcelVo.setChildProjectType(cellData.get("childProjectType"));
+                childProjectExcelVo.setStructureType(cellData.get("structureType"));
+                childProjectExcelVo.setFoundationType(cellData.get("foundationType"));
+                childProjectExcelVo.setBaseType(cellData.get("baseType"));
+                childProjectExcelVo.setPrjStartDate(cellData.get("prjStartDate") != null ? LocalDate.parse(cellData.get("prjStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setPrjCompleteDate(cellData.get("prjCompleteDate") != null ? LocalDate.parse(cellData.get("prjCompleteDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setPrjLength(cellData.get("prjLength"));
+                childProjectExcelVo.setPrjSpan(cellData.get("prjSpan"));
+                childProjectExcelVo.setOverGroundFloor(cellData.get("overGroundFloor"));
+                childProjectExcelVo.setUnderGroundFloor(cellData.get("underGroundFloor"));
+                childProjectExcelVo.setUsefulLife(cellData.get("usefulLife"));
+                childProjectExcelVo.setSeismicPrecaution(cellData.get("seismicPrecaution"));
+                childProjectExcelVo.setPrjArea(cellData.get("prjArea"));
+                return childProjectExcelVo;
             }
 
             @Override
             public ChildProject toBean(ChildProjectExcelVo excelVo) {
-                return null;
+                ChildProject childProject = new ChildProject();
+                BeanUtil.copyProperties(excelVo, childProject);
+                return childProject;
             }
 
             @Override
             public void saveBeans(List<ChildProject> t) {
-
+                saveBatch(t);
             }
         }, ChildProjectExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();

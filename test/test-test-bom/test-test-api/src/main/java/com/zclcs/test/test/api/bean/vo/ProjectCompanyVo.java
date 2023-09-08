@@ -16,7 +16,7 @@ import java.io.Serializable;
  * 项目参建单位信息数据 Vo
  *
  * @author zclcs
- * @since 2023-09-04 20:04:43.968
+ * @since 2023-09-08 16:48:43.853
  */
 @Data
 @AllArgsConstructor
@@ -48,13 +48,13 @@ public class ProjectCompanyVo extends BaseEntity implements Serializable {
     private Long companyId;
 
     /**
-     * 参建类型 @@company_role
+     * 参建类型@@company_role
      * 默认值：
      */
     private String companyRole;
 
     /**
-     * 参建类型 @@company_role
+     * 参建类型@@company_role
      */
     private String companyRoleText;
 
@@ -69,13 +69,13 @@ public class ProjectCompanyVo extends BaseEntity implements Serializable {
     private String managerName;
 
     /**
-     * 项目经理证件类型 @@id_card_type
+     * 项目经理证件类型@@id_card_type
      * 默认值：
      */
     private String managerIdCardType;
 
     /**
-     * 项目经理证件类型 @@id_card_type
+     * 项目经理证件类型@@id_card_type
      */
     private String managerIdCardTypeText;
 

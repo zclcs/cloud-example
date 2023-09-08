@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * 项目信息 CacheVo
  *
  * @author zclcs
- * @since 2023-09-04 20:04:49.084
+ * @since 2023-09-08 16:48:48.873
  */
 @Data
 public class ProjectCacheVo implements Serializable {
@@ -42,12 +42,12 @@ public class ProjectCacheVo implements Serializable {
     private String description;
 
     /**
-     * 项目分类 @@project_category
+     * 项目分类@@project_category
      */
     private String category;
 
     /**
-     * 项目分类 @@project_category
+     * 项目分类@@project_category
      */
     private String categoryText;
 
@@ -66,26 +66,26 @@ public class ProjectCacheVo implements Serializable {
     private String childProjectPlanNum;
 
     /**
-     * 项目所在地 array @@area_code
+     * 项目所在地@@area_code@@tree
      */
     private String areaCode;
-    
+
     /**
-     * 项目所在地 array @@area_code
+     * 项目所在地@@area_code@@tree
      */
     private String areaCodeText;
 
     public String getAreaCodeText() {
-        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
+        return DictCacheUtil.getDictTitle("area_code", this.areaCode);
     }
 
     /**
-     * 是否市直管 @@yes_no
+     * 是否市直管@@yes_no
      */
     private String isLeadByCity;
 
     /**
-     * 是否市直管 @@yes_no
+     * 是否市直管@@yes_no
      */
     private String isLeadByCityText;
 
@@ -139,12 +139,12 @@ public class ProjectCacheVo implements Serializable {
     private String linkPhone;
 
     /**
-     * 项目状态 @@project_status
+     * 项目状态@@project_status
      */
     private String projectStatus;
 
     /**
-     * 项目状态 @@project_status
+     * 项目状态@@project_status
      */
     private String projectStatusText;
 
@@ -173,12 +173,12 @@ public class ProjectCacheVo implements Serializable {
     private String approvalNum;
 
     /**
-     * 立项级别 @@approval_level
+     * 立项级别@@approval_level
      */
     private String approvalLevelNum;
 
     /**
-     * 立项级别 @@approval_level
+     * 立项级别@@approval_level
      */
     private String approvalLevelNumText;
 
@@ -187,12 +187,12 @@ public class ProjectCacheVo implements Serializable {
     }
 
     /**
-     * 建设规模 @@project_size
+     * 建设规模@@project_size
      */
     private String projectSize;
 
     /**
-     * 建设规模 @@project_size
+     * 建设规模@@project_size
      */
     private String projectSizeText;
 
@@ -201,12 +201,12 @@ public class ProjectCacheVo implements Serializable {
     }
 
     /**
-     * 建设性质 @@property_num
+     * 建设性质@@property_num
      */
     private String propertyNum;
 
     /**
-     * 建设性质 @@property_num
+     * 建设性质@@property_num
      */
     private String propertyNumText;
 
@@ -215,12 +215,12 @@ public class ProjectCacheVo implements Serializable {
     }
 
     /**
-     * 工程用途 @@function_num
+     * 工程用途@@function_num
      */
     private String functionNum;
 
     /**
-     * 工程用途 @@function_num
+     * 工程用途@@function_num
      */
     private String functionNumText;
 
@@ -229,12 +229,12 @@ public class ProjectCacheVo implements Serializable {
     }
 
     /**
-     * 职能单位 @@functional_unit
+     * 职能单位@@functional_unit
      */
     private String functionalUnit;
 
     /**
-     * 职能单位 @@functional_unit
+     * 职能单位@@functional_unit
      */
     private String functionalUnitText;
 
@@ -243,12 +243,12 @@ public class ProjectCacheVo implements Serializable {
     }
 
     /**
-     * 是否重点项目 @@yes_no
+     * 是否重点项目@@yes_no
      */
     private String majorProject;
 
     /**
-     * 是否重点项目 @@yes_no
+     * 是否重点项目@@yes_no
      */
     private String majorProjectText;
 

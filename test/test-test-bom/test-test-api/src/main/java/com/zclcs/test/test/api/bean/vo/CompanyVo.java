@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * 企业信息 Vo
  *
  * @author zclcs
- * @since 2023-09-08 15:00:09.827
+ * @since 2023-09-08 16:49:03.555
  */
 @Data
 @AllArgsConstructor

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
  * 项目信息 Entity
  *
  * @author zclcs
- * @since 2023-09-04 20:04:49.084
+ * @since 2023-09-08 16:48:48.873
  */
 @Data
 @AllArgsConstructor
@@ -61,7 +61,7 @@ public class Project extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * 项目分类 @@project_category
+     * 项目分类@@project_category
      */
     @Column("category")
     private String category;
@@ -79,13 +79,13 @@ public class Project extends BaseEntity implements Serializable {
     private String childProjectPlanNum;
 
     /**
-     * 项目所在地 array @@area_code
+     * 项目所在地@@area_code@@tree
      */
     @Column("area_code")
     private String areaCode;
 
     /**
-     * 是否市直管 @@yes_no
+     * 是否市直管@@yes_no
      */
     @Column("is_lead_by_city")
     private String isLeadByCity;
@@ -145,7 +145,7 @@ public class Project extends BaseEntity implements Serializable {
     private String linkPhone;
 
     /**
-     * 项目状态 @@project_status
+     * 项目状态@@project_status
      */
     @Column("project_status")
     private String projectStatus;
@@ -175,37 +175,37 @@ public class Project extends BaseEntity implements Serializable {
     private String approvalNum;
 
     /**
-     * 立项级别 @@approval_level
+     * 立项级别@@approval_level
      */
     @Column("approval_level_num")
     private String approvalLevelNum;
 
     /**
-     * 建设规模 @@project_size
+     * 建设规模@@project_size
      */
     @Column("project_size")
     private String projectSize;
 
     /**
-     * 建设性质 @@property_num
+     * 建设性质@@property_num
      */
     @Column("property_num")
     private String propertyNum;
 
     /**
-     * 工程用途 @@function_num
+     * 工程用途@@function_num
      */
     @Column("function_num")
     private String functionNum;
 
     /**
-     * 职能单位 @@functional_unit
+     * 职能单位@@functional_unit
      */
     @Column("functional_unit")
     private String functionalUnit;
 
     /**
-     * 是否重点项目 @@yes_no
+     * 是否重点项目@@yes_no
      */
     @Column("major_project")
     private String majorProject;

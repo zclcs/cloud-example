@@ -15,12 +15,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 企业信息 ExcelVo
  *
  * @author zclcs
- * @since 2023-09-08 15:00:09.827
+ * @since 2023-09-08 16:49:03.555
  */
 @Data
 public class CompanyExcelVo {
@@ -62,7 +63,7 @@ public class CompanyExcelVo {
     @ExcelSelect(handler = DynamicSelectDictHandler.class, parameter = "company_type")
     @ExcelProperty(value = "企业登记注册类型")
     private String companyType;
-
+    
     public void setCompanyType(String companyType) {
         this.companyType = DictCacheUtil.getDictTitle("company_type", companyType);
     }
@@ -87,7 +88,7 @@ public class CompanyExcelVo {
     @ExcelSelect(parentColumn = "省", handler = DynamicSelectCityHandler.class, parameter = "area_code")
     @ExcelProperty("市")
     private String city;
-
+    
     /**
      * 区/县
      */
@@ -159,7 +160,7 @@ public class CompanyExcelVo {
     @ExcelSelect(handler = DynamicSelectDictHandler.class, parameter = "id_card_type")
     @ExcelProperty(value = "法定代表人证件类型")
     private String legalManIdCardType;
-
+    
     public void setLegalManIdCardType(String legalManIdCardType) {
         this.legalManIdCardType = DictCacheUtil.getDictTitle("id_card_type", legalManIdCardType);
     }
@@ -192,7 +193,7 @@ public class CompanyExcelVo {
     @ExcelSelect(handler = DynamicSelectDictHandler.class, parameter = "currency_type")
     @ExcelProperty(value = "资本币种")
     private String capitalCurrencyType;
-
+    
     public void setCapitalCurrencyType(String capitalCurrencyType) {
         this.capitalCurrencyType = DictCacheUtil.getDictTitle("currency_type", capitalCurrencyType);
     }
