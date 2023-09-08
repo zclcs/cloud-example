@@ -24,9 +24,9 @@ import java.util.Set;
  * @author zclcs
  */
 @Slf4j
-public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, String>> {
+public class SimpleImportListener<T, R> extends AnalysisEventListener<Map<Integer, String>> {
 
-    private final ImportExcelService<T> importExcelService;
+    private final ImportExcelService<T, R> importExcelService;
 
     private final Field[] declaredFields;
 
@@ -38,12 +38,12 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     @Getter
     private Map<Integer, String> error = new HashMap<>();
 
-    public SimpleImportListener(ImportExcelService<T> importExcelService, Field[] declaredFields) {
+    public SimpleImportListener(ImportExcelService<T, R> importExcelService, Field[] declaredFields) {
         this.importExcelService = importExcelService;
         this.declaredFields = declaredFields;
     }
 
-    public SimpleImportListener(ImportExcelService<T> importExcelService, Field[] declaredFields, int batchSize) {
+    public SimpleImportListener(ImportExcelService<T, R> importExcelService, Field[] declaredFields, int batchSize) {
         this.importExcelService = importExcelService;
         this.declaredFields = declaredFields;
         this.batchSize = batchSize;
@@ -65,19 +65,18 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
             Field declaredField = declaredFields[i];
             beanMap.put(declaredField.getName(), data.get(i));
         }
-        T bean = this.importExcelService.toBean(beanMap);
-        Set<ConstraintViolation<T>> violations = Validators.validate(bean);
+        R excelVo = this.importExcelService.toExcelVo(beanMap);
+        Set<ConstraintViolation<R>> violations = Validators.validate(excelVo);
         if (CollectionUtil.isNotEmpty(violations)) {
             StringBuilder message = new StringBuilder();
             for (ConstraintViolation<?> violation : violations) {
                 Path path = violation.getPropertyPath();
-                String s = StrUtil.subAfter(path.toString(), ".", true);
-                message.append(s).append(violation.getMessage()).append(StrUtil.COMMA);
+                message.append(path.toString()).append(violation.getMessage()).append(StrUtil.COMMA);
             }
             message = new StringBuilder(message.substring(0, message.length() - 1));
             throw new ExcelAnalysisException(message.toString());
         }
-        cachedDataList.add(bean);
+        cachedDataList.add(this.importExcelService.toBean(excelVo));
         if (cachedDataList.size() >= batchSize) {
             this.importExcelService.saveBeans(cachedDataList);
             cachedDataList = ListUtils.newArrayListWithExpectedSize(batchSize);
@@ -88,5 +87,5 @@ public class SimpleImportListener<T> extends AnalysisEventListener<Map<Integer, 
     public void doAfterAllAnalysed(AnalysisContext context) {
         this.importExcelService.saveBeans(cachedDataList);
     }
-    
+
 }

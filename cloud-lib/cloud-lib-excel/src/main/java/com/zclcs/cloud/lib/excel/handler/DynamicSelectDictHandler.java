@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.excel.handler;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.handler.ColumnDynamicSelectDataHandler;
@@ -17,6 +18,12 @@ public class DynamicSelectDictHandler implements ColumnDynamicSelectDataHandler<
 
     @Override
     public Function<String, List<String>> source(String dictName) {
-        return params -> DictCacheUtil.getDictByDictName(dictName).stream().map(DictItemCacheVo::getTitle).collect(Collectors.toList());
+        return params -> {
+            List<DictItemCacheVo> dictByDictName = DictCacheUtil.getDictByDictName(dictName);
+            if (CollectionUtil.isEmpty(dictByDictName)) {
+                return null;
+            }
+            return dictByDictName.stream().map(DictItemCacheVo::getTitle).collect(Collectors.toList());
+        };
     }
 }

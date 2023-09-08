@@ -2,7 +2,6 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -151,45 +149,20 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
-        SimpleImportListener<ChildProject> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<ChildProject, ChildProjectExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+            @Override
+            public ChildProjectExcelVo toExcelVo(Map<String, String> cellData) {
+                return null;
+            }
 
             @Override
-            public ChildProject toBean(Map<String, String> cellData) {
-                ChildProject childProject = new ChildProject();
-                childProject.setChildProjectId(Long.valueOf(cellData.get("childProjectId")));
-                childProject.setChildProjectName(cellData.get("childProjectName"));
-                childProject.setProjectId(Long.valueOf(cellData.get("projectId")));
-                childProject.setLocation(cellData.get("location"));
-                childProject.setChildProjectSize(cellData.get("childProjectSize"));
-                childProject.setPrice(cellData.get("price"));
-                childProject.setContractStartDate(LocalDate.parse(cellData.get("contractStartDate"), DatePattern.NORM_DATE_FORMATTER));
-                childProject.setContractEndDate(LocalDate.parse(cellData.get("contractEndDate"), DatePattern.NORM_DATE_FORMATTER));
-                childProject.setConstructionPermit(cellData.get("constructionPermit"));
-                childProject.setPermitGrantOrg(cellData.get("permitGrantOrg"));
-                childProject.setPermitGrantDate(LocalDate.parse(cellData.get("permitGrantDate"), DatePattern.NORM_DATE_FORMATTER));
-                childProject.setPermitStatus(cellData.get("permitStatus"));
-                childProject.setPermitAttachment(cellData.get("permitAttachment"));
-                childProject.setPermitRemark(cellData.get("permitRemark"));
-                childProject.setChildProjectStatus(cellData.get("childProjectStatus"));
-                childProject.setChildProjectType(cellData.get("childProjectType"));
-                childProject.setStructureType(cellData.get("structureType"));
-                childProject.setFoundationType(cellData.get("foundationType"));
-                childProject.setBaseType(cellData.get("baseType"));
-                childProject.setPrjStartDate(LocalDate.parse(cellData.get("prjStartDate"), DatePattern.NORM_DATE_FORMATTER));
-                childProject.setPrjCompleteDate(LocalDate.parse(cellData.get("prjCompleteDate"), DatePattern.NORM_DATE_FORMATTER));
-                childProject.setPrjLength(cellData.get("prjLength"));
-                childProject.setPrjSpan(cellData.get("prjSpan"));
-                childProject.setOverGroundFloor(cellData.get("overGroundFloor"));
-                childProject.setUnderGroundFloor(cellData.get("underGroundFloor"));
-                childProject.setUsefulLife(cellData.get("usefulLife"));
-                childProject.setSeismicPrecaution(cellData.get("seismicPrecaution"));
-                childProject.setPrjArea(cellData.get("prjArea"));
-                return childProject;
+            public ChildProject toBean(ChildProjectExcelVo excelVo) {
+                return null;
             }
 
             @Override
             public void saveBeans(List<ChildProject> t) {
-                saveBatch(t);
+
             }
         }, ChildProjectExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();

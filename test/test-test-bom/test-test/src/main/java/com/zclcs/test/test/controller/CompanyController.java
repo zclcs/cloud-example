@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * 企业信息
  *
  * @author zclcs
- * @since 2023-09-04 20:04:53.080
+ * @since 2023-09-08 15:00:09.827
  */
 @Slf4j
 @RestController
@@ -41,11 +41,11 @@ public class CompanyController {
 
     /**
      * 企业信息查询（分页）
-     * 权限: company:view
+     * 权限: company:page
      *
      * @see CompanyService#findCompanyPage(BasePageAo, CompanyVo)
      */
-    @GetMapping("/page")
+    @GetMapping
     @SaCheckPermission("company:page")
     public BaseRsp<BasePage<CompanyVo>> findCompanyPage(@Validated BasePageAo basePageAo, @Validated CompanyVo companyVo) {
         BasePage<CompanyVo> page = this.companyService.findCompanyPage(basePageAo, companyVo);
@@ -54,7 +54,7 @@ public class CompanyController {
 
     /**
      * 企业信息查询（集合）
-     * 权限: company:view
+     * 权限: company:list
      *
      * @see CompanyService#findCompanyList(CompanyVo)
      */
@@ -67,7 +67,7 @@ public class CompanyController {
 
     /**
      * 企业信息查询（单个）
-     * 权限: company:view
+     * 权限: company:one
      *
      * @see CompanyService#findCompany(CompanyVo)
      */
@@ -87,7 +87,7 @@ public class CompanyController {
     @PostMapping
     @SaCheckPermission("company:add")
     @ControllerEndpoint(operation = "新增企业信息")
-    public BaseRsp<Company> createCompany(@RequestBody @Validated CompanyAo companyAo) {
+    public BaseRsp<Company> addCompany(@Validated @RequestBody CompanyAo companyAo) {
         return RspUtil.data(this.companyService.createCompany(companyAo));
     }
 
@@ -100,7 +100,7 @@ public class CompanyController {
     @PutMapping
     @SaCheckPermission("company:update")
     @ControllerEndpoint(operation = "修改企业信息")
-    public BaseRsp<Company> updateCompany(@RequestBody @Validated({ValidGroups.Crud.Update.class}) CompanyAo companyAo) {
+    public BaseRsp<Company> updateCompany(@Validated({ValidGroups.Crud.Update.class}) @RequestBody CompanyAo companyAo) {
         return RspUtil.data(this.companyService.updateCompany(companyAo));
     }
 

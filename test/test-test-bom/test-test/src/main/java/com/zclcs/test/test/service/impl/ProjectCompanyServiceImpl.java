@@ -129,20 +129,16 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
-        SimpleImportListener<ProjectCompany> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<ProjectCompany, ProjectCompanyExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
 
             @Override
-            public ProjectCompany toBean(Map<String, String> cellData) {
-                ProjectCompany projectCompany = new ProjectCompany();
-                projectCompany.setProjectCompanyId(Long.valueOf(cellData.get("projectCompanyId")));
-                projectCompany.setProjectId(Long.valueOf(cellData.get("projectId")));
-                projectCompany.setCompanyId(Long.valueOf(cellData.get("companyId")));
-                projectCompany.setCompanyRole(cellData.get("companyRole"));
-                projectCompany.setManagerName(cellData.get("managerName"));
-                projectCompany.setManagerIdCardType(cellData.get("managerIdCardType"));
-                projectCompany.setManagerIdCardNumber(cellData.get("managerIdCardNumber"));
-                projectCompany.setManagerPhone(cellData.get("managerPhone"));
-                return projectCompany;
+            public ProjectCompanyExcelVo toExcelVo(Map<String, String> cellData) {
+                return null;
+            }
+
+            @Override
+            public ProjectCompany toBean(ProjectCompanyExcelVo excelVo) {
+                return null;
             }
 
             @Override

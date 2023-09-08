@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.excel.handler;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
@@ -18,6 +19,12 @@ public class DynamicSelectProvinceHandler implements ColumnDynamicSelectDataHand
 
     @Override
     public Function<String, List<String>> source(String dictName) {
-        return params -> DictCacheUtil.getDictByDictNameAndParentValue(dictName, CommonCore.TOP_PARENT_CODE).stream().map(DictItemCacheVo::getTitle).collect(Collectors.toList());
+        return params -> {
+            List<DictItemCacheVo> dictByDictNameAndParentValue = DictCacheUtil.getDictByDictNameAndParentValue(dictName, CommonCore.TOP_PARENT_CODE);
+            if (CollectionUtil.isEmpty(dictByDictNameAndParentValue)) {
+                return null;
+            }
+            return dictByDictNameAndParentValue.stream().map(DictItemCacheVo::getTitle).collect(Collectors.toList());
+        };
     }
 }

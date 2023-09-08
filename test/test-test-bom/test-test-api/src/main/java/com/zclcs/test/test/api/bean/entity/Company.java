@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * 企业信息 Entity
  *
  * @author zclcs
- * @since 2023-09-04 20:04:53.080
+ * @since 2023-09-08 15:00:09.827
  */
 @Data
 @AllArgsConstructor
@@ -60,7 +60,7 @@ public class Company extends BaseEntity implements Serializable {
     private String companyName;
 
     /**
-     * 企业登记注册类型 @@company_type
+     * 企业登记注册类型@@company_type
      */
     @Column("company_type")
     private String companyType;
@@ -72,7 +72,7 @@ public class Company extends BaseEntity implements Serializable {
     private String licenseNum;
 
     /**
-     * 注册地区编码 array @@area_code
+     * 注册地区编码@@area_code@@tree
      */
     @Column("area_code")
     private String areaCode;
@@ -114,7 +114,7 @@ public class Company extends BaseEntity implements Serializable {
     private String legalManProTitle;
 
     /**
-     * 法定代表人证件类型 @@id_card_type
+     * 法定代表人证件类型@@id_card_type
      */
     @Column("legal_man_id_card_type")
     private String legalManIdCardType;
@@ -138,7 +138,7 @@ public class Company extends BaseEntity implements Serializable {
     private String factRegCapital;
 
     /**
-     * 资本币种 @@currency_type
+     * 资本币种@@currency_type
      */
     @Column("capital_currency_type")
     private String capitalCurrencyType;

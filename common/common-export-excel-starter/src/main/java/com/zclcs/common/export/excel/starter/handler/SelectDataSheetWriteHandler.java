@@ -37,35 +37,37 @@ public class SelectDataSheetWriteHandler implements SheetWriteHandler {
         AtomicInteger tmpCascadeSheetStartCol = new AtomicInteger(0);
 
         selectedMap.forEach((colIndex, model) -> {
-            if (StrUtil.isNotEmpty(model.getParentColumn())) {
-                //直接粘贴该工具类方法到你的项目中
-                tmpCascadeSheet.set(
-                        ExcelUtil.addCascadeValidationToSheet(
-                                writeWorkbookHolder,
-                                writeSheetHolder,
-                                tmpCascadeSheet.get(),
-                                (Map<String, List<String>>) model.getSource(),
-                                tmpCascadeSheetStartCol,
-                                model.getParentColumnIndex(),
-                                colIndex,
-                                model.getFirstRow(),
-                                model.getLastRow()
-                        )
-                );
-            } else {
-                //直接粘贴该工具类方法到你的项目中
-                tmpSheet.set(
-                        ExcelUtil.addSelectValidationToSheet(
-                                writeWorkbookHolder,
-                                writeSheetHolder,
-                                tmpSheet.get(),
-                                (List<String>) model.getSource(),
-                                tmpSheetStartCol,
-                                colIndex,
-                                model.getFirstRow(),
-                                model.getLastRow()
-                        )
-                );
+            if (model.getSource() != null) {
+                if (StrUtil.isNotEmpty(model.getParentColumn())) {
+                    //直接粘贴该工具类方法到你的项目中
+                    tmpCascadeSheet.set(
+                            ExcelUtil.addCascadeValidationToSheet(
+                                    writeWorkbookHolder,
+                                    writeSheetHolder,
+                                    tmpCascadeSheet.get(),
+                                    (Map<String, List<String>>) model.getSource(),
+                                    tmpCascadeSheetStartCol,
+                                    model.getParentColumnIndex(),
+                                    colIndex,
+                                    model.getFirstRow(),
+                                    model.getLastRow()
+                            )
+                    );
+                } else {
+                    //直接粘贴该工具类方法到你的项目中
+                    tmpSheet.set(
+                            ExcelUtil.addSelectValidationToSheet(
+                                    writeWorkbookHolder,
+                                    writeSheetHolder,
+                                    tmpSheet.get(),
+                                    (List<String>) model.getSource(),
+                                    tmpSheetStartCol,
+                                    colIndex,
+                                    model.getFirstRow(),
+                                    model.getLastRow()
+                            )
+                    );
+                }
             }
         });
     }

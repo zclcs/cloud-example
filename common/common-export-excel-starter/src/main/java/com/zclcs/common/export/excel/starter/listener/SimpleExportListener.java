@@ -237,7 +237,7 @@ public class SimpleExportListener<T, K> {
                 maxHeadLayers.set(Math.max(headLayerCount, maxHeadLayers.get()));
                 excelSelectedResolve.setParentColumn(selected.parentColumn());
                 excelSelectedResolve.setColumn(columName);
-                excelSelectedResolve.setSource(Objects.nonNull(source) ? source : Collections.emptyList());
+                excelSelectedResolve.setSource(source);
                 excelSelectedResolve.setFirstRow(Math.max(selected.firstRow(), headLayerCount));
                 excelSelectedResolve.setLastRow(selected.lastRow());
                 excelSelectedResolve.setColumnIndex(index);

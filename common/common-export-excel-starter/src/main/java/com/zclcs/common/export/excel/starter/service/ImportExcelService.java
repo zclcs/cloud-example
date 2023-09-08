@@ -6,9 +6,11 @@ import java.util.Map;
 /**
  * @author zclcs
  */
-public interface ImportExcelService<T> {
+public interface ImportExcelService<T, R> {
 
-    T toBean(Map<String, String> cellData);
+    R toExcelVo(Map<String, String> cellData);
+    
+    T toBean(R excelVo);
 
     void saveBeans(List<T> t);
 

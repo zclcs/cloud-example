@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.excel.handler;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
@@ -19,13 +20,18 @@ public class DynamicSelectCityHandler implements ColumnDynamicSelectDataHandler<
 
     @Override
     public Function<String, Map<String, List<String>>> source(String dictName) {
-        List<DictItemTreeVo> dictTree = DictCacheUtil.getDictTree(dictName);
-        Map<String, List<String>> data = new HashMap<>(20);
-        for (DictItemTreeVo dictItemTreeVo : dictTree) {
-            if (dictItemTreeVo.isHasChildren()) {
-                data.put(dictItemTreeVo.getLabel(), dictItemTreeVo.getChildren().stream().map(Tree::getLabel).toList());
+        return param -> {
+            List<DictItemTreeVo> dictTree = DictCacheUtil.getDictTree(dictName);
+            Map<String, List<String>> data = new HashMap<>(20);
+            for (DictItemTreeVo dictItemTreeVo : dictTree) {
+                if (dictItemTreeVo.isHasChildren()) {
+                    data.put(dictItemTreeVo.getLabel(), dictItemTreeVo.getChildren().stream().map(Tree::getLabel).toList());
+                }
             }
-        }
-        return param -> data;
+            if (CollectionUtil.isEmpty(data)) {
+                return null;
+            }
+            return data;
+        };
     }
 }

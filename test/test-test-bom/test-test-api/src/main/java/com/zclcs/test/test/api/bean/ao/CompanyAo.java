@@ -11,12 +11,13 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 企业信息 Ao
  *
  * @author zclcs
- * @since 2023-09-04 20:04:53.080
+ * @since 2023-09-08 15:00:09.827
  */
 @Data
 @AllArgsConstructor
@@ -60,7 +61,7 @@ public class CompanyAo implements Serializable {
     private String companyName;
 
     /**
-     * 企业登记注册类型 @@company_type
+     * 企业登记注册类型@@company_type
      * 默认值：
      */
     @DictValid(value = "company_type", message = "{dict}")
@@ -75,7 +76,7 @@ public class CompanyAo implements Serializable {
     private String licenseNum;
 
     /**
-     * 注册地区编码 array @@area_code
+     * 注册地区编码@@area_code@@tree
      * 默认值：
      */
     @DictValid(value = "area_code", message = "{dict}")
@@ -126,7 +127,7 @@ public class CompanyAo implements Serializable {
     private String legalManProTitle;
 
     /**
-     * 法定代表人证件类型 @@id_card_type
+     * 法定代表人证件类型@@id_card_type
      * 默认值：
      */
     @DictValid(value = "id_card_type", message = "{dict}")
@@ -155,7 +156,7 @@ public class CompanyAo implements Serializable {
     private String factRegCapital;
 
     /**
-     * 资本币种 @@currency_type
+     * 资本币种@@currency_type
      * 默认值：
      */
     @DictValid(value = "currency_type", message = "{dict}")

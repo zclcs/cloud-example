@@ -3,6 +3,7 @@ package ${basePackage}.${serviceImplPackage};
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -191,8 +192,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 <#list columns as column>
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
                 || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
-                || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') 
-                && column.hasDict = true && column.isTree = true && column.field = 'areaCode'>
+                || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isTree = true && column.field = 'AreaCode'>
                 String areaCodeDictName = "area_code";
                 String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
                 DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
@@ -213,28 +213,28 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}"));
                 </#if>
                 <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>
-                ${className?uncap_first}.set${column.field?cap_first}(Long.valueOf(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'date' || column.type = 'DATE'>
-                ${className?uncap_first}.set${column.field?cap_first}(LocalDate.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATE_FORMATTER));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDate.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATE_FORMATTER) : null);
                 </#if>
                 <#if column.type = 'datetime' || column.type = 'DATETIME'>
-                ${className?uncap_first}.set${column.field?cap_first}(LocalDateTime.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATETIME_FORMATTER));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDateTime.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATETIME_FORMATTER) : null);
                 </#if>
                 <#if column.type = 'int' || column.type = 'smallint'>
-                ${className?uncap_first}.set${column.field?cap_first}(Integer.valueOf(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Integer.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'double'>
-                ${className?uncap_first}.set${column.field?cap_first}(Double.valueOf(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Double.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'bigint'>
-                ${className?uncap_first}.set${column.field?cap_first}(Long.valueOf(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'tinyint'>
-                ${className?uncap_first}.set${column.field?cap_first}(Byte.valueOf(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Byte.valueOf(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 <#if column.type = 'decimal' || column.type = 'numeric'>
-                ${className?uncap_first}.set${column.field?cap_first}(new BigDecimal(cellData.get("${column.field?uncap_first}")));
+                ${className?uncap_first}.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? new BigDecimal(cellData.get("${column.field?uncap_first}")) : null);
                 </#if>
                 </#list>
                 </#if>

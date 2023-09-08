@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * 企业信息 CacheVo
  *
  * @author zclcs
- * @since 2023-09-04 20:04:53.080
+ * @since 2023-09-08 15:00:09.827
  */
 @Data
 public class CompanyCacheVo implements Serializable {
@@ -41,12 +41,12 @@ public class CompanyCacheVo implements Serializable {
     private String companyName;
 
     /**
-     * 企业登记注册类型 @@company_type
+     * 企业登记注册类型@@company_type
      */
     private String companyType;
 
     /**
-     * 企业登记注册类型 @@company_type
+     * 企业登记注册类型@@company_type
      */
     private String companyTypeText;
 
@@ -60,17 +60,17 @@ public class CompanyCacheVo implements Serializable {
     private String licenseNum;
 
     /**
-     * 注册地区编码 array @@area_code
+     * 注册地区编码@@area_code@@tree
      */
     private String areaCode;
-    
+
     /**
-     * 注册地区编码 array @@area_code
+     * 注册地区编码@@area_code@@tree
      */
     private String areaCodeText;
 
     public String getAreaCodeText() {
-        return DictCacheUtil.getDictTitleArray("area_code", this.areaCode);
+        return DictCacheUtil.getDictTitle("area_code", this.areaCode);
     }
 
     /**
@@ -104,12 +104,12 @@ public class CompanyCacheVo implements Serializable {
     private String legalManProTitle;
 
     /**
-     * 法定代表人证件类型 @@id_card_type
+     * 法定代表人证件类型@@id_card_type
      */
     private String legalManIdCardType;
 
     /**
-     * 法定代表人证件类型 @@id_card_type
+     * 法定代表人证件类型@@id_card_type
      */
     private String legalManIdCardTypeText;
 
@@ -133,12 +133,12 @@ public class CompanyCacheVo implements Serializable {
     private String factRegCapital;
 
     /**
-     * 资本币种 @@currency_type
+     * 资本币种@@currency_type
      */
     private String capitalCurrencyType;
 
     /**
-     * 资本币种 @@currency_type
+     * 资本币种@@currency_type
      */
     private String capitalCurrencyTypeText;
 

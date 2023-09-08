@@ -98,7 +98,6 @@ public interface ${className}Service extends IService<${className}> {
      *
      * @param ${className?uncap_first}Aos {@link ${className}Ao}
      * @return {@link ${className}}
-     * @see IService#saveOrUpdateBatch(Collection)
      */
     List<${className}> createOrUpdate${className}Batch(List<${className}Ao> ${className?uncap_first}Aos);
 

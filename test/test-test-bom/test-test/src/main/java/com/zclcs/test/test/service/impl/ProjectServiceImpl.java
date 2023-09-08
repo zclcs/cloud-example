@@ -2,7 +2,6 @@ package com.zclcs.test.test.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.EasyExcel;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -28,9 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -155,42 +151,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
-        SimpleImportListener<Project> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<Project, ProjectExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
 
             @Override
-            public Project toBean(Map<String, String> cellData) {
-                Project project = new Project();
-                project.setProjectId(Long.valueOf(cellData.get("projectId")));
-                project.setProjectCode(cellData.get("projectCode"));
-                project.setProjectName(cellData.get("projectName"));
-                project.setDescription(cellData.get("description"));
-                project.setCategory(cellData.get("category"));
-                project.setBuildPlanNum(cellData.get("buildPlanNum"));
-                project.setChildProjectPlanNum(cellData.get("childProjectPlanNum"));
-                project.setAreaCode(cellData.get("areaCode"));
-                project.setIsLeadByCity(cellData.get("isLeadByCity"));
-                project.setInvest(cellData.get("invest"));
-                project.setBuildingArea(cellData.get("buildingArea"));
-                project.setBuildingLength(cellData.get("buildingLength"));
-                project.setStartDate(LocalDate.parse(cellData.get("startDate"), DatePattern.NORM_DATE_FORMATTER));
-                project.setCompleteDate(LocalDate.parse(cellData.get("completeDate"), DatePattern.NORM_DATE_FORMATTER));
-                project.setPlannedStartDate(LocalDate.parse(cellData.get("plannedStartDate"), DatePattern.NORM_DATE_FORMATTER));
-                project.setPlannedCompleteDate(LocalDate.parse(cellData.get("plannedCompleteDate"), DatePattern.NORM_DATE_FORMATTER));
-                project.setLinkMan(cellData.get("linkMan"));
-                project.setLinkPhone(cellData.get("linkPhone"));
-                project.setProjectStatus(cellData.get("projectStatus"));
-                project.setLng(new BigDecimal(cellData.get("lng")));
-                project.setLat(new BigDecimal(cellData.get("lat")));
-                project.setAddress(cellData.get("address"));
-                project.setApprovalNum(cellData.get("approvalNum"));
-                project.setApprovalLevelNum(cellData.get("approvalLevelNum"));
-                project.setProjectSize(cellData.get("projectSize"));
-                project.setPropertyNum(cellData.get("propertyNum"));
-                project.setFunctionNum(cellData.get("functionNum"));
-                project.setFunctionalUnit(cellData.get("functionalUnit"));
-                project.setMajorProject(cellData.get("majorProject"));
-                project.setLastAttendTime(LocalDateTime.parse(cellData.get("lastAttendTime"), DatePattern.NORM_DATETIME_FORMATTER));
-                return project;
+            public ProjectExcelVo toExcelVo(Map<String, String> cellData) {
+                return null;
+            }
+
+            @Override
+            public Project toBean(ProjectExcelVo excelVo) {
+                return null;
             }
 
             @Override

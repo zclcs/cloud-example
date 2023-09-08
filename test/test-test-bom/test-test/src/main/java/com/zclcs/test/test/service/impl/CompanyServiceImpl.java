@@ -42,7 +42,7 @@ import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-04 20:16:44.686
+ * @since 2023-09-08 15:00:09.827
  */
 @Slf4j
 @Service
@@ -199,16 +199,17 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @SneakyThrows
     @Override
     public void importExcel(MultipartFile multipartFile) {
-        SimpleImportListener<Company> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+        SimpleImportListener<Company, CompanyExcelVo> simpleImportListener = new SimpleImportListener<>(new ImportExcelService<>() {
+
             @Override
-            public Company toBean(Map<String, String> cellData) {
-                Company company = new Company();
-                company.setCompanyId(Long.valueOf(cellData.get("companyId")));
-                company.setCompanyCode(cellData.get("companyCode"));
-                company.setCompanyAttachment(cellData.get("companyAttachment"));
-                company.setCompanyName(cellData.get("companyName"));
-                company.setCompanyType(DictCacheUtil.getDictValue("company_type", cellData.get("companyType")));
-                company.setLicenseNum(cellData.get("licenseNum"));
+            public CompanyExcelVo toExcelVo(Map<String, String> cellData) {
+                CompanyExcelVo companyExcelVo = new CompanyExcelVo();
+                companyExcelVo.setCompanyId(cellData.get("companyId") != null ? Long.valueOf(cellData.get("companyId")) : null);
+                companyExcelVo.setCompanyCode(cellData.get("companyCode"));
+                companyExcelVo.setCompanyAttachment(cellData.get("companyAttachment"));
+                companyExcelVo.setCompanyName(cellData.get("companyName"));
+                companyExcelVo.setCompanyType(cellData.get("companyType"));
+                companyExcelVo.setLicenseNum(cellData.get("licenseNum"));
                 String areaCodeDictName = "area_code";
                 String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
                 DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
@@ -221,28 +222,35 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                     throw new FieldException("市输入非法值");
                 }
                 String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
-                company.setAreaCode(area);
-                company.setAddress(cellData.get("address"));
-                company.setZipCode(cellData.get("zipCode"));
-                company.setLegalMan(cellData.get("legalMan"));
-                company.setLegalManPhone(cellData.get("legalManPhone"));
-                company.setLegalManDuty(cellData.get("legalManDuty"));
-                company.setLegalManProTitle(cellData.get("legalManProTitle"));
-                company.setLegalManIdCardType(cellData.get("legalManIdCardType"));
-                company.setLegalManIdCardNumber(cellData.get("legalManIdCardNumber"));
-                company.setRegCapital(cellData.get("regCapital"));
-                company.setFactRegCapital(cellData.get("factRegCapital"));
-                company.setCapitalCurrencyType(cellData.get("capitalCurrencyType"));
-                company.setRegisterDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                company.setEstablishDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                company.setOfficePhone(cellData.get("officePhone"));
-                company.setFaxNumber(cellData.get("faxNumber"));
-                company.setLinkMan(cellData.get("linkMan"));
-                company.setLinkDuty(cellData.get("linkDuty"));
-                company.setLinkPhone(cellData.get("linkPhone"));
-                company.setEmail(cellData.get("email"));
-                company.setWebSite(cellData.get("webSite"));
-                company.setRemark(cellData.get("remark"));
+                companyExcelVo.setAreaCode(area);
+                companyExcelVo.setAddress(cellData.get("address"));
+                companyExcelVo.setZipCode(cellData.get("zipCode"));
+                companyExcelVo.setLegalMan(cellData.get("legalMan"));
+                companyExcelVo.setLegalManPhone(cellData.get("legalManPhone"));
+                companyExcelVo.setLegalManDuty(cellData.get("legalManDuty"));
+                companyExcelVo.setLegalManProTitle(cellData.get("legalManProTitle"));
+                companyExcelVo.setLegalManIdCardType(cellData.get("legalManIdCardType"));
+                companyExcelVo.setLegalManIdCardNumber(cellData.get("legalManIdCardNumber"));
+                companyExcelVo.setRegCapital(cellData.get("regCapital"));
+                companyExcelVo.setFactRegCapital(cellData.get("factRegCapital"));
+                companyExcelVo.setCapitalCurrencyType(cellData.get("capitalCurrencyType"));
+                companyExcelVo.setRegisterDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                companyExcelVo.setEstablishDate(cellData.get("establishDate") != null ? LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                companyExcelVo.setOfficePhone(cellData.get("officePhone"));
+                companyExcelVo.setFaxNumber(cellData.get("faxNumber"));
+                companyExcelVo.setLinkMan(cellData.get("linkMan"));
+                companyExcelVo.setLinkDuty(cellData.get("linkDuty"));
+                companyExcelVo.setLinkPhone(cellData.get("linkPhone"));
+                companyExcelVo.setEmail(cellData.get("email"));
+                companyExcelVo.setWebSite(cellData.get("webSite"));
+                companyExcelVo.setRemark(cellData.get("remark"));
+                return companyExcelVo;
+            }
+
+            @Override
+            public Company toBean(CompanyExcelVo excelVo) {
+                Company company = new Company();
+                BeanUtil.copyProperties(excelVo, company);
                 return company;
             }
 
@@ -250,7 +258,6 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             public void saveBeans(List<Company> t) {
                 saveBatch(t);
             }
-
         }, CompanyExcelVo.class.getDeclaredFields());
         EasyExcel.read(multipartFile.getInputStream(), simpleImportListener).sheet().doRead();
         Map<Integer, String> error = simpleImportListener.getError();

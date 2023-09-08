@@ -8,14 +8,13 @@ import com.zclcs.test.test.api.bean.entity.Company;
 import com.zclcs.test.test.api.bean.vo.CompanyVo;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * 企业信息 Service接口
  *
  * @author zclcs
- * @since 2023-09-04 20:04:53.080
+ * @since 2023-09-08 15:00:09.827
  */
 public interface CompanyService extends IService<Company> {
 
@@ -23,7 +22,7 @@ public interface CompanyService extends IService<Company> {
      * 查询（分页）
      *
      * @param basePageAo {@link BasePageAo}
-     * @param companyVo  {@link CompanyVo}
+     * @param companyVo {@link CompanyVo}
      * @return {@link CompanyVo}
      */
     BasePage<CompanyVo> findCompanyPage(BasePageAo basePageAo, CompanyVo companyVo);
@@ -99,7 +98,6 @@ public interface CompanyService extends IService<Company> {
      *
      * @param companyAos {@link CompanyAo}
      * @return {@link Company}
-     * @see IService#saveOrUpdateBatch(Collection)
      */
     List<Company> createOrUpdateCompanyBatch(List<CompanyAo> companyAos);
 
