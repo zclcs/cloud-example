@@ -74,9 +74,9 @@ public class RateLimitLogServiceImpl extends ServiceImpl<RateLimitLogMapper, Rat
                         RATE_LIMIT_LOG.CREATE_AT,
                         RATE_LIMIT_LOG.UPDATE_AT
                 )
-                .where(RATE_LIMIT_LOG.RATE_LIMIT_LOG_IP.likeRight(rateLimitLogVo.getRateLimitLogIp()))
-                .and(RATE_LIMIT_LOG.REQUEST_URI.likeRight(rateLimitLogVo.getRequestUri()))
-                .and(RATE_LIMIT_LOG.REQUEST_METHOD.likeRight(rateLimitLogVo.getRequestMethod()))
+                .where(RATE_LIMIT_LOG.RATE_LIMIT_LOG_IP.like(rateLimitLogVo.getRateLimitLogIp()))
+                .and(RATE_LIMIT_LOG.REQUEST_URI.like(rateLimitLogVo.getRequestUri()))
+                .and(RATE_LIMIT_LOG.REQUEST_METHOD.like(rateLimitLogVo.getRequestMethod()))
                 .and(RATE_LIMIT_LOG.REQUEST_TIME.between(
                         rateLimitLogVo.getRequestTimeFrom(),
                         rateLimitLogVo.getRequestTimeTo(),

@@ -107,7 +107,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                         DEPT.CREATE_AT,
                         DEPT.UPDATE_AT
                 )
-                .where(DEPT.DEPT_NAME.likeRight(deptVo.getDeptName(), If::hasText))
+                .where(DEPT.DEPT_NAME.like(deptVo.getDeptName(), If::hasText))
                 .and(DEPT.CREATE_AT.between(
                         deptVo.getCreateTimeFrom(),
                         deptVo.getCreateTimeTo(),

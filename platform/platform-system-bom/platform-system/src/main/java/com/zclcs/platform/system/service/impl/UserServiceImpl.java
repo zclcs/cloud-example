@@ -133,7 +133,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 )
                 .where(USER.USER_ID.in(deptList.get(), If::isNotEmpty))
                 .and(USER.USER_ID.eq(userVo.getUserId(), If::notNull))
-                .and(USER.USERNAME.likeRight(userVo.getUsername(), If::hasText))
+                .and(USER.USERNAME.like(userVo.getUsername(), If::hasText))
         ;
         return queryWrapper;
     }

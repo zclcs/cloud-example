@@ -94,8 +94,8 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
                         BLACK_LIST.CREATE_AT,
                         BLACK_LIST.UPDATE_BY
                 )
-                .where(BLACK_LIST.BLACK_IP.likeRight(blackListVo.getBlackIp(), If::hasText))
-                .and(BLACK_LIST.REQUEST_URI.likeRight(blackListVo.getRequestUri(), If::hasText))
+                .where(BLACK_LIST.BLACK_IP.like(blackListVo.getBlackIp(), If::hasText))
+                .and(BLACK_LIST.REQUEST_URI.like(blackListVo.getRequestUri(), If::hasText))
                 .and(BLACK_LIST.REQUEST_METHOD.eq(blackListVo.getRequestMethod(), If::hasText))
                 .and(BLACK_LIST.BLACK_STATUS.eq(blackListVo.getBlackStatus(), If::hasText))
                 .and(BLACK_LIST.BLACK_ID.eq(blackListVo.getBlackId()))

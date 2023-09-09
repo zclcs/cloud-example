@@ -233,7 +233,7 @@ public class MinioServiceImpl implements MinioService {
                 .from(MINIO_FILE)
                 .innerJoin(MINIO_BUCKET).on(MINIO_FILE.BUCKET_ID.eq(MINIO_BUCKET.ID))
                 .where(MINIO_FILE.ID.eq(minioFileVo.getId()))
-                .and(MINIO_FILE.ORIGINAL_FILE_NAME.likeRight(minioFileVo.getOriginalFileName(), If::hasText))
+                .and(MINIO_FILE.ORIGINAL_FILE_NAME.like(minioFileVo.getOriginalFileName(), If::hasText))
                 .orderBy(MINIO_FILE.CREATE_AT.desc())
         ;
         return queryWrapper;

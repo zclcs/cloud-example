@@ -111,7 +111,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                         MENU.CREATE_AT,
                         MENU.UPDATE_AT
                 )
-                .where(MENU.MENU_NAME.likeRight(menuVo.getMenuName(), If::hasText))
+                .where(MENU.MENU_NAME.like(menuVo.getMenuName(), If::hasText))
                 .and(MENU.MENU_ID.in(menuVo.getMenuIds(), If::isNotEmpty))
                 .and(MENU.TYPE.eq(menuVo.getType(), If::hasText))
                 .and(MENU.TYPE.in(menuVo.getTypes(), If::isNotEmpty))

@@ -78,8 +78,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
                         LOG.LOCATION
                 )
                 .where(LOG.USERNAME.eq(logVo.getUsername(), If::hasText))
-                .and(LOG.OPERATION.likeRight(logVo.getOperation(), If::hasText))
-                .and(LOG.LOCATION.likeRight(logVo.getLocation(), If::hasText))
+                .and(LOG.OPERATION.like(logVo.getOperation(), If::hasText))
+                .and(LOG.LOCATION.like(logVo.getLocation(), If::hasText))
                 .and(LOG.CREATE_AT.between(
                         logVo.getCreateAtFrom(),
                         logVo.getCreateAtTo(),

@@ -50,7 +50,7 @@ public class QueryWrapperUtil {
     public <T> QueryWrapper<T> likeAreaCodeNotBlank(QueryWrapper<T> queryWrapper, String column, String param) {
         Optional.ofNullable(param).filter(StrUtil::isNotBlank).ifPresent(s -> {
             switch (getNameByAreaCode(s)) {
-                case PROVINCE -> queryWrapper.likeRight(column, s);
+                case PROVINCE -> queryWrapper.like(column, s);
                 case CITY -> queryWrapper.like(column, s);
                 case COUNTY -> queryWrapper.likeLeft(column, s);
                 default -> {
@@ -127,13 +127,13 @@ public class QueryWrapperUtil {
         return queryWrapper;
     }
 
-    public <T> QueryWrapper<T> likeRightNotBlank(QueryWrapper<T> queryWrapper, String column, String param) {
-        queryWrapper.likeRight(StrUtil.isNotBlank(param), column, param);
+    public <T> QueryWrapper<T> likeNotBlank(QueryWrapper<T> queryWrapper, String column, String param) {
+        queryWrapper.like(StrUtil.isNotBlank(param), column, param);
         return queryWrapper;
     }
 
-    public <T> QueryWrapper<T> likeRightNotNull(QueryWrapper<T> queryWrapper, String column, Object param) {
-        queryWrapper.likeRight(param != null, column, param);
+    public <T> QueryWrapper<T> likeNotNull(QueryWrapper<T> queryWrapper, String column, Object param) {
+        queryWrapper.like(param != null, column, param);
         return queryWrapper;
     }
 

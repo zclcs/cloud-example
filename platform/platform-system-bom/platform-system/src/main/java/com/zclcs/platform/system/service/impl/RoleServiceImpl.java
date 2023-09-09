@@ -91,7 +91,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                         ROLE.REMARK,
                         ROLE.CREATE_AT
                 )
-                .where(ROLE.ROLE_NAME.likeRight(roleVo.getRoleName(), If::hasText))
+                .where(ROLE.ROLE_NAME.like(roleVo.getRoleName(), If::hasText))
                 .and(ROLE.ROLE_ID.eq(roleVo.getRoleId()))
                 .orderBy(ROLE.CREATE_AT.desc())
         ;

@@ -76,8 +76,8 @@ public class BlockLogServiceImpl extends ServiceImpl<BlockLogMapper, BlockLog> i
                         BLOCK_LOG.CREATE_AT,
                         BLOCK_LOG.UPDATE_BY
                 )
-                .where(BLOCK_LOG.BLOCK_IP.likeRight(blockLogVo.getBlockIp(), If::hasText))
-                .and(BLOCK_LOG.REQUEST_URI.likeRight(blockLogVo.getRequestUri(), If::hasText))
+                .where(BLOCK_LOG.BLOCK_IP.like(blockLogVo.getBlockIp(), If::hasText))
+                .and(BLOCK_LOG.REQUEST_URI.like(blockLogVo.getRequestUri(), If::hasText))
                 .and(BLOCK_LOG.REQUEST_METHOD.eq(blockLogVo.getRequestMethod(), If::hasText))
                 .and(ROUTE_LOG.REQUEST_TIME.between(
                         blockLogVo.getRequestTimeFrom(),

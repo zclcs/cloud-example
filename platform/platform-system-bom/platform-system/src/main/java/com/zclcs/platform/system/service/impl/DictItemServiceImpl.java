@@ -127,10 +127,10 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
                         DICT_ITEM.SORTED,
                         DICT_ITEM.IS_DISABLED
                 )
-                .where(DICT_ITEM.DICT_NAME.likeRight(dictItemVo.getDictName(), If::hasText))
-                .and(DICT_ITEM.VALUE.likeRight(dictItemVo.getValue(), If::hasText))
-                .and(DICT_ITEM.PARENT_VALUE.likeRight(dictItemVo.getParentValue(), If::hasText))
-                .and(DICT_ITEM.TITLE.likeRight(dictItemVo.getTitle(), If::hasText))
+                .where(DICT_ITEM.DICT_NAME.like(dictItemVo.getDictName(), If::hasText))
+                .and(DICT_ITEM.VALUE.like(dictItemVo.getValue(), If::hasText))
+                .and(DICT_ITEM.PARENT_VALUE.like(dictItemVo.getParentValue(), If::hasText))
+                .and(DICT_ITEM.TITLE.like(dictItemVo.getTitle(), If::hasText))
                 .and(DICT_ITEM.ID.eq(dictItemVo.getId()))
                 .orderBy(DICT_ITEM.SORTED.asc())
         ;
@@ -144,7 +144,7 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
                         DICT_ITEM.DICT_NAME.as("name"),
                         DICT_ITEM.DICT_NAME.as("dictName")
                 ).groupBy(DICT_ITEM.DICT_NAME)
-                .where(DICT_ITEM.DICT_NAME.likeRight(dictVo.getDictName(), If::hasText))
+                .where(DICT_ITEM.DICT_NAME.like(dictVo.getDictName(), If::hasText))
                 .orderBy(DICT_ITEM.SORTED.asc())
         ;
         return queryWrapper;

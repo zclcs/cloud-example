@@ -93,7 +93,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
                         RATE_LIMIT_RULE.CREATE_AT,
                         RATE_LIMIT_RULE.UPDATE_AT
                 )
-                .where(RATE_LIMIT_RULE.REQUEST_URI.likeRight(rateLimitRuleVo.getRequestUri(), If::hasText))
+                .where(RATE_LIMIT_RULE.REQUEST_URI.like(rateLimitRuleVo.getRequestUri(), If::hasText))
                 .and(RATE_LIMIT_RULE.REQUEST_METHOD.eq(rateLimitRuleVo.getRequestMethod()))
                 .and(RATE_LIMIT_RULE.RULE_STATUS.eq(rateLimitRuleVo.getRuleStatus()))
         ;

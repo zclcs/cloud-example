@@ -148,9 +148,9 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
                         ROUTE_LOG.TIME,
                         ROUTE_LOG.CREATE_AT,
                         ROUTE_LOG.UPDATE_AT)
-                .where(ROUTE_LOG.ROUTE_IP.likeRight(routeLogVo.getRouteIp(), If::hasText))
-                .and(ROUTE_LOG.TARGET_SERVER.likeRight(routeLogVo.getTargetServer(), If::hasText))
-                .and(ROUTE_LOG.REQUEST_METHOD.likeRight(routeLogVo.getRequestMethod(), If::hasText))
+                .where(ROUTE_LOG.ROUTE_IP.like(routeLogVo.getRouteIp(), If::hasText))
+                .and(ROUTE_LOG.TARGET_SERVER.like(routeLogVo.getTargetServer(), If::hasText))
+                .and(ROUTE_LOG.REQUEST_METHOD.like(routeLogVo.getRequestMethod(), If::hasText))
                 .and(ROUTE_LOG.REQUEST_TIME.between(
                         routeLogVo.getRequestTimeFrom(),
                         routeLogVo.getRequestTimeTo(),

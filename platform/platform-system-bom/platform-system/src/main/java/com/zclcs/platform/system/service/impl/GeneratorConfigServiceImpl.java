@@ -111,7 +111,7 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
                         GENERATOR_CONFIG.CREATE_AT
                 )
                 .where(GENERATOR_CONFIG.ID.eq(generatorConfigVo.getId()))
-                .and(GENERATOR_CONFIG.SERVER_NAME.likeRight(generatorConfigVo.getServerName(), If::hasText))
+                .and(GENERATOR_CONFIG.SERVER_NAME.like(generatorConfigVo.getServerName(), If::hasText))
         ;
         return queryWrapper;
     }

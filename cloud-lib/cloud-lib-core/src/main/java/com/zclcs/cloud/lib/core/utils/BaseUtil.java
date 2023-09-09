@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.Regexp;
 import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.enums.AreaType;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.env.Environment;
 
@@ -19,6 +20,22 @@ import java.util.regex.Pattern;
 public class BaseUtil {
 
     private static final String UNKNOWN = "unknown";
+
+    /**
+     * 根据行政区划代码返回 省 市 县
+     *
+     * @param areaCode 行政区划代码
+     * @return {@link AreaType}
+     */
+    public AreaType getAreaTypeByAreaCode(String areaCode) {
+        if (StrUtil.endWith(areaCode, AreaType.PROVINCE.getCode())) {
+            return AreaType.PROVINCE;
+        }
+        if (StrUtil.endWith(areaCode, AreaType.CITY.getCode())) {
+            return AreaType.CITY;
+        }
+        return AreaType.COUNTY;
+    }
 
     /**
      * 驼峰转下划线

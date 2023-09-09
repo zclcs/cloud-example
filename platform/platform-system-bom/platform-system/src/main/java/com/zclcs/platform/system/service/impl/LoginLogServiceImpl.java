@@ -74,8 +74,8 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
                         LOGIN_LOG.SYSTEM,
                         LOGIN_LOG.BROWSER
                 )
-                .where(LOGIN_LOG.IP.likeRight(loginLogVo.getIp(), If::hasText))
-                .and(LOGIN_LOG.USERNAME.likeRight(loginLogVo.getUsername(), If::hasText))
+                .where(LOGIN_LOG.IP.like(loginLogVo.getIp(), If::hasText))
+                .and(LOGIN_LOG.USERNAME.like(loginLogVo.getUsername(), If::hasText))
                 .and(LOGIN_LOG.LOGIN_TYPE.eq(loginLogVo.getLoginType(), If::hasText))
                 .and(LOGIN_LOG.LOGIN_TIME.between(
                         loginLogVo.getLoginTimeFrom(),
