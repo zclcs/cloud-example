@@ -160,7 +160,7 @@ public class GeneratorConfigAo implements Serializable {
      * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
+//    @NotBlank(message = "{required}")
     private String cacheVoPackage;
 
     /**
@@ -168,7 +168,7 @@ public class GeneratorConfigAo implements Serializable {
      * 默认值：
      */
     @Size(max = 50, message = "{noMoreThan}")
-    @NotBlank(message = "{required}")
+//    @NotBlank(message = "{required}")
     private String excelVoPackage;
 
 
