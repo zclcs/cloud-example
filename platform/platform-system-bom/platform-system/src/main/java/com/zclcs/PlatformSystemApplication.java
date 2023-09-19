@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableMyFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan("com.zclcs.platform.system.mapper")
+@MapperScan(value = "com.zclcs.platform.system.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class PlatformSystemApplication {
 
     public static void main(String[] args) {
