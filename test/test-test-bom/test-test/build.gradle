@@ -1,7 +1,5 @@
-apply plugin: "org.springframework.boot"
-
 springBoot {
-    mainClass = "com.zclcs.SystemApplication"
+    mainClass = "com.zclcs.TestTestApplication"
 }
 
 dependencies {

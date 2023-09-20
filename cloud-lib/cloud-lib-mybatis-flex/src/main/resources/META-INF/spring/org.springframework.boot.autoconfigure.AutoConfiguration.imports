@@ -2,3 +2,4 @@ com.zclcs.cloud.lib.mybatis.flex.aspect.MyDataPermissionAspect
 com.zclcs.cloud.lib.mybatis.flex.aspect.MyDataDesensitizationAspect
 com.zclcs.cloud.lib.mybatis.flex.aspect.MyFieldPermissionAspect
 com.zclcs.cloud.lib.mybatis.flex.configure.MyBatisFlexConfiguration
+com.zclcs.cloud.lib.mybatis.flex.configure.MyBatisNativeConfiguration

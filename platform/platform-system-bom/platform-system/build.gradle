@@ -1,6 +1,3 @@
-apply plugin: "org.springframework.boot"
-apply plugin: "org.graalvm.buildtools.native"
-
 springBoot {
     mainClass = "com.zclcs.PlatformSystemApplication"
 }

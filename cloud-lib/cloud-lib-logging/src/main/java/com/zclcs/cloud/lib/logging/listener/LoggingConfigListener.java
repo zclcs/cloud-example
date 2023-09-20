@@ -8,12 +8,13 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
-import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
 import com.zclcs.cloud.lib.logging.handler.LoggingLevelHandler;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
@@ -30,6 +31,8 @@ public class LoggingConfigListener {
 
     private MyNacosProperties myNacosProperties;
 
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     @Autowired
     public void setNacosProperties(MyNacosProperties myNacosProperties) {
         this.myNacosProperties = myNacosProperties;
@@ -38,6 +41,12 @@ public class LoggingConfigListener {
     @Autowired
     public void setLoggingLevelHandler(LoggingLevelHandler loggingLevelHandler) {
         this.loggingLevelHandler = loggingLevelHandler;
+    }
+
+    @Qualifier(CommonCore.NACOS_CONFIG)
+    @Autowired
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
 
     @PostConstruct
@@ -61,7 +70,7 @@ public class LoggingConfigListener {
 
             @Override
             public Executor getExecutor() {
-                return SpringContextHolderUtil.getBean(CommonCore.NACOS_CONFIG);
+                return threadPoolTaskExecutor;
             }
         });
 

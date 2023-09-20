@@ -75,7 +75,7 @@ public class MyRabbitMqAutoConfigure {
     }
 
     @Bean
-    public void initMqSetting() {
+    public Boolean initMqSetting() {
         Map<String, MyRabbitMqProperties.DirectQueue> directQueues = Optional.ofNullable(myRabbitMqProperties.getDirectQueues()).orElse(new HashMap<>());
         for (MyRabbitMqProperties.DirectQueue directQueue : directQueues.values()) {
             String queueName = directQueue.getQueueName();
@@ -120,6 +120,7 @@ public class MyRabbitMqAutoConfigure {
             amqpAdmin.declareExchange(exchange);
             amqpAdmin.declareBinding(binding);
         }
+        return true;
     }
 
     private void definition(ExchangeType exchangeType, String queueName, String exchangeName, String routeKey, String dlxQueueName, String dlxExchangeName, String dlxRouteKey, Boolean initDlx, Integer ttl, Map<String, MyRabbitMqProperties.TopicQueue> distributionTopicQueues) {

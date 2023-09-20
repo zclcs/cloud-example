@@ -9,7 +9,6 @@ import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Params;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
 import com.zclcs.platform.gateway.event.SaveBlockLogEvent;
 import com.zclcs.platform.gateway.event.SaveRateLimitLogEvent;
 import com.zclcs.platform.gateway.event.SaveRouteLogEvent;
@@ -24,6 +23,7 @@ import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.Route;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,6 +51,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private static final String METHOD_ALL = "ALL";
     private final RouteEnhanceCacheService routeEnhanceCacheService;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
@@ -145,7 +146,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                         .code(String.valueOf(code))
                         .time(executeTime)
                         .build();
-                SpringContextHolderUtil.publishEvent(new SaveRouteLogEvent(routeLog));
+                applicationEventPublisher.publishEvent(new SaveRouteLogEvent(routeLog));
             }
             // 记录日志
             if (log.isDebugEnabled()) {
@@ -168,7 +169,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            SpringContextHolderUtil.publishEvent(new SaveBlockLogEvent(blockLog));
+            applicationEventPublisher.publishEvent(new SaveBlockLogEvent(blockLog));
             log.debug("Store blocked request logs >>>");
         }
     }
@@ -187,7 +188,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
                     .requestUri(originUri.getPath())
                     .requestTime(LocalDateTime.now())
                     .build();
-            SpringContextHolderUtil.publishEvent(new SaveRateLimitLogEvent(rateLimitLog));
+            applicationEventPublisher.publishEvent(new SaveRateLimitLogEvent(rateLimitLog));
             log.debug("Store rate limit logs >>>");
         }
     }

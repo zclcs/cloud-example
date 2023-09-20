@@ -7,11 +7,12 @@ import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
-import com.zclcs.cloud.lib.core.utils.SpringContextHolderUtil;
 import com.zclcs.platform.gateway.handler.RoutesHandler;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
@@ -28,6 +29,8 @@ public class RoutesConfigListener {
 
     private MyNacosProperties myNacosProperties;
 
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     @Autowired
     public void setNacosProperties(MyNacosProperties myNacosProperties) {
         this.myNacosProperties = myNacosProperties;
@@ -36,6 +39,12 @@ public class RoutesConfigListener {
     @Autowired
     public void setRoutesHandler(RoutesHandler routesHandler) {
         this.routesHandler = routesHandler;
+    }
+
+    @Qualifier(CommonCore.ASYNC_POOL)
+    @Autowired
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
 
     @PostConstruct
@@ -59,7 +68,7 @@ public class RoutesConfigListener {
 
             @Override
             public Executor getExecutor() {
-                return SpringContextHolderUtil.getBean(CommonCore.ASYNC_POOL);
+                return threadPoolTaskExecutor;
             }
         });
 

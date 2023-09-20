@@ -1,11 +1,11 @@
 buildscript {
     ext {
         // 3.0.2 3.1.1 3.1.2
-        springBootVersion = "3.1.2"
+        springBootVersion = "3.1.3"
         // 0.9.18 0.9.23
-        springBootNativeVersion = "0.9.23"
+        springBootNativeVersion = "0.9.24"
         // 2022.0.0 2022.0.3
-        springCloudVersion = "2022.0.3"
+        springCloudVersion = "2022.0.4"
         springCloudAlibabaVersion = "2022.0.0.0"
         seataVersion = "1.7.0"
         sentinelVersion = "1.8.6"
@@ -47,7 +47,7 @@ ext {
     bom = Set.of(project(":cloud-bom"), project(":common"), project(":cloud-lib"),
             project(":platform"), project(":platform:platform-system-bom"),
             project(":test"), project(":test:test-test-bom"))
-    jibPackage = Set.of(
+    childPackage = Set.of(
             project(":platform:platform-gateway"),
             project(":platform:platform-system-bom:platform-system"),
             project(":platform:platform-maintenance"),
@@ -55,7 +55,6 @@ ext {
             project(":third-part-database-sync"),
             project(":third-part-config-sync")
     )
-    nativePackage = Set.of(project(":third-part-database-sync"))
     commons = (subprojects - bom)
 }
 
@@ -119,8 +118,11 @@ configure(commons) {
     compileJava.dependsOn(processResources)
 }
 
-configure(jibPackage) {
+configure(childPackage) {
     apply plugin: "java"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "org.graalvm.buildtools.native"
+    apply plugin: 'io.spring.dependency-management'
     apply plugin: "com.google.cloud.tools.jib"
 
     jib {
@@ -147,21 +149,20 @@ configure(jibPackage) {
             creationTime = "USE_CURRENT_TIMESTAMP"
         }
     }
-}
 
-//configuration(nativePackage) {
-//    apply plugin: "org.graalvm.buildtools.native"
-//    bootBuildImage {
-//        imageName = "${dockerJibToImage}/${project.name}:native"
-//        docker {
-//            host = "tcp://192.168.33.10:2375"
-//            tlsVerify = false
-//            builderRegistry {
-//                username = "${dockerJibAuthUsername}"
-//                password = "${dockerJibAuthPassword}"
-//                url = "${dockerJibToImage}/${project.name}"
-//                email = "2371219112@qq.com"
-//            }
-//        }
-//    }
-//}
+    bootBuildImage {
+//        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+        imageName = "${dockerJibToImage}/${project.name}:native"
+        environment['BP_NATIVE_IMAGE'] = 'true'
+        buildpacks = ["urn:cnb:builder:paketobuildpacks/builder-jammy-tiny:latest", "gcr.io/paketo-buildpacks/health-checker:latest"]
+        publish = true
+        docker {
+            host = "tcp://192.168.33.10:2375"
+            tlsVerify = false
+            publishRegistry {
+                username = "$dockerJibAuthUsername"
+                password = "${dockerJibAuthPassword}"
+            }
+        }
+    }
+}
