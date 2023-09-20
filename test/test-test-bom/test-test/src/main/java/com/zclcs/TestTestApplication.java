@@ -14,10 +14,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableMyFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan("com.zclcs.test.test.mapper")
+@MapperScan(value = "com.zclcs.test.test.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class TestTestApplication {
 
     public static void main(String[] args) {
+        System.setProperty("javax.xml.accessExternalDTD", "all");
         SpringApplication.run(TestTestApplication.class, args);
     }
 }

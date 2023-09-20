@@ -6,6 +6,7 @@ import com.zclcs.cloud.lib.core.properties.RabbitmqApiInfoProperties;
 import com.zclcs.cloud.lib.core.properties.SaTokenProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ImportRuntimeHints;
 
 /**
  * @author zclcs
@@ -17,5 +18,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         RabbitmqApiInfoProperties.class,
         SaTokenProperties.class
 })
+@ImportRuntimeHints({CoreRuntimeHintsRegistrar.class})
 public class MyCoreAutoConfigure {
 }

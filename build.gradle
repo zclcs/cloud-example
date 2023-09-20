@@ -154,7 +154,7 @@ configure(childPackage) {
 //        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
         imageName = "${dockerJibToImage}/${project.name}:native"
         environment['BP_NATIVE_IMAGE'] = 'true'
-        buildpacks = ["urn:cnb:builder:paketobuildpacks/builder-jammy-tiny:latest", "gcr.io/paketo-buildpacks/health-checker:latest"]
+//        buildpacks = ["paketobuildpacks/builder-jammy-tiny:latest", "gcr.io/paketo-buildpacks/health-checker:latest"]
         publish = true
         docker {
             host = "tcp://192.168.33.10:2375"

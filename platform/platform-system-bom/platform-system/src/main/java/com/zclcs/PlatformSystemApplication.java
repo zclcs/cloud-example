@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class PlatformSystemApplication {
 
     public static void main(String[] args) {
+        System.setProperty("javax.xml.accessExternalDTD", "all");
         SpringApplication.run(PlatformSystemApplication.class, args);
     }
 }
