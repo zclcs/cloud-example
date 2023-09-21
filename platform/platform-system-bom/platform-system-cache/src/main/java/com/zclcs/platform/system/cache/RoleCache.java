@@ -3,7 +3,6 @@ package com.zclcs.platform.system.cache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
 import com.zclcs.platform.system.api.fegin.RemoteRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,8 @@ public class RoleCache extends CacheService<RoleCacheVo> {
 
     private RemoteRoleService remoteRoleService;
 
-    public RoleCache(RedisService redisService) {
-        super(RedisCachePrefix.ROLE_PREFIX, false, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_ROLE_PREFIX), 10000, 0.03);
+    public RoleCache() {
+        super(RedisCachePrefix.ROLE_PREFIX, false);
     }
 
     @Autowired

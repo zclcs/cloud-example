@@ -8,6 +8,8 @@ spring:
     name: platform-maintenance
 
   cloud:
+    refresh:
+      enabled: false
     nacos:
       config:
         server-addr: ${NACOS_HOST:192.168.33.10}:${NACOS_PORT:8848}
@@ -24,22 +26,25 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml
-      - nacos:tomcat.yaml
-      - nacos:openfeign.yaml
-      - nacos:hikari.yaml
-      - nacos:rabbitmq.yaml
-      - nacos:redis.yaml
-      - nacos:mybatis-plus.yaml
-      - nacos:jasypt.yaml
-      - nacos:system-dict.yaml
-      - nacos:minio.yaml
-      - nacos:xxl-job.yaml
-      - nacos:platform-system-rabbit-mq-queue.yaml
-      - nacos:sa-token.yaml
+      - optional:nacos:global-configuration.yaml
+      - optional:nacos:tomcat.yaml
+      - optional:nacos:openfeign.yaml
+      - optional:nacos:hikari.yaml
+      - optional:nacos:rabbitmq.yaml
+      - optional:nacos:redis.yaml
+      - optional:nacos:jasypt.yaml
+      - optional:nacos:system-dict.yaml
+      - optional:nacos:minio.yaml
+      - optional:nacos:xxl-job.yaml
+      - optional:nacos:platform-system-rabbit-mq-queue.yaml
+      - optional:nacos:sa-token.yaml
 
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
     url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_ROOT_USERNAME:root}
     password: ${DATASOURCE_ROOT_PASSWORD:123456}
+
+logging:
+  level:
+    com.alibaba.cloud.nacos.configdata: debug

@@ -4,8 +4,8 @@ import cn.dev33.satoken.exception.NotPermissionException;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,10 +20,7 @@ import org.springframework.core.annotation.AnnotationUtils;
  */
 @Slf4j
 @Aspect
-@RequiredArgsConstructor
 public class MySecurityInnerAspect implements Ordered {
-
-    private final HttpServletRequest request;
 
     @Around("@within(inner) || @annotation(inner)")
     public Object around(ProceedingJoinPoint point, Inner inner) throws Throwable {
@@ -32,7 +29,8 @@ public class MySecurityInnerAspect implements Ordered {
             Class<?> clazz = point.getTarget().getClass();
             inner = AnnotationUtils.findAnnotation(clazz, Inner.class);
         }
-        String header = request.getHeader(Security.FROM);
+        HttpServletRequest httpServletRequest = WebUtil.getHttpServletRequest();
+        String header = httpServletRequest.getHeader(Security.FROM);
         assert inner != null;
         if (inner.value() && !StrUtil.equals(Security.FROM_IN, header)) {
             log.warn("访问接口 {} 没有权限", point.getSignature().getName());

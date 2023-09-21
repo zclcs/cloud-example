@@ -24,7 +24,6 @@ import com.zclcs.common.redis.starter.enums.CacheType;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RBloomFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
@@ -61,10 +60,10 @@ public abstract class CacheService<T> {
     @Getter
     private ObjectMapper objectMapper;
 
-    /**
-     * 布隆过滤器
-     */
-    private RBloomFilter<String> rBloomFilter;
+//    /**
+//     * 布隆过滤器
+//     */
+//    private RBloomFilter<String> rBloomFilter;
 
     /**
      * 缓存过期时间
@@ -150,86 +149,86 @@ public abstract class CacheService<T> {
         this.timeOut = timeOut;
     }
 
-    /**
-     * 构造方法
-     * 缓存类型: 使用布隆过滤器
-     *
-     * @param redisPrefix        缓存前缀
-     * @param rBloomFilter       布隆过滤器
-     * @param expectedInsertions 预期数量
-     * @param falseProbability   预期错误概率
-     */
-    public CacheService(String redisPrefix,
-                        RBloomFilter<String> rBloomFilter,
-                        long expectedInsertions,
-                        double falseProbability) {
-        this(redisPrefix);
-        this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
-        this.rBloomFilter = rBloomFilter;
-        this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
-    }
+//    /**
+//     * 构造方法
+//     * 缓存类型: 使用布隆过滤器
+//     *
+//     * @param redisPrefix        缓存前缀
+//     * @param rBloomFilter       布隆过滤器
+//     * @param expectedInsertions 预期数量
+//     * @param falseProbability   预期错误概率
+//     */
+//    public CacheService(String redisPrefix,
+//                        RBloomFilter<String> rBloomFilter,
+//                        long expectedInsertions,
+//                        double falseProbability) {
+//        this(redisPrefix);
+//        this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
+//        this.rBloomFilter = rBloomFilter;
+//        this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
+//    }
 
-    /**
-     * 构造方法
-     * 缓存类型: 使用布隆过滤器
-     *
-     * @param redisPrefix        缓存前缀
-     * @param withCache          是否使用内存缓存
-     * @param rBloomFilter       布隆过滤器
-     * @param expectedInsertions 预期数量
-     * @param falseProbability   预期错误概率
-     */
-    public CacheService(String redisPrefix,
-                        boolean withCache,
-                        RBloomFilter<String> rBloomFilter,
-                        long expectedInsertions,
-                        double falseProbability) {
-        this(redisPrefix, withCache);
-        this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
-        this.rBloomFilter = rBloomFilter;
-        this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
-    }
+//    /**
+//     * 构造方法
+//     * 缓存类型: 使用布隆过滤器
+//     *
+//     * @param redisPrefix        缓存前缀
+//     * @param withCache          是否使用内存缓存
+//     * @param rBloomFilter       布隆过滤器
+//     * @param expectedInsertions 预期数量
+//     * @param falseProbability   预期错误概率
+//     */
+//    public CacheService(String redisPrefix,
+//                        boolean withCache,
+//                        RBloomFilter<String> rBloomFilter,
+//                        long expectedInsertions,
+//                        double falseProbability) {
+//        this(redisPrefix, withCache);
+//        this.cacheType = CacheType.CACHE_USING_BLOOM_FILTER;
+//        this.rBloomFilter = rBloomFilter;
+//        this.rBloomFilter.tryInit(expectedInsertions, falseProbability);
+//    }
+//
+//    /**
+//     * 构造方法
+//     * 缓存类型: 使用布隆过滤器
+//     *
+//     * @param redisPrefix        缓存前缀
+//     * @param rBloomFilter       布隆过滤器
+//     * @param expectedInsertions 预期数量
+//     * @param falseProbability   预期错误概率
+//     * @param timeOut            过期时间
+//     */
+//    public CacheService(String redisPrefix,
+//                        RBloomFilter<String> rBloomFilter,
+//                        long expectedInsertions,
+//                        double falseProbability,
+//                        long timeOut) {
+//        this(redisPrefix, rBloomFilter, expectedInsertions, falseProbability);
+//        this.timeOut = timeOut;
+//    }
 
-    /**
-     * 构造方法
-     * 缓存类型: 使用布隆过滤器
-     *
-     * @param redisPrefix        缓存前缀
-     * @param rBloomFilter       布隆过滤器
-     * @param expectedInsertions 预期数量
-     * @param falseProbability   预期错误概率
-     * @param timeOut            过期时间
-     */
-    public CacheService(String redisPrefix,
-                        RBloomFilter<String> rBloomFilter,
-                        long expectedInsertions,
-                        double falseProbability,
-                        long timeOut) {
-        this(redisPrefix, rBloomFilter, expectedInsertions, falseProbability);
-        this.timeOut = timeOut;
-    }
 
-
-    /**
-     * 构造方法
-     * 缓存类型: 使用布隆过滤器
-     *
-     * @param redisPrefix        缓存前缀
-     * @param withCache          是否使用内存缓存
-     * @param rBloomFilter       布隆过滤器
-     * @param expectedInsertions 预期数量
-     * @param falseProbability   预期错误概率
-     * @param timeOut            过期时间
-     */
-    public CacheService(String redisPrefix,
-                        boolean withCache,
-                        RBloomFilter<String> rBloomFilter,
-                        long expectedInsertions,
-                        double falseProbability,
-                        long timeOut) {
-        this(redisPrefix, withCache, rBloomFilter, expectedInsertions, falseProbability);
-        this.timeOut = timeOut;
-    }
+//    /**
+//     * 构造方法
+//     * 缓存类型: 使用布隆过滤器
+//     *
+//     * @param redisPrefix        缓存前缀
+//     * @param withCache          是否使用内存缓存
+//     * @param rBloomFilter       布隆过滤器
+//     * @param expectedInsertions 预期数量
+//     * @param falseProbability   预期错误概率
+//     * @param timeOut            过期时间
+//     */
+//    public CacheService(String redisPrefix,
+//                        boolean withCache,
+//                        RBloomFilter<String> rBloomFilter,
+//                        long expectedInsertions,
+//                        double falseProbability,
+//                        long timeOut) {
+//        this(redisPrefix, withCache, rBloomFilter, expectedInsertions, falseProbability);
+//        this.timeOut = timeOut;
+//    }
 
     private <K1, V1> Cache<K1, V1> buildCache(int maximumSize, int initialCapacity, Duration duration) {
         final Caffeine<Object, Object> builder = Caffeine.newBuilder();
@@ -317,31 +316,31 @@ public abstract class CacheService<T> {
     public T cacheKey(T cache, Object... key) {
         String redisKey = String.format(redisPrefix, key);
         Long redisTimeOut = timeOut + RandomUtil.randomLong(1, 360);
-        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
-            if (cache == null) {
-                rBloomFilter.add(redisKey);
-            } else if (cache instanceof Collection<?> collection) {
-                if (CollectionUtil.isEmpty(collection)) {
-                    rBloomFilter.add(redisKey);
-                } else {
-                    redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
-                }
+//        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
+//            if (cache == null) {
+//                rBloomFilter.add(redisKey);
+//            } else if (cache instanceof Collection<?> collection) {
+//                if (CollectionUtil.isEmpty(collection)) {
+//                    rBloomFilter.add(redisKey);
+//                } else {
+//                    redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
+//                }
+//            } else {
+//                redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
+//            }
+//        } else {
+        if (cache == null) {
+            redisService.set(redisKey, "{}", redisTimeOut);
+        } else if (cache instanceof Collection<?> collection) {
+            if (CollectionUtil.isEmpty(collection)) {
+                redisService.set(redisKey, "[]", redisTimeOut);
             } else {
                 redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
             }
         } else {
-            if (cache == null) {
-                redisService.set(redisKey, "{}", redisTimeOut);
-            } else if (cache instanceof Collection<?> collection) {
-                if (CollectionUtil.isEmpty(collection)) {
-                    redisService.set(redisKey, "[]", redisTimeOut);
-                } else {
-                    redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
-                }
-            } else {
-                redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
-            }
+            redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
         }
+//        }
         return cache;
     }
 
@@ -353,11 +352,11 @@ public abstract class CacheService<T> {
      */
     public boolean checkCache(Object... key) {
         String redisKey = String.format(redisPrefix, key);
-        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
-            if (rBloomFilter.contains(redisKey)) {
-                return true;
-            }
-        }
+//        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
+//            if (rBloomFilter.contains(redisKey)) {
+//                return true;
+//            }
+//        }
         return redisService.hasKey(redisKey);
     }
 
@@ -393,11 +392,11 @@ public abstract class CacheService<T> {
 
     private T findCacheWithRedis(Object... key) {
         String redisKey = String.format(redisPrefix, key);
-        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
-            if (rBloomFilter.contains(redisKey)) {
-                return null;
-            }
-        }
+//        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
+//            if (rBloomFilter.contains(redisKey)) {
+//                return null;
+//            }
+//        }
         String obj = (String) redisService.get(redisKey);
         if (obj == null) {
             synchronized (this) {

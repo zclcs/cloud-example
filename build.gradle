@@ -25,7 +25,7 @@ buildscript {
         lombokMapstructBindingVersion = "0.2.0"
         guavaVersion = "31.1-jre"
         javassistVersion = "3.28.0-GA"
-        redissonVersion = "3.20.0"
+        redissonVersion = "3.23.5"
         xxlJobVersion = "2.4.0"
         janinoVersion = "3.1.9"
         saTokenVersion = "1.35.0.RC"
@@ -61,16 +61,6 @@ ext {
 subprojects {
     group = group
     version = version
-}
-
-configure(commons) {
-    apply plugin: "java-library"
-    sourceCompatibility = "$javaVersion"
-    targetCompatibility = "$javaVersion"
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
 
     repositories {
         mavenLocal()
@@ -80,6 +70,16 @@ configure(commons) {
         maven { url "https://repo.spring.io/release" }
         maven { url "https://repo.spring.io/milestone" }
         mavenCentral()
+    }
+}
+
+configure(commons) {
+    apply plugin: "java-library"
+    sourceCompatibility = "$javaVersion"
+    targetCompatibility = "$javaVersion"
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 
     configurations {
@@ -124,6 +124,10 @@ configure(childPackage) {
     apply plugin: "org.graalvm.buildtools.native"
     apply plugin: 'io.spring.dependency-management'
     apply plugin: "com.google.cloud.tools.jib"
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
 
     jib {
         from {
@@ -147,6 +151,14 @@ configure(childPackage) {
             entrypoint = "INHERIT"
             format = "OCI"
             creationTime = "USE_CURRENT_TIMESTAMP"
+        }
+    }
+
+    graalvmNative {
+        binaries {
+            main {
+                sharedLibrary = false
+            }
         }
     }
 

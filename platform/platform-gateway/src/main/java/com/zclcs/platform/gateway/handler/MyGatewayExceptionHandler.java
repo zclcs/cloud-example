@@ -4,11 +4,6 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.csp.sentinel.slots.block.authority.AuthorityException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowException;
-import com.alibaba.csp.sentinel.slots.system.SystemBlockException;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import jakarta.validation.constraints.NotNull;
@@ -121,21 +116,21 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (error.getCause() instanceof NotRoleException e) {
             errorMessage = e.getMessage();
             httpStatus = HttpStatus.UNAUTHORIZED;
-        } else if (error instanceof FlowException) {
-            errorMessage = "访问频繁";
-            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-        } else if (error instanceof DegradeException) {
-            errorMessage = "服务降级";
-            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-        } else if (error instanceof ParamFlowException) {
-            errorMessage = "访问频繁";
-            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-        } else if (error instanceof SystemBlockException) {
-            errorMessage = "触发系统保护规则";
-            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-        } else if (error instanceof AuthorityException) {
-            errorMessage = "授权规则不通过";
-            httpStatus = HttpStatus.FORBIDDEN;
+//        } else if (error instanceof FlowException) {
+//            errorMessage = "访问频繁";
+//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+//        } else if (error instanceof DegradeException) {
+//            errorMessage = "服务降级";
+//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+//        } else if (error instanceof ParamFlowException) {
+//            errorMessage = "访问频繁";
+//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+//        } else if (error instanceof SystemBlockException) {
+//            errorMessage = "触发系统保护规则";
+//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
+//        } else if (error instanceof AuthorityException) {
+//            errorMessage = "授权规则不通过";
+//            httpStatus = HttpStatus.FORBIDDEN;
         } else {
             errorMessage = "网关转发异常";
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

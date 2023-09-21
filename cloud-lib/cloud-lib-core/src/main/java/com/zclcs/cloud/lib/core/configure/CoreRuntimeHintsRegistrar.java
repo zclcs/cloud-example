@@ -18,7 +18,7 @@ public class CoreRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
     @SneakyThrows
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        Set<Class<?>> classes = ClassUtil.scanPackage("com.zclcs");
+        Set<Class<?>> classes = ClassUtil.scanPackage("com.zclcs.cloud.lib.core.base");
         for (Class<?> aClass : classes) {
             hints.reflection().registerType(aClass, MemberCategory.values());
         }

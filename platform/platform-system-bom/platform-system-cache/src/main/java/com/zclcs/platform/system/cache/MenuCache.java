@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.common.redis.starter.service.CacheService;
-import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.fegin.RemoteMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +23,8 @@ public class MenuCache extends CacheService<MenuCacheVo> {
 
     private RemoteMenuService remoteMenuService;
 
-    public MenuCache(RedisService redisService) {
-        super(RedisCachePrefix.MENU_PREFIX, redisService.getBloomFilter(RedisCachePrefix.BLOOM_FILTER_MENU_PREFIX), 10000, 0.03);
+    public MenuCache() {
+        super(RedisCachePrefix.MENU_PREFIX);
     }
 
     @Autowired
