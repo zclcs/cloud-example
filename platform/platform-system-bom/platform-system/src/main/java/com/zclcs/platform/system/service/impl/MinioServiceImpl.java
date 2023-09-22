@@ -87,7 +87,7 @@ public class MinioServiceImpl implements MinioService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MinioBucket updateMinioBucket(MinioBucketAo minioBucketAo) {
-        MinioBucket one = minioBucketService.queryChain().where(MINIO_BUCKET.ID.eq(minioBucketAo.getId())).one();
+        MinioBucket one = minioBucketService.getOne(new QueryWrapper().where(MINIO_BUCKET.ID.eq(minioBucketAo.getId())));
         if (one == null) {
             throw new MyException("桶不存在");
         }
@@ -107,10 +107,10 @@ public class MinioServiceImpl implements MinioService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteMinioBucket(List<Long> ids) {
-        if (minioFileService.queryChain().where(MINIO_FILE.BUCKET_ID.in(ids)).count() != 0) {
+        if (minioFileService.count(new QueryWrapper().where(MINIO_FILE.BUCKET_ID.in(ids))) != 0) {
             throw new MyException("请先删除文件，再删除桶");
         }
-        List<MinioBucket> list = minioBucketService.queryChain().where(MINIO_BUCKET.ID.in(ids)).list();
+        List<MinioBucket> list = minioBucketService.list(new QueryWrapper().where(MINIO_BUCKET.ID.in(ids)));
         for (MinioBucket minioBucket : list) {
             try {
                 minioUtil.removeBucket(minioBucket.getBucketName());
@@ -124,7 +124,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void validateBucketName(String bucketName, Long bucketId) {
-        MinioBucket one = minioBucketService.queryChain().where(MINIO_BUCKET.BUCKET_NAME.eq(bucketName)).one();
+        MinioBucket one = minioBucketService.getOne(new QueryWrapper().where(MINIO_BUCKET.BUCKET_NAME.eq(bucketName)));
         if (one != null && !one.getId().equals(bucketId)) {
             throw new FieldException("桶名称重复");
         }
@@ -173,7 +173,7 @@ public class MinioServiceImpl implements MinioService {
         String defaultBucket = Optional.ofNullable(bucketName).filter(StrUtil::isNotBlank).orElse("default");
         Long bucketId;
         FileUploadVo fileUploadVo;
-        if (minioBucketService.queryChain().where(MINIO_BUCKET.BUCKET_NAME.eq(defaultBucket)).count() == 0L) {
+        if (minioBucketService.count(new QueryWrapper().where(MINIO_BUCKET.BUCKET_NAME.eq(defaultBucket))) == 0L) {
             try {
                 bucketId = this.createMinioBucket(MinioBucketAo.builder().bucketName(defaultBucket).build()).getId();
                 fileUploadVo = minioUtil.uploadFile(multipartFile, defaultBucket);
@@ -182,7 +182,7 @@ public class MinioServiceImpl implements MinioService {
                 throw new FileUploadException("调用minio失败，" + e.getMessage());
             }
         } else {
-            MinioBucket one = minioBucketService.queryChain().where(MINIO_BUCKET.BUCKET_NAME.eq(defaultBucket)).one();
+            MinioBucket one = minioBucketService.getOne(new QueryWrapper().where(MINIO_BUCKET.BUCKET_NAME.eq(defaultBucket)));
             try {
                 bucketId = one.getId();
                 fileUploadVo = minioUtil.uploadFile(multipartFile, defaultBucket);

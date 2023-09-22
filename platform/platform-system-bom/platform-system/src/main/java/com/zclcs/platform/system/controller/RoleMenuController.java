@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.controller;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.service.RoleMenuService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,6 @@ public class RoleMenuController {
     @GetMapping("/findByRoleId/{roleId}")
     @Inner
     public List<Long> findByRoleId(@PathVariable Long roleId) {
-        return this.roleMenuService.queryChain().select(ROLE_MENU.MENU_ID).where(ROLE_MENU.ROLE_ID.eq(roleId)).listAs(Long.class);
+        return this.roleMenuService.listAs(new QueryWrapper().select(ROLE_MENU.MENU_ID).where(ROLE_MENU.ROLE_ID.eq(roleId)), Long.class);
     }
 }

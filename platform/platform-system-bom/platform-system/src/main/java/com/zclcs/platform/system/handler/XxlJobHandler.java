@@ -3,6 +3,7 @@ package com.zclcs.platform.system.handler;
 import cn.dev33.satoken.same.SaSameUtil;
 import cn.hutool.core.date.DateUtil;
 import com.google.common.base.Stopwatch;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.zclcs.platform.system.service.*;
@@ -59,26 +60,26 @@ public class XxlJobHandler {
         Long limit = Long.valueOf(Optional.of(XxlJobHelper.getJobParam()).orElse("0"));
         LocalDateTime localDateTime = DateUtil.beginOfDay(DateUtil.date()).toLocalDateTime();
 
-        Long blockLogCount = blockLogService.queryChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).count();
+        Long blockLogCount = blockLogService.count(new QueryWrapper().where(BLOCK_LOG.CREATE_AT.le(localDateTime)));
         while (blockLogCount > limit) {
             blockLogCount -= limit;
-            blockLogService.updateChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
+            blockLogService.remove(new QueryWrapper().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).limit(limit));
         }
-        blockLogService.updateChain().where(BLOCK_LOG.CREATE_AT.le(localDateTime)).remove();
+        blockLogService.remove(new QueryWrapper().where(BLOCK_LOG.CREATE_AT.le(localDateTime)));
 
-        Long rateLimitLogCount = rateLimitLogService.queryChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).count();
+        Long rateLimitLogCount = rateLimitLogService.count(new QueryWrapper().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)));
         while (rateLimitLogCount > limit) {
             rateLimitLogCount -= limit;
-            rateLimitLogService.updateChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
+            rateLimitLogService.remove(new QueryWrapper().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).limit(limit));
         }
-        rateLimitLogService.updateChain().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)).remove();
+        rateLimitLogService.remove(new QueryWrapper().where(RATE_LIMIT_LOG.CREATE_AT.le(localDateTime)));
 
-        Long routeLogCount = routeLogService.queryChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).count();
+        Long routeLogCount = routeLogService.count(new QueryWrapper().where(ROUTE_LOG.CREATE_AT.le(localDateTime)));
         while (routeLogCount > limit) {
             routeLogCount -= limit;
-            routeLogService.updateChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).limit(limit).remove();
+            routeLogService.remove(new QueryWrapper().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).limit(limit));
         }
-        routeLogService.updateChain().where(ROUTE_LOG.CREATE_AT.le(localDateTime)).remove();
+        routeLogService.remove(new QueryWrapper().where(ROUTE_LOG.CREATE_AT.le(localDateTime)));
 
         XxlJobHelper.log("Clean Log Completed - {}", stopwatch.stop());
     }

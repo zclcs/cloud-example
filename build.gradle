@@ -158,6 +158,7 @@ configure(childPackage) {
         binaries {
             main {
                 sharedLibrary = false
+                buildArgs.add("--initialize-at-run-time=sun.net.dns.ResolverConfigurationImpl")
             }
         }
     }

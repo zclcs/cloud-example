@@ -142,14 +142,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         this.save(menu);
         Long menuId = menu.getMenuId();
         SystemCacheUtil.deleteMenuByMenuId(menuId);
-        List<Long> roleIds = roleMenuService.queryChain()
-                .where(ROLE_MENU.MENU_ID.eq(menuId)).list().stream().map(RoleMenu::getRoleId).toList();
+        List<Long> roleIds = roleMenuService.list(new QueryWrapper()
+                        .where(ROLE_MENU.MENU_ID.eq(menuId)))
+                .stream().map(RoleMenu::getRoleId).toList();
         if (CollectionUtil.isNotEmpty(roleIds)) {
-            List<Long> userIdList = userRoleService.queryChain()
-                    .where(USER_ROLE.ROLE_ID.in(roleIds)).list().stream().map(UserRole::getUserId).toList();
+            List<Long> userIdList = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(roleIds)))
+                    .stream().map(UserRole::getUserId).toList();
             if (CollectionUtil.isNotEmpty(userIdList)) {
-                Object[] usernames = userService.queryChain()
-                        .where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+                Object[] usernames = userService.list(new QueryWrapper().where(USER.USER_ID.in(userIdList)))
+                        .stream().map(User::getUsername).toList().toArray();
                 SystemCacheUtil.deletePermissionsByUsernames(usernames);
                 SystemCacheUtil.deleteRoutersByUsernames(usernames);
             }
@@ -167,14 +168,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         this.updateById(menu);
         Long menuId = menu.getMenuId();
         SystemCacheUtil.deleteMenuByMenuId(menuId);
-        List<Long> roleIds = roleMenuService.queryChain()
-                .where(ROLE_MENU.MENU_ID.eq(menuId)).list().stream().map(RoleMenu::getRoleId).toList();
+        List<Long> roleIds = roleMenuService.list(new QueryWrapper().where(ROLE_MENU.MENU_ID.eq(menuId)))
+                .stream().map(RoleMenu::getRoleId).toList();
         if (CollectionUtil.isNotEmpty(roleIds)) {
-            List<Long> userIdList = userRoleService.queryChain()
-                    .where(USER_ROLE.ROLE_ID.in(roleIds)).list().stream().map(UserRole::getUserId).toList();
+            List<Long> userIdList = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(roleIds)))
+                    .stream().map(UserRole::getUserId).toList();
             if (CollectionUtil.isNotEmpty(userIdList)) {
-                Object[] usernames = userService.queryChain()
-                        .where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+                Object[] usernames = userService.list(new QueryWrapper().where(USER.USER_ID.in(userIdList)))
+                        .stream().map(User::getUsername).toList().toArray();
                 SystemCacheUtil.deletePermissionsByUsernames(usernames);
                 SystemCacheUtil.deleteRoutersByUsernames(usernames);
             }
@@ -185,7 +186,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Menu createOrUpdateMenu(MenuAo menuAo) {
-        Menu one = this.queryChain().select(MENU.MENU_ID).where(MENU.MENU_CODE.eq(menuAo.getMenuCode())).one();
+        Menu one = this.getOne(new QueryWrapper().select(MENU.MENU_ID).where(MENU.MENU_CODE.eq(menuAo.getMenuCode())));
         if (one == null) {
             return createMenu(menuAo);
         } else {
@@ -204,21 +205,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         List<Long> distinct = CollectionUtil.distinct(allMenuIds);
         Object[] menuIds = distinct.toArray();
-        List<RoleMenu> roleIdList = roleMenuService.queryChain()
-                .where(ROLE_MENU.MENU_ID.in(distinct)).list();
+        List<RoleMenu> roleIdList = roleMenuService.list(new QueryWrapper().where(ROLE_MENU.MENU_ID.in(distinct)));
         Object[] roleIds = roleIdList.stream().map(RoleMenu::getRoleId).toList().toArray();
         Object[] usernames = new Object[0];
         if (CollectionUtil.isNotEmpty(roleIdList)) {
-            List<Long> userIdList = userRoleService.queryChain()
-                    .where(USER_ROLE.ROLE_ID.in(roleIds)).list().stream().map(UserRole::getUserId).toList();
+            List<Long> userIdList = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(roleIds)))
+                    .stream().map(UserRole::getUserId).toList();
             if (CollectionUtil.isNotEmpty(userIdList)) {
-                usernames = userService.queryChain()
-                        .where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+                usernames = userService.list(new QueryWrapper().where(USER.USER_ID.in(userIdList)))
+                        .stream().map(User::getUsername).toList().toArray();
             }
         }
         this.removeByIds(distinct);
         SystemCacheUtil.deleteMenuByMenuIds(menuIds);
-        roleMenuService.updateChain().where(ROLE_MENU.MENU_ID.in(distinct));
+        roleMenuService.remove(new QueryWrapper().where(ROLE_MENU.MENU_ID.in(distinct)));
         if (ArrayUtil.isNotEmpty(roleIds)) {
             SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
         }
@@ -271,12 +271,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<Long> getChildMenuId(Long menuId) {
         List<Long> menuIds = new ArrayList<>();
         menuIds.add(menuId);
-        getChild(menuIds, this.queryChain().where(MENU.MENU_ID.eq(menuId)).one());
+        getChild(menuIds, this.getOne(new QueryWrapper().where(MENU.MENU_ID.eq(menuId))));
         return menuIds;
     }
 
     private void getChild(List<Long> allDeptId, Menu menu) {
-        List<Menu> list = this.queryChain().where(MENU.PARENT_CODE.eq(menu.getMenuCode())).list();
+        List<Menu> list = this.list(new QueryWrapper().where(MENU.PARENT_CODE.eq(menu.getMenuCode())));
         if (CollUtil.isNotEmpty(list)) {
             for (Menu m : list) {
                 allDeptId.add(m.getMenuId());
@@ -290,7 +290,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (CommonCore.TOP_PARENT_CODE.equals(menuCode)) {
             throw new FieldException("菜单编码输入非法值");
         }
-        Menu one = this.queryChain().where(MENU.MENU_CODE.eq(menuCode)).one();
+        Menu one = this.getOne(new QueryWrapper().where(MENU.MENU_CODE.eq(menuCode)));
         if (one != null && !one.getMenuId().equals(menuId)) {
             throw new FieldException("菜单编码重复");
         }

@@ -107,9 +107,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         BeanUtil.copyProperties(roleAo, role);
         this.save(role);
         Long roleId = role.getRoleId();
-        List<UserRole> list = userRoleService.queryChain().where(USER_ROLE.ROLE_ID.in(role.getRoleId())).list();
+        List<UserRole> list = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(role.getRoleId())));
         List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
-        Object[] usernames = userService.queryChain().select(USER.USERNAME).where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+        Object[] usernames = userService.list(new QueryWrapper().select(USER.USERNAME).where(USER.USER_ID.in(userIdList))).stream().map(User::getUsername).toList().toArray();
         SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
         roleMenuService.saveBatch(roleMenus);
@@ -127,14 +127,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Role role = new Role();
         BeanUtil.copyProperties(roleAo, role);
         role.setRoleCode(null);
-        List<UserRole> list = userRoleService.queryChain().where(USER_ROLE.ROLE_ID.in(role.getRoleId())).list();
+        List<UserRole> list = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(role.getRoleId())));
         List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
-        Object[] usernames = userService.queryChain().where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+        Object[] usernames = userService.list(new QueryWrapper().select(USER.USERNAME).where(USER.USER_ID.in(userIdList))).stream().map(User::getUsername).toList().toArray();
         this.updateById(role);
         Long roleId = role.getRoleId();
         SystemCacheUtil.deleteRoleByRoleId(roleId);
         List<RoleMenu> roleMenus = getRoleMenus(role, roleAo.getMenuIds());
-        this.roleMenuService.updateChain().where(ROLE_MENU.ROLE_ID.eq(roleId)).remove();
+        this.roleMenuService.remove(new QueryWrapper().where(ROLE_MENU.ROLE_ID.eq(roleId)));
 
         roleMenuService.saveBatch(roleMenus);
         SystemCacheUtil.deleteMenuIdsByRoleId(roleId);
@@ -147,18 +147,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(List<Long> ids) {
-        List<UserRole> list = userRoleService.queryChain().where(USER_ROLE.ROLE_ID.in(ids)).list();
+        List<UserRole> list = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(ids)));
         List<Long> userIdList = list.stream().map(UserRole::getUserId).toList();
         Object[] userIds = userIdList.toArray();
-        Object[] usernames = userService.queryChain().where(USER.USER_ID.in(userIdList)).list().stream().map(User::getUsername).toList().toArray();
+        Object[] usernames = userService.list(new QueryWrapper().where(USER.USER_ID.in(userIdList))).stream().map(User::getUsername).toList().toArray();
         this.removeByIds(ids);
         Object[] roleIds = ids.toArray();
         SystemCacheUtil.deleteRoleByRoleIds(roleIds);
 
-        this.roleMenuService.updateChain().where(ROLE_MENU.ROLE_ID.in(ids)).remove();
+        this.roleMenuService.remove(new QueryWrapper().where(ROLE_MENU.ROLE_ID.in(ids)));
         SystemCacheUtil.deleteMenuIdsByRoleIds(roleIds);
 
-        this.userRoleService.updateChain().where(USER_ROLE.ROLE_ID.in(ids)).remove();
+        this.userRoleService.remove(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(ids)));
         SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
 
         SystemCacheUtil.deletePermissionsByUsernames(usernames);
@@ -181,7 +181,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (CommonCore.TOP_PARENT_CODE.equals(roleCode)) {
             throw new FieldException("角色编码输入非法值");
         }
-        Role one = this.queryChain().where(ROLE.ROLE_CODE.eq(roleCode)).one();
+        Role one = this.getOne(new QueryWrapper().where(ROLE.ROLE_CODE.eq(roleCode)));
         if (one != null && !one.getRoleId().equals(roleId)) {
             throw new FieldException("角色编码重复");
         }
@@ -189,7 +189,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public void validateRoleName(String roleName, Long roleId) {
-        Role one = this.queryChain().where(ROLE.ROLE_NAME.eq(roleName)).one();
+        Role one = this.getOne(new QueryWrapper().where(ROLE.ROLE_NAME.eq(roleName)));
         if (one != null && !one.getRoleId().equals(roleId)) {
             throw new FieldException("角色名称重复");
         }

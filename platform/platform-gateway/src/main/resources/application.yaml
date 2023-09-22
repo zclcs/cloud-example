@@ -22,7 +22,7 @@ spring:
 
   cloud:
     refresh:
-      enabled: false
+      enabled: ${CONFIG_REFRESH:false}
     nacos:
       config:
         server-addr: ${NACOS_HOST:192.168.33.10}:${NACOS_PORT:8848}

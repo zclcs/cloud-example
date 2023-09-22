@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.controller;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,6 @@ public class UserRoleController {
     @GetMapping("/findByUserId/{userId}")
     @Inner
     public List<Long> findByUserId(@PathVariable Long userId) {
-        return userRoleService.queryChain().select(USER_ROLE.ROLE_ID).where(USER_ROLE.USER_ID.eq(userId)).listAs(Long.class);
+        return userRoleService.listAs(new QueryWrapper().select(USER_ROLE.ROLE_ID).where(USER_ROLE.USER_ID.eq(userId)), Long.class);
     }
 }

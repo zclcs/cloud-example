@@ -24,6 +24,7 @@ import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -45,6 +46,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({GatewayConfigProperties.class, MyValidateCodeProperties.class})
+@ImportRuntimeHints({GatewayRuntimeHintsRegistrar.class})
 @RequiredArgsConstructor
 @Slf4j
 public class GatewayConfiguration {

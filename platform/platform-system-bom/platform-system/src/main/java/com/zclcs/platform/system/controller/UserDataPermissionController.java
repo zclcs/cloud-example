@@ -1,5 +1,6 @@
 package com.zclcs.platform.system.controller;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.service.UserDataPermissionService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,6 @@ public class UserDataPermissionController {
     @GetMapping("/findByUserId/{userId}")
     @Inner
     public List<Long> findByUserId(@PathVariable Long userId) {
-        return userDataPermissionService.queryChain().select(USER_DATA_PERMISSION.DEPT_ID).where(USER_DATA_PERMISSION.USER_ID.eq(userId)).listAs(Long.class);
+        return userDataPermissionService.listAs(new QueryWrapper().select(USER_DATA_PERMISSION.DEPT_ID).where(USER_DATA_PERMISSION.USER_ID.eq(userId)), Long.class);
     }
 }

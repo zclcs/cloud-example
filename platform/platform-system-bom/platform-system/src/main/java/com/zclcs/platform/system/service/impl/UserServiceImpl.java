@@ -95,12 +95,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserVo findByName(String username) {
-        return this.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserVo.class);
+        return this.getOneAs(new QueryWrapper().where(USER.USERNAME.eq(username)), UserVo.class);
     }
 
     @Override
     public UserVo findByMobile(String mobile) {
-        return this.queryChain().where(USER.MOBILE.eq(mobile)).oneAs(UserVo.class);
+        return this.getOneAs(new QueryWrapper().where(USER.MOBILE.eq(mobile)), UserVo.class);
     }
 
     private QueryWrapper getQueryWrapper(UserVo userVo) {
@@ -191,12 +191,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         SystemCacheUtil.deletePermissionsByUsername(username);
         SystemCacheUtil.deleteRoutersByUsername(username);
 
-        userRoleService.updateChain().where(USER_ROLE.USER_ID.eq(userId)).remove();
+        userRoleService.remove(new QueryWrapper().where(USER_ROLE.USER_ID.eq(userId)));
         List<UserRole> userRoles = getUserRoles(user, userAo.getRoleIds());
         userRoleService.saveBatch(userRoles);
         SystemCacheUtil.deleteRoleIdsByUserId(userId);
 
-        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.USER_ID.eq(userId)).remove();
+        userDataPermissionService.remove(new QueryWrapper().where(USER_DATA_PERMISSION.USER_ID.eq(userId)));
         List<UserDataPermission> userDataPermissions = getUserDataPermissions(user, userAo.getDeptIds());
         userDataPermissionService.saveBatch(userDataPermissions);
         SystemCacheUtil.deleteDeptIdsByUserId(userId);
@@ -206,7 +206,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(List<Long> ids) {
-        List<User> list = this.queryChain().where(USER.USER_ID.in(ids)).list();
+        List<User> list = this.list(new QueryWrapper().where(USER.USER_ID.in(ids)));
         this.removeByIds(ids);
         Object[] usernames = list.stream().map(User::getUsername).toList().toArray();
         Object[] mobiles = list.stream().map(User::getMobile).filter(StrUtil::isNotBlank).toList().toArray();
@@ -218,17 +218,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         SystemCacheUtil.deleteUserCaches(usernames);
         SystemCacheUtil.deleteUsernameByMobiles(mobiles);
         // 删除用户角色
-        userRoleService.updateChain().where(USER_ROLE.USER_ID.in(ids)).remove();
+        userRoleService.remove(new QueryWrapper().where(USER_ROLE.USER_ID.in(ids)));
         SystemCacheUtil.deleteRoleIdsByUserIds(userIds);
         // 删除用户权限
-        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.USER_ID.in(ids)).remove();
+        userDataPermissionService.remove(new QueryWrapper().where(USER_DATA_PERMISSION.USER_ID.in(ids)));
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateLoginTime(String username) {
-        this.updateChain().where(USER.USERNAME.eq(username)).set(User::getLastLoginTime, DateUtil.date()).update();
+        this.update(User.builder().lastLoginTime(DateUtil.date().toLocalDateTime()).build(),
+                new QueryWrapper().where(USER.USERNAME.eq(username)));
         SystemCacheUtil.deleteUserCache(username);
     }
 
@@ -236,8 +237,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void updatePassword(String username, String password) {
         String currentUsername = LoginHelper.getUsername();
-        this.updateChain().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername)))
-                .set(User::getPassword, BCrypt.hashpw(password)).update();
+        this.update(User.builder().password(BCrypt.hashpw(password)).build(),
+                new QueryWrapper().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))));
         SystemCacheUtil.deleteUserCache(username);
     }
 
@@ -246,17 +247,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateStatus(String username, String status) {
         String orElse = Optional.ofNullable(status).filter(StrUtil::isNotBlank).orElse(Security.STATUS_LOCK);
         String currentUsername = LoginHelper.getUsername();
-        this.updateChain().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername)))
-                .set(User::getStatus, orElse)
-                .update();
+        this.update(User.builder().status(orElse).build(),
+                new QueryWrapper().where(USER.USERNAME.eq(Optional.ofNullable(username).filter(StrUtil::isNotBlank).orElse(currentUsername))));
         SystemCacheUtil.deleteUserCache(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPassword(List<String> usernames) {
-        this.updateChain().where(USER.USERNAME.in(usernames))
-                .set(User::getPassword, BCrypt.hashpw(globalProperties.getDefaultPassword())).update();
+        this.update(User.builder().password(BCrypt.hashpw(globalProperties.getDefaultPassword())).build(),
+                new QueryWrapper().where(USER.USERNAME.in(usernames)));
         SystemCacheUtil.deleteUserCaches(usernames.toArray());
     }
 

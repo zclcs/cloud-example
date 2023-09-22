@@ -152,11 +152,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         ArrayList<Long> deptIdsDistinct = CollectionUtil.distinct(allDeptIds);
         Object[] deptIds = deptIdsDistinct.toArray();
-        Object[] userIds = userDataPermissionService.queryChain().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)).list().stream()
+        Object[] userIds = userDataPermissionService.list(new QueryWrapper().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)))
+                .stream()
                 .map(UserDataPermission::getUserId).toList().toArray();
         removeByIds(deptIdsDistinct);
         SystemCacheUtil.deleteDeptByDeptIds(deptIds);
-        userDataPermissionService.updateChain().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)).remove();
+        userDataPermissionService.remove(new QueryWrapper().where(USER_DATA_PERMISSION.DEPT_ID.in(ids)));
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
@@ -175,7 +176,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     private void getChild(List<Long> allDeptId, Dept systemDept) {
-        List<Dept> list = this.queryChain().where(DEPT.PARENT_CODE.eq(systemDept.getDeptCode())).list();
+        List<Dept> list = this.list(new QueryWrapper().where(DEPT.PARENT_CODE.eq(systemDept.getDeptCode())));
         if (CollUtil.isNotEmpty(list)) {
             for (Dept dept : list) {
                 allDeptId.add(dept.getDeptId());
@@ -189,7 +190,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (CommonCore.TOP_PARENT_CODE.equals(deptCode)) {
             throw new FieldException("部门编码输入非法值");
         }
-        Dept one = this.queryChain().where(DEPT.DEPT_CODE.eq(deptCode)).one();
+        Dept one = this.getOne(new QueryWrapper().where(DEPT.DEPT_CODE.eq(deptCode)));
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new FieldException("部门编码重复");
         }
@@ -197,7 +198,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public void validateDeptName(String deptName, Long deptId) {
-        Dept one = this.queryChain().where(DEPT.DEPT_NAME.eq(deptName)).one();
+        Dept one = this.getOne(new QueryWrapper().where(DEPT.DEPT_NAME.eq(deptName)));
         if (one != null && !one.getDeptId().equals(deptId)) {
             throw new FieldException("部门名称重复");
         }

@@ -331,7 +331,7 @@ public class DbMergeUtil {
         final ResourceDatabasePopulator popular = new ResourceDatabasePopulator();
         for (Resource re : resourceForPath) {
             popular.addScript(re);
-            log.info("Execute Sql Location : {}", re.getFile().getPath());
+//            log.info("Execute Sql Location : {}", re.getFile().getPath());
         }
         return popular;
     }

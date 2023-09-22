@@ -81,7 +81,7 @@ public class GeneratorConfigServiceImpl extends ServiceImpl<GeneratorConfigMappe
 
     @Override
     public void validateServerName(String serverName, Long id) {
-        GeneratorConfig one = this.queryChain().where(GENERATOR_CONFIG.SERVER_NAME.eq(serverName)).one();
+        GeneratorConfig one = this.getOne(new QueryWrapper().where(GENERATOR_CONFIG.SERVER_NAME.eq(serverName)));
         if (one != null && !one.getId().equals(id)) {
             throw new FieldException("服务名重复");
         }

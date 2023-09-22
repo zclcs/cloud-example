@@ -17,7 +17,7 @@ public enum CacheType {
     /**
      * 利用布隆过滤器
      */
-//    CACHE_USING_BLOOM_FILTER(2, "使用布隆过滤器"),
+    CACHE_USING_BLOOM_FILTER(2, "使用布隆过滤器"),
     ;
 
     private final Integer value;

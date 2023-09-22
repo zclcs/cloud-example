@@ -2,6 +2,7 @@ package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -92,7 +93,7 @@ public class DictItemController {
     @GetMapping("/findByDictName")
     @Inner
     public List<DictItemCacheVo> findByDictName(@RequestParam @NotBlank(message = "{required}") String dictName) {
-        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName)).listAs(DictItemCacheVo.class);
+        return this.dictItemService.listAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName)), DictItemCacheVo.class);
     }
 
     /**
@@ -107,9 +108,8 @@ public class DictItemController {
     @Inner
     public DictItemCacheVo findByDictNameAndValue(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                   @RequestParam @NotBlank(message = "{required}") String value) {
-        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
-                .and(DICT_ITEM.VALUE.eq(value))
-                .oneAs(DictItemCacheVo.class);
+        return this.dictItemService.getOneAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName))
+                .and(DICT_ITEM.VALUE.eq(value)), DictItemCacheVo.class);
     }
 
     /**
@@ -127,11 +127,10 @@ public class DictItemController {
     public DictItemCacheVo findByDictNameAndParentValueAndTitle(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                                 @RequestParam @NotBlank(message = "{required}") String parentValue,
                                                                 @RequestParam @NotBlank(message = "{required}") String title) {
-        return this.dictItemService.queryChain()
+        return this.dictItemService.getOneAs(new QueryWrapper()
                 .where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
-                .and(DICT_ITEM.TITLE.eq(title))
-                .oneAs(DictItemCacheVo.class);
+                .and(DICT_ITEM.TITLE.eq(title)), DictItemCacheVo.class);
     }
 
     /**
@@ -146,10 +145,9 @@ public class DictItemController {
     @Inner
     public List<DictItemCacheVo> findByDictNameAndParentValue(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                               @RequestParam @NotBlank(message = "{required}") String parentValue) {
-        return this.dictItemService.queryChain().where(DICT_ITEM.DICT_NAME.eq(dictName))
+        return this.dictItemService.listAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName))
                 .and(DICT_ITEM.PARENT_VALUE.eq(parentValue))
-                .orderBy(DICT_ITEM.SORTED.asc())
-                .listAs(DictItemCacheVo.class);
+                .orderBy(DICT_ITEM.SORTED.asc()), DictItemCacheVo.class);
     }
 
     /**

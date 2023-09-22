@@ -3,6 +3,7 @@ package com.zclcs.platform.system.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.collection.CollectionUtil;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -108,7 +109,7 @@ public class MenuController {
     @GetMapping(value = "/findByMenuId/{menuId}")
     @Inner
     public MenuCacheVo findByMenuId(@PathVariable Long menuId) {
-        return this.menuService.queryChain().where(MENU.MENU_ID.eq(menuId)).oneAs(MenuCacheVo.class);
+        return this.menuService.getOneAs(new QueryWrapper().where(MENU.MENU_ID.eq(menuId)), MenuCacheVo.class);
     }
 
     /**
@@ -122,7 +123,7 @@ public class MenuController {
     @Inner
     public Map<Long, MenuCacheVo> findByMenuIds(@PathVariable List<Long> menuIds) {
         Map<Long, MenuCacheVo> menuMap = new HashMap<>();
-        List<MenuCacheVo> menuCacheVos = this.menuService.queryChain().where(MENU.MENU_ID.in(menuIds)).listAs(MenuCacheVo.class);
+        List<MenuCacheVo> menuCacheVos = this.menuService.listAs(new QueryWrapper().where(MENU.MENU_ID.in(menuIds)), MenuCacheVo.class);
         if (CollectionUtil.isNotEmpty(menuCacheVos)) {
             for (Long menuId : menuIds) {
                 MenuCacheVo menu = CollectionUtil.findOneByField(menuCacheVos, "menuId", menuId);

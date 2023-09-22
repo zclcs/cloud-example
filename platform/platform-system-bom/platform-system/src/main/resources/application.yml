@@ -8,6 +8,8 @@ spring:
     name: platform-system
 
   cloud:
+    refresh:
+      enabled: ${CONFIG_REFRESH:false}
     nacos:
       config:
         server-addr: ${NACOS_HOST:192.168.33.10}:${NACOS_PORT:8848}
@@ -24,19 +26,19 @@ spring:
 
   config:
     import:
-      - nacos:global-configuration.yaml
-      - nacos:tomcat.yaml
-      - nacos:openfeign.yaml
-      - nacos:hikari.yaml
-      - nacos:rabbitmq.yaml
-      - nacos:redis.yaml
-      - nacos:mybatis-flex.yaml
-      - nacos:jasypt.yaml
-      - nacos:minio.yaml
-      - nacos:xxl-job.yaml
-      - nacos:platform-system-rabbit-mq-queue.yaml
-      - nacos:db-merge.yaml
-      - nacos:sa-token.yaml
+      - optional:nacos:global-configuration.yaml
+      - optional:nacos:tomcat.yaml
+      - optional:nacos:openfeign.yaml
+      - optional:nacos:hikari.yaml
+      - optional:nacos:rabbitmq.yaml
+      - optional:nacos:redis.yaml
+      - optional:nacos:mybatis-flex.yaml
+      - optional:nacos:jasypt.yaml
+      - optional:nacos:minio.yaml
+      - optional:nacos:xxl-job.yaml
+      - optional:nacos:platform-system-rabbit-mq-queue.yaml
+      - optional:nacos:db-merge.yaml
+      - optional:nacos:sa-token.yaml
 
   aop:
     proxy-target-class: true
@@ -48,7 +50,7 @@ spring:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
     url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_USERNAME:root}
-    password: ${DATASOURCE_PASSWORD:root}
+    password: ${DATASOURCE_PASSWORD:123456}
 
 mybatis-flex:
   mapper-locations:

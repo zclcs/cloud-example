@@ -6,13 +6,12 @@ dependencies {
 //    implementation('com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway')
 //    implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel')
 //    implementation('com.alibaba.csp:sentinel-datasource-nacos')
-    implementation(project(":cloud-lib:cloud-lib-sa-token-api")) exclude(module: "common-redis-starter")
+    implementation(project(":cloud-lib:cloud-lib-sa-token-api"))
     implementation(project(":cloud-lib:cloud-lib-rabbit-mq"))
-    implementation(project(":common:common-redis-starter")) exclude(module: "spring-boot-starter-data-redis")
+    implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-jackson-starter"))
     implementation(project(":cloud-lib:cloud-lib-logging"))
     implementation(project(":cloud-lib:cloud-lib-core"))
-    implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
     implementation "org.springframework.cloud:spring-cloud-starter-gateway"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"

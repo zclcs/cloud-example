@@ -9,7 +9,7 @@ spring:
 
   cloud:
     refresh:
-      enabled: false
+      enabled: ${CONFIG_REFRESH:false}
     nacos:
       config:
         server-addr: ${NACOS_HOST:192.168.33.10}:${NACOS_PORT:8848}
@@ -41,10 +41,6 @@ spring:
 
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
-    url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:127.0.0.1}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
+    url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${spring.cloud.nacos.config.namespace}_platform_system?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
     username: ${DATASOURCE_ROOT_USERNAME:root}
     password: ${DATASOURCE_ROOT_PASSWORD:123456}
-
-logging:
-  level:
-    com.alibaba.cloud.nacos.configdata: debug

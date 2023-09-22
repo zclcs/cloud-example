@@ -2,6 +2,7 @@ package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -118,7 +119,7 @@ public class DeptController {
     @GetMapping(value = "/findByDeptId/{deptId}")
     @Inner
     public DeptCacheVo findByDeptId(@PathVariable Long deptId) {
-        return this.deptService.queryChain().where(DEPT.DEPT_ID.eq(deptId)).oneAs(DeptCacheVo.class);
+        return this.deptService.getOneAs(new QueryWrapper().where(DEPT.DEPT_ID.eq(deptId)), DeptCacheVo.class);
     }
 
     /**

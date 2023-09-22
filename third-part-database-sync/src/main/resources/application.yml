@@ -11,12 +11,12 @@ spring:
       driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
       url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_nacos?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
       username: ${DATASOURCE_USERNAME:root}
-      password: ${DATASOURCE_PASSWORD:root}
+      password: ${DATASOURCE_PASSWORD:123456}
     xxl-job:
       driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
       url: jdbc:${DATASOURCE_DB_TYPE:mysql}://${DATASOURCE_HOST:192.168.33.10}:${DATASOURCE_PORT:3306}/${NACOS_NAMESPACE:dev}_xxl_job?${DATASOURCE_PARAM:useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai}
       username: ${DATASOURCE_USERNAME:root}
-      password: ${DATASOURCE_PASSWORD:root}
+      password: ${DATASOURCE_PASSWORD:123456}
     hikari:
       connection-timeout: 30000
       max-lifetime: 1800000

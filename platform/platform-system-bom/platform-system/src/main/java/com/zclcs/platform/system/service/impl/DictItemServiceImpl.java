@@ -213,9 +213,9 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
 
     @Override
     public void validateDictNameAndValueAndType(String dictName, String value, Long id) {
-        DictItem one = this.queryChain()
+        DictItem one = this.getOne(new QueryWrapper()
                 .where(DICT_ITEM.DICT_NAME.eq(dictName))
-                .and(DICT_ITEM.VALUE.eq(value)).one();
+                .and(DICT_ITEM.VALUE.eq(value)));
         if (one != null && !one.getId().equals(id)) {
             throw new FieldException("字典项重复");
         }

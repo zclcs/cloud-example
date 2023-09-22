@@ -2,6 +2,7 @@ package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -90,7 +91,7 @@ public class RoleController {
     @GetMapping(value = "/findByRoleId/{roleId}")
     @Inner
     public RoleCacheVo findByRoleId(@PathVariable Long roleId) {
-        return this.roleService.queryChain().where(ROLE.ROLE_ID.eq(roleId)).oneAs(RoleCacheVo.class);
+        return this.roleService.getOneAs(new QueryWrapper().where(ROLE.ROLE_ID.eq(roleId)), RoleCacheVo.class);
     }
 
     /**

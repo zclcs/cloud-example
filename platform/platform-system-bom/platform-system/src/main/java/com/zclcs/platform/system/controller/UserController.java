@@ -3,6 +3,7 @@ package com.zclcs.platform.system.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.crypto.digest.BCrypt;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -99,7 +100,7 @@ public class UserController {
     @GetMapping("/findByUsername/{username}")
     @Inner
     public UserCacheVo findByUsername(@PathVariable String username) {
-        return userService.queryChain().where(USER.USERNAME.eq(username)).oneAs(UserCacheVo.class);
+        return userService.getOneAs(new QueryWrapper().where(USER.USERNAME.eq(username)), UserCacheVo.class);
     }
 
     /**
@@ -112,7 +113,7 @@ public class UserController {
     @GetMapping("/findByMobile/{mobile}")
     @Inner
     public String findByMobile(@PathVariable String mobile) {
-        return userService.queryChain().select(USER.MOBILE).where(USER.MOBILE.eq(mobile)).oneAs(String.class);
+        return userService.getOneAs(new QueryWrapper().where(USER.MOBILE.eq(mobile)), String.class);
     }
 
     /**

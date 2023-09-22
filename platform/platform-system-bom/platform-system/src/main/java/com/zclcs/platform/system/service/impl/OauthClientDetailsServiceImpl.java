@@ -110,7 +110,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OauthClientDetails updateOauthClientDetails(OauthClientDetailsAo oauthClientDetailsAo) {
-        long count = this.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(oauthClientDetailsAo.getClientId())).count();
+        long count = this.count(new QueryWrapper().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(oauthClientDetailsAo.getClientId())));
         if (count == 0L) {
             throw new MyException("该Client不存在");
         }
@@ -134,7 +134,7 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
 
     @Override
     public void validateClientId(String clientId) {
-        if (this.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).count() > 0L) {
+        if (this.count(new QueryWrapper().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId))) > 0L) {
             throw new FieldException("客户端id重复");
         }
     }

@@ -2,6 +2,7 @@ package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -90,7 +91,7 @@ public class OauthClientDetailsController {
     @GetMapping(value = "/findByClientId/{clientId}")
     @Inner
     public OauthClientDetailsCacheVo findByClientId(@PathVariable String clientId) {
-        return oauthClientDetailsService.queryChain().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)).oneAs(OauthClientDetailsCacheVo.class);
+        return oauthClientDetailsService.getObjAs(new QueryWrapper().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)), OauthClientDetailsCacheVo.class);
     }
 
     /**

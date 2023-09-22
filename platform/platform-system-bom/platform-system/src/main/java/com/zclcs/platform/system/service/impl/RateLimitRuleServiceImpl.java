@@ -127,7 +127,7 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRateLimitRule(List<Long> ids) {
-        List<RateLimitRule> list = this.queryChain().where(RATE_LIMIT_RULE.RATE_LIMIT_RULE_ID.in(ids)).list();
+        List<RateLimitRule> list = this.list(new QueryWrapper().where(RATE_LIMIT_RULE.RATE_LIMIT_RULE_ID.in(ids)));
         this.removeByIds(ids);
         for (RateLimitRule rateLimitRule : list) {
             String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());

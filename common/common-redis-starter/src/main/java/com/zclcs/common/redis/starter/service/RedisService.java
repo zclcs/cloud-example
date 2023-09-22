@@ -3,6 +3,8 @@ package com.zclcs.common.redis.starter.service;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,7 @@ public class RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-//    private final RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     /**
      * 指定缓存失效时间
@@ -631,7 +633,7 @@ public class RedisService {
         }
     }
 
-//    public <V> RBloomFilter<V> getBloomFilter(String name) {
-//        return redissonClient.getBloomFilter(name);
-//    }
+    public <V> RBloomFilter<V> getBloomFilter(String name) {
+        return redissonClient.getBloomFilter(name);
+    }
 }
