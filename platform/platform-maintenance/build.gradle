@@ -20,5 +20,6 @@ dependencies {
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation runtimeOnly("com.mysql:mysql-connector-j")
 }

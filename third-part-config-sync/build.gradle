@@ -8,4 +8,5 @@ dependencies {
     implementation project(":cloud-lib:cloud-lib-core")
     implementation "cn.hutool:hutool-http"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
 }

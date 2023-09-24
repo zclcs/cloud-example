@@ -164,17 +164,34 @@ configure(childPackage) {
     }
 
     bootBuildImage {
-//        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+        buildpacks = [
+                'urn:cnb:builder:paketo-buildpacks/ca-certificates',
+                'urn:cnb:builder:paketo-buildpacks/bellsoft-liberica',
+                'urn:cnb:builder:paketo-buildpacks/syft',
+                'urn:cnb:builder:paketo-buildpacks/executable-jar',
+                'urn:cnb:builder:paketo-buildpacks/spring-boot',
+                'urn:cnb:builder:paketo-buildpacks/native-image',
+                'docker.io/paketobuildpacks/health-checker:latest'
+        ]
         imageName = "${dockerJibToImage}/${project.name}:native"
-        environment['BP_NATIVE_IMAGE'] = 'true'
-//        buildpacks = ["paketobuildpacks/builder-jammy-tiny:latest", "gcr.io/paketo-buildpacks/health-checker:latest"]
+        environment = [
+                "BP_NATIVE_IMAGE"          : "true",
+                "BP_HEALTH_CHECKER_ENABLED": "true",
+                "BPE_DEFAULT_LANG"         : "en_US.utf8",
+                "TZ"                       : "Asia/Shanghai",
+                "LANG"                     : "en_US.utf8",
+                "JAVA_TOOL_OPTIONS"        : "-Dfile.encoding=UTF-8",
+                "HTTP_PROXY"               : "http://192.168.33.10:7890",
+                "HTTPS_PROXY"              : "http://192.168.33.10:7890",
+        ]
         publish = true
         docker {
             host = "tcp://192.168.33.10:2375"
             tlsVerify = false
             publishRegistry {
                 username = "$dockerJibAuthUsername"
-                password = "${dockerJibAuthPassword}"
+                password = "$dockerJibAuthPassword"
             }
         }
     }

@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -55,17 +54,14 @@ public class MyDbMergeAutoConfigure {
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(@Qualifier("myDataSource") DataSource dataSource, @Qualifier("myDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
+    public Boolean dataSourceInitializer(@Qualifier("myDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
         DbMergeUtil.createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
         DbMergeUtil.createProcedure(dataSourceProperties);
-        final DataSourceInitializer initializer = new DataSourceInitializer();
-        // 设置数据源
-        initializer.setDataSource(dataSource);
         List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myDbMergeProperties.getSql())));
         if (CollectionUtil.isNotEmpty(resourceList)) {
             resourceList.sort(Comparator.comparing(Resource::getFilename));
         }
-        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(resourceList));
-        return initializer;
+        DbMergeUtil.executeSql(dataSourceProperties, resourceList, namespace, false);
+        return true;
     }
 }

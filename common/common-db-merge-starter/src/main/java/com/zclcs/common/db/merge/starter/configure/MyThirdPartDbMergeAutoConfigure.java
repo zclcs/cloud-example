@@ -15,7 +15,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -62,36 +61,26 @@ public class MyThirdPartDbMergeAutoConfigure {
     }
 
     @Bean
-    public DataSourceInitializer nacosDatabaseInitializer(@Qualifier("nacosDataSource") DataSource dataSource, @Qualifier("nacosDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
-        DbMergeUtil.createDataBase(dataSourceProperties, "utf8", "utf8_bin");
+    public Boolean nacosDatabaseInitializer(@Qualifier("nacosDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
+        DbMergeUtil.createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
         DbMergeUtil.createProcedure(dataSourceProperties);
-        final DataSourceInitializer initializer = new DataSourceInitializer();
-        // 设置数据源
-        initializer.setDataSource(dataSource);
-        List<Resource> resources = List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getNacosSql()));
-        DbMergeUtil.replaceSqlScript(resources, namespace);
-        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getNacosTmpSql())));
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getNacosSql())));
         if (CollectionUtil.isNotEmpty(resourceList)) {
             resourceList.sort(Comparator.comparing(Resource::getFilename));
         }
-        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(resourceList));
-        return initializer;
+        DbMergeUtil.executeSql(dataSourceProperties, resourceList, namespace, true);
+        return true;
     }
 
     @Bean
-    public DataSourceInitializer xxlJobDatabaseInitializer(@Qualifier("xxlJobDataSource") DataSource dataSource, @Qualifier("xxlJobDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
+    public Boolean xxlJobDatabaseInitializer(@Qualifier("xxlJobDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
         DbMergeUtil.createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
         DbMergeUtil.createProcedure(dataSourceProperties);
-        final DataSourceInitializer initializer = new DataSourceInitializer();
-        // 设置数据源
-        initializer.setDataSource(dataSource);
-        List<Resource> resources = List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobSql()));
-        DbMergeUtil.replaceSqlScript(resources, namespace);
-        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobTmpSql())));
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobSql())));
         if (CollectionUtil.isNotEmpty(resourceList)) {
             resourceList.sort(Comparator.comparing(Resource::getFilename));
         }
-        initializer.setDatabasePopulator(DbMergeUtil.databasePopulator(resourceList));
-        return initializer;
+        DbMergeUtil.executeSql(dataSourceProperties, resourceList, namespace, true);
+        return true;
     }
 }

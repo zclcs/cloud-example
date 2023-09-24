@@ -21,4 +21,5 @@ dependencies {
     implementation "cn.hutool:hutool-crypto"
     implementation "cn.hutool:hutool-http"
     implementation "cn.dev33:sa-token-reactor-spring-boot3-starter"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
 }

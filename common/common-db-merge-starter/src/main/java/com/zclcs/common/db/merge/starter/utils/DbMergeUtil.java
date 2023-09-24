@@ -24,10 +24,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 @UtilityClass
 @Slf4j
@@ -46,7 +48,7 @@ public class DbMergeUtil {
         Connection connection = DriverManager.getConnection(url02, dataSourceProperties.getUsername(), dataSourceProperties.getPassword());
         Statement statement = connection.createStatement();
         // 创建数据库
-        statement.executeUpdate("CREATE DATABASE if NOT EXISTS `" + datasourceName + "` " +
+        statement.execute("CREATE DATABASE if NOT EXISTS `" + datasourceName + "` " +
                 "DEFAULT CHARACTER SET " + character + " COLLATE " + collate);
         statement.close();
         connection.close();
@@ -58,8 +60,8 @@ public class DbMergeUtil {
         Connection connection = DriverManager.getConnection(url, dataSourceProperties.getUsername(), dataSourceProperties.getPassword());
         Statement statement = connection.createStatement();
         // 创建存储过程
-        statement.executeUpdate("drop procedure if exists add_column_if_not_exists");
-        statement.executeUpdate("create procedure add_column_if_not_exists(" +
+        statement.execute("drop procedure if exists add_column_if_not_exists");
+        statement.execute("create procedure add_column_if_not_exists(" +
                 "    IN dbName tinytext," +
                 "    IN tableName tinytext," +
                 "    IN fieldName tinytext," +
@@ -78,8 +80,8 @@ public class DbMergeUtil {
                 "        execute stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("drop procedure if exists change_column_if_exists");
-        statement.executeUpdate("create procedure change_column_if_exists(IN dbName tinytext," +
+        statement.execute("drop procedure if exists change_column_if_exists");
+        statement.execute("create procedure change_column_if_exists(IN dbName tinytext," +
                 "                                         IN tableName tinytext," +
                 "                                         IN oldFieldName tinytext," +
                 "                                         IN fieldName tinytext," +
@@ -100,8 +102,8 @@ public class DbMergeUtil {
                 "        execute stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("drop procedure if exists drop_column_if_exists");
-        statement.executeUpdate("create procedure drop_column_if_exists(IN dbName tinytext," +
+        statement.execute("drop procedure if exists drop_column_if_exists");
+        statement.execute("create procedure drop_column_if_exists(IN dbName tinytext," +
                 "                                       IN tableName tinytext," +
                 "                                       IN fieldName tinytext)" +
                 "begin" +
@@ -119,8 +121,8 @@ public class DbMergeUtil {
                 "        execute stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("drop procedure if exists add_index_if_not_exists");
-        statement.executeUpdate("CREATE PROCEDURE add_index_if_not_exists(IN dbName tinytext," +
+        statement.execute("drop procedure if exists add_index_if_not_exists");
+        statement.execute("CREATE PROCEDURE add_index_if_not_exists(IN dbName tinytext," +
                 "                                         IN tableName tinytext," +
                 "                                         IN indexType int," +
                 "                                         IN indexName tinytext," +
@@ -159,8 +161,8 @@ public class DbMergeUtil {
                 "        EXECUTE stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("DROP PROCEDURE IF EXISTS change_index_if_exists");
-        statement.executeUpdate("CREATE PROCEDURE change_index_if_exists(IN dbName tinytext," +
+        statement.execute("DROP PROCEDURE IF EXISTS change_index_if_exists");
+        statement.execute("CREATE PROCEDURE change_index_if_exists(IN dbName tinytext," +
                 "                                        IN tableName tinytext," +
                 "                                        IN indexType tinytext," +
                 "                                        IN indexName tinytext," +
@@ -218,8 +220,8 @@ public class DbMergeUtil {
                 "        EXECUTE stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("DROP PROCEDURE IF EXISTS drop_index_if_exists");
-        statement.executeUpdate("CREATE PROCEDURE drop_index_if_exists(IN dbName tinytext," +
+        statement.execute("DROP PROCEDURE IF EXISTS drop_index_if_exists");
+        statement.execute("CREATE PROCEDURE drop_index_if_exists(IN dbName tinytext," +
                 "                                      IN tableName tinytext," +
                 "                                      IN indexName tinytext)" +
                 "BEGIN" +
@@ -242,8 +244,8 @@ public class DbMergeUtil {
                 "        EXECUTE stmt;" +
                 "    END IF;" +
                 "END");
-        statement.executeUpdate("DROP PROCEDURE IF EXISTS insert_if_not_exists");
-        statement.executeUpdate("CREATE PROCEDURE insert_if_not_exists(IN dbName tinytext," +
+        statement.execute("DROP PROCEDURE IF EXISTS insert_if_not_exists");
+        statement.execute("CREATE PROCEDURE insert_if_not_exists(IN dbName tinytext," +
                 "                                      IN tableName tinytext," +
                 "                                      IN columnName text," +
                 "                                      IN columnData text," +
@@ -270,8 +272,8 @@ public class DbMergeUtil {
                 "    PREPARE stmt FROM @str;" +
                 "    EXECUTE stmt;" +
                 "END");
-        statement.executeUpdate("DROP PROCEDURE IF EXISTS insert_or_update");
-        statement.executeUpdate("CREATE PROCEDURE insert_or_update(IN dbName tinytext," +
+        statement.execute("DROP PROCEDURE IF EXISTS insert_or_update");
+        statement.execute("CREATE PROCEDURE insert_or_update(IN dbName tinytext," +
                 "                                  IN tableName tinytext," +
                 "                                  IN insertSql varchar(10000)," +
                 "                                  IN updateSql varchar(10000))" +
@@ -305,22 +307,21 @@ public class DbMergeUtil {
         statement.close();
     }
 
-    public void executeSql(DataSourceProperties dataSourceProperties, Resource[] resources, String nacosNamespace, boolean replace) throws ClassNotFoundException, SQLException, IOException {
-        List<Resource> resourceList = Arrays.stream(resources).filter(Objects::isNull).sorted(Comparator.comparing(Resource::getFilename)).collect(Collectors.toList());
+    public void executeSql(DataSourceProperties dataSourceProperties, List<Resource> resourceList, String nacosNamespace, boolean replace) throws ClassNotFoundException, SQLException, IOException {
         String url = dataSourceProperties.getUrl();
         Class.forName(dataSourceProperties.getDriverClassName());
         Connection connection = DriverManager.getConnection(url, dataSourceProperties.getUsername(), dataSourceProperties.getPassword());
         Statement statement = connection.createStatement();
         for (Resource resource : resourceList) {
             byte[] bytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-            String sql = new String(bytes);
+            String sql = new String(bytes, StandardCharsets.UTF_8);
             if (replace) {
                 sql = StrUtil.replace(sql, NACOS_NAMESPACE, nacosNamespace);
             }
-            List<String> split = StrUtil.split(sql, ";");
+            List<String> split = StrUtil.split(sql, ";").stream().filter(StrUtil::isNotBlank).toList();
             for (String s : split) {
                 log.debug("Sql : {}", s);
-                statement.executeUpdate(s);
+                statement.execute(s);
             }
         }
         connection.close();
@@ -346,8 +347,10 @@ public class DbMergeUtil {
 
     private void replaceSql(List<Resource> resourceForPath, String nacosNamespace) throws IOException {
         for (Resource resource : resourceForPath) {
-            File file = resource.getFile();
-            String sql = FileUtil.readString(file, StandardCharsets.UTF_8);
+            File out = FileUtil.file(FileUtil.getTmpDirPath() + "/tmp.sql");
+            FileCopyUtils.copy(FileCopyUtils.copyToByteArray(resource.getInputStream()), out);
+            String sql = FileUtil.readString(out, StandardCharsets.UTF_8);
+            log.info(sql);
             String nacosNamespaceReplace = StrUtil.replace(sql, NACOS_NAMESPACE, nacosNamespace);
             String path = resource.getURI().getPath();
             String filename = resource.getFilename();

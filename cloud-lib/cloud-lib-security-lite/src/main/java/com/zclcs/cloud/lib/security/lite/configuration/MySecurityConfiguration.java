@@ -42,6 +42,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
     public SaServletFilter getSaServletFilter(ObjectMapper objectMapper, MySecurityProperties mySecurityProperties) {
         return new SaServletFilter()
                 .addInclude("/**")
+                .addExclude("/actuator/health")
                 // 每次请求都会进入
                 .setAuth(obj -> SaRouter.match("/**").notMatch(mySecurityProperties.getIgnoreUrls()).check(SaSameUtil::checkCurrentRequestToken))
                 .setError(e -> {

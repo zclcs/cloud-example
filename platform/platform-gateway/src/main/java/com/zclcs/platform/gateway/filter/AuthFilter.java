@@ -27,6 +27,7 @@ public class AuthFilter {
                 // 拦截地址
                 .addInclude("/**")
                 .addExclude("/code")
+                .addExclude("/actuator/health")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 登录校验 -- 拦截所有路由
