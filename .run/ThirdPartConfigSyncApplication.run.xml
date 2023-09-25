@@ -24,6 +24,7 @@
       <env name="XXL_JOB_HOST" value="192.168.33.10" />
       <env name="XXL_JOB_PORT" value="8080" />
       <env name="XXL_JOB_TOKEN" value="12382e1c-fafc-4cc8-bb04-d276fd1ca7de" />
+      <env name="CONFIG_REFRESH" value="true" />
     </envs>
     <module name="cloud-17.third-part-config-sync.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />

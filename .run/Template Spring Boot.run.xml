@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ALTERNATIVE_JRE_PATH" value="graalvm-17" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="DATASOURCE_DB_TYPE" value="p6spy:mysql" />
-      <env name="DATASOURCE_DRIVER" value="com.p6spy.engine.spy.P6SpyDriver" />
+      <env name="DATASOURCE_DB_TYPE" value="mysql" />
+      <env name="DATASOURCE_DRIVER" value="com.mysql.cj.jdbc.Driver" />
       <env name="DATASOURCE_HOST" value="192.168.33.10" />
       <env name="DATASOURCE_PASSWORD" value="123456" />
       <env name="GATEWAY_HOST" value="127.0.0.1" />
@@ -24,6 +26,7 @@
       <env name="XXL_JOB_HOST" value="192.168.33.10" />
       <env name="XXL_JOB_PORT" value="8080" />
       <env name="XXL_JOB_TOKEN" value="12382e1c-fafc-4cc8-bb04-d276fd1ca7de" />
+      <env name="CONFIG_REFRESH" value="true" />
     </envs>
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" />

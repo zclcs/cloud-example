@@ -3,8 +3,6 @@ dependencies {
     api "cn.hutool:hutool-crypto"
     api 'jakarta.validation:jakarta.validation-api'
     api "com.fasterxml.jackson.core:jackson-annotations"
-//    api "com.baomidou:mybatis-plus-annotation"
-//    api "com.baomidou:mybatis-plus-extension"
     api "com.mybatis-flex:mybatis-flex-annotation"
     api "com.mybatis-flex:mybatis-flex-core"
     api "com.google.guava:guava"
