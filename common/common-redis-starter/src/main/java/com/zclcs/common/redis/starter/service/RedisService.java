@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -84,6 +85,10 @@ public class RedisService {
                 redisTemplate.delete(Arrays.asList(key));
             }
         }
+    }
+
+    public DataType type(String key) {
+        return redisTemplate.type(key);
     }
 
     /**

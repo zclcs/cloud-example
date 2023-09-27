@@ -17,6 +17,7 @@ import com.zclcs.platform.maintenance.bean.vo.RedisVo;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.DataType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,11 +95,14 @@ public class RedisController {
             RedisVo redisVo = new RedisVo();
             try {
                 Object value = null;
-                // 序列化方法采用的是java
-                if (key.contains(BLOOM_FILTER)) {
-                    value = redisService.hmget(key);
-                } else {
-                    value = redisService.get(key);
+                DataType type = redisService.type(key);
+                switch (type) {
+                    case STRING -> value = redisService.get(key);
+                    case LIST -> value = redisService.lGet(key, 0L, -1L);
+                    case SET -> value = redisService.sGet(key);
+                    case HASH -> value = redisService.hmget(key);
+                    default -> {
+                    }
                 }
                 Long tll = redisService.getTll(key);
                 redisVo.setKey(globalProperties.getRedisCachePrefix() + key);
