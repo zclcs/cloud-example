@@ -29,7 +29,7 @@ buildscript {
         janinoVersion = "3.1.9"
         saTokenVersion = "1.35.0.RC"
         easyexcelVersion = "3.3.2"
-        mybatisFlexVersion = "1.6.6"
+        mybatisFlexVersion = "1.6.7"
         mybatisVersion = "3.0.2"
     }
 }
@@ -119,9 +119,9 @@ configure(commons) {
 configure(childPackage) {
     apply plugin: "java"
     apply plugin: "org.springframework.boot"
-    apply plugin: "org.graalvm.buildtools.native"
-    apply plugin: 'io.spring.dependency-management'
     apply plugin: "com.google.cloud.tools.jib"
+//    apply plugin: "org.graalvm.buildtools.native"
+
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -152,45 +152,45 @@ configure(childPackage) {
         }
     }
 
-    graalvmNative {
-        binaries {
-            main {
-                sharedLibrary = false
-                buildArgs.add("--initialize-at-run-time=sun.net.dns.ResolverConfigurationImpl")
-            }
-        }
-    }
-
-    bootBuildImage {
-        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
-        buildpacks = [
-                'urn:cnb:builder:paketo-buildpacks/ca-certificates',
-                'urn:cnb:builder:paketo-buildpacks/bellsoft-liberica',
-                'urn:cnb:builder:paketo-buildpacks/syft',
-                'urn:cnb:builder:paketo-buildpacks/executable-jar',
-                'urn:cnb:builder:paketo-buildpacks/spring-boot',
-                'urn:cnb:builder:paketo-buildpacks/native-image',
-                'docker.io/paketobuildpacks/health-checker:latest'
-        ]
-        imageName = "${dockerJibToImage}/${project.name}:native"
-        environment = [
-                "BP_NATIVE_IMAGE"          : "true",
-                "BP_HEALTH_CHECKER_ENABLED": "true",
-                "BPE_DEFAULT_LANG"         : "en_US.utf8",
-                "TZ"                       : "Asia/Shanghai",
-                "LANG"                     : "en_US.utf8",
-                "JAVA_TOOL_OPTIONS"        : "-Dfile.encoding=UTF-8",
-                "HTTP_PROXY"               : "http://192.168.33.10:7890",
-                "HTTPS_PROXY"              : "http://192.168.33.10:7890",
-        ]
-        publish = true
-        docker {
-            host = "tcp://192.168.33.10:2375"
-            tlsVerify = false
-            publishRegistry {
-                username = "$dockerJibAuthUsername"
-                password = "$dockerJibAuthPassword"
-            }
-        }
-    }
+//    graalvmNative {
+//        binaries {
+//            main {
+//                sharedLibrary = false
+//                buildArgs.add("--initialize-at-run-time=sun.net.dns.ResolverConfigurationImpl")
+//            }
+//        }
+//    }
+//
+//    bootBuildImage {
+//        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+//        buildpacks = [
+//                'urn:cnb:builder:paketo-buildpacks/ca-certificates',
+//                'urn:cnb:builder:paketo-buildpacks/bellsoft-liberica',
+//                'urn:cnb:builder:paketo-buildpacks/syft',
+//                'urn:cnb:builder:paketo-buildpacks/executable-jar',
+//                'urn:cnb:builder:paketo-buildpacks/spring-boot',
+//                'urn:cnb:builder:paketo-buildpacks/native-image',
+//                'docker.io/paketobuildpacks/health-checker:latest'
+//        ]
+//        imageName = "${dockerJibToImage}/${project.name}:native"
+//        environment = [
+//                "BP_NATIVE_IMAGE"          : "true",
+//                "BP_HEALTH_CHECKER_ENABLED": "true",
+//                "BPE_DEFAULT_LANG"         : "en_US.utf8",
+//                "TZ"                       : "Asia/Shanghai",
+//                "LANG"                     : "en_US.utf8",
+//                "JAVA_TOOL_OPTIONS"        : "-Dfile.encoding=UTF-8",
+//                "HTTP_PROXY"               : "http://192.168.33.10:7890",
+//                "HTTPS_PROXY"              : "http://192.168.33.10:7890",
+//        ]
+//        publish = true
+//        docker {
+//            host = "tcp://192.168.33.10:2375"
+//            tlsVerify = false
+//            publishRegistry {
+//                username = "$dockerJibAuthUsername"
+//                password = "$dockerJibAuthPassword"
+//            }
+//        }
+//    }
 }
