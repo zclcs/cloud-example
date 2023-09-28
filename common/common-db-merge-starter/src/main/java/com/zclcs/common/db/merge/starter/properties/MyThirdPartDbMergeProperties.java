@@ -29,19 +29,9 @@ public class MyThirdPartDbMergeProperties {
     private String nacosSql = "classpath:sql/nacos/**.sql";
 
     /**
-     * nacos脚本
-     */
-    private String nacosTmpSql = "classpath:sql/nacos/sql_tmp/**.sql";
-
-    /**
      * xxlJob脚本
      */
     private String xxlJobSql = "classpath:sql/xxl-job/**.sql";
-
-    /**
-     * xxlJob脚本
-     */
-    private String xxlJobTmpSql = "classpath:sql/xxl-job/sql_tmp/**.sql";
 
     public Boolean getEnable() {
         return enable;
@@ -53,22 +43,6 @@ public class MyThirdPartDbMergeProperties {
 
     public String getNacosSql() {
         return nacosSql;
-    }
-
-    public String getNacosTmpSql() {
-        return nacosTmpSql;
-    }
-
-    public void setNacosTmpSql(String nacosTmpSql) {
-        this.nacosTmpSql = nacosTmpSql;
-    }
-
-    public String getXxlJobTmpSql() {
-        return xxlJobTmpSql;
-    }
-
-    public void setXxlJobTmpSql(String xxlJobTmpSql) {
-        this.xxlJobTmpSql = xxlJobTmpSql;
     }
 
     public void setNacosSql(String nacosSql) {
