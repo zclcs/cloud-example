@@ -42,7 +42,6 @@ public class RedisService {
             }
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
             return false;
         }
     }
