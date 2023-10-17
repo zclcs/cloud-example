@@ -1,7 +1,5 @@
 package com.zclcs.cloud.lib.core.constant;
 
-import java.util.List;
-
 /**
  * @author zclcs
  */
@@ -28,33 +26,11 @@ public interface CommonCore {
      */
     String UTF8 = "utf-8";
 
-    /**
-     * 刷新令牌有效期默认 30 天
-     */
-    int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * 30;
-
-    /**
-     * 请求令牌有效期默认 12 小时
-     */
-    int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60 * 12;
-
-    /**
-     * 排序规则：降序
-     */
-    String ORDER_DESC = "desc";
-
-    /**
-     * 排序规则：升序
-     */
-    String ORDER_ASC = "asc";
-
     String LOCALHOST = "localhost";
 
     String LOCALHOST_IP = "127.0.0.1";
 
     String START_TIME = "startTime";
-
-    String SELECT = "SELECT";
 
     String COUNT = "COUNT";
 
@@ -102,9 +78,4 @@ public interface CommonCore {
     String HTTP = "http://";
 
     String BOOLEAN_TRUE = "true";
-
-    /**
-     * 允许上传的文件类型
-     */
-    List<String> ALLOW_FILE_TYPE = List.of("jpg", "png", "pdf", "xls");
 }

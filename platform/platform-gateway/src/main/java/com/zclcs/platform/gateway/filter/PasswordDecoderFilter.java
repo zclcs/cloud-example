@@ -43,13 +43,8 @@ import java.util.function.Function;
 public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> {
 
     private static final List<HttpMessageReader<?>> MESSAGE_READERS = HandlerStrategies.withDefaults().messageReaders();
-
-    private static final String PASSWORD = "password";
-
     private static final String KEY_ALGORITHM = "AES";
-
     private final GatewayConfigProperties gatewayConfig;
-
     private final ObjectMapper objectMapper;
 
     @Override
