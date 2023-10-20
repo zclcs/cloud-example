@@ -1,11 +1,10 @@
 package com.zclcs.third.part.database.sync.runner;
 
 import cn.hutool.core.io.FileUtil;
+import com.zclcs.cloud.lib.core.enums.ServerName;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
-import com.zclcs.common.db.merge.starter.properties.MyThirdPartDbMergeProperties;
-import com.zclcs.third.part.database.sync.entity.XxlJobInfo;
-import com.zclcs.third.part.database.sync.enums.Servers;
-import com.zclcs.third.part.database.sync.mapper.XxlJobInfoMapper;
+import com.zclcs.third.part.database.sync.entity.JobInfo;
+import com.zclcs.third.part.database.sync.mapper.PowerJobInfoMapper;
 import com.zclcs.third.part.database.sync.properties.ThirdPartDatabaseSyncProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,83 +29,84 @@ import java.util.List;
 public class GenerateSqlRunner implements ApplicationRunner {
 
     private final ConfigurableApplicationContext context;
-    private final XxlJobInfoMapper xxlJobInfoMapper;
-    private final MyThirdPartDbMergeProperties myThirdPartDbMergeProperties;
+    private final PowerJobInfoMapper jobInfoMapper;
     private final ThirdPartDatabaseSyncProperties thirdPartDatabaseSyncProperties;
     private final MyNacosProperties myNacosProperties;
-    private DataSource xxlJobDataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public void setXxlJobDataSource(DataSource xxlJobDataSource) {
-        this.xxlJobDataSource = xxlJobDataSource;
-        jdbcTemplate = new JdbcTemplate(xxlJobDataSource);
+    public void setXxlJobDataSource(DataSource powerJobDataSource) {
+        jdbcTemplate = new JdbcTemplate(powerJobDataSource);
     }
 
     @Override
     public void run(ApplicationArguments args) {
         if (context.isActive() && thirdPartDatabaseSyncProperties.getGenerateSql()) {
             StringBuilder sql = new StringBuilder();
-            for (Servers value : Servers.values()) {
+            for (ServerName value : ServerName.values()) {
                 String serverName = value.getServerName();
-                String desc = value.getDesc();
-                sql.append(getXxlJobGroupSql(serverName, desc));
-                sql.append(getXxlJobInfoSql(serverName));
+                sql.append(getPowerAppInfoSql(serverName));
+                sql.append(getPowerJobInfoSql(serverName));
             }
-            writeSql(sql.toString(), "1.0.3-data.sql");
+            writeSql(sql.toString(), "1.0.2-data.sql");
         }
     }
 
-    private String getXxlJobInfoSql(String serverName) {
+    private String getPowerJobInfoSql(String serverName) {
         String serverNameFill = "{{NACOS_NAMESPACE}}-" + serverName;
         serverName = myNacosProperties.getNamespace() + "-" + serverName;
         StringBuilder sqlBuilder = new StringBuilder();
-        List<XxlJobInfo> xxlJobInfos = jdbcTemplate.query("select * from xxl_job_info where job_group = (select id from xxl_job_group where app_name = ?)", xxlJobInfoMapper, serverName);
-        for (XxlJobInfo xxlJobInfo : xxlJobInfos) {
+        List<JobInfo> jobInfos = jdbcTemplate.query("select * from job_info where app_id = (select id from app_info where app_name = ?)", jobInfoMapper, serverName);
+        for (JobInfo jobInfo : jobInfos) {
             String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                     "'%s'," +
                     "'%s'," +
                     "'%s');";
-            String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
-            String jobGroupIdSql = "(select id from xxl_job_group where app_name = " + getValue(serverNameFill) + ")";
+            String valuesFill = "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s";
+            String jobGroupIdSql = "(select id from app_info where app_name = " + getValue(serverNameFill) + ")";
             String values = String.format(valuesFill, jobGroupIdSql
-                    , getValue(xxlJobInfo.getJobDesc()), "now()", "now()", getValue(xxlJobInfo.getAuthor())
-                    , getValue(xxlJobInfo.getAlarmEmail()), getValue(xxlJobInfo.getScheduleType())
-                    , getValue(xxlJobInfo.getScheduleConf()), getValue(xxlJobInfo.getMisfireStrategy())
-                    , getValue(xxlJobInfo.getExecutorRouteStrategy()), getValue(xxlJobInfo.getExecutorHandler())
-                    , getValue(xxlJobInfo.getExecutorParam()), getValue(xxlJobInfo.getExecutorBlockStrategy())
-                    , xxlJobInfo.getExecutorTimeout(), xxlJobInfo.getExecutorFailRetryCount()
-                    , getValue(xxlJobInfo.getGlueType()), getValue(xxlJobInfo.getGlueSource())
-                    , getValue(xxlJobInfo.getGlueRemark()), "now()"
-                    , getValue(xxlJobInfo.getChildJobId()), "1", "0", "0");
-            String uniqueSqlFill = "job_group=%s and executor_handler=%s";
-            String uniqueSql = String.format(uniqueSqlFill, jobGroupIdSql, getValue(xxlJobInfo.getExecutorHandler()));
-            String sql = String.format(sqlFill, "xxl_job_info",
+                    , getValue(jobInfo.getConcurrency()), getValue(jobInfo.getDesignatedWorkers())
+                    , getValue(jobInfo.getDispatchStrategy()), getValue(jobInfo.getExecuteType())
+                    , getValue(jobInfo.getExtra()), "now()", "now()", getValue(jobInfo.getInstanceRetryNum())
+                    , getValue(jobInfo.getInstanceTimeLimit()), getValue(jobInfo.getJobDescription())
+                    , getValue(jobInfo.getJobName()), getValue(jobInfo.getJobParams())
+                    , getValue(jobInfo.getMaxInstanceNum()), getValue(jobInfo.getMaxWorkerCount())
+                    , getValue(jobInfo.getMinCpuCores()), getValue(jobInfo.getMinDiskSpace())
+                    , getValue(jobInfo.getMinMemorySpace()), "null"
+                    , getValue(jobInfo.getNotifyUserIds()), getValue(jobInfo.getProcessorInfo())
+                    , getValue(jobInfo.getProcessorType()), getValue(jobInfo.getStatus())
+                    , getValue(jobInfo.getTag()), getValue(jobInfo.getTaskRetryNum())
+                    , getValue(jobInfo.getTimeExpression()), getValue(jobInfo.getTimeExpressionType()));
+            String uniqueSqlFill = "app_id=%s and job_name=%s";
+            String uniqueSql = String.format(uniqueSqlFill, jobGroupIdSql, getValue(jobInfo.getJobName()));
+            String sql = String.format(sqlFill, "job_info",
                     """
-                            job_group,job_desc,add_time,update_time,author,alarm_email,schedule_type,schedule_conf,misfire_strategy,
-                            executor_route_strategy,executor_handler,executor_param,executor_block_strategy,executor_timeout,executor_fail_retry_count,
-                            glue_type,glue_source,glue_remark,glue_updatetime,child_jobid,trigger_status,trigger_last_time,trigger_next_time
+                            app_id, concurrency, designated_workers, dispatch_strategy, execute_type, extra,
+                            gmt_create, gmt_modified, instance_retry_num, instance_time_limit, job_description, job_name,
+                            job_params, max_instance_num, max_worker_count, min_cpu_cores, min_disk_space,
+                            min_memory_space, next_trigger_time, notify_user_ids, processor_info, processor_type,
+                            status, tag, task_retry_num, time_expression, time_expression_type
                             """, values, uniqueSql);
             sqlBuilder.append(sql).append("\n");
         }
         return sqlBuilder.toString();
     }
 
-    private String getXxlJobGroupSql(String serverName, String desc) {
+    private String getPowerAppInfoSql(String serverName) {
         serverName = "{{NACOS_NAMESPACE}}-" + serverName;
         StringBuilder sqlBuilder = new StringBuilder();
         String sqlFill = "call insert_if_not_exists(database(), '%s', " +
                 "'%s'," +
                 "'%s'," +
                 "'%s');";
-        String valuesFill = "%s,%s,%s,%s,%s";
+        String valuesFill = "%s,%s,%s,%s";
         String values = String.format(valuesFill, getValue(serverName)
-                , getValue(desc), "0"
-                , "NULL", "now()");
+                , "now()", "now()"
+                , "123456");
         String uniqueSqlFill = "app_name=%s";
         String uniqueSql = String.format(uniqueSqlFill, getValue(serverName));
-        String sql = String.format(sqlFill, "xxl_job_group",
-                "app_name,title,address_type,address_list,update_time", values, uniqueSql);
+        String sql = String.format(sqlFill, "app_info",
+                "app_name,gmt_create,gmt_modified,password", values, uniqueSql);
         sqlBuilder.append(sql).append("\n");
         return sqlBuilder.toString();
 
@@ -116,7 +116,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
         String finalPath = applicationHome.getDir().getParentFile().getParentFile()
                 .getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\"
-                + "sql\\xxl-job\\" + fileName;
+                + "sql\\power-job\\" + fileName;
         FileUtil.touch(finalPath);
         FileUtil.writeString(sql, finalPath, StandardCharsets.UTF_8);
     }

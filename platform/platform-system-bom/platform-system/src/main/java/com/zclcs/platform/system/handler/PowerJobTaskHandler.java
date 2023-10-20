@@ -4,11 +4,12 @@ import cn.dev33.satoken.same.SaSameUtil;
 import cn.hutool.core.date.DateUtil;
 import com.google.common.base.Stopwatch;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.xxl.job.core.context.XxlJobHelper;
-import com.xxl.job.core.handler.annotation.XxlJob;
 import com.zclcs.platform.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import tech.powerjob.worker.annotation.PowerJobHandler;
+import tech.powerjob.worker.core.processor.TaskContext;
+import tech.powerjob.worker.log.OmsLogger;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -20,9 +21,9 @@ import static com.zclcs.platform.system.api.bean.entity.table.RouteLogTableDef.R
 /**
  * @author zclcs
  */
-@Component
+@Component("powerJobTaskHandler")
 @RequiredArgsConstructor
-public class XxlJobHandler {
+public class PowerJobTaskHandler {
 
     private final BlackListService blackListService;
     private final RateLimitRuleService rateLimitRuleService;
@@ -32,32 +33,39 @@ public class XxlJobHandler {
 
     /**
      * 刷新限流配置和黑名单配置
+     * 处理器配置方法1： 全限定类名#方法名，比如 tech.powerjob.samples.tester.SpringMethodProcessorService#testEmptyReturn
+     * 处理器配置方法2： SpringBean名称#方法名，比如 springMethodProcessorService#testEmptyReturn
+     *
+     * @param context 必须要有入参 TaskContext，返回值可以是 null，也可以是其他任意类型。正常返回代表成功，抛出异常代表执行失败
      */
-    @XxlJob("refreshBlackListAndRateLimitRules")
-    public void refreshBlackListAndRateLimitRules() throws Exception {
+    @PowerJobHandler(name = "refreshBlackListAndRateLimitRules")
+    public void refreshBlackListAndRateLimitRules(TaskContext context) throws Exception {
+        OmsLogger omsLogger = context.getOmsLogger();
         Stopwatch stopwatch = Stopwatch.createStarted();
         blackListService.cacheAllBlackList();
         rateLimitRuleService.cacheAllRateLimitRules();
-        XxlJobHelper.log("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
+        omsLogger.info("Cache BlackList And RateLimitRules Completed - {}", stopwatch.stop());
     }
 
     /**
      * 刷新sa-same-token
      */
-    @XxlJob("refreshSaSameToken")
-    public void refreshSaSameToken() throws Exception {
+    @PowerJobHandler(name = "refreshSaSameToken")
+    public void refreshSaSameToken(TaskContext context) throws Exception {
+        OmsLogger omsLogger = context.getOmsLogger();
         Stopwatch stopwatch = Stopwatch.createStarted();
         SaSameUtil.refreshToken();
-        XxlJobHelper.log("Refresh Sa Same Token Completed - {}", stopwatch.stop());
+        omsLogger.info("Refresh Sa Same Token Completed - {}", stopwatch.stop());
     }
 
     /**
      * 清理日志表
      */
-    @XxlJob("cleanLog")
-    public void cleanLog() throws Exception {
+    @PowerJobHandler(name = "cleanLog")
+    public void cleanLog(TaskContext context) throws Exception {
+        OmsLogger omsLogger = context.getOmsLogger();
         Stopwatch stopwatch = Stopwatch.createStarted();
-        Long limit = Long.valueOf(Optional.of(XxlJobHelper.getJobParam()).orElse("0"));
+        Long limit = Long.valueOf(Optional.of(context.getJobParams()).orElse("1000"));
         LocalDateTime localDateTime = DateUtil.beginOfDay(DateUtil.date()).toLocalDateTime();
 
         Long blockLogCount = blockLogService.count(new QueryWrapper().where(BLOCK_LOG.CREATE_AT.le(localDateTime)));
@@ -81,7 +89,7 @@ public class XxlJobHandler {
         }
         routeLogService.remove(new QueryWrapper().where(ROUTE_LOG.CREATE_AT.le(localDateTime)));
 
-        XxlJobHelper.log("Clean Log Completed - {}", stopwatch.stop());
+        omsLogger.info("Clean Log Completed - {}", stopwatch.stop());
     }
 
 }

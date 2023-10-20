@@ -35,7 +35,7 @@ spring:
       - optional:nacos:mybatis-flex.yaml
       - optional:nacos:jasypt.yaml
       - optional:nacos:minio.yaml
-      - optional:nacos:xxl-job.yaml
+      - optional:nacos:power-job.yaml
       - optional:nacos:platform-system-rabbit-mq-queue.yaml
       - optional:nacos:db-merge.yaml
       - optional:nacos:sa-token.yaml

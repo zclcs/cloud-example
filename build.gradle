@@ -11,7 +11,7 @@ buildscript {
         sentinelVersion = "1.8.6"
         findbugsVersion = "3.0.2"
         lombokVersion = "1.18.24"
-        hutoolVersion = "5.8.21"
+        hutoolVersion = "5.8.22"
         p6spyVersion = "3.9.1"
         apmToolkitLogbackVersion = "8.7.0"
         easyCaptchaVersion = "1.6.2"
@@ -25,10 +25,12 @@ buildscript {
         redissonVersion = "3.23.5"
         xxlJobVersion = "2.4.0"
         janinoVersion = "3.1.9"
-        saTokenVersion = "1.35.0.RC"
+        saTokenVersion = "1.37.0"
         easyexcelVersion = "3.3.2"
-        mybatisFlexVersion = "1.7.0"
+        mybatisFlexVersion = "1.7.2"
         mybatisVersion = "3.0.2"
+        powerJobVersion = "4.3.6"
+        jaxbApiVersion = "2.3.1"
     }
 }
 
@@ -158,7 +160,7 @@ configure(childPackage) {
 //            }
 //        }
 //    }
-//
+
 //    bootBuildImage {
 //        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
 //        buildpacks = [

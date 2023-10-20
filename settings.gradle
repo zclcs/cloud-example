@@ -43,4 +43,6 @@ include 'test'
 include 'test:test-test-bom'
 include 'test:test-test-bom:test-test-api'
 include 'test:test-test-bom:test-test'
+include 'common:common-power-job-starter'
+findProject(':common:common-power-job-starter')?.name = 'common-power-job-starter'
 

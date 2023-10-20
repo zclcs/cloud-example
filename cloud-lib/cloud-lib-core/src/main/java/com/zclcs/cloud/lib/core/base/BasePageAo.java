@@ -12,14 +12,16 @@ import lombok.Data;
 public class BasePageAo {
 
     /**
-     * 页数
+     * 页码
+     * 默认：1
      */
     @NotNull(message = "{required}")
-    private Long pageNum;
+    private Long pageNum = 1L;
 
     /**
-     * 页码
+     * 页数
+     * 默认：10
      */
     @NotNull(message = "{required}")
-    private Long pageSize;
+    private Long pageSize = 10L;
 }

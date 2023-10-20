@@ -7,7 +7,7 @@ dependencies {
     implementation(project(":common:common-jackson-starter"))
     implementation(project(":common:common-redis-starter"))
     implementation(project(":common:common-db-merge-starter"))
-    implementation(project(":common:common-xxl-job-starter"))
+    implementation(project(":common:common-power-job-starter"))
     implementation(project(":common:common-ip2region-starter"))
     implementation(project(":common:common-minio-starter"))
     implementation(project(":common:common-export-excel-starter"))

@@ -31,30 +31,6 @@ public class MyThirdPartDbMergeProperties {
     /**
      * xxlJob脚本
      */
-    private String xxlJobSql = "classpath:sql/xxl-job/**.sql";
-
-    public Boolean getEnable() {
-        return enable;
-    }
-
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
-
-    public String getNacosSql() {
-        return nacosSql;
-    }
-
-    public void setNacosSql(String nacosSql) {
-        this.nacosSql = nacosSql;
-    }
-
-    public String getXxlJobSql() {
-        return xxlJobSql;
-    }
-
-    public void setXxlJobSql(String xxlJobSql) {
-        this.xxlJobSql = xxlJobSql;
-    }
+    private String powerJobSql = "classpath:sql/power-job/**.sql";
 
 }

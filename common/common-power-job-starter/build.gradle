@@ -1,0 +1,5 @@
+dependencies {
+    api "javax.xml.bind:jaxb-api"
+    api "tech.powerjob:powerjob-worker-spring-boot-starter"
+    api "tech.powerjob:powerjob-official-processors"
+}

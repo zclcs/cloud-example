@@ -1,6 +1,6 @@
 server {
 	listen       9527;
-    client_max_body_size ${NGINX_MAX_FILE_SIZE};
+	client_max_body_size ${NGINX_MAX_FILE_SIZE};
 	# server_name  localhost
 	location /basic-api/ {
 		# 后台接口地址

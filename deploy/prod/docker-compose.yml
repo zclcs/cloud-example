@@ -187,9 +187,9 @@ services:
     depends_on:
       platform-gateway:
         condition: service_healthy
-  xxl-job:
-    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/xxl-job:2.4.1-SNAPSHOT
-    container_name: ${NACOS_NAMESPACE}-xxl-job
+  power-job:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}/library/power-job:4.3.6
+    container_name: ${NACOS_NAMESPACE}-power-job
     networks:
       - cloud_net
     restart: unless-stopped
@@ -197,11 +197,12 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java -Xms1024m -Xmx1024m -Xmn256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=160m -XX:HeapDumpPath=/data/applogs/xxl-job/java_heapdump.hprof -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:-UseLargePages -cp /app/resources:/app/classes:/app/libs/* com.xxl.job.admin.XxlJobAdminApplication"
+      JVMOPTIONS: "-Xmx512m"
+      PARAMS: "--oms.mongodb.enable=false --spring.profiles.active=product --spring.datasource.core.jdbc-url=jdbc:${DATASOURCE_DB_TYPE}://${DATASOURCE_HOST}:${DATASOURCE_PORT}/${NACOS_NAMESPACE}_power_job?${DATASOURCE_PARAM} --spring.datasource.core.username=${DATASOURCE_USERNAME} --spring.datasource.core.password=${DATASOURCE_PASSWORD} --spring.datasource.core.driver-class-name=${DATASOURCE_DRIVER}"
     volumes:
-      - ./xxl-job/log:/data/applogs/xxl-job
+      - ./power-job:/root/powerjob/server/
     healthcheck:
-      test: [ "CMD-SHELL", "curl -sS ${XXL_JOB_HOST}:${XXL_JOB_PORT} || exit 1" ]
+      test: [ "CMD-SHELL", "curl -sS ${POWER_JOB_HOST}:${POWER_JOB_PORT} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
       timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
       retries: ${DOCKER_HEALTHCHECK_RETRIES}

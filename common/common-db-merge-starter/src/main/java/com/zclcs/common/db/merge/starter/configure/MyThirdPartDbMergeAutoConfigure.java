@@ -49,14 +49,14 @@ public class MyThirdPartDbMergeAutoConfigure {
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
-    @Bean(name = "xxlJobDataSourceProperties")
-    @ConfigurationProperties(prefix = "spring.datasource.xxl-job")
-    public DataSourceProperties xxlJobDataSourceProperties() {
+    @Bean(name = "powerJobDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.power-job")
+    public DataSourceProperties powerJobDataSourceProperties() {
         return new DataSourceProperties();
     }
 
-    @Bean(name = "xxlJobDataSource")
-    public DataSource xxlJobDataSource(@Qualifier("xxlJobDataSourceProperties") DataSourceProperties dataSourceProperties) {
+    @Bean(name = "powerJobDataSource")
+    public DataSource powerJobDataSource(@Qualifier("powerJobDataSourceProperties") DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
@@ -73,10 +73,10 @@ public class MyThirdPartDbMergeAutoConfigure {
     }
 
     @Bean
-    public Boolean xxlJobDatabaseInitializer(@Qualifier("xxlJobDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
+    public Boolean powerJobDatabaseInitializer(@Qualifier("powerJobDataSourceProperties") DataSourceProperties dataSourceProperties) throws SQLException, ClassNotFoundException, IOException {
         DbMergeUtil.createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
         DbMergeUtil.createProcedure(dataSourceProperties);
-        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getXxlJobSql())));
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(myThirdPartDbMergeProperties.getPowerJobSql())));
         if (CollectionUtil.isNotEmpty(resourceList)) {
             resourceList.sort(Comparator.comparing(Resource::getFilename));
         }
