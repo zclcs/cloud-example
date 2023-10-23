@@ -72,7 +72,7 @@ public class GenerateSqlRunner implements ApplicationRunner {
                     , getValue(jobInfo.getJobName()), getValue(jobInfo.getJobParams())
                     , getValue(jobInfo.getMaxInstanceNum()), getValue(jobInfo.getMaxWorkerCount())
                     , getValue(jobInfo.getMinCpuCores()), getValue(jobInfo.getMinDiskSpace())
-                    , getValue(jobInfo.getMinMemorySpace()), "null"
+                    , getValue(jobInfo.getMinMemorySpace()), 0
                     , getValue(jobInfo.getNotifyUserIds()), getValue(jobInfo.getProcessorInfo())
                     , getValue(jobInfo.getProcessorType()), getValue(jobInfo.getStatus())
                     , getValue(jobInfo.getTag()), getValue(jobInfo.getTaskRetryNum())
