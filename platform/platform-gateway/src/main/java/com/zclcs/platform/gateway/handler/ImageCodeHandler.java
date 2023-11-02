@@ -55,7 +55,9 @@ public class ImageCodeHandler implements HandlerFunction<ServerResponse> {
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         captcha.out(os);
 
-        return ServerResponse.status(HttpStatus.OK).contentType(MediaType.valueOf(StrUtil.equalsIgnoreCase(myValidateCodeProperties.getType(), ImageType.GIF) ? MediaType.IMAGE_GIF_VALUE : MediaType.IMAGE_PNG_VALUE))
+        return ServerResponse.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(StrUtil.equalsIgnoreCase(myValidateCodeProperties.getType(), ImageType.GIF)
+                        ? MediaType.IMAGE_GIF_VALUE : MediaType.IMAGE_PNG_VALUE))
                 .body(BodyInserters.fromResource(new ByteArrayResource(os.toByteArray())));
     }
 

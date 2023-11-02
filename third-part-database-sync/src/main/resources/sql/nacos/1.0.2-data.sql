@@ -1,6 +1,7 @@
-call insert_or_update(database(), 'users',
-                      '(`username`, `password`, `enabled`) VALUES ("nacos", "$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu", 1)',
-                      'SET `password` = "$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu", `enabled` = 1 WHERE `username` = "nacos"');
+call insert_if_not_exists(database(), 'users',
+                          '`username`, `password`, `enabled`',
+                          '"nacos", "$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu", 1',
+                          '`username` = "nacos"');
 
 call insert_if_not_exists(database(), 'roles',
                           'username,role',

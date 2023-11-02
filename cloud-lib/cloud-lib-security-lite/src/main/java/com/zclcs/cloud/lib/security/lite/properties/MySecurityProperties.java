@@ -45,7 +45,7 @@ public class MySecurityProperties implements InitializingBean {
 //
 //            // 获取类上边的注解, 替代path variable 为 *
 //            Inner controller = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), Inner.class);
-//            Optional.ofNullable(controller).ifPresent(inner -> Objects.requireNonNull(info.getPathPatternsCondition())
+//            Optional.ofNullable(controller).ifPres ent(inner -> Objects.requireNonNull(info.getPathPatternsCondition())
 //                    .getPatternValues().forEach(url -> ignoreUrls.add(ReUtil.replaceAll(url, PATTERN, "*"))));
 //        });
     }

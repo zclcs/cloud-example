@@ -78,7 +78,7 @@ public class StartedUpRunner implements ApplicationRunner {
     }
 
     private String getNacosToken() {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(2);
         params.put("username", myNacosProperties.getUsername());
         params.put("password", myNacosProperties.getPassword());
         try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint("/nacos/v1/auth/users/login")).form(params).execute()) {

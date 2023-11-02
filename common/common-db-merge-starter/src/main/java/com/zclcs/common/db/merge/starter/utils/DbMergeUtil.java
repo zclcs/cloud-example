@@ -311,43 +311,43 @@ public class DbMergeUtil {
                     EXECUTE stmt;
                 END
                 """);
-        statement.execute("""
-                DROP PROCEDURE IF EXISTS insert_or_update
-                """);
-        // 如果数据不存在则新增数据，例如给 system_user 新增或数据username为admin 表中要有主键或者唯一索引
-        // call insert_or_update(database(), 'system_user', 'username', '(admin)', 'username=values(username)');
-        statement.execute("""
-                CREATE PROCEDURE insert_or_update(IN dbName tinytext,
-                                                  IN tableName tinytext,
-                                                  IN insertSql varchar(10000),
-                                                  IN updateSql varchar(10000))
-                BEGIN
-                    set @updateSql = concat(
-                            ' update ',
-                            dbName,
-                            '.',
-                            tableName,
-                            ' ',
-                            updateSql
-                        );
-                    prepare stmt from @updateSql;
-                    EXECUTE stmt;
-                                
-                    IF ROW_COUNT() = 0 THEN
-                        set @insertSql = concat(
-                            ' insert into ',
-                            dbName,
-                            '.',
-                            tableName,
-                            ' ',
-                            insertSql
-                            );
-                        prepare stmt from @insertSql;
-                        EXECUTE stmt;
-                    END IF;
-                    deallocate prepare stmt;
-                END
-                """);
+//        statement.execute("""
+//                DROP PROCEDURE IF EXISTS insert_or_update
+//                """);
+//        // 如果数据不存在则新增数据，例如给 system_user 新增或数据username为admin 表中要有主键或者唯一索引
+//        // call insert_or_update(database(), 'system_user', 'username', '(admin)', 'username=values(username)');
+//        statement.execute("""
+//                CREATE PROCEDURE insert_or_update(IN dbName tinytext,
+//                                                  IN tableName tinytext,
+//                                                  IN insertSql varchar(10000),
+//                                                  IN updateSql varchar(10000))
+//                BEGIN
+//                    set @updateSql = concat(
+//                            ' update ',
+//                            dbName,
+//                            '.',
+//                            tableName,
+//                            ' ',
+//                            updateSql
+//                        );
+//                    prepare stmt from @updateSql;
+//                    EXECUTE stmt;
+//
+//                    IF ROW_COUNT() = 0 THEN
+//                        set @insertSql = concat(
+//                            ' insert into ',
+//                            dbName,
+//                            '.',
+//                            tableName,
+//                            ' ',
+//                            insertSql
+//                            );
+//                        prepare stmt from @insertSql;
+//                        EXECUTE stmt;
+//                    END IF;
+//                    deallocate prepare stmt;
+//                END
+//                """);
         connection.close();
         statement.close();
     }

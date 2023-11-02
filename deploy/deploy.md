@@ -9,7 +9,6 @@
 
 > - 搜索[centos镜像](https://app.vagrantup.com/boxes/search)
 > - 创建vagrant_vm目录
-> - 环境变量添加 VAGRANT_EXPERIMENTAL=disks
 > - 进入vagrant_vm目录，执行`vagrant init centos/7`（来自镜像网站）命令
 > - 修改目录下的配置
 
@@ -21,7 +20,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "zclcs" do |zclcs|
     zclcs.vm.network "private_network", ip: "192.168.33.10"
     zclcs.vm.hostname = "zclcs"
-    zclcs.vm.disk :disk, size: "40GB", primary: true
     zclcs.vm.provider "virtualbox" do |v|
       v.memory = 12288
       v.cpus = 2
@@ -182,6 +180,12 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 > - 执行docker build -t 192.168.33.10:3000/library/nginx:1.21.3 .
 > - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/nginx:1.21.3`
 
+# 若无power-job基础镜像先创建基础镜像
+
+> - 复制项目 /deploy/dev/power-job 下的内容，上传至服务器
+> - 执行docker build -t 192.168.33.10:3000/library/power-job:4.3.6 .
+> - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/power-job:4.3.6`
+
 # 若无rabbitmq基础镜像先创建基础镜像
 
 > - 复制项目 /deploy/dev/rabbitmq 下的内容，上传至服务器
@@ -193,11 +197,6 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 > - 复制项目 /deploy/dev/redis 下的内容，上传至服务器
 > - 执行docker build -t 192.168.33.10:3000/library/redis:7.0.5 .
 > - push 镜像到harbor仓库`docker push 192.168.33.10:3000/library/redis:7.0.5`
-
-# 若无xxl-job基础镜像先创建基础镜像
-
-> - 克隆项目 https://github.com/zclcs/xxl-job.git
-> - 执行mvn -DsendCredentialsOverHttp=true clean package
 
 # 部署
 
