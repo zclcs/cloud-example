@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.platform.system.api.fegin.RemoteUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,9 @@ public class UserRoleCache extends CacheService<List<Long>> {
     }
 
     @Override
-    protected List<Long> serialization(String json) throws JsonProcessingException {
+    protected List<Long> serialization(String json) {
         TypeReference<List<Long>> valueTypeRef = new TypeReference<>() {
         };
-        return super.getObjectMapper().readValue(json, valueTypeRef);
+        return JsonUtil.readValue(json, valueTypeRef);
     }
 }

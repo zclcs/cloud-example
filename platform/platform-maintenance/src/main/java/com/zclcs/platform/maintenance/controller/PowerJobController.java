@@ -4,14 +4,13 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.common.redis.starter.service.RedisService;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.maintenance.bean.ao.PowerJobQueryInstanceAo;
 import com.zclcs.platform.maintenance.bean.ao.PowerJobQueryJobInfoAo;
 import com.zclcs.platform.maintenance.bean.ao.PowerJobSaveJobInfoAo;
@@ -23,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * powerJob 控制台
@@ -40,16 +36,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PowerJobController {
 
-    private final RedisService redisService;
-
     private PlatformMaintenanceProperties platformMaintenanceProperties;
-
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @Autowired
     public void setPlatformMaintenanceProperties(PlatformMaintenanceProperties platformMaintenanceProperties) {
@@ -72,7 +59,8 @@ public class PowerJobController {
             String body = execute.body();
             TypeReference<PowerJobResultVo<List<PowerJobAppInfoVo>>> typeReference = new TypeReference<>() {
             };
-            PowerJobResultVo<List<PowerJobAppInfoVo>> resultVo = objectMapper.readValue(body, typeReference);
+            PowerJobResultVo<List<PowerJobAppInfoVo>> resultVo = JsonUtil.readValue(body, typeReference);
+            Objects.requireNonNull(resultVo);
             return RspUtil.data(resultVo.getData());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -97,11 +85,11 @@ public class PowerJobController {
         params.put("appId", powerJobQueryJobInfoAo.getAppId());
         params.put("jobId", powerJobQueryJobInfoAo.getJobId());
         params.put("keyword", powerJobQueryJobInfoAo.getKeyword());
-        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/job/list")).body(objectMapper.writeValueAsString(params)).execute()) {
+        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/job/list")).body(JsonUtil.toJson(params)).execute()) {
             String body = execute.body();
             TypeReference<PowerJobResultVo<PowerJobPageResultVo<PowerJobJobInfoVo>>> typeReference = new TypeReference<>() {
             };
-            PowerJobResultVo<PowerJobPageResultVo<PowerJobJobInfoVo>> resultVo = objectMapper.readValue(body, typeReference);
+            PowerJobResultVo<PowerJobPageResultVo<PowerJobJobInfoVo>> resultVo = JsonUtil.readValue(body, typeReference);
             BasePage<PowerJobJobInfoVo> basePage = new BasePage<>();
             PowerJobPageResultVo<PowerJobJobInfoVo> data = resultVo.getData();
             basePage.setTotal(data.getTotalItems());
@@ -136,11 +124,11 @@ public class PowerJobController {
         params.put("jobId", powerJobQueryInstanceAo.getJobId());
         params.put("wfInstanceId", powerJobQueryInstanceAo.getWfInstanceId());
         params.put("status", powerJobQueryInstanceAo.getStatus());
-        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/instance/list")).body(objectMapper.writeValueAsString(params)).execute()) {
+        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/instance/list")).body(JsonUtil.toJson(params)).execute()) {
             String body = execute.body();
             TypeReference<PowerJobResultVo<PowerJobPageResultVo<PowerJobInstanceInfoVo>>> typeReference = new TypeReference<>() {
             };
-            PowerJobResultVo<PowerJobPageResultVo<PowerJobInstanceInfoVo>> resultVo = objectMapper.readValue(body, typeReference);
+            PowerJobResultVo<PowerJobPageResultVo<PowerJobInstanceInfoVo>> resultVo = JsonUtil.readValue(body, typeReference);
             BasePage<PowerJobInstanceInfoVo> basePage = new BasePage<>();
             PowerJobPageResultVo<PowerJobInstanceInfoVo> data = resultVo.getData();
             basePage.setTotal(data.getTotalItems());
@@ -172,7 +160,7 @@ public class PowerJobController {
             String body = execute.body();
             TypeReference<PowerJobResultVo<PowerJobStringPageVo>> typeReference = new TypeReference<>() {
             };
-            PowerJobResultVo<PowerJobStringPageVo> resultVo = objectMapper.readValue(body, typeReference);
+            PowerJobResultVo<PowerJobStringPageVo> resultVo = JsonUtil.readValue(body, typeReference);
             return RspUtil.data(resultVo.getData());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -190,7 +178,7 @@ public class PowerJobController {
     @PostMapping("/job/info/saveOrUpdate")
     @SaCheckPermission("powerJob:view")
     public BaseRsp<String> saveOrUpdateJobInfo(@RequestBody @Validated PowerJobSaveJobInfoAo powerJobSaveJobInfoAo) {
-        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/job/save")).body(objectMapper.writeValueAsString(powerJobSaveJobInfoAo)).execute()) {
+        try (HttpResponse execute = HttpUtil.createPost(getPowerJobEndPoint("/job/save")).body(JsonUtil.toJson(powerJobSaveJobInfoAo)).execute()) {
             int status = execute.getStatus();
             return RspUtil.message();
         } catch (Exception e) {
@@ -219,7 +207,7 @@ public class PowerJobController {
             String body = execute.body();
             TypeReference<PowerJobResultVo<Long>> typeReference = new TypeReference<>() {
             };
-            PowerJobResultVo<Long> resultVo = objectMapper.readValue(body, typeReference);
+            PowerJobResultVo<Long> resultVo = JsonUtil.readValue(body, typeReference);
             return RspUtil.data(resultVo.getData());
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -2,5 +2,6 @@ dependencies {
     api project(":cloud-lib:cloud-lib-core")
     api project(":common:common-redis-starter")
     api(project(":platform:platform-system-bom:platform-system-api"))
+    api project(":common:common-jackson-starter")
     api "cn.dev33:sa-token-core"
 }

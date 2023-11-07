@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
@@ -32,7 +32,7 @@ public class RoleCache extends CacheService<RoleCacheVo> {
     }
 
     @Override
-    protected RoleCacheVo serialization(String json) throws JsonProcessingException {
-        return super.getObjectMapper().readValue(json, RoleCacheVo.class);
+    protected RoleCacheVo serialization(String json) {
+        return JsonUtil.readValue(json, RoleCacheVo.class);
     }
 }

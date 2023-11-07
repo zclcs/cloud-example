@@ -3,30 +3,13 @@ package com.zclcs.cloud.lib.sa.token.api.core.dao;
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.util.SaFoxUtil;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,25 +24,6 @@ import java.util.List;
 public class SaTokenDaoImpl implements SaTokenDao {
 
     private final RedisService redisService;
-
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DatePattern.NORM_DATETIME_FORMATTER));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DatePattern.NORM_DATETIME_FORMATTER));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DatePattern.NORM_DATE_FORMATTER));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DatePattern.NORM_DATE_FORMATTER));
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DatePattern.NORM_TIME_FORMATTER));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DatePattern.NORM_TIME_FORMATTER));
-        objectMapper.registerModule(javaTimeModule);
-        this.objectMapper = objectMapper;
-    }
 
     /**
      * 获取Value，如无返空
@@ -149,7 +113,7 @@ public class SaTokenDaoImpl implements SaTokenDao {
     public void setObject(String key, Object object, long timeout) {
         var redisValue = "";
         if (object instanceof SaSession saSession) {
-            redisValue = objectMapper.writeValueAsString(saSession);
+            redisValue = JsonUtil.toJson(saSession);
         } else {
             redisValue = (String) object;
         }
@@ -172,7 +136,7 @@ public class SaTokenDaoImpl implements SaTokenDao {
     public void updateObject(String key, Object object) {
         var redisValue = "";
         if (object instanceof SaSession saSession) {
-            redisValue = objectMapper.writeValueAsString(saSession);
+            redisValue = JsonUtil.toJson(saSession);
         } else {
             redisValue = (String) object;
         }
@@ -233,6 +197,6 @@ public class SaTokenDaoImpl implements SaTokenDao {
         if (StrUtil.isBlank(s)) {
             return null;
         }
-        return objectMapper.readValue(s, SaSession.class);
+        return JsonUtil.readValue(s, SaSession.class);
     }
 }

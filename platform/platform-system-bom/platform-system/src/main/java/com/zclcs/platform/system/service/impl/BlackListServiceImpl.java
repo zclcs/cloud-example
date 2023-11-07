@@ -2,8 +2,6 @@ package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -12,6 +10,7 @@ import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.common.ip2region.starter.core.Ip2regionSearcher;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.system.api.bean.ao.BlackListAo;
 import com.zclcs.platform.system.api.bean.cache.BlackListCacheVo;
@@ -41,7 +40,6 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     private final RedisService redisService;
     private final Ip2regionSearcher ip2regionSearcher;
-    private final ObjectMapper objectMapper;
 
     @Override
     public BasePage<BlackListVo> findBlackListPage(BasePageAo basePageAo, BlackListVo blackListVo) {
@@ -72,11 +70,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     public void cacheAllBlackList() {
         List<BlackList> list = this.list();
         list.forEach(black -> {
-            try {
-                redisService.sSet(getCacheKey(black), objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(black)));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            redisService.sSet(getCacheKey(black), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(black)));
         });
     }
 
@@ -105,19 +99,19 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BlackList createBlackList(BlackListAo blackListAo) throws JsonProcessingException {
+    public BlackList createBlackList(BlackListAo blackListAo) {
         BlackList blackList = new BlackList();
         BeanUtil.copyProperties(blackListAo, blackList);
         setBlackList(blackList);
         this.save(blackList);
         BlackListCacheVo blackListCacheVo = BlackListCacheVo.convertToBlackListCacheBean(blackList);
-        redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(blackListCacheVo));
+        redisService.sSet(getCacheKey(blackList), JsonUtil.toJson(blackListCacheVo));
         return blackList;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BlackList updateBlackList(BlackListAo blackListAo) throws JsonProcessingException {
+    public BlackList updateBlackList(BlackListAo blackListAo) {
         BlackList old = this.getById(blackListAo.getBlackId());
         BlackList blackList = new BlackList();
         BeanUtil.copyProperties(blackListAo, blackList);
@@ -125,18 +119,18 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         this.updateById(blackList);
         String oldKey = getCacheKey(old);
         String newKey = getCacheKey(blackList);
-        redisService.setRemove(oldKey, objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(old)));
-        redisService.sSet(newKey, objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
+        redisService.setRemove(oldKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(old)));
+        redisService.sSet(newKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         return blackList;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBlackList(List<Long> ids) throws JsonProcessingException {
+    public void deleteBlackList(List<Long> ids) {
         List<BlackList> list = this.listByIds(ids);
         this.removeByIds(ids);
         for (BlackList blackList : list) {
-            redisService.sSet(getCacheKey(blackList), objectMapper.writeValueAsString(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
+            redisService.sSet(getCacheKey(blackList), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         }
     }
 

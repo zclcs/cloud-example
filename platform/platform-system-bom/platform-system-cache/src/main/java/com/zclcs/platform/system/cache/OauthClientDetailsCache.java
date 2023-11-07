@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheVo;
 import com.zclcs.platform.system.api.fegin.RemoteClientDetailsService;
@@ -31,7 +31,7 @@ public class OauthClientDetailsCache extends CacheService<OauthClientDetailsCach
     }
 
     @Override
-    protected OauthClientDetailsCacheVo serialization(String json) throws JsonProcessingException {
-        return super.getObjectMapper().readValue(json, OauthClientDetailsCacheVo.class);
+    protected OauthClientDetailsCacheVo serialization(String json) {
+        return JsonUtil.readValue(json, OauthClientDetailsCacheVo.class);
     }
 }

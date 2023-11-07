@@ -3,7 +3,6 @@ package com.zclcs.platform.gateway.filter;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ public class AuthFilter {
      * 注册 Sa-Token 全局过滤器
      */
     @Bean
-    public SaReactorFilter getSaReactorFilter(GatewayConfigProperties gatewayConfigProperties, ObjectMapper objectMapper) {
+    public SaReactorFilter getSaReactorFilter(GatewayConfigProperties gatewayConfigProperties) {
         return new SaReactorFilter()
                 // 拦截地址
                 .addInclude("/**")

@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.system.api.bean.ao.BlockLogAo;
 import com.zclcs.platform.system.service.BlockLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +27,9 @@ public class SystemBlockLogQueueHandler {
 
     private BlockLogService blockLogService;
 
-    private ObjectMapper objectMapper;
-
     @Autowired
     public void setBlockLogService(BlockLogService blockLogService) {
         this.blockLogService = blockLogService;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = "${my.rabbit.mq.direct-queues.systemBlockLog.queue-name}", containerFactory = "batchRabbitListenerContainerFactory")
@@ -47,7 +40,7 @@ public class SystemBlockLogQueueHandler {
             String msg = new String(message.getBody());
             log.debug("处理系统黑名单日志，手动ACK，接收消息：{}", msg);
             try {
-                BlockLogAo bean = objectMapper.readValue(msg, BlockLogAo.class);
+                BlockLogAo bean = JsonUtil.readValue(msg, BlockLogAo.class);
                 batch.add(bean);
                 channel.basicAck(deliveryTag, false);
             } catch (Exception e) {

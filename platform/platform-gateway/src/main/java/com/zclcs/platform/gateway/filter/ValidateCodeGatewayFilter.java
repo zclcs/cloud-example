@@ -3,12 +3,11 @@ package com.zclcs.platform.gateway.filter;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.gateway.utils.GatewayUtil;
@@ -36,8 +35,6 @@ import java.net.URI;
 public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Object> {
 
     private final GatewayConfigProperties gatewayConfigProperties;
-
-    private final ObjectMapper objectMapper;
 
     private final RedisService redisService;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
@@ -70,15 +67,9 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory<Obje
                 response.setStatusCode(HttpStatus.PRECONDITION_REQUIRED);
                 response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
                 return response.writeWith(Mono.create(monoSink -> {
-                    try {
-                        byte[] bytes = objectMapper.writeValueAsBytes(RspUtil.message(errMsg));
-                        DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
-
-                        monoSink.success(dataBuffer);
-                    } catch (JsonProcessingException jsonProcessingException) {
-                        log.error("对象输出异常", jsonProcessingException);
-                        monoSink.error(jsonProcessingException);
-                    }
+                    byte[] bytes = JsonUtil.toJsonAsBytes(RspUtil.message(errMsg));
+                    DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
+                    monoSink.success(dataBuffer);
                 }));
             }
 

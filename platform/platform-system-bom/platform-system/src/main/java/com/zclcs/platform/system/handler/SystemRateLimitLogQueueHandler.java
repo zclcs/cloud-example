@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.system.api.bean.ao.RateLimitLogAo;
 import com.zclcs.platform.system.service.RateLimitLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +27,9 @@ public class SystemRateLimitLogQueueHandler {
 
     private RateLimitLogService rateLimitLogService;
 
-    private ObjectMapper objectMapper;
-
     @Autowired
     public void setRateLimitLogService(RateLimitLogService rateLimitLogService) {
         this.rateLimitLogService = rateLimitLogService;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = "${my.rabbit.mq.direct-queues.systemRateLimitLog.queue-name}", containerFactory = "batchRabbitListenerContainerFactory")
@@ -47,7 +40,7 @@ public class SystemRateLimitLogQueueHandler {
             String msg = new String(message.getBody());
             log.debug("处理系统限流日志，手动ACK，接收消息：{}", msg);
             try {
-                RateLimitLogAo bean = objectMapper.readValue(msg, RateLimitLogAo.class);
+                RateLimitLogAo bean = JsonUtil.readValue(msg, RateLimitLogAo.class);
                 batch.add(bean);
                 channel.basicAck(deliveryTag, false);
             } catch (Exception e) {

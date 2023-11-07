@@ -1,9 +1,8 @@
 package com.zclcs.platform.gateway.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
@@ -19,11 +18,9 @@ import java.util.List;
 public class RoutesHandler {
 
     private static final List<String> ROUTE_LIST = new ArrayList<>();
-    private ObjectMapper objectMapper;
     private RouteDefinitionWriter routeDefinitionWriter;
 
-    public RoutesHandler(ObjectMapper objectMapper, RouteDefinitionWriter routeDefinitionWriter) {
-        this.objectMapper = objectMapper;
+    public RoutesHandler(RouteDefinitionWriter routeDefinitionWriter) {
         this.routeDefinitionWriter = routeDefinitionWriter;
     }
 
@@ -71,12 +68,8 @@ public class RoutesHandler {
         }
         // 用Jackson反序列化
         List<RouteDefinition> routeDefinitions = null;
-        try {
-            routeDefinitions = objectMapper.readValue(configStr, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            log.error("get route definition from nacos string error", e);
-        }
+        routeDefinitions = JsonUtil.readValue(configStr, new TypeReference<>() {
+        });
         // 如果等于null，表示反序列化失败，立即返回
         if (null == routeDefinitions) {
             return;

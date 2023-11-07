@@ -1,10 +1,8 @@
 package com.zclcs.platform.gateway.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Strings;
-import lombok.SneakyThrows;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import lombok.experimental.UtilityClass;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
@@ -25,10 +23,6 @@ import java.util.Objects;
  */
 @UtilityClass
 public class GatewayUtil {
-
-    private final String BASIC_ = "Basic ";
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 获取请求IP
@@ -74,12 +68,11 @@ public class GatewayUtil {
      * @param value       响应内容
      * @return Mono<Void>
      */
-    @SneakyThrows(JsonProcessingException.class)
     public static Mono<Void> makeWebFluxResponse(ServerHttpResponse response, String contentType,
                                                  HttpStatus status, Object value) {
         response.setStatusCode(status);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
-        DataBuffer dataBuffer = response.bufferFactory().wrap(OBJECT_MAPPER.writeValueAsBytes(value));
+        DataBuffer dataBuffer = response.bufferFactory().wrap(JsonUtil.toJsonAsBytes(value));
         return response.writeWith(Mono.just(dataBuffer));
     }
 

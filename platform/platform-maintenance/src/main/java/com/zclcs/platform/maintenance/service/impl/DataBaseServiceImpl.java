@@ -7,7 +7,6 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.platform.maintenance.bean.vo.DataBaseDataVo;
 import com.zclcs.platform.maintenance.bean.vo.SchemaVo;
 import com.zclcs.platform.maintenance.bean.vo.VueColumnVo;
-import com.zclcs.platform.maintenance.mapper.DataBaseVoMapper;
 import com.zclcs.platform.maintenance.mapper.SchemaVoMapper;
 import com.zclcs.platform.maintenance.service.DataBaseService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DataBaseServiceImpl implements DataBaseService {
 
-    private final DataBaseVoMapper dataBaseVoMapper;
+    private static final Pattern PATTERN = Pattern.compile("[^0-9]");
+
     private final SchemaVoMapper schemaVoMapper;
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -75,8 +75,7 @@ public class DataBaseServiceImpl implements DataBaseService {
             } else {
                 int lastIndexOfIgnoreCase = StrUtil.lastIndexOfIgnoreCase(sql, CommonCore.LIMIT);
                 String sub = StrUtil.sub(sql, lastIndexOfIgnoreCase, sql.length());
-                Pattern p = Pattern.compile("[^0-9]");
-                Matcher m = p.matcher(sub);
+                Matcher m = PATTERN.matcher(sub);
                 String limitNumber = m.replaceAll("").trim();
                 BigDecimal bigDecimal = new BigDecimal(limitNumber);
                 if (bigDecimal.intValue() > 100) {

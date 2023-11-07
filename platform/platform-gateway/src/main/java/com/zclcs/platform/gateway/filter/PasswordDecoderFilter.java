@@ -4,10 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.exception.ValidateCodeException;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.gateway.properties.GatewayConfigProperties;
 import com.zclcs.platform.system.api.bean.ao.LoginByUsernameAo;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +32,7 @@ import reactor.core.publisher.Mono;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -45,7 +45,6 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
     private static final List<HttpMessageReader<?>> MESSAGE_READERS = HandlerStrategies.withDefaults().messageReaders();
     private static final String KEY_ALGORITHM = "AES";
     private final GatewayConfigProperties gatewayConfig;
-    private final ObjectMapper objectMapper;
 
     @Override
     public GatewayFilter apply(Object config) {
@@ -97,21 +96,13 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory<Object> 
 
             // 获取请求密码并解密
             LoginByUsernameAo loginByUsernameAo = null;
-            try {
-                loginByUsernameAo = objectMapper.readValue((String) s, LoginByUsernameAo.class);
-            } catch (JsonProcessingException e) {
-                throw new ValidateCodeException("参数解析异常");
-            }
+            loginByUsernameAo = JsonUtil.readValue((String) s, LoginByUsernameAo.class);
             if (loginByUsernameAo != null && StrUtil.isNotBlank(loginByUsernameAo.getPassword())) {
                 loginByUsernameAo.setPassword(aes.decryptStr(loginByUsernameAo.getPassword()));
             } else {
                 throw new ValidateCodeException("参数解析异常");
             }
-            try {
-                return Mono.just(objectMapper.writeValueAsString(loginByUsernameAo));
-            } catch (JsonProcessingException e) {
-                throw new ValidateCodeException("参数解析异常");
-            }
+            return Mono.just(Objects.requireNonNull(JsonUtil.toJson(loginByUsernameAo)));
         };
     }
 

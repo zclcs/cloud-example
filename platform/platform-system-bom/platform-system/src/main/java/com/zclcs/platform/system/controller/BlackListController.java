@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -85,7 +84,7 @@ public class BlackListController {
     @PostMapping
     @SaCheckPermission("blackList:add")
     @ControllerEndpoint(operation = "新增黑名单")
-    public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) throws JsonProcessingException {
+    public BaseRsp<BlackList> addBlackList(@RequestBody @Validated BlackListAo blackListAo) {
         return RspUtil.data(this.blackListService.createBlackList(blackListAo));
     }
 
@@ -99,7 +98,7 @@ public class BlackListController {
     @DeleteMapping("/{blackListIds}")
     @SaCheckPermission("blackList:delete")
     @ControllerEndpoint(operation = "删除黑名单")
-    public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) throws JsonProcessingException {
+    public BaseRsp<String> deleteBlackList(@NotBlank(message = "{required}") @PathVariable String blackListIds) {
         List<Long> ids = Arrays.stream(blackListIds.split(Strings.COMMA)).map(Long::valueOf).collect(Collectors.toList());
         this.blackListService.deleteBlackList(ids);
         return RspUtil.message("删除成功");
@@ -114,7 +113,7 @@ public class BlackListController {
     @PutMapping
     @SaCheckPermission("blackList:update")
     @ControllerEndpoint(operation = "修改黑名单")
-    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated({ValidGroups.Crud.Update.class}) BlackListAo blackListAo) throws JsonProcessingException {
+    public BaseRsp<BlackList> updateBlackList(@RequestBody @Validated({ValidGroups.Crud.Update.class}) BlackListAo blackListAo) {
         return RspUtil.data(this.blackListService.updateBlackList(blackListAo));
     }
 }

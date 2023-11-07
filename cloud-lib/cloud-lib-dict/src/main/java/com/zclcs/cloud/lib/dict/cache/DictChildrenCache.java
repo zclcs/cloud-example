@@ -1,10 +1,10 @@
 package com.zclcs.cloud.lib.dict.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +35,10 @@ public class DictChildrenCache extends CacheService<List<DictItemCacheVo>> {
     }
 
     @Override
-    protected List<DictItemCacheVo> serialization(String json) throws JsonProcessingException {
+    protected List<DictItemCacheVo> serialization(String json) {
         TypeReference<List<DictItemCacheVo>> valueTypeRef = new TypeReference<>() {
         };
-        return super.getObjectMapper().readValue(json, valueTypeRef);
+        return JsonUtil.readValue(json, valueTypeRef);
     }
 
 }

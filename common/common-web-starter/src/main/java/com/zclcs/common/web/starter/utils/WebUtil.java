@@ -1,6 +1,6 @@
 package com.zclcs.common.web.starter.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
@@ -28,8 +28,6 @@ public class WebUtil {
     private static final String UNKNOWN = "unknown";
 
     private static final String COMMA = ",";
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 允许下载的文件类型，根据需求自己添加（小写）
@@ -60,7 +58,7 @@ public class WebUtil {
                                     int status, Object value) throws IOException {
         response.setContentType(contentType);
         response.setStatus(status);
-        response.getOutputStream().write(OBJECT_MAPPER.writeValueAsString(value).getBytes());
+        response.getOutputStream().write(JsonUtil.toJsonAsBytes(value));
     }
 
     /**

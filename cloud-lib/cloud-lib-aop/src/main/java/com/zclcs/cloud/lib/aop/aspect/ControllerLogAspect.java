@@ -1,6 +1,6 @@
 package com.zclcs.cloud.lib.aop.aspect;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,9 +36,8 @@ public class ControllerLogAspect {
                 log.error("[class: {}][method: {}][cost: {}ms][args: {}][发生异常]",
                         className, methodName, cost, pjp.getArgs(), ex);
             } else {
-                ObjectMapper objectMapper = new ObjectMapper();
                 log.info("[class: {}][method: {}][cost: {}ms][args: {}][return: {}]",
-                        className, methodName, cost, pjp.getArgs(), objectMapper.writeValueAsString(returnValue));
+                        className, methodName, cost, pjp.getArgs(), JsonUtil.toJson(returnValue));
             }
         }
 

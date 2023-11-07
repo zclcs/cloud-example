@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.CacheService;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
 import com.zclcs.platform.system.api.bean.vo.MenuVo;
@@ -35,9 +35,9 @@ public class UserRoutersCache extends CacheService<List<VueRouter<MenuVo>>> {
     }
 
     @Override
-    protected List<VueRouter<MenuVo>> serialization(String json) throws JsonProcessingException {
+    protected List<VueRouter<MenuVo>> serialization(String json) {
         TypeReference<List<VueRouter<MenuVo>>> valueTypeRef = new TypeReference<>() {
         };
-        return super.getObjectMapper().readValue(json, valueTypeRef);
+        return JsonUtil.readValue(json, valueTypeRef);
     }
 }

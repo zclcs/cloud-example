@@ -1,7 +1,7 @@
 package com.zclcs.platform.system.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.system.api.bean.ao.RouteLogAo;
 import com.zclcs.platform.system.service.RouteLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +27,9 @@ public class SystemRouteLogQueueHandler {
 
     private RouteLogService routeLogService;
 
-    private ObjectMapper objectMapper;
-
     @Autowired
     public void setRouteLogService(RouteLogService routeLogService) {
         this.routeLogService = routeLogService;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = "${my.rabbit.mq.direct-queues.systemRouteLog.queue-name}", containerFactory = "batchRabbitListenerContainerFactory")
@@ -47,7 +40,7 @@ public class SystemRouteLogQueueHandler {
             String msg = new String(message.getBody());
             log.debug("处理系统网关转发日志，手动ACK，接收消息：{}", msg);
             try {
-                RouteLogAo bean = objectMapper.readValue(msg, RouteLogAo.class);
+                RouteLogAo bean = JsonUtil.readValue(msg, RouteLogAo.class);
                 batch.add(bean);
                 channel.basicAck(deliveryTag, false);
             } catch (Exception e) {

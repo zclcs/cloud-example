@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -62,7 +61,7 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @param rateLimitRuleAo {@link RateLimitRuleAo}
      * @return {@link RateLimitRule}
      */
-    RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
+    RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo);
 
     /**
      * 修改
@@ -70,7 +69,7 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      * @param rateLimitRuleAo {@link RateLimitRuleAo}
      * @return {@link RateLimitRule}
      */
-    RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException;
+    RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo);
 
     /**
      * 删除

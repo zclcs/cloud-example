@@ -1,5 +1,6 @@
 dependencies {
     api project(":cloud-lib:cloud-lib-core")
+    api project(":common:common-jackson-starter")
     api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
     api "org.springframework.cloud:spring-cloud-starter-openfeign"
     api "io.github.openfeign:feign-okhttp"

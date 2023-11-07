@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -16,6 +15,7 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.maintenance.bean.ao.NacosConfigAo;
 import com.zclcs.platform.maintenance.bean.ao.NacosServiceAo;
@@ -24,12 +24,12 @@ import com.zclcs.platform.maintenance.bean.vo.NacosServiceVo;
 import com.zclcs.platform.maintenance.bean.vo.NacosTokenVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * nacos控制台
@@ -47,13 +47,6 @@ public class NacosController {
 
     private final MyNacosProperties myNacosProperties;
 
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     /**
      * 配置查询
      * 权限: nacos:view
@@ -66,7 +59,7 @@ public class NacosController {
     @SaCheckPermission("nacos:view")
     public BaseRsp<BasePage<NacosConfigVo.ConfigVo>> findNacosConfigPage(@Validated BasePageAo basePageAo, @Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(10);
         params.put("dataId", StrUtil.isNotBlank(nacosConfigAo.getDataId()) ? Strings.ASTERISK + nacosConfigAo.getDataId() + Strings.ASTERISK : "");
         params.put("group", myNacosProperties.getGroup());
         params.put("appName", "");
@@ -79,7 +72,8 @@ public class NacosController {
         params.put("username", myNacosProperties.getUsername());
         try (HttpResponse execute = HttpUtil.createGet(getNacosEndPoint("/nacos/v1/cs/configs")).form(params).execute()) {
             String body = execute.body();
-            NacosConfigVo nacosConfigVo = objectMapper.readValue(body, NacosConfigVo.class);
+            NacosConfigVo nacosConfigVo = JsonUtil.readValue(body, NacosConfigVo.class);
+            Objects.requireNonNull(nacosConfigVo);
             BasePage<NacosConfigVo.ConfigVo> nacosConfigVoBasePage = new BasePage<>();
             nacosConfigVoBasePage.setPages(nacosConfigVo.getPagesAvailable());
             nacosConfigVoBasePage.setTotal(nacosConfigVo.getTotalCount());
@@ -103,7 +97,7 @@ public class NacosController {
     @SaCheckPermission("nacos:view")
     public BaseRsp<NacosConfigVo.ConfigDetailVo> findNacosConfigDetail(@Validated NacosConfigAo nacosConfigAo) {
         String nacosToken = getNacosToken();
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(10);
         params.put("dataId", nacosConfigAo.getDataId());
         params.put("group", myNacosProperties.getGroup());
         params.put("namespaceId", myNacosProperties.getNamespace());
@@ -113,7 +107,7 @@ public class NacosController {
         params.put("username", myNacosProperties.getUsername());
         try (HttpResponse execute = HttpUtil.createGet(getNacosEndPoint("/nacos/v1/cs/configs")).form(params).execute()) {
             String body = execute.body();
-            return RspUtil.data(objectMapper.readValue(body, NacosConfigVo.ConfigDetailVo.class));
+            return RspUtil.data(JsonUtil.readValue(body, NacosConfigVo.ConfigDetailVo.class));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new MyException("请求nacos config detail失败");
@@ -156,7 +150,7 @@ public class NacosController {
     @SaCheckPermission("nacos:view")
     public BaseRsp<BasePage<NacosServiceVo.Service>> findNacosServicePage(@Validated BasePageAo basePageAo, @Validated NacosServiceAo nacosServiceAo) {
         String nacosToken = getNacosToken();
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(10);
         params.put("hasIpCount", "true");
         params.put("withInstances", "false");
         params.put("pageNo", basePageAo.getPageNum());
@@ -167,7 +161,8 @@ public class NacosController {
         params.put("namespaceId", myNacosProperties.getNamespace());
         try (HttpResponse execute = HttpUtil.createGet(getNacosEndPoint("/nacos/v1/ns/catalog/services")).form(params).execute()) {
             String body = execute.body();
-            NacosServiceVo nacosServiceVo = objectMapper.readValue(body, NacosServiceVo.class);
+            NacosServiceVo nacosServiceVo = JsonUtil.readValue(body, NacosServiceVo.class);
+            Objects.requireNonNull(nacosServiceVo);
             BasePage<NacosServiceVo.Service> nacosServiceBasePage = new BasePage<>();
             nacosServiceBasePage.setTotal(nacosServiceVo.getCount());
             nacosServiceBasePage.setList(nacosServiceVo.getServiceList());
@@ -181,12 +176,13 @@ public class NacosController {
     private String getNacosToken() {
         String token = (String) redisService.get(RedisCachePrefix.NACOS_TOKEN_PREFIX);
         if (token == null) {
-            Map<String, Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>(2);
             params.put("username", myNacosProperties.getUsername());
             params.put("password", myNacosProperties.getPassword());
             try (HttpResponse execute = HttpUtil.createPost(getNacosEndPoint("/nacos/v1/auth/users/login")).form(params).execute()) {
                 String body = execute.body();
-                NacosTokenVo nacosTokenVo = objectMapper.readValue(body, NacosTokenVo.class);
+                NacosTokenVo nacosTokenVo = JsonUtil.readValue(body, NacosTokenVo.class);
+                Objects.requireNonNull(nacosTokenVo);
                 redisService.set(RedisCachePrefix.NACOS_TOKEN_PREFIX, nacosTokenVo.getAccessToken(), nacosTokenVo.getTokenTtl() - 30L * 60L);
                 return nacosTokenVo.getAccessToken();
             } catch (Exception e) {

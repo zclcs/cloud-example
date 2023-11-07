@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -85,7 +84,7 @@ public class RateLimitRuleController {
     @PostMapping
     @SaCheckPermission("rateLimitRule:add")
     @ControllerEndpoint(operation = "新增限流规则")
-    public BaseRsp<RateLimitRule> addRateLimitRule(@RequestBody @Validated RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException {
+    public BaseRsp<RateLimitRule> addRateLimitRule(@RequestBody @Validated RateLimitRuleAo rateLimitRuleAo) {
         return RspUtil.data(this.rateLimitRuleService.createRateLimitRule(rateLimitRuleAo));
     }
 
@@ -114,7 +113,7 @@ public class RateLimitRuleController {
     @PutMapping
     @SaCheckPermission("rateLimitRule:update")
     @ControllerEndpoint(operation = "修改限流规则")
-    public BaseRsp<RateLimitRule> updateRateLimitRule(@RequestBody @Validated({ValidGroups.Crud.Update.class}) RateLimitRuleAo rateLimitRuleAo) throws JsonProcessingException {
+    public BaseRsp<RateLimitRule> updateRateLimitRule(@RequestBody @Validated({ValidGroups.Crud.Update.class}) RateLimitRuleAo rateLimitRuleAo) {
         return RspUtil.data(this.rateLimitRuleService.updateRateLimitRule(rateLimitRuleAo));
     }
 }

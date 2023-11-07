@@ -1,6 +1,5 @@
 package com.zclcs.platform.gateway.configure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
@@ -67,14 +66,14 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties, ObjectMapper objectMapper) {
-        return new PasswordDecoderFilter(configProperties, objectMapper);
+    public PasswordDecoderFilter passwordDecoderFilter(GatewayConfigProperties configProperties) {
+        return new PasswordDecoderFilter(configProperties);
     }
 
     @Bean
     public ValidateCodeGatewayFilter validateCodeGatewayFilter(GatewayConfigProperties configProperties,
-                                                               ObjectMapper objectMapper, RedisService redisService) {
-        return new ValidateCodeGatewayFilter(configProperties, objectMapper, redisService);
+                                                               RedisService redisService) {
+        return new ValidateCodeGatewayFilter(configProperties, redisService);
     }
 
     @Bean
@@ -83,10 +82,8 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public RoutesHandler routesHandler(ObjectMapper objectMapper,
-                                       RouteDefinitionWriter routeDefinitionWriter) {
-        return new RoutesHandler(objectMapper,
-                routeDefinitionWriter);
+    public RoutesHandler routesHandler(RouteDefinitionWriter routeDefinitionWriter) {
+        return new RoutesHandler(routeDefinitionWriter);
     }
 
     @Bean(CommonCore.ASYNC_POOL)

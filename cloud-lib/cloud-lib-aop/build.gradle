@@ -2,6 +2,7 @@ dependencies {
     api project(":cloud-lib:cloud-lib-rabbit-mq")
     api project(":cloud-lib:cloud-lib-core")
     api project(":cloud-lib:cloud-lib-sa-token")
+    api project(":common:common-jackson-starter")
     api "cn.hutool:hutool-core"
     api "com.fasterxml.jackson.core:jackson-databind"
     api "jakarta.servlet:jakarta.servlet-api"

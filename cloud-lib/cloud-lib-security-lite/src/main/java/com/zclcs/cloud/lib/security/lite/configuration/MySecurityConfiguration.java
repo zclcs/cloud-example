@@ -5,11 +5,10 @@ import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.same.SaSameUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.security.lite.feign.MyOAuthRequestInterceptor;
 import com.zclcs.cloud.lib.security.lite.properties.MySecurityProperties;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import feign.RequestInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -39,7 +38,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
      * 校验是否从网关转发
      */
     @Bean
-    public SaServletFilter getSaServletFilter(ObjectMapper objectMapper, MySecurityProperties mySecurityProperties) {
+    public SaServletFilter getSaServletFilter(MySecurityProperties mySecurityProperties) {
         return new SaServletFilter()
                 .addInclude("/**")
                 .addExclude("/actuator/health")
@@ -50,11 +49,7 @@ public class MySecurityConfiguration implements WebMvcConfigurer {
                 .setError(e -> {
                     SaHolder.getResponse().setHeader("Content-Type", "application/json;charset=UTF-8");
                     SaHolder.getResponse().setStatus(HttpStatus.UNAUTHORIZED.value());
-                    try {
-                        return objectMapper.writeValueAsString(RspUtil.message("认证失败"));
-                    } catch (JsonProcessingException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    return JsonUtil.toJson(RspUtil.message("认证失败"));
                 })
                 ;
     }

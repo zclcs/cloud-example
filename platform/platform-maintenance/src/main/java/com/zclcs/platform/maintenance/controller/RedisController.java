@@ -3,7 +3,6 @@ package com.zclcs.platform.maintenance.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
@@ -39,7 +38,6 @@ public class RedisController {
     private final static String BLOOM_FILTER = "bloom_filter";
     private final RedisService redisService;
     private final GlobalProperties globalProperties;
-    private final ObjectMapper objectMapper;
 
     /**
      * redis key 查询（分页）

@@ -1,14 +1,16 @@
 package com.zclcs.cloud.lib.rabbit.mq.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.utils.RabbitKeyUtil;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * @author zclcs
@@ -20,23 +22,21 @@ public class RabbitService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    private final ObjectMapper objectMapper;
-
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.DirectQueue directQueue, T message) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getDirectExchangeName(directQueue),
-                RabbitKeyUtil.getDirectRouteKey(directQueue), objectMapper.writeValueAsString(message));
+                RabbitKeyUtil.getDirectRouteKey(directQueue), Objects.requireNonNull(JsonUtil.toJson(message)));
     }
 
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.FanoutQueue fanoutQueue, T message) {
-        rabbitTemplate.convertAndSend(fanoutQueue.getExchangeName(), objectMapper.writeValueAsString(message));
+        rabbitTemplate.convertAndSend(fanoutQueue.getExchangeName(), Objects.requireNonNull(JsonUtil.toJson(message)));
     }
 
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.TopicQueue topicQueue, T message) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getTopicExchangeName(topicQueue),
-                RabbitKeyUtil.getTopicRouteKey(topicQueue), objectMapper.writeValueAsString(message));
+                RabbitKeyUtil.getTopicRouteKey(topicQueue), Objects.requireNonNull(JsonUtil.toJson(message)));
     }
 
     /**
@@ -47,7 +47,7 @@ public class RabbitService {
     @SneakyThrows
     public <T> void convertAndSend(MyRabbitMqProperties.DelayedQueue delayedQueue, T message, int delayTime) {
         rabbitTemplate.convertAndSend(RabbitKeyUtil.getDelayedExchangeName(delayedQueue),
-                RabbitKeyUtil.getDelayedRouteKey(delayedQueue), objectMapper.writeValueAsString(message),
+                RabbitKeyUtil.getDelayedRouteKey(delayedQueue), Objects.requireNonNull(JsonUtil.toJson(message)),
                 messageSetting -> {
                     //设置消息持久化
                     messageSetting.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);

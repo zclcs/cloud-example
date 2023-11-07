@@ -1,7 +1,6 @@
 package com.zclcs.cloud.lib.logging.configure;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.logging.handler.LoggingLevelHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +19,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class MyLoggingLevelAutoConfigure {
 
     @Bean
-    public LoggingLevelHandler loggingLevelHandler(LoggingSystem loggingSystem, ObjectMapper objectMapper) {
-        return new LoggingLevelHandler(loggingSystem, objectMapper);
+    public LoggingLevelHandler loggingLevelHandler(LoggingSystem loggingSystem) {
+        return new LoggingLevelHandler(loggingSystem);
     }
 
     @Bean(CommonCore.NACOS_CONFIG)

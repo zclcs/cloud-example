@@ -1,13 +1,13 @@
 package com.zclcs.cloud.lib.aop.aspect;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -36,8 +36,6 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
 
     private static final String UNKNOWN = "unknown";
 
-    private ObjectMapper objectMapper;
-
     private RabbitService rabbitService;
 
     private MyRabbitMqProperties myRabbitMqProperties;
@@ -45,11 +43,6 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
     @Autowired
     public void setRabbitService(RabbitService rabbitService) {
         this.rabbitService = rabbitService;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     @Autowired
@@ -131,9 +124,9 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
                         try {
                             aClass.getDeclaredMethod("toString", new Class[]{null});
                             // 如果不抛出 NoSuchMethodException 异常则存在 toString 方法 ，安全的 writeValueAsString ，否则 走 Object的 toString方法
-                            params.append(" ").append(paramNames.get(i)).append(": ").append(objectMapper.writeValueAsString(args[i]));
+                            params.append(" ").append(paramNames.get(i)).append(": ").append(JsonUtil.toJson(args[i]));
                         } catch (NoSuchMethodException e) {
-                            params.append(" ").append(paramNames.get(i)).append(": ").append(objectMapper.writeValueAsString(args[i].toString()));
+                            params.append(" ").append(paramNames.get(i)).append(": ").append(JsonUtil.toJson(args[i].toString()));
                         }
                     } else if (args[i] instanceof MultipartFile) {
                         MultipartFile file = (MultipartFile) args[i];

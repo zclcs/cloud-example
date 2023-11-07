@@ -1,36 +1,18 @@
 package com.zclcs.common.redis.starter.service;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.enums.CacheType;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -54,12 +36,6 @@ public abstract class CacheService<T> {
      * redis服务类
      */
     private RedisService redisService;
-
-    /**
-     * redis服务类
-     */
-    @Getter
-    private ObjectMapper objectMapper;
 
     /**
      * 布隆过滤器
@@ -245,23 +221,6 @@ public abstract class CacheService<T> {
         this.redisService = redisService;
     }
 
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DatePattern.NORM_DATETIME_FORMATTER));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DatePattern.NORM_DATETIME_FORMATTER));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DatePattern.NORM_DATE_FORMATTER));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DatePattern.NORM_DATE_FORMATTER));
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DatePattern.NORM_TIME_FORMATTER));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DatePattern.NORM_TIME_FORMATTER));
-        objectMapper.registerModule(javaTimeModule);
-        this.objectMapper = objectMapper;
-    }
-
     /**
      * fegin 远程调用返回缓存对象方法
      *
@@ -276,7 +235,7 @@ public abstract class CacheService<T> {
      * @param json 缓存值
      * @return 缓存对象
      */
-    protected abstract T serialization(String json) throws JsonProcessingException;
+    protected abstract T serialization(String json);
 
     /**
      * 缓存并获取缓存对象方法
@@ -317,31 +276,31 @@ public abstract class CacheService<T> {
     public T cacheKey(T cache, Object... key) {
         String redisKey = String.format(redisPrefix, key);
         Long redisTimeOut = timeOut + RandomUtil.randomLong(1, 360);
-//        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
-//            if (cache == null) {
-//                rBloomFilter.add(redisKey);
-//            } else if (cache instanceof Collection<?> collection) {
-//                if (CollectionUtil.isEmpty(collection)) {
-//                    rBloomFilter.add(redisKey);
-//                } else {
-//                    redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
-//                }
-//            } else {
-//                redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
-//            }
-//        } else {
-        if (cache == null) {
-            redisService.set(redisKey, "{}", redisTimeOut);
-        } else if (cache instanceof Collection<?> collection) {
-            if (CollectionUtil.isEmpty(collection)) {
-                redisService.set(redisKey, "[]", redisTimeOut);
+        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
+            if (cache == null) {
+                rBloomFilter.add(redisKey);
+            } else if (cache instanceof Collection<?> collection) {
+                if (CollectionUtil.isEmpty(collection)) {
+                    rBloomFilter.add(redisKey);
+                } else {
+                    redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                }
             } else {
-                redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
+                redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
             }
         } else {
-            redisService.set(redisKey, objectMapper.writeValueAsString(cache), redisTimeOut);
+            if (cache == null) {
+                redisService.set(redisKey, "{}", redisTimeOut);
+            } else if (cache instanceof Collection<?> collection) {
+                if (CollectionUtil.isEmpty(collection)) {
+                    redisService.set(redisKey, "[]", redisTimeOut);
+                } else {
+                    redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                }
+            } else {
+                redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+            }
         }
-//        }
         return cache;
     }
 
@@ -404,20 +363,12 @@ public abstract class CacheService<T> {
                 // 再查一次，防止上个已经抢到锁的线程已经更新过了
                 obj = (String) redisService.get(redisKey);
                 if (obj != null) {
-                    try {
-                        return this.serialization(obj);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    return this.serialization(obj);
                 }
                 return cacheAndGetByKey(key);
             }
         }
-        try {
-            return this.serialization(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return this.serialization(obj);
     }
 
     /**

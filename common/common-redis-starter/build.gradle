@@ -1,4 +1,5 @@
 dependencies {
+    api project(":common:common-jackson-starter")
     api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     api "org.redisson:redisson-spring-boot-starter"
     api "org.apache.commons:commons-pool2"

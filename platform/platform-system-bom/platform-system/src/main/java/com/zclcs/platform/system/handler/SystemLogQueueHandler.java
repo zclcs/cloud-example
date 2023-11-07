@@ -1,8 +1,8 @@
 package com.zclcs.platform.system.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.zclcs.cloud.lib.aop.ao.LogAo;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.system.service.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -27,16 +27,9 @@ public class SystemLogQueueHandler {
 
     private LogService logService;
 
-    private ObjectMapper objectMapper;
-
     @Autowired
     public void setLogService(LogService logService) {
         this.logService = logService;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = "${my.rabbit.mq.direct-queues.systemLog.queue-name}", containerFactory = "batchRabbitListenerContainerFactory")
@@ -47,7 +40,7 @@ public class SystemLogQueueHandler {
             String msg = new String(message.getBody());
             log.debug("处理系统操作日志，手动ACK，接收消息：{}", msg);
             try {
-                LogAo bean = objectMapper.readValue(msg, LogAo.class);
+                LogAo bean = JsonUtil.readValue(msg, LogAo.class);
                 batch.add(bean);
                 channel.basicAck(deliveryTag, false);
             } catch (Exception e) {

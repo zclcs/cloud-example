@@ -125,7 +125,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<MenuVo> menus = findMenuList(menu);
         List<MenuTreeVo> trees = new ArrayList<>();
         buildTrees(trees, menus);
-
         if (StrUtil.equals(menu.getType(), Dict.TYPE_BUTTON) || StrUtil.isNotBlank(menu.getMenuName())) {
             return trees;
         } else {

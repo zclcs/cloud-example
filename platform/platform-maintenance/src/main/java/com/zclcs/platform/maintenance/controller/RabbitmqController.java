@@ -6,7 +6,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.*;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
@@ -16,13 +15,13 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.RabbitmqApiInfoProperties;
 import com.zclcs.cloud.lib.core.utils.BaseUtil;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.platform.maintenance.bean.ao.RabbitmqDetailAo;
 import com.zclcs.platform.maintenance.bean.ao.RabbitmqExchangeAo;
 import com.zclcs.platform.maintenance.bean.ao.RabbitmqQueueAo;
 import com.zclcs.platform.maintenance.bean.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * rabbitmq控制台
@@ -48,13 +44,6 @@ import java.util.Optional;
 public class RabbitmqController {
 
     private final RabbitmqApiInfoProperties rabbitmqApiInfoProperties;
-
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     /**
      * 交换机查询
@@ -79,7 +68,8 @@ public class RabbitmqController {
             String body = execute.body();
             TypeReference<RabbitmqBasePageResultVo<RabbitmqExchangeVo>> typeReference = new TypeReference<>() {
             };
-            RabbitmqBasePageResultVo<RabbitmqExchangeVo> pageResultVo = objectMapper.readValue(body, typeReference);
+            RabbitmqBasePageResultVo<RabbitmqExchangeVo> pageResultVo = JsonUtil.readValue(body, typeReference);
+            Objects.requireNonNull(pageResultVo);
             for (RabbitmqExchangeVo item : pageResultVo.getItems()) {
                 if (StrUtil.isBlank(item.getName())) {
                     item.setName("(AMQP default)");
@@ -114,7 +104,8 @@ public class RabbitmqController {
             String body = execute.body();
             TypeReference<List<RabbitmqExchangeDetailVo>> typeReference = new TypeReference<>() {
             };
-            List<RabbitmqExchangeDetailVo> rabbitmqExchangeDetailVos = objectMapper.readValue(body, typeReference);
+            List<RabbitmqExchangeDetailVo> rabbitmqExchangeDetailVos = JsonUtil.readValue(body, typeReference);
+            Objects.requireNonNull(rabbitmqExchangeDetailVos);
             StringBuilder stringBuilder = new StringBuilder();
             for (RabbitmqExchangeDetailVo rabbitmqExchangeDetailVo : rabbitmqExchangeDetailVos) {
                 stringBuilder.append("队列名称：").append(rabbitmqExchangeDetailVo.getDestination()).append("\n")
@@ -177,7 +168,8 @@ public class RabbitmqController {
             String body = execute.body();
             TypeReference<RabbitmqBasePageResultVo<RabbitmqQueueVo>> typeReference = new TypeReference<>() {
             };
-            RabbitmqBasePageResultVo<RabbitmqQueueVo> pageResultVo = objectMapper.readValue(body, typeReference);
+            RabbitmqBasePageResultVo<RabbitmqQueueVo> pageResultVo = JsonUtil.readValue(body, typeReference);
+            Objects.requireNonNull(pageResultVo);
             for (RabbitmqQueueVo item : pageResultVo.getItems()) {
                 if (CollectionUtil.isNotEmpty(item.getArguments())) {
                     Map<String, String> map = new HashMap<>();
@@ -216,7 +208,8 @@ public class RabbitmqController {
             String body = execute.body();
             TypeReference<List<RabbitmqQueueDetailVo>> typeReference = new TypeReference<>() {
             };
-            List<RabbitmqQueueDetailVo> rabbitmqExchangeDetailVos = objectMapper.readValue(body, typeReference);
+            List<RabbitmqQueueDetailVo> rabbitmqExchangeDetailVos = JsonUtil.readValue(body, typeReference);
+            Objects.requireNonNull(rabbitmqExchangeDetailVos);
             StringBuilder stringBuilder = new StringBuilder();
             for (RabbitmqQueueDetailVo rabbitmqQueueDetailVo : rabbitmqExchangeDetailVos) {
                 if (StrUtil.isNotBlank(rabbitmqQueueDetailVo.getSource())) {
@@ -249,7 +242,7 @@ public class RabbitmqController {
         params.put("name", rabbitmqDetailAo.getName());
         params.put("mode", "delete");
         try (HttpResponse execute = HttpUtil.createRequest(Method.DELETE, getRabbitmqEndpoint(url))
-                .body(objectMapper.writeValueAsString(params), ContentType.JSON.getValue())
+                .body(JsonUtil.toJson(params), ContentType.JSON.getValue())
                 .basicAuth(rabbitmqApiInfoProperties.getUsername(), rabbitmqApiInfoProperties.getPassword()).execute()) {
             String body = execute.body();
             if (execute.getStatus() != HttpStatus.HTTP_NO_CONTENT) {
