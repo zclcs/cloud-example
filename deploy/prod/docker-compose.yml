@@ -226,9 +226,8 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java -XX:+UseG1GC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_THIRD_PART_DATABASE_SYNC} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${THIRD_PART_DATABASE_SYNC_MAIN_CLASS}"
     volumes:
-      - ./third-part-database-sync/log:/log/third-part-database-sync
+      - ./third-part-database-sync/log:/app/log
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_DATA_SYNC} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
@@ -254,9 +253,8 @@ services:
       # 设置时区
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-    command: sh -c "java -XX:+UseG1GC ${JAVA_OPS_LOG} ${JAVA_OPS_SYSTEM} ${JAVA_OPS_LOG_THIRD_PART_CONFIG_SYNC} ${JAVA_OPS_MODULAR_LIMITATIONS} -cp @/app/jib-classpath-file @/app/jib-main-class-file ${THIRD_PART_CONFIG_SYNC_MAIN_CLASS}"
     volumes:
-      - ./third-part-config-sync/log:/log/third-part-config-sync
+      - ./third-part-config-sync/log:/app/log
     healthcheck:
       test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:${PORT_CONFIG_SYNC} || exit 1" ]
       interval: ${DOCKER_HEALTHCHECK_INTERVAL}
