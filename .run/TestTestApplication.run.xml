@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TestTestApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
+      <env name="CONFIG_REFRESH" value="true" />
       <env name="DATASOURCE_DB_TYPE" value="mysql" />
       <env name="DATASOURCE_DRIVER" value="com.mysql.cj.jdbc.Driver" />
       <env name="DATASOURCE_HOST" value="192.168.33.10" />
@@ -17,14 +18,12 @@
       <env name="NACOS_PASSWORD" value="nacos" />
       <env name="NACOS_PORT" value="8848" />
       <env name="NACOS_USERNAME" value="nacos" />
+      <env name="POWER_JOB_HOST" value="192.168.33.10" />
+      <env name="POWER_JOB_PORT" value="7700" />
       <env name="RABBIT_MQ_HOST" value="192.168.33.10" />
       <env name="REDIS_HOST" value="192.168.33.10" />
       <env name="REDIS_PASSWORD" value="123456" />
       <env name="spring.profiles.active" value="local" />
-      <env name="XXL_JOB_HOST" value="192.168.33.10" />
-      <env name="XXL_JOB_PORT" value="8080" />
-      <env name="XXL_JOB_TOKEN" value="12382e1c-fafc-4cc8-bb04-d276fd1ca7de" />
-      <env name="CONFIG_REFRESH" value="true" />
     </envs>
     <module name="cloud-17.test.test-test-bom.test-test.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
