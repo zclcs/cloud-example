@@ -95,9 +95,9 @@ public class RouteLogServiceImpl extends ServiceImpl<RouteLogMapper, RouteLog> i
                 routeLogExcelVo.setTargetUri(cellData.get("targetUri"));
                 routeLogExcelVo.setRequestMethod(cellData.get("requestMethod"));
                 routeLogExcelVo.setTargetServer(cellData.get("targetServer"));
-                routeLogExcelVo.setRequestTime(DateUtil.parseLocalDateTime(cellData.get("requestTime")));
+                routeLogExcelVo.setRequestTime(parseLocalDateTime(cellData.get("requestTime")));
                 routeLogExcelVo.setCode(cellData.get("code"));
-                routeLogExcelVo.setTime(Long.valueOf(cellData.get("time")));
+                routeLogExcelVo.setTime(parseLong(cellData.get("time")));
                 routeLogExcelVo.setLocation(cellData.get("location"));
                 return routeLogExcelVo;
             }

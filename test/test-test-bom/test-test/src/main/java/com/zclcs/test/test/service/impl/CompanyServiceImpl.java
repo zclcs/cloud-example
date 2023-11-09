@@ -44,7 +44,7 @@ import static com.zclcs.test.test.api.bean.entity.table.CompanyTableDef.COMPANY;
  * 企业信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-08 16:49:03.555
+ * @since 2023-11-09 16:48:46.159
  */
 @Slf4j
 @Service
@@ -206,25 +206,13 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             @Override
             public CompanyExcelVo toExcelVo(Map<String, String> cellData) {
                 CompanyExcelVo companyExcelVo = new CompanyExcelVo();
-                companyExcelVo.setCompanyId(cellData.get("companyId") != null ? Long.valueOf(cellData.get("companyId")) : null);
+                companyExcelVo.setCompanyId(parseLong(cellData.get("companyId")));
                 companyExcelVo.setCompanyCode(cellData.get("companyCode"));
                 companyExcelVo.setCompanyAttachment(cellData.get("companyAttachment"));
                 companyExcelVo.setCompanyName(cellData.get("companyName"));
                 companyExcelVo.setCompanyType(cellData.get("companyType"));
                 companyExcelVo.setLicenseNum(cellData.get("licenseNum"));
-                String areaCodeDictName = "area_code";
-                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
-                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
-                if (province == null) {
-                    throw new FieldException("省输入非法值");
-                }
-                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
-                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
-                if (city == null) {
-                    throw new FieldException("市输入非法值");
-                }
-                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
-                companyExcelVo.setAreaCode(area);
+                companyExcelVo.setAreaCode(DictCacheUtil.validateAreaCode(cellData.get("province"), cellData.get("city"), cellData.get("areaCode")));
                 companyExcelVo.setAddress(cellData.get("address"));
                 companyExcelVo.setZipCode(cellData.get("zipCode"));
                 companyExcelVo.setLegalMan(cellData.get("legalMan"));
@@ -236,8 +224,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 companyExcelVo.setRegCapital(cellData.get("regCapital"));
                 companyExcelVo.setFactRegCapital(cellData.get("factRegCapital"));
                 companyExcelVo.setCapitalCurrencyType(cellData.get("capitalCurrencyType"));
-                companyExcelVo.setRegisterDate(cellData.get("registerDate") != null ? LocalDate.parse(cellData.get("registerDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                companyExcelVo.setEstablishDate(cellData.get("establishDate") != null ? LocalDate.parse(cellData.get("establishDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                companyExcelVo.setRegisterDate(parseLocalDate(cellData.get("registerDate")));
+                companyExcelVo.setEstablishDate(parseLocalDate(cellData.get("establishDate")));
                 companyExcelVo.setOfficePhone(cellData.get("officePhone"));
                 companyExcelVo.setFaxNumber(cellData.get("faxNumber"));
                 companyExcelVo.setLinkMan(cellData.get("linkMan"));

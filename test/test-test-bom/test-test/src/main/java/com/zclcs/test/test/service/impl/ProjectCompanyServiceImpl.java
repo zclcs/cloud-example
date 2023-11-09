@@ -42,7 +42,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ProjectCompanyTableDef.P
  * 项目参建单位信息数据 Service实现
  *
  * @author zclcs
- * @since 2023-09-08 16:48:43.853
+ * @since 2023-11-09 16:48:38.746
  */
 @Slf4j
 @Service
@@ -184,9 +184,9 @@ public class ProjectCompanyServiceImpl extends ServiceImpl<ProjectCompanyMapper,
             @Override
             public ProjectCompanyExcelVo toExcelVo(Map<String, String> cellData) {
                 ProjectCompanyExcelVo projectCompanyExcelVo = new ProjectCompanyExcelVo();
-                projectCompanyExcelVo.setProjectCompanyId(cellData.get("projectCompanyId") != null ? Long.valueOf(cellData.get("projectCompanyId")) : null);
-                projectCompanyExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
-                projectCompanyExcelVo.setCompanyId(cellData.get("companyId") != null ? Long.valueOf(cellData.get("companyId")) : null);
+                projectCompanyExcelVo.setProjectCompanyId(parseLong(cellData.get("projectCompanyId")));
+                projectCompanyExcelVo.setProjectId(parseLong(cellData.get("projectId")));
+                projectCompanyExcelVo.setCompanyId(parseLong(cellData.get("companyId")));
                 projectCompanyExcelVo.setCompanyRole(cellData.get("companyRole"));
                 projectCompanyExcelVo.setManagerName(cellData.get("managerName"));
                 projectCompanyExcelVo.setManagerIdCardType(cellData.get("managerIdCardType"));

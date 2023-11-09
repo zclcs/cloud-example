@@ -3,6 +3,7 @@ package com.zclcs.cloud.lib.dict.utils;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Strings;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import com.zclcs.cloud.lib.dict.cache.*;
@@ -117,6 +118,21 @@ public class DictCacheUtil {
 
     public static String getDictTitleArray(String dictName, String value) {
         return getDictTitleArray(dictName, value, Strings.COMMA, Strings.SLASH, false);
+    }
+
+    public static String validateAreaCode(String provinceCellData, String cityCellData, String areaCodeCellData) {
+        String areaCodeDictName = "area_code";
+        String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, provinceCellData);
+        DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
+        if (province == null) {
+            throw new FieldException("省输入非法值");
+        }
+        String cityCode = DictCacheUtil.getDictValue(areaCodeDictName, province.getValue(), cityCellData);
+        DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
+        if (city == null) {
+            throw new FieldException("市输入非法值");
+        }
+        return DictCacheUtil.getDictValue(areaCodeDictName, city.getValue(), areaCodeCellData);
     }
 
     /**

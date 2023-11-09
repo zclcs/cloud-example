@@ -34,6 +34,7 @@ import com.zclcs.platform.system.service.UserService;
 import com.zclcs.platform.system.utils.SystemCacheUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,22 +141,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.save(menu);
-        Long menuId = menu.getMenuId();
-        SystemCacheUtil.deleteMenuByMenuId(menuId);
-        List<Long> roleIds = roleMenuService.list(new QueryWrapper()
-                        .where(ROLE_MENU.MENU_ID.eq(menuId)))
-                .stream().map(RoleMenu::getRoleId).toList();
-        if (CollectionUtil.isNotEmpty(roleIds)) {
-            List<Long> userIdList = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(roleIds)))
-                    .stream().map(UserRole::getUserId).toList();
-            if (CollectionUtil.isNotEmpty(userIdList)) {
-                Object[] usernames = userService.list(new QueryWrapper().where(USER.USER_ID.in(userIdList)))
-                        .stream().map(User::getUsername).toList().toArray();
-                SystemCacheUtil.deletePermissionsByUsernames(usernames);
-                SystemCacheUtil.deleteRoutersByUsernames(usernames);
-            }
-        }
-        return menu;
+        return refreshCache(menu);
     }
 
     @Override
@@ -166,9 +152,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         BeanUtil.copyProperties(menuAo, menu);
         setMenu(menu);
         this.updateById(menu);
+        return refreshCache(menu);
+    }
+
+    @NotNull
+    private Menu refreshCache(Menu menu) {
         Long menuId = menu.getMenuId();
         SystemCacheUtil.deleteMenuByMenuId(menuId);
-        List<Long> roleIds = roleMenuService.list(new QueryWrapper().where(ROLE_MENU.MENU_ID.eq(menuId)))
+        List<Long> roleIds = roleMenuService.list(new QueryWrapper()
+                        .where(ROLE_MENU.MENU_ID.eq(menuId)))
                 .stream().map(RoleMenu::getRoleId).toList();
         if (CollectionUtil.isNotEmpty(roleIds)) {
             List<Long> userIdList = userRoleService.list(new QueryWrapper().where(USER_ROLE.ROLE_ID.in(roleIds)))

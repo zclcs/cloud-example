@@ -45,7 +45,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ProjectTableDef.PROJECT;
  * 项目信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-08 16:48:48.873
+ * @since 2023-11-09 16:48:42.774
  */
 @Slf4j
 @Service
@@ -209,39 +209,27 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             @Override
             public ProjectExcelVo toExcelVo(Map<String, String> cellData) {
                 ProjectExcelVo projectExcelVo = new ProjectExcelVo();
-                projectExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
+                projectExcelVo.setProjectId(parseLong(cellData.get("projectId")));
                 projectExcelVo.setProjectCode(cellData.get("projectCode"));
                 projectExcelVo.setProjectName(cellData.get("projectName"));
                 projectExcelVo.setDescription(cellData.get("description"));
                 projectExcelVo.setCategory(cellData.get("category"));
                 projectExcelVo.setBuildPlanNum(cellData.get("buildPlanNum"));
                 projectExcelVo.setChildProjectPlanNum(cellData.get("childProjectPlanNum"));
-                String areaCodeDictName = "area_code";
-                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
-                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
-                if (province == null) {
-                    throw new FieldException("省输入非法值");
-                }
-                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
-                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
-                if (city == null) {
-                    throw new FieldException("市输入非法值");
-                }
-                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
-                projectExcelVo.setAreaCode(area);
+                projectExcelVo.setAreaCode(DictCacheUtil.validateAreaCode(cellData.get("province"), cellData.get("city"), cellData.get("areaCode")));
                 projectExcelVo.setIsLeadByCity(cellData.get("isLeadByCity"));
                 projectExcelVo.setInvest(cellData.get("invest"));
                 projectExcelVo.setBuildingArea(cellData.get("buildingArea"));
                 projectExcelVo.setBuildingLength(cellData.get("buildingLength"));
-                projectExcelVo.setStartDate(cellData.get("startDate") != null ? LocalDate.parse(cellData.get("startDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                projectExcelVo.setCompleteDate(cellData.get("completeDate") != null ? LocalDate.parse(cellData.get("completeDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                projectExcelVo.setPlannedStartDate(cellData.get("plannedStartDate") != null ? LocalDate.parse(cellData.get("plannedStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                projectExcelVo.setPlannedCompleteDate(cellData.get("plannedCompleteDate") != null ? LocalDate.parse(cellData.get("plannedCompleteDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                projectExcelVo.setStartDate(parseLocalDate(cellData.get("startDate")));
+                projectExcelVo.setCompleteDate(parseLocalDate(cellData.get("completeDate")));
+                projectExcelVo.setPlannedStartDate(parseLocalDate(cellData.get("plannedStartDate")));
+                projectExcelVo.setPlannedCompleteDate(parseLocalDate(cellData.get("plannedCompleteDate")));
                 projectExcelVo.setLinkMan(cellData.get("linkMan"));
                 projectExcelVo.setLinkPhone(cellData.get("linkPhone"));
                 projectExcelVo.setProjectStatus(cellData.get("projectStatus"));
-                projectExcelVo.setLng(cellData.get("lng") != null ? new BigDecimal(cellData.get("lng")) : null);
-                projectExcelVo.setLat(cellData.get("lat") != null ? new BigDecimal(cellData.get("lat")) : null);
+                projectExcelVo.setLng(parseBigDecimal(cellData.get("lng")));
+                projectExcelVo.setLat(parseBigDecimal(cellData.get("lat")));
                 projectExcelVo.setAddress(cellData.get("address"));
                 projectExcelVo.setApprovalNum(cellData.get("approvalNum"));
                 projectExcelVo.setApprovalLevelNum(cellData.get("approvalLevelNum"));
@@ -250,7 +238,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 projectExcelVo.setFunctionNum(cellData.get("functionNum"));
                 projectExcelVo.setFunctionalUnit(cellData.get("functionalUnit"));
                 projectExcelVo.setMajorProject(cellData.get("majorProject"));
-                projectExcelVo.setLastAttendTime(cellData.get("lastAttendTime") != null ? LocalDateTime.parse(cellData.get("lastAttendTime"), DatePattern.NORM_DATETIME_FORMATTER) : null);
+                projectExcelVo.setLastAttendTime(parseLocalDateTime(cellData.get("lastAttendTime")));
                 return projectExcelVo;
             }
 

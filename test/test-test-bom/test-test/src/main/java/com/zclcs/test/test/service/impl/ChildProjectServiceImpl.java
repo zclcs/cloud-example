@@ -44,7 +44,7 @@ import static com.zclcs.test.test.api.bean.entity.table.ChildProjectTableDef.CHI
  * 工程信息 Service实现
  *
  * @author zclcs
- * @since 2023-09-08 16:48:53.770
+ * @since 2023-11-09 16:48:50.073
  */
 @Slf4j
 @Service
@@ -206,17 +206,17 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
             @Override
             public ChildProjectExcelVo toExcelVo(Map<String, String> cellData) {
                 ChildProjectExcelVo childProjectExcelVo = new ChildProjectExcelVo();
-                childProjectExcelVo.setChildProjectId(cellData.get("childProjectId") != null ? Long.valueOf(cellData.get("childProjectId")) : null);
+                childProjectExcelVo.setChildProjectId(parseLong(cellData.get("childProjectId")));
                 childProjectExcelVo.setChildProjectName(cellData.get("childProjectName"));
-                childProjectExcelVo.setProjectId(cellData.get("projectId") != null ? Long.valueOf(cellData.get("projectId")) : null);
+                childProjectExcelVo.setProjectId(parseLong(cellData.get("projectId")));
                 childProjectExcelVo.setLocation(cellData.get("location"));
                 childProjectExcelVo.setChildProjectSize(cellData.get("childProjectSize"));
                 childProjectExcelVo.setPrice(cellData.get("price"));
-                childProjectExcelVo.setContractStartDate(cellData.get("contractStartDate") != null ? LocalDate.parse(cellData.get("contractStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                childProjectExcelVo.setContractEndDate(cellData.get("contractEndDate") != null ? LocalDate.parse(cellData.get("contractEndDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setContractStartDate(parseLocalDate(cellData.get("contractStartDate")));
+                childProjectExcelVo.setContractEndDate(parseLocalDate(cellData.get("contractEndDate")));
                 childProjectExcelVo.setConstructionPermit(cellData.get("constructionPermit"));
                 childProjectExcelVo.setPermitGrantOrg(cellData.get("permitGrantOrg"));
-                childProjectExcelVo.setPermitGrantDate(cellData.get("permitGrantDate") != null ? LocalDate.parse(cellData.get("permitGrantDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setPermitGrantDate(parseLocalDate(cellData.get("permitGrantDate")));
                 childProjectExcelVo.setPermitStatus(cellData.get("permitStatus"));
                 childProjectExcelVo.setPermitAttachment(cellData.get("permitAttachment"));
                 childProjectExcelVo.setPermitRemark(cellData.get("permitRemark"));
@@ -225,8 +225,8 @@ public class ChildProjectServiceImpl extends ServiceImpl<ChildProjectMapper, Chi
                 childProjectExcelVo.setStructureType(cellData.get("structureType"));
                 childProjectExcelVo.setFoundationType(cellData.get("foundationType"));
                 childProjectExcelVo.setBaseType(cellData.get("baseType"));
-                childProjectExcelVo.setPrjStartDate(cellData.get("prjStartDate") != null ? LocalDate.parse(cellData.get("prjStartDate"), DatePattern.NORM_DATE_FORMATTER) : null);
-                childProjectExcelVo.setPrjCompleteDate(cellData.get("prjCompleteDate") != null ? LocalDate.parse(cellData.get("prjCompleteDate"), DatePattern.NORM_DATE_FORMATTER) : null);
+                childProjectExcelVo.setPrjStartDate(parseLocalDate(cellData.get("prjStartDate")));
+                childProjectExcelVo.setPrjCompleteDate(parseLocalDate(cellData.get("prjCompleteDate")));
                 childProjectExcelVo.setPrjLength(cellData.get("prjLength"));
                 childProjectExcelVo.setPrjSpan(cellData.get("prjSpan"));
                 childProjectExcelVo.setOverGroundFloor(cellData.get("overGroundFloor"));

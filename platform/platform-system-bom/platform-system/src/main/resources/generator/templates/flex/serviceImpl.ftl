@@ -193,19 +193,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
                 || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
                 || column.type = 'VARCHAR'|| column.type = 'CLOB' || column.type = 'char' || column.type = 'json') && column.isTree = true && column.field = 'AreaCode'>
-                String areaCodeDictName = "area_code";
-                String provinceCode = DictCacheUtil.getDictValue(areaCodeDictName, cellData.get("province"));
-                DictItemCacheVo province = DictCacheUtil.getDict(areaCodeDictName, provinceCode);
-                if (province == null) {
-                    throw new FieldException("省输入非法值");
-                }
-                String cityCode = DictCacheUtil.getDictValue("area_code", province.getValue(), cellData.get("city"));
-                DictItemCacheVo city = DictCacheUtil.getDict(areaCodeDictName, cityCode);
-                if (city == null) {
-                    throw new FieldException("市输入非法值");
-                }
-                String area = DictCacheUtil.getDictValue("area_code", city.getValue(), cellData.get("areaCode"));
-                ${className?uncap_first}ExcelVo.setAreaCode(area);
+                ${className?uncap_first}ExcelVo.setAreaCode(DictCacheUtil.validateAreaCode(cellData.get("province"), cellData.get("city"), cellData.get("areaCode")));
                 </#if>
                 <#if (column.type = 'varchar' || column.type = 'text' || column.type = 'uniqueidentifier'
                 || column.type = 'varchar2' || column.type = 'nvarchar' || column.type = 'VARCHAR2'
@@ -213,28 +201,28 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${c
                 ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}"));
                 </#if>
                 <#if column.type = 'timestamp' || column.type = 'TIMESTAMP'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseLong(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'date' || column.type = 'DATE'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDate.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATE_FORMATTER) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseLocalDate(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'datetime' || column.type = 'DATETIME'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? LocalDateTime.parse(cellData.get("${column.field?uncap_first}"), DatePattern.NORM_DATETIME_FORMATTER) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseLocalDateTime(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'int' || column.type = 'smallint'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Integer.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseInteger(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'double'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Double.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseDouble(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'bigint'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Long.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseLong(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'tinyint'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? Byte.valueOf(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseByte(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 <#if column.type = 'decimal' || column.type = 'numeric'>
-                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(cellData.get("${column.field?uncap_first}") != null ? new BigDecimal(cellData.get("${column.field?uncap_first}")) : null);
+                ${className?uncap_first}ExcelVo.set${column.field?cap_first}(parseBigDecimal(cellData.get("${column.field?uncap_first}")));
                 </#if>
                 </#list>
                 </#if>
