@@ -14,7 +14,6 @@ import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DictItemAo;
 import com.zclcs.platform.system.api.bean.vo.DictVo;
 import com.zclcs.platform.system.service.DictItemService;
@@ -91,7 +90,6 @@ public class DictItemController {
      * @return 所有字典项
      */
     @GetMapping("/findByDictName")
-    @Inner
     public List<DictItemCacheVo> findByDictName(@RequestParam @NotBlank(message = "{required}") String dictName) {
         return this.dictItemService.listAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName)), DictItemCacheVo.class);
     }
@@ -105,7 +103,6 @@ public class DictItemController {
      * @return 字典项
      */
     @GetMapping("/findByDictNameAndValue")
-    @Inner
     public DictItemCacheVo findByDictNameAndValue(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                   @RequestParam @NotBlank(message = "{required}") String value) {
         return this.dictItemService.getOneAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName))
@@ -123,7 +120,6 @@ public class DictItemController {
      * @return 字典项
      */
     @GetMapping("/findByDictNameAndParentValueAndTitle")
-    @Inner
     public DictItemCacheVo findByDictNameAndParentValueAndTitle(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                                 @RequestParam @NotBlank(message = "{required}") String parentValue,
                                                                 @RequestParam @NotBlank(message = "{required}") String title) {
@@ -142,7 +138,6 @@ public class DictItemController {
      * @return 字典项
      */
     @GetMapping("/findByDictNameAndParentValue")
-    @Inner
     public List<DictItemCacheVo> findByDictNameAndParentValue(@RequestParam @NotBlank(message = "{required}") String dictName,
                                                               @RequestParam @NotBlank(message = "{required}") String parentValue) {
         return this.dictItemService.listAs(new QueryWrapper().where(DICT_ITEM.DICT_NAME.eq(dictName))
@@ -157,7 +152,6 @@ public class DictItemController {
      * @see DictItemService#tree(String)
      */
     @GetMapping("/inner/tree")
-    @Inner
     public List<DictItemTreeVo> tree(@RequestParam @NotBlank(message = "{required}") String dictName) {
         return this.dictItemService.tree(dictName);
     }

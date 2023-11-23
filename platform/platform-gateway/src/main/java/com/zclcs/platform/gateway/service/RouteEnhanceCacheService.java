@@ -34,29 +34,4 @@ public interface RouteEnhanceCacheService {
      */
     RateLimitRuleCacheVo getRateLimitRule(String uri, String method);
 
-    /**
-     * 获取当前请求次数
-     *
-     * @param uri uri
-     * @param ip  ip
-     * @return 次数
-     */
-    int getCurrentRequestCount(String uri, String ip);
-
-    /**
-     * 设置请求次数
-     *
-     * @param uri  uri
-     * @param ip   ip
-     * @param time time
-     */
-    void setCurrentRequestCount(String uri, String ip, Long time);
-
-    /**
-     * 递增请求次数
-     *
-     * @param uri uri
-     * @param ip  ip
-     */
-    void incrCurrentRequestCount(String uri, String ip);
 }

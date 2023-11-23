@@ -4,6 +4,7 @@ import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.RabbitMq;
 import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
+import com.zclcs.common.redis.starter.rate.limiter.impl.DefaultRateLimiterClient;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.event.SaveBlockLogEvent;
 import com.zclcs.platform.gateway.event.SaveRateLimitLogEvent;
@@ -77,8 +78,8 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public ImageCodeHandler imageCodeHandler(RedisService redisService, MyValidateCodeProperties myValidateCodeProperties) {
-        return new ImageCodeHandler(redisService, myValidateCodeProperties);
+    public ImageCodeHandler imageCodeHandler(RedisService redisService, MyValidateCodeProperties myValidateCodeProperties, DefaultRateLimiterClient defaultRateLimiterClient) {
+        return new ImageCodeHandler(redisService, myValidateCodeProperties, defaultRateLimiterClient);
     }
 
     @Bean

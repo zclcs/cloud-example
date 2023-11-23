@@ -10,7 +10,6 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.cache.DeptCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Dept;
@@ -117,7 +116,6 @@ public class DeptController {
      * @return 部门
      */
     @GetMapping(value = "/findByDeptId/{deptId}")
-    @Inner
     public DeptCacheVo findByDeptId(@PathVariable Long deptId) {
         return this.deptService.getOneAs(new QueryWrapper().where(DEPT.DEPT_ID.eq(deptId)), DeptCacheVo.class);
     }

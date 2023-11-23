@@ -56,7 +56,7 @@ public class SimpleExportListener<T, K> {
 
     private WriteHandler headHandler = new LongestMatchColumnWidthStyleStrategy();
 
-    private WriteHandler selectHandler;
+    private final WriteHandler selectHandler;
 
     public SimpleExportListener(ExportExcelService<T, K> exportExcelService, Field[] declaredFields) {
         this.exportExcelService = exportExcelService;

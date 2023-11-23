@@ -1,7 +1,6 @@
 package com.zclcs.platform.system.api.fegin;
 
 import com.zclcs.cloud.lib.core.base.BaseRsp;
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheVo;
 import com.zclcs.platform.system.api.bean.vo.OauthClientDetailsVo;
@@ -23,7 +22,7 @@ public interface RemoteClientDetailsService {
      * @param clientId 客户端id
      * @return {@link OauthClientDetailsCacheVo}
      */
-    @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/oauthClientDetails/findByClientId/{clientId}")
     OauthClientDetailsCacheVo findByClientId(@PathVariable("clientId") String clientId);
 
     /**
@@ -31,7 +30,7 @@ public interface RemoteClientDetailsService {
      *
      * @return BaseRsp
      */
-    @GetMapping(value = "/oauthClientDetails/list", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/oauthClientDetails/list")
     BaseRsp<List<OauthClientDetailsVo>> listClientDetails();
 
 }

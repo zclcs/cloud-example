@@ -10,7 +10,6 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.OauthClientDetailsAo;
 import com.zclcs.platform.system.api.bean.cache.OauthClientDetailsCacheVo;
 import com.zclcs.platform.system.api.bean.entity.OauthClientDetails;
@@ -89,7 +88,6 @@ public class OauthClientDetailsController {
      * @return 终端信息
      */
     @GetMapping(value = "/findByClientId/{clientId}")
-    @Inner
     public OauthClientDetailsCacheVo findByClientId(@PathVariable String clientId) {
         return oauthClientDetailsService.getObjAs(new QueryWrapper().where(OAUTH_CLIENT_DETAILS.CLIENT_ID.eq(clientId)), OauthClientDetailsCacheVo.class);
     }

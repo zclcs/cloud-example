@@ -23,6 +23,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.result.view.ViewResolver;
+import org.springframework.web.server.MissingRequestValueException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -80,9 +81,8 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
 
     @Override
     public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable error) {
-        /**
-         * 按照异常类型进行处理
-         */
+        log.error(error.getMessage(), error);
+        // 按照异常类型进行处理
         HttpStatus httpStatus;
         ServerHttpRequest request = exchange.getRequest();
         String errorMessage;
@@ -116,21 +116,9 @@ public class MyGatewayExceptionHandler implements ErrorWebExceptionHandler {
         } else if (error.getCause() instanceof NotRoleException e) {
             errorMessage = e.getMessage();
             httpStatus = HttpStatus.UNAUTHORIZED;
-//        } else if (error instanceof FlowException) {
-//            errorMessage = "访问频繁";
-//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-//        } else if (error instanceof DegradeException) {
-//            errorMessage = "服务降级";
-//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-//        } else if (error instanceof ParamFlowException) {
-//            errorMessage = "访问频繁";
-//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-//        } else if (error instanceof SystemBlockException) {
-//            errorMessage = "触发系统保护规则";
-//            httpStatus = HttpStatus.TOO_MANY_REQUESTS;
-//        } else if (error instanceof AuthorityException) {
-//            errorMessage = "授权规则不通过";
-//            httpStatus = HttpStatus.FORBIDDEN;
+        } else if (error instanceof MissingRequestValueException e) {
+            errorMessage = e.getMessage();
+            httpStatus = HttpStatus.BAD_REQUEST;
         } else {
             errorMessage = "网关转发异常";
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

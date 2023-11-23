@@ -6,6 +6,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zclcs.common.jackson.starter.util.JsonUtil;
+import com.zclcs.common.redis.starter.bean.CacheKey;
 import com.zclcs.common.redis.starter.enums.CacheType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -283,22 +284,22 @@ public abstract class CacheService<T> {
                 if (CollectionUtil.isEmpty(collection)) {
                     rBloomFilter.add(redisKey);
                 } else {
-                    redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                    redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), JsonUtil.toJson(cache));
                 }
             } else {
-                redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), JsonUtil.toJson(cache));
             }
         } else {
             if (cache == null) {
-                redisService.set(redisKey, "{}", redisTimeOut);
+                redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), "{}");
             } else if (cache instanceof Collection<?> collection) {
                 if (CollectionUtil.isEmpty(collection)) {
-                    redisService.set(redisKey, "[]", redisTimeOut);
+                    redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), "[]");
                 } else {
-                    redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                    redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), JsonUtil.toJson(cache));
                 }
             } else {
-                redisService.set(redisKey, JsonUtil.toJson(cache), redisTimeOut);
+                redisService.set(new CacheKey(redisKey, Duration.ofSeconds(redisTimeOut)), JsonUtil.toJson(cache));
             }
         }
         return cache;
@@ -312,12 +313,12 @@ public abstract class CacheService<T> {
      */
     public boolean checkCache(Object... key) {
         String redisKey = String.format(redisPrefix, key);
-//        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
-//            if (rBloomFilter.contains(redisKey)) {
-//                return true;
-//            }
-//        }
-        return redisService.hasKey(redisKey);
+        if (cacheType.equals(CacheType.CACHE_USING_BLOOM_FILTER)) {
+            if (rBloomFilter.contains(redisKey)) {
+                return true;
+            }
+        }
+        return Boolean.TRUE.equals(redisService.exists(redisKey));
     }
 
     /**

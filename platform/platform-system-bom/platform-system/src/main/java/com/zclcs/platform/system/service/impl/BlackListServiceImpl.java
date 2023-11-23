@@ -69,9 +69,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     @Override
     public void cacheAllBlackList() {
         List<BlackList> list = this.list();
-        list.forEach(black -> {
-            redisService.sSet(getCacheKey(black), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(black)));
-        });
+        list.forEach(black -> redisService.sAdd(getCacheKey(black), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(black))));
     }
 
     private QueryWrapper getQueryWrapper(BlackListVo blackListVo) {
@@ -105,7 +103,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         setBlackList(blackList);
         this.save(blackList);
         BlackListCacheVo blackListCacheVo = BlackListCacheVo.convertToBlackListCacheBean(blackList);
-        redisService.sSet(getCacheKey(blackList), JsonUtil.toJson(blackListCacheVo));
+        redisService.sAdd(getCacheKey(blackList), JsonUtil.toJson(blackListCacheVo));
         return blackList;
     }
 
@@ -119,8 +117,8 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         this.updateById(blackList);
         String oldKey = getCacheKey(old);
         String newKey = getCacheKey(blackList);
-        redisService.setRemove(oldKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(old)));
-        redisService.sSet(newKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
+        redisService.sRem(oldKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(old)));
+        redisService.sAdd(newKey, JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         return blackList;
     }
 
@@ -130,7 +128,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         List<BlackList> list = this.listByIds(ids);
         this.removeByIds(ids);
         for (BlackList blackList : list) {
-            redisService.sSet(getCacheKey(blackList), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
+            redisService.sAdd(getCacheKey(blackList), JsonUtil.toJson(BlackListCacheVo.convertToBlackListCacheBean(blackList)));
         }
     }
 

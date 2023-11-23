@@ -1,13 +1,13 @@
 package com.zclcs.platform.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.common.jackson.starter.util.JsonUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
@@ -97,9 +97,9 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RateLimitRule createRateLimitRule(RateLimitRuleAo rateLimitRuleAo) {
+        validateRateLimitRule(rateLimitRuleAo.getRequestUri(), rateLimitRuleAo.getRequestMethod(), rateLimitRuleAo.getRateLimitRuleId());
         RateLimitRule rateLimitRule = new RateLimitRule();
         BeanUtil.copyProperties(rateLimitRuleAo, rateLimitRule);
-        setRateLimitRule(rateLimitRule);
         this.save(rateLimitRule);
         String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
         redisService.set(key, JsonUtil.toJson(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
@@ -109,12 +109,15 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RateLimitRule updateRateLimitRule(RateLimitRuleAo rateLimitRuleAo) {
+        validateRateLimitRule(rateLimitRuleAo.getRequestUri(), rateLimitRuleAo.getRequestMethod(), rateLimitRuleAo.getRateLimitRuleId());
+        RateLimitRule byId = this.getById(rateLimitRuleAo.getRateLimitRuleId());
         RateLimitRule rateLimitRule = new RateLimitRule();
         BeanUtil.copyProperties(rateLimitRuleAo, rateLimitRule);
-        setRateLimitRule(rateLimitRule);
         this.updateById(rateLimitRule);
-        String key = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-        redisService.set(key, JsonUtil.toJson(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
+        String oldKey = RouteEnhanceCacheUtil.getRateLimitCacheKey(byId.getRequestUri(), byId.getRequestMethod());
+        String newKey = RouteEnhanceCacheUtil.getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
+        redisService.del(oldKey);
+        redisService.set(newKey, JsonUtil.toJson(RateLimitRuleCacheVo.convertToRateLimitRuleCacheBean(rateLimitRule)));
         return rateLimitRule;
     }
 
@@ -129,12 +132,14 @@ public class RateLimitRuleServiceImpl extends ServiceImpl<RateLimitRuleMapper, R
         }
     }
 
-    private void setRateLimitRule(RateLimitRule rateLimitRule) {
-        if (StrUtil.isBlank(rateLimitRule.getLimitFrom())) {
-            rateLimitRule.setLimitFrom("00:00:00");
-        }
-        if (StrUtil.isBlank(rateLimitRule.getLimitTo())) {
-            rateLimitRule.setLimitFrom("23:59:59");
+    @Override
+    public void validateRateLimitRule(String requestUri, String requestMethod, Long rateLimitRuleId) {
+        RateLimitRule byId = this.getOne(new QueryWrapper()
+                .where(RATE_LIMIT_RULE.REQUEST_URI.eq(requestUri))
+                .and(RATE_LIMIT_RULE.REQUEST_METHOD.eq(requestMethod))
+        );
+        if (byId != null && !byId.getRateLimitRuleId().equals(rateLimitRuleId)) {
+            throw new FieldException("限流规则重复");
         }
     }
 }

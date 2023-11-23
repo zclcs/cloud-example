@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @author zclcs 2023/1/5
+ * @author zclcs 2023/7/5
  */
 @Component
 public class DynamicSelectDictHandler implements ColumnDynamicSelectDataHandler<String, List<String>> {

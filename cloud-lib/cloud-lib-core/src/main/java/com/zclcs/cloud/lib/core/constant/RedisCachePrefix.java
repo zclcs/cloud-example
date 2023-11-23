@@ -13,14 +13,9 @@ public interface RedisCachePrefix {
 
     String RATE_LIMIT_COUNT_KEY_PREFIX = "my:route:rate-limit:count:";
 
+    String IMAGE_CODE_RATE_LIMIT_KEY_PREFIX = "imageCode:%s";
+
     String NACOS_TOKEN_PREFIX = "nacos";
-
-    String XXL_JOB_COOKIE_PREFIX = "xxl-job";
-
-    /**
-     * 字典 redis key
-     */
-    String REFRESH_TOKEN_PREFIX = "%s:login:refresh:%s";
 
     /**
      * 字典 redis key

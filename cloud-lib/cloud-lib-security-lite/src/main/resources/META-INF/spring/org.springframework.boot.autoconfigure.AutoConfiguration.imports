@@ -1,3 +1,2 @@
-com.zclcs.cloud.lib.security.lite.aspect.MySecurityInnerAspect
 com.zclcs.cloud.lib.security.lite.configuration.MySecurityConfiguration
 com.zclcs.cloud.lib.security.lite.handler.BaseExceptionHandler

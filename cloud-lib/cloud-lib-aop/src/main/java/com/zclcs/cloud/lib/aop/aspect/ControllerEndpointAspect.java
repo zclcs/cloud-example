@@ -8,7 +8,7 @@ import com.zclcs.cloud.lib.rabbit.mq.properties.MyRabbitMqProperties;
 import com.zclcs.cloud.lib.rabbit.mq.service.RabbitService;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
 import com.zclcs.common.jackson.starter.util.JsonUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.zclcs.common.web.starter.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,9 +16,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
@@ -29,12 +26,9 @@ import java.util.*;
 /**
  * @author zclcs
  */
-@Aspect
 @Slf4j
-@Component
+@Aspect
 public class ControllerEndpointAspect extends BaseAspectSupport {
-
-    private static final String UNKNOWN = "unknown";
 
     private RabbitService rabbitService;
 
@@ -65,7 +59,7 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
         long end = System.currentTimeMillis();
         if (StrUtil.isNotBlank(operation)) {
             String username = Optional.ofNullable(LoginHelper.getUsername()).orElse("system");
-            String ip = getHttpServletRequestIpAddress();
+            String ip = WebUtil.getHttpServletRequestIpAddress();
 
             String className = point.getTarget().getClass().getName();
             String methodName = targetMethod.getName();
@@ -88,21 +82,6 @@ public class ControllerEndpointAspect extends BaseAspectSupport {
             rabbitService.convertAndSend(myRabbitMqProperties.getDirectQueues().get(RabbitMq.SYSTEM_LOG), systemLogAo);
         }
         return result;
-    }
-
-    private String getHttpServletRequestIpAddress() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
 
     @SuppressWarnings("all")

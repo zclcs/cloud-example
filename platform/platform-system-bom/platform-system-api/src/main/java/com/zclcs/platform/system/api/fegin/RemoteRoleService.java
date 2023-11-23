@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +18,7 @@ public interface RemoteRoleService {
      * @param roleId 角色id
      * @return {@link RoleCacheVo}
      */
-    @GetMapping(value = "/role/findByRoleId/{roleId}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/role/findByRoleId/{roleId}")
     RoleCacheVo findByRoleId(@PathVariable("roleId") Long roleId);
 
 }

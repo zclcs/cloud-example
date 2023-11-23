@@ -13,7 +13,6 @@ import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.cloud.lib.mybatis.flex.annotation.DataDesensitization;
 import com.zclcs.cloud.lib.sa.token.api.utils.LoginHelper;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.UserAo;
 import com.zclcs.platform.system.api.bean.cache.UserCacheVo;
 import com.zclcs.platform.system.api.bean.entity.User;
@@ -98,7 +97,6 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/findByUsername/{username}")
-    @Inner
     public UserCacheVo findByUsername(@PathVariable String username) {
         return userService.getOneAs(new QueryWrapper().where(USER.USERNAME.eq(username)), UserCacheVo.class);
     }
@@ -111,7 +109,6 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/findByMobile/{mobile}")
-    @Inner
     public String findByMobile(@PathVariable String mobile) {
         return userService.getOneAs(new QueryWrapper().where(USER.MOBILE.eq(mobile)), String.class);
     }
@@ -124,7 +121,7 @@ public class UserController {
      */
     @GetMapping("/findUserInfo")
     public BaseRsp<LoginVo> findUserInfo() {
-        LoginVo userDetail = SystemCacheUtil.getLoginVoByMobile(LoginHelper.getUsername());
+        LoginVo userDetail = SystemCacheUtil.getLoginVoByUsername(LoginHelper.getUsername());
         if (userDetail == null) {
             RspUtil.message("获取当前用户信息失败");
         }
@@ -138,6 +135,7 @@ public class UserController {
      * @return 用户权限
      */
     @GetMapping("/permissions")
+//    @RedisRateLimiter(value = "permissions", param = "#requestIpAddress")
     public BaseRsp<List<String>> findUserPermissions() {
         List<String> userPermissions = this.userService.findUserPermissions(LoginHelper.getUsername());
         return RspUtil.data(userPermissions);

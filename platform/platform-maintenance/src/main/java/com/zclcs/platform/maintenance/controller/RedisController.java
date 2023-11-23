@@ -12,6 +12,7 @@ import com.zclcs.cloud.lib.core.exception.MyException;
 import com.zclcs.cloud.lib.core.properties.GlobalProperties;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.redis.starter.service.RedisService;
+import com.zclcs.platform.maintenance.bean.ao.DeleteRedisAo;
 import com.zclcs.platform.maintenance.bean.vo.RedisVo;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -85,24 +86,24 @@ public class RedisController {
      * @param key redis Key
      * @return {@link RedisVo}
      */
-    @GetMapping("/one/{key}")
+    @GetMapping("/one")
     @SaCheckPermission("redis:view")
-    public BaseRsp<RedisVo> findRedis(@NotBlank(message = "{required}") @PathVariable String key) {
+    public BaseRsp<RedisVo> findRedis(@NotBlank(message = "{required}") @RequestParam String key) {
         key = StrUtil.removePrefix(key, globalProperties.getRedisCachePrefix());
-        if (redisService.hasKey(key)) {
+        if (Boolean.TRUE.equals(redisService.exists(key))) {
             RedisVo redisVo = new RedisVo();
             try {
                 Object value = null;
                 DataType type = redisService.type(key);
                 switch (type) {
                     case STRING -> value = redisService.get(key);
-                    case LIST -> value = redisService.lGet(key, 0L, -1L);
-                    case SET -> value = redisService.sGet(key);
-                    case HASH -> value = redisService.hmget(key);
+                    case LIST -> value = redisService.lRange(key, 0L, -1L);
+                    case SET -> value = redisService.sMembers(key);
+                    case HASH -> value = redisService.hGetAll(key);
                     default -> {
                     }
                 }
-                Long tll = redisService.getTll(key);
+                Long tll = redisService.ttl(key);
                 redisVo.setKey(globalProperties.getRedisCachePrefix() + key);
                 redisVo.setValue(value);
                 redisVo.setTtl(tll);
@@ -119,13 +120,14 @@ public class RedisController {
      * 删除redis值
      * 权限: redis:view
      *
-     * @param keys redis key集合
+     * @param deleteRedisAo {@link DeleteRedisAo}
      * @return 是否成功
      */
-    @DeleteMapping("/{keys}")
+    @DeleteMapping("")
     @SaCheckPermission("redis:delete")
     @ControllerEndpoint(operation = "删除redis值")
-    public BaseRsp<String> deleteRedis(@NotBlank(message = "{required}") @PathVariable String keys) {
+    public BaseRsp<String> deleteRedis(@NotBlank(message = "{required}") @RequestBody DeleteRedisAo deleteRedisAo) {
+        String keys = deleteRedisAo.getKeys();
         if (StrUtil.containsAny(keys, BLOOM_FILTER)) {
             throw new MyException("key不能被删除");
         }

@@ -9,7 +9,6 @@ import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.vo.LogVo;
 import com.zclcs.platform.system.service.LogService;
 import jakarta.validation.constraints.NotBlank;
@@ -82,7 +81,6 @@ public class LogController {
      * @see LogService#createLog(LogAo)
      */
     @PostMapping
-    @Inner
     public void saveLog(@RequestBody @Validated LogAo logAo) {
         this.logService.createLog(logAo);
     }

@@ -17,7 +17,7 @@ import java.time.Duration;
 @Getter
 @Configuration(proxyBeanMethods = false)
 @AllArgsConstructor
-public class DictCacheFactory {
+public class CacheFactory {
 
     public <K1, V1> Cache<K1, V1> build(int maximumSize, int initialCapacity, Duration duration) {
         final Caffeine<Object, Object> builder = Caffeine.newBuilder();

@@ -5,11 +5,13 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.util.SaFoxUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zclcs.common.jackson.starter.util.JsonUtil;
+import com.zclcs.common.redis.starter.bean.CacheKey;
 import com.zclcs.common.redis.starter.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +47,7 @@ public class SaTokenDaoImpl implements SaTokenDao {
         if (timeout == SaTokenDao.NEVER_EXPIRE) {
             redisService.set(key, value);
         } else {
-            redisService.set(key, value, timeout);
+            redisService.set(new CacheKey(key, Duration.ofSeconds(timeout)), value);
         }
     }
 
@@ -75,7 +77,8 @@ public class SaTokenDaoImpl implements SaTokenDao {
      */
     @Override
     public long getTimeout(String key) {
-        return redisService.getExpire(key);
+        Long ttl = redisService.ttl(key);
+        return ttl == null ? 0L : ttl;
     }
 
     /**
@@ -124,7 +127,7 @@ public class SaTokenDaoImpl implements SaTokenDao {
         if (timeout == SaTokenDao.NEVER_EXPIRE) {
             redisService.set(key, redisValue);
         } else {
-            redisService.set(key, redisValue, timeout);
+            redisService.set(new CacheKey(key, Duration.ofSeconds(timeout)), redisValue);
         }
     }
 
@@ -161,7 +164,8 @@ public class SaTokenDaoImpl implements SaTokenDao {
      */
     @Override
     public long getObjectTimeout(String key) {
-        return redisService.getExpire(key);
+        Long ttl = redisService.ttl(key);
+        return ttl == null ? 0L : ttl;
     }
 
     /**

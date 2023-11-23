@@ -1,8 +1,12 @@
 package com.zclcs.cloud.lib.aop.configure;
 
+import com.zclcs.cloud.lib.aop.aspect.ControllerEndpointAspect;
 import com.zclcs.cloud.lib.aop.aspect.ControllerLogAspect;
+import com.zclcs.cloud.lib.aop.aspect.RedisRateLimiterAspect;
 import com.zclcs.cloud.lib.aop.properties.MyAopProperties;
+import com.zclcs.common.redis.starter.rate.limiter.impl.DefaultRateLimiterClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,5 +22,17 @@ public class MyAopAutoConfigure {
     @Bean
     public ControllerLogAspect controllerLogAspect() {
         return new ControllerLogAspect();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RedisRateLimiterAspect redisRateLimiterAspect(DefaultRateLimiterClient rateLimiterClient) {
+        return new RedisRateLimiterAspect(rateLimiterClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ControllerEndpointAspect controllerEndpointAspect() {
+        return new ControllerEndpointAspect();
     }
 }

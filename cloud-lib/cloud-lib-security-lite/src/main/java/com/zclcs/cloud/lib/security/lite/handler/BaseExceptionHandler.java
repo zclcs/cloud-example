@@ -5,11 +5,11 @@ import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SameTokenInvalidException;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.csp.sentinel.Tracer;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.*;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.common.redis.starter.exception.RateLimiterException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
@@ -36,6 +36,15 @@ import java.util.Set;
 @Slf4j
 @Order()
 public class BaseExceptionHandler {
+
+    /**
+     * 权限码异常
+     */
+    @ExceptionHandler(RateLimiterException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public BaseRsp<Object> handleNotPermissionException(RateLimiterException e) {
+        return RspUtil.message("访问频繁，请稍后再试");
+    }
 
     /**
      * 权限码异常
@@ -87,9 +96,6 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseRsp<String> handleGlobalException(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
-
-        // 业务异常交由 sentinel 记录
-        Tracer.trace(e);
         return RspUtil.message("系统异常");
     }
 

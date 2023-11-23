@@ -6,6 +6,7 @@ import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.gateway.service.RouteEnhanceCacheService;
 import com.zclcs.platform.system.api.bean.cache.BlackListCacheVo;
 import com.zclcs.platform.system.api.bean.cache.RateLimitRuleCacheVo;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,23 +31,24 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
     @Override
     public Set<BlackListCacheVo> getBlackList(String ip) {
         String key = RouteEnhanceCacheUtil.getBlackListCacheKey(ip);
-        Set<Object> objects = redisService.sGet(key);
-        Set<BlackListCacheVo> blackListCacheVos = new HashSet<>();
-        for (Object object : objects) {
-            BlackListCacheVo blackListCacheVo = JsonUtil.readValue((String) object, BlackListCacheVo.class);
-            blackListCacheVos.add(blackListCacheVo);
-        }
-        return blackListCacheVos;
+        return getBlackListCacheVos(key);
     }
 
     @Override
     public Set<BlackListCacheVo> getBlackList() {
         String key = RouteEnhanceCacheUtil.getBlackListCacheKey();
-        Set<Object> objects = redisService.sGet(key);
+        return getBlackListCacheVos(key);
+    }
+
+    @NotNull
+    private Set<BlackListCacheVo> getBlackListCacheVos(String key) {
+        Set<String> members = redisService.sMembers(key);
         Set<BlackListCacheVo> blackListCacheVos = new HashSet<>();
-        for (Object object : objects) {
-            BlackListCacheVo blackListCacheVo = JsonUtil.readValue((String) object, BlackListCacheVo.class);
-            blackListCacheVos.add(blackListCacheVo);
+        if (members != null) {
+            for (String member : members) {
+                BlackListCacheVo blackListCacheVo = JsonUtil.readValue(member, BlackListCacheVo.class);
+                blackListCacheVos.add(blackListCacheVo);
+            }
         }
         return blackListCacheVos;
     }
@@ -59,24 +61,6 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
             return null;
         }
         return JsonUtil.readValue((String) o, RateLimitRuleCacheVo.class);
-    }
-
-    @Override
-    public int getCurrentRequestCount(String uri, String ip) {
-        String key = RouteEnhanceCacheUtil.getRateLimitCountKey(uri, ip);
-        return redisService.hasKey(key) ? (int) redisService.get(key) : 0;
-    }
-
-    @Override
-    public void setCurrentRequestCount(String uri, String ip, Long time) {
-        String key = RouteEnhanceCacheUtil.getRateLimitCountKey(uri, ip);
-        redisService.set(key, 1, time);
-    }
-
-    @Override
-    public void incrCurrentRequestCount(String uri, String ip) {
-        String key = RouteEnhanceCacheUtil.getRateLimitCountKey(uri, ip);
-        redisService.incr(key, 1L);
     }
 
 }

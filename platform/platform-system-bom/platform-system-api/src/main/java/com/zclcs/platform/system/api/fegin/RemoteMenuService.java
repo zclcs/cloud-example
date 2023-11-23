@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.router.VueRouter;
@@ -24,7 +23,7 @@ public interface RemoteMenuService {
      * @param menuId 菜单id
      * @return {@link MenuCacheVo}
      */
-    @GetMapping(value = "/menu/findByMenuId/{menuId}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/menu/findByMenuId/{menuId}")
     MenuCacheVo findByMenuId(@PathVariable Long menuId);
 
     /**
@@ -33,7 +32,7 @@ public interface RemoteMenuService {
      * @param menuIds 菜单id集合
      * @return 菜单集合
      */
-    @GetMapping(value = "/menu/findByMenuIds/{menuIds}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/menu/findByMenuIds/{menuIds}")
     Map<Long, MenuCacheVo> findByMenuIds(@PathVariable List<Long> menuIds);
 
     /**
@@ -42,7 +41,7 @@ public interface RemoteMenuService {
      * @param username 用户名称
      * @return 权限
      */
-    @GetMapping(value = "/menu/findUserPermissions/{username}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/menu/findUserPermissions/{username}")
     List<String> findUserPermissions(@PathVariable String username);
 
     /**
@@ -51,7 +50,7 @@ public interface RemoteMenuService {
      * @param username 用户名称
      * @return 路由
      */
-    @GetMapping(value = "/menu/findUserRouters/{username}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/menu/findUserRouters/{username}")
     List<VueRouter<MenuVo>> findUserRouters(@PathVariable String username);
 
 }

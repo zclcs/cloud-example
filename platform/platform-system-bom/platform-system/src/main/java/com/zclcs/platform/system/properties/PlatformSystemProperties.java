@@ -21,5 +21,5 @@ public class PlatformSystemProperties {
     /**
      * 启动是否生成迁移sql到文件
      */
-    private Boolean generateSql;
+    private Boolean generateSql = false;
 }

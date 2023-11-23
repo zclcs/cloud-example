@@ -11,7 +11,6 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
@@ -107,7 +106,6 @@ public class MenuController {
      * @return 菜单
      */
     @GetMapping(value = "/findByMenuId/{menuId}")
-    @Inner
     public MenuCacheVo findByMenuId(@PathVariable Long menuId) {
         return this.menuService.getOneAs(new QueryWrapper().where(MENU.MENU_ID.eq(menuId)), MenuCacheVo.class);
     }
@@ -120,7 +118,6 @@ public class MenuController {
      * @return 菜单集合
      */
     @GetMapping(value = "/findByMenuIds/{menuIds}")
-    @Inner
     public Map<Long, MenuCacheVo> findByMenuIds(@PathVariable List<Long> menuIds) {
         Map<Long, MenuCacheVo> menuMap = new HashMap<>();
         List<MenuCacheVo> menuCacheVos = this.menuService.listAs(new QueryWrapper().where(MENU.MENU_ID.in(menuIds)), MenuCacheVo.class);
@@ -141,7 +138,6 @@ public class MenuController {
      * @return 权限
      */
     @GetMapping(value = "/findUserPermissions/{username}")
-    @Inner
     public List<String> findUserPermissions(@PathVariable String username) {
         return this.menuService.findUserPermissions(username);
     }
@@ -154,7 +150,6 @@ public class MenuController {
      * @return 路由
      */
     @GetMapping(value = "/findUserRouters/{username}")
-    @Inner
     public List<VueRouter<MenuVo>> findUserRouters(@PathVariable String username) {
         return this.menuService.findUserRouters(username);
     }

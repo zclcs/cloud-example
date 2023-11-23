@@ -10,7 +10,6 @@ import com.zclcs.cloud.lib.core.base.BaseRsp;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
-import com.zclcs.cloud.lib.security.lite.annotation.Inner;
 import com.zclcs.platform.system.api.bean.ao.RoleAo;
 import com.zclcs.platform.system.api.bean.cache.RoleCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Role;
@@ -89,7 +88,6 @@ public class RoleController {
      * @return 角色
      */
     @GetMapping(value = "/findByRoleId/{roleId}")
-    @Inner
     public RoleCacheVo findByRoleId(@PathVariable Long roleId) {
         return this.roleService.getOneAs(new QueryWrapper().where(ROLE.ROLE_ID.eq(roleId)), RoleCacheVo.class);
     }

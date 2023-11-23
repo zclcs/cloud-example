@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.DeptCacheVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +18,7 @@ public interface RemoteDeptService {
      * @param deptId 部门id
      * @return {@link DeptCacheVo}
      */
-    @GetMapping(value = "/dept/findByDeptId/{deptId}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dept/findByDeptId/{deptId}")
     DeptCacheVo findByDeptId(@PathVariable("deptId") Long deptId);
 
 }

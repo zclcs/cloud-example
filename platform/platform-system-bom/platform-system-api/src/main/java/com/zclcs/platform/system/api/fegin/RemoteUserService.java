@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.platform.system.api.bean.cache.UserCacheVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +18,7 @@ public interface RemoteUserService {
      * @param username 用户名
      * @return {@link UserCacheVo}
      */
-    @GetMapping(value = "/user/findByUsername/{username}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/user/findByUsername/{username}")
     UserCacheVo findByUsername(@PathVariable("username") String username);
 
     /**
@@ -28,7 +27,7 @@ public interface RemoteUserService {
      * @param mobile 手机号
      * @return BaseRsp
      */
-    @GetMapping(value = "/user/findByMobile/{mobile}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/user/findByMobile/{mobile}")
     String findByMobile(@PathVariable("mobile") String mobile);
 
 }

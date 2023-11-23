@@ -1,6 +1,6 @@
 package org.springframework.cloud.openfeign;
 
-import com.zclcs.cloud.lib.fegin.MyFeignAutoConfiguration;
+import com.zclcs.cloud.lib.fegin.configure.MyFeignAutoConfiguration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -30,13 +30,12 @@ import java.util.Map;
  * <p>
  * feign 自动配置功能 from mica
  */
+@Getter
 @Slf4j
 public class MyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware, EnvironmentAware {
 
-    @Getter
     private ClassLoader beanClassLoader;
 
-    @Getter
     private Environment environment;
 
     @Override
@@ -219,7 +218,7 @@ public class MyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, B
     }
 
     @Override
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(@NotNull Environment environment) {
         this.environment = environment;
     }
 

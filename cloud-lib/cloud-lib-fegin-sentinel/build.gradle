@@ -1,0 +1,11 @@
+dependencies {
+    api project(":cloud-lib:cloud-lib-core")
+    api project(":common:common-jackson-starter")
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "io.github.openfeign:feign-okhttp"
+    api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
+    api "com.github.ben-manes.caffeine:caffeine"
+    api "jakarta.servlet:jakarta.servlet-api"
+    api "com.fasterxml.jackson.core:jackson-databind"
+}

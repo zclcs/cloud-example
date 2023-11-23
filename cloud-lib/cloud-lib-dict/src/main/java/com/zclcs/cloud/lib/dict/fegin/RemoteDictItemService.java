@@ -1,6 +1,5 @@
 package com.zclcs.cloud.lib.dict.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
@@ -22,7 +21,7 @@ public interface RemoteDictItemService {
      * @param dictName 字典唯一值
      * @return 所有字典项
      */
-    @GetMapping(value = "/dictItem/findByDictName", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dictItem/findByDictName")
     List<DictItemCacheVo> findByDictName(@RequestParam String dictName);
 
     /**
@@ -32,7 +31,7 @@ public interface RemoteDictItemService {
      * @param value    字典项唯一值
      * @return 字典项
      */
-    @GetMapping(value = "/dictItem/findByDictNameAndValue", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dictItem/findByDictNameAndValue")
     DictItemCacheVo findByDictNameAndValue(@RequestParam String dictName, @RequestParam String value);
 
     /**
@@ -45,7 +44,7 @@ public interface RemoteDictItemService {
      * @param title       字典值
      * @return 字典项
      */
-    @GetMapping(value = "/dictItem/findByDictNameAndParentValueAndTitle", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dictItem/findByDictNameAndParentValueAndTitle")
     DictItemCacheVo findByDictNameAndParentValueAndTitle(@RequestParam String dictName, @RequestParam String parentValue, @RequestParam String title);
 
     /**
@@ -55,7 +54,7 @@ public interface RemoteDictItemService {
      * @param parentValue 父级字典项唯一值
      * @return 所有子级字典项
      */
-    @GetMapping(value = "/dictItem/findByDictNameAndParentValue", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dictItem/findByDictNameAndParentValue")
     List<DictItemCacheVo> findByDictNameAndParentValue(@RequestParam String dictName, @RequestParam String parentValue);
 
     /**
@@ -64,6 +63,6 @@ public interface RemoteDictItemService {
      * @param dictName 字典名称
      * @return 字典树
      */
-    @GetMapping(value = "/dictItem/inner/tree", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/dictItem/inner/tree")
     List<DictItemTreeVo> tree(@RequestParam String dictName);
 }

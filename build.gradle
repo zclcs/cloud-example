@@ -27,7 +27,7 @@ buildscript {
         janinoVersion = "3.1.9"
         saTokenVersion = "1.37.0"
         easyexcelVersion = "3.3.2"
-        mybatisFlexVersion = "1.7.2"
+        mybatisFlexVersion = "1.7.4"
         mybatisVersion = "3.0.2"
         powerJobVersion = "4.3.6"
         jaxbApiVersion = "2.3.1"

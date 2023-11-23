@@ -22,7 +22,6 @@ public class MyFieldPermissionAspect implements Ordered {
 
     @Around("@within(fieldPermission) || @annotation(fieldPermission)")
     public Object around(ProceedingJoinPoint point, FieldPermission fieldPermission) throws Throwable {
-        // 实际注入的inner实体由表达式后一个注解决定，即是方法上的@Inner注解实体，若方法上无@Inner注解，则获取类上的
         if (fieldPermission == null) {
             Class<?> clazz = point.getTarget().getClass();
             fieldPermission = AnnotationUtils.findAnnotation(clazz, FieldPermission.class);

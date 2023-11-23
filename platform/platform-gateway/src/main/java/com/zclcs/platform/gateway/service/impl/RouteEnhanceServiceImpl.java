@@ -8,7 +8,9 @@ import com.google.common.base.Stopwatch;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.constant.Params;
+import com.zclcs.cloud.lib.core.utils.RouteEnhanceCacheUtil;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
+import com.zclcs.common.redis.starter.rate.limiter.impl.DefaultRateLimiterClient;
 import com.zclcs.platform.gateway.event.SaveBlockLogEvent;
 import com.zclcs.platform.gateway.event.SaveRateLimitLogEvent;
 import com.zclcs.platform.gateway.event.SaveRouteLogEvent;
@@ -50,8 +52,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private static final String METHOD_ALL = "ALL";
+    private static final String LIMIT_FORM_DEFAULT = "00:00:00";
+    private static final String LIMIT_TO_DEFAULT = "23:59:59";
     private final RouteEnhanceCacheService routeEnhanceCacheService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final DefaultRateLimiterClient defaultRateLimiterClient;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
@@ -216,15 +221,11 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
             checkTime(limit, rule.getLimitFrom(), rule.getLimitTo());
         }
         if (limit.get()) {
-            String requestUri = uri.getPath();
-            int count = routeEnhanceCacheService.getCurrentRequestCount(requestUri, requestIp);
-            if (count == 0) {
-                routeEnhanceCacheService.setCurrentRequestCount(requestUri, requestIp, Long.parseLong(rule.getIntervalSec()));
-            } else if (count >= rule.getRateLimitCount()) {
+            String key = RouteEnhanceCacheUtil.getRateLimitCountKey(uri.getPath(), requestIp);
+            boolean allowed = defaultRateLimiterClient.isAllowed(key, rule.getRateLimitCount(), Long.parseLong(rule.getIntervalSec()));
+            if (!allowed) {
                 return GatewayUtil.makeWebFluxResponse(response, MediaType.APPLICATION_JSON_VALUE,
                         HttpStatus.TOO_MANY_REQUESTS, RspUtil.message("访问频率超限，请稍后再试"));
-            } else {
-                routeEnhanceCacheService.incrCurrentRequestCount(requestUri, requestIp);
             }
         }
         return null;
@@ -232,11 +233,15 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
 
     private void checkTime(AtomicBoolean checkTime, String limitFrom, String limitTo) {
         if (StrUtil.isNotBlank(limitFrom) && StrUtil.isNotBlank(limitTo)) {
-            DateTime now = DateUtil.date();
-            DateTime limitFromTime = DateUtil.parse(now.toString(DatePattern.NORM_DATE_PATTERN) + StrUtil.SPACE + limitFrom, DatePattern.NORM_DATETIME_PATTERN);
-            DateTime limitToTime = DateUtil.parse(now.toString(DatePattern.NORM_DATE_PATTERN) + StrUtil.SPACE + limitTo, DatePattern.NORM_DATETIME_PATTERN);
-            if (DateUtil.isIn(now, limitFromTime, limitToTime)) {
+            if (LIMIT_FORM_DEFAULT.equals(limitFrom) && LIMIT_TO_DEFAULT.equals(limitTo)) {
                 checkTime.set(true);
+            } else {
+                DateTime now = DateUtil.date();
+                DateTime limitFromTime = DateUtil.parse(now.toString(DatePattern.NORM_DATE_PATTERN) + StrUtil.SPACE + limitFrom, DatePattern.NORM_DATETIME_PATTERN);
+                DateTime limitToTime = DateUtil.parse(now.toString(DatePattern.NORM_DATE_PATTERN) + StrUtil.SPACE + limitTo, DatePattern.NORM_DATETIME_PATTERN);
+                if (DateUtil.isIn(now, limitFromTime, limitToTime)) {
+                    checkTime.set(true);
+                }
             }
         } else {
             checkTime.set(true);

@@ -1,7 +1,6 @@
 package com.zclcs.platform.gateway.filter;
 
 import cn.dev33.satoken.same.SaSameUtil;
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.platform.gateway.service.RouteEnhanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +30,14 @@ public class MyGatewayRequestFilter implements GlobalFilter {
             routeEnhanceService.saveBlockLogs(exchange);
             return blackListResult;
         }
-//        Mono<Void> rateLimitResult = routeEnhanceService.filterRateLimit(exchange);
-//        if (rateLimitResult != null) {
-//            routeEnhanceService.saveRateLimitLogs(exchange);
-//            return rateLimitResult;
-//        }
+        Mono<Void> rateLimitResult = routeEnhanceService.filterRateLimit(exchange);
+        if (rateLimitResult != null) {
+            routeEnhanceService.saveRateLimitLogs(exchange);
+            return rateLimitResult;
+        }
         // 1. 清洗请求头中from 参数 添加
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(httpHeaders -> {
-                            httpHeaders.remove(Security.FROM);
                             httpHeaders.remove(SaSameUtil.SAME_TOKEN);
                             httpHeaders.add(SaSameUtil.SAME_TOKEN, SaSameUtil.getToken());
                         }

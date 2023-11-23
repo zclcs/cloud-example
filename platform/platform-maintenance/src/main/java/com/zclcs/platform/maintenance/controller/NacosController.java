@@ -16,6 +16,7 @@ import com.zclcs.cloud.lib.core.properties.MyNacosProperties;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
 import com.zclcs.common.jackson.starter.util.JsonUtil;
+import com.zclcs.common.redis.starter.bean.CacheKey;
 import com.zclcs.common.redis.starter.service.RedisService;
 import com.zclcs.platform.maintenance.bean.ao.NacosConfigAo;
 import com.zclcs.platform.maintenance.bean.ao.NacosServiceAo;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -183,7 +185,7 @@ public class NacosController {
                 String body = execute.body();
                 NacosTokenVo nacosTokenVo = JsonUtil.readValue(body, NacosTokenVo.class);
                 Objects.requireNonNull(nacosTokenVo);
-                redisService.set(RedisCachePrefix.NACOS_TOKEN_PREFIX, nacosTokenVo.getAccessToken(), nacosTokenVo.getTokenTtl() - 30L * 60L);
+                redisService.set(new CacheKey(RedisCachePrefix.NACOS_TOKEN_PREFIX, Duration.ofSeconds(nacosTokenVo.getTokenTtl() - 30L * 60L)), nacosTokenVo.getAccessToken());
                 return nacosTokenVo.getAccessToken();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);

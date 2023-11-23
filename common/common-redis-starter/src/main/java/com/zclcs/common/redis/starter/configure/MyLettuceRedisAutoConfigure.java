@@ -1,7 +1,9 @@
 package com.zclcs.common.redis.starter.configure;
 
 import com.zclcs.common.redis.starter.properties.MyLettuceRedisProperties;
+import com.zclcs.common.redis.starter.service.RedisService;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,6 +43,11 @@ public class MyLettuceRedisAutoConfigure {
         template.afterPropertiesSet();
 
         return template;
+    }
+
+    @Bean
+    public RedisService redisService(RedisTemplate<String, Object> redisTemplate, RedissonClient redissonClient) {
+        return new RedisService(redisTemplate, redissonClient);
     }
 
     @Bean

@@ -120,7 +120,7 @@ public class WebUtil {
      */
     public static Optional<HttpServletRequest> getRequest() {
         return Optional
-                .ofNullable(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+                .of(((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest());
     }
 
     /**

@@ -23,22 +23,14 @@ public class MyLettuceRedisProperties {
      */
     private String redisCachePrefix = "dev";
 
+    /**
+     * redis配置
+     */
     private Boolean lettuceRedisEnable = true;
 
-    public String getRedisCachePrefix() {
-        return redisCachePrefix;
-    }
-
-    public void setRedisCachePrefix(String redisCachePrefix) {
-        this.redisCachePrefix = redisCachePrefix;
-    }
-
-    public Boolean getLettuceRedisEnable() {
-        return lettuceRedisEnable;
-    }
-
-    public void setLettuceRedisEnable(Boolean lettuceRedisEnable) {
-        this.lettuceRedisEnable = lettuceRedisEnable;
-    }
+    /**
+     * 限流是否开启
+     */
+    private Boolean rateLimiterEnable = true;
 
 }

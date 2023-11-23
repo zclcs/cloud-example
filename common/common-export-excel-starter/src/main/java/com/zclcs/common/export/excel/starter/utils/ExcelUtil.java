@@ -6,6 +6,7 @@ import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 /**
  * @author zclcs
  */
+@Slf4j
 @UtilityClass
 public class ExcelUtil {
 
@@ -38,7 +40,7 @@ public class ExcelUtil {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename*=utf-8''" + fileName);
     }
 
-    private static final int limitation = 100;
+    private static final int LIMITATION = 100;
 
     public static Sheet addCascadeValidationToSheet(
             WriteWorkbookHolder workbookHolder,
@@ -64,7 +66,7 @@ public class ExcelUtil {
 
             int columnIndex = startCol.getAndIncrement();
             createDropdownElement(tmpSheet, children, columnIndex);
-            if (children.size() >= limitation) {
+            if (children.size() >= LIMITATION) {
                 tmpSheet = createTmpSheet(null, workbook, "cascade_sheet");
             }
 
@@ -105,7 +107,7 @@ public class ExcelUtil {
         final String formula = createFormulaForDropdown(tmpSheet, options.size(), columnName);
         createDropdownElement(tmpSheet, options, columnIndex);
         createValidation(workbook, sheet, tmpSheet, formula, selfCol, startRow, endRow);
-        return options.size() >= limitation ? null : tmpSheet;
+        return options.size() >= LIMITATION ? null : tmpSheet;
     }
 
 
@@ -118,7 +120,7 @@ public class ExcelUtil {
                         try {
                             return tmpSheet.createRow(rIndex);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.error(e.getMessage(), e);
                             throw new RuntimeException(e);
                         }
 

@@ -3,9 +3,7 @@ dependencies {
     api project(":cloud-lib:cloud-lib-core")
     api project(":cloud-lib:cloud-lib-sa-token")
     api project(":common:common-jackson-starter")
+    api project(":common:common-web-starter")
     api "cn.hutool:hutool-core"
-    api "com.fasterxml.jackson.core:jackson-databind"
-    api "jakarta.servlet:jakarta.servlet-api"
     api "org.springframework.boot:spring-boot-starter-aop"
-    api "org.springframework:spring-web"
 }

@@ -78,4 +78,13 @@ public interface RateLimitRuleService extends IService<RateLimitRule> {
      */
     void deleteRateLimitRule(List<Long> ids);
 
+    /**
+     * 验证限流规则是否重复
+     *
+     * @param requestUri      请求uri
+     * @param requestMethod   请求方法
+     * @param rateLimitRuleId id
+     */
+    void validateRateLimitRule(String requestUri, String requestMethod, Long rateLimitRuleId);
+
 }

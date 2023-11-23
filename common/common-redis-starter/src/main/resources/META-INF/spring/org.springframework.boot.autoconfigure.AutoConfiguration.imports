@@ -1,1 +1,2 @@
 com.zclcs.common.redis.starter.configure.MyLettuceRedisAutoConfigure
+com.zclcs.common.redis.starter.configure.MyRateLimiterAutoConfigure

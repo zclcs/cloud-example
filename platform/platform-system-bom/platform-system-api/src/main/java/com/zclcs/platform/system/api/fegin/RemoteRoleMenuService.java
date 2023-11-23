@@ -1,6 +1,5 @@
 package com.zclcs.platform.system.api.fegin;
 
-import com.zclcs.cloud.lib.core.constant.Security;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ public interface RemoteRoleMenuService {
      * @param roleId 角色id
      * @return BaseRsp
      */
-    @GetMapping(value = "/role/menu/findByRoleId/{roleId}", headers = Security.HEADER_FROM_IN)
+    @GetMapping(value = "/role/menu/findByRoleId/{roleId}")
     List<Long> findByRoleId(@PathVariable("roleId") Long roleId);
 
 }
