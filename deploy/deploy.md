@@ -107,15 +107,12 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 {
     "data-root":"/zclcs/docker",
-    "hosts":[
-        "tcp://0.0.0.0:2375",
-        "unix:///var/run/docker.sock"
-    ],
-    "registry-mirrors":[
+    "registry-mirrors": [
+        "https://docker.mirrors.sjtug.sjtu.edu.cn",
+        "https://docker.m.daocloud.io",
         "https://dockerproxy.com",
-        "https://hub-mirror.c.163.com",
-        "https://mirror.baidubce.com",
-        "https://ccr.ccs.tencentyun.com"
+        "https://docker.mirrors.ustc.edu.cn",
+        "https://docker.nju.edu.cn"
     ],
     "insecure-registries":[
         "192.168.33.10:3000"
@@ -133,7 +130,8 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ### 如果起不来：
 
 ```
-进入 /usr/lib/systemd/system 修改 docker.serivce 修改配置 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock 为 ExecStart=/usr/bin/dockerd
+进入 /usr/lib/systemd/system 修改 docker.serivce 修改配置 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock 为 
+ExecStart=ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
 修改完 执行 systemctl daemon-reload 再执行上面得命令启动
 ```
 

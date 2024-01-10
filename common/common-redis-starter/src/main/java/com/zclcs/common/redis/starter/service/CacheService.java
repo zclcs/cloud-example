@@ -56,7 +56,7 @@ public abstract class CacheService<T> {
     /**
      * 缓存最大容量
      */
-    private int maximumSize = 500;
+    private int maximumSize = 5000;
 
     /**
      * 缓存初始化容量
@@ -358,11 +358,11 @@ public abstract class CacheService<T> {
 //                return null;
 //            }
 //        }
-        String obj = (String) redisService.get(redisKey);
+        String obj = redisService.get(redisKey);
         if (obj == null) {
             synchronized (this) {
                 // 再查一次，防止上个已经抢到锁的线程已经更新过了
-                obj = (String) redisService.get(redisKey);
+                obj = redisService.get(redisKey);
                 if (obj != null) {
                     return this.serialization(obj);
                 }

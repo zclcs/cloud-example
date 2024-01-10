@@ -170,7 +170,7 @@ public class DictItemController {
     }
 
     /**
-     * 字典项查询（分页）
+     * 字典查询（分页）
      * 权限: dictItem:view
      *
      * @see DictItemService#findDictPage(BasePageAo, DictVo)
@@ -183,7 +183,7 @@ public class DictItemController {
     }
 
     /**
-     * 字典项查询（集合）
+     * 字典查询（集合）
      * 权限: dictItem:view
      *
      * @see DictItemService#findDictList(DictVo)
@@ -196,7 +196,7 @@ public class DictItemController {
     }
 
     /**
-     * 字典项查询（单个）
+     * 字典查询（单个）
      * 权限: dictItem:view
      *
      * @see DictItemService#findDictList(DictVo)

@@ -42,7 +42,7 @@ public class BaseExceptionHandler {
      */
     @ExceptionHandler(RateLimiterException.class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public BaseRsp<Object> handleNotPermissionException(RateLimiterException e) {
+    public BaseRsp<Object> handleRateLimiterException(RateLimiterException e) {
         return RspUtil.message("访问频繁，请稍后再试");
     }
 
@@ -83,6 +83,7 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
     public BaseRsp<Object> handleNotLoginException(NotLoginException e) {
         log.error("token过期", e);
+
         return RspUtil.message("token已过期");
     }
 
