@@ -25,7 +25,7 @@ public class AuthFilter {
         return new SaReactorFilter()
                 // 拦截地址
                 .addInclude("/**")
-                .addExclude("/code")
+                .addExclude("/system/code")
                 .addExclude("/actuator/health")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {

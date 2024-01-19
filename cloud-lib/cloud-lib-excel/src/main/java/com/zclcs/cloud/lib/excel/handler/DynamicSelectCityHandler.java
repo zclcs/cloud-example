@@ -21,9 +21,9 @@ public class DynamicSelectCityHandler implements ColumnDynamicSelectDataHandler<
     @Override
     public Function<String, Map<String, List<String>>> source(String dictName) {
         return param -> {
-            List<DictItemTreeVo> dictTree = DictCacheUtil.getDictTree(dictName);
+            List<Tree<DictItemTreeVo>> dictTree = DictCacheUtil.getDictTree(dictName);
             Map<String, List<String>> data = new HashMap<>(20);
-            for (DictItemTreeVo dictItemTreeVo : dictTree) {
+            for (Tree<DictItemTreeVo> dictItemTreeVo : dictTree) {
                 if (dictItemTreeVo.isHasChildren()) {
                     data.put(dictItemTreeVo.getLabel(), dictItemTreeVo.getChildren().stream().map(Tree::getLabel).toList());
                 }

@@ -10,6 +10,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.exception.FieldException;
 import com.zclcs.cloud.lib.core.utils.TreeUtil;
@@ -73,14 +74,14 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public List<DeptTreeVo> findDeptTree(DeptVo deptVo) {
+    public List<Tree<DeptTreeVo>> findDeptTree(DeptVo deptVo) {
         List<DeptVo> depts = findDeptList(deptVo);
-        List<DeptTreeVo> trees = new ArrayList<>();
+        List<Tree<DeptTreeVo>> trees = new ArrayList<>();
         buildTrees(trees, depts);
         if (StrUtil.isNotBlank(deptVo.getDeptName())) {
             return trees;
         } else {
-            return (List<DeptTreeVo>) TreeUtil.build(trees);
+            return TreeUtil.build(trees);
         }
     }
 
@@ -161,16 +162,18 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         SystemCacheUtil.deleteDeptIdsByUserIds(userIds);
     }
 
-    private void buildTrees(List<DeptTreeVo> trees, List<DeptVo> deptVos) {
+    private void buildTrees(List<Tree<DeptTreeVo>> trees, List<DeptVo> deptVos) {
         deptVos.forEach(deptVo -> {
-            DeptTreeVo tree = new DeptTreeVo();
+            Tree<DeptTreeVo> tree = new Tree<>();
             tree.setId(deptVo.getDeptId());
             tree.setCode(deptVo.getDeptCode());
             tree.setParentCode(deptVo.getParentCode());
-            tree.setHarPar(!deptVo.getParentCode().equals(CommonCore.TOP_PARENT_CODE));
             tree.setLabel(deptVo.getDeptName());
-            tree.setOrderNum(deptVo.getOrderNum());
-            tree.setDeptName(deptVo.getDeptName());
+            DeptTreeVo deptTreeVo = new DeptTreeVo();
+            deptTreeVo.setHarPar(!deptVo.getParentCode().equals(CommonCore.TOP_PARENT_CODE));
+            deptTreeVo.setOrderNum(deptVo.getOrderNum());
+            deptTreeVo.setDeptName(deptVo.getDeptName());
+            tree.setExtra(deptTreeVo);
             trees.add(tree);
         });
     }

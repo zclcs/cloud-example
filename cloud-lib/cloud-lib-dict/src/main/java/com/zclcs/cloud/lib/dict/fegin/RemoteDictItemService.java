@@ -1,5 +1,6 @@
 package com.zclcs.cloud.lib.dict.fegin;
 
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.ServiceName;
 import com.zclcs.cloud.lib.dict.bean.cache.DictItemCacheVo;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
@@ -64,5 +65,5 @@ public interface RemoteDictItemService {
      * @return 字典树
      */
     @GetMapping(value = "/dictItem/inner/tree")
-    List<DictItemTreeVo> tree(@RequestParam String dictName);
+    List<Tree<DictItemTreeVo>> tree(@RequestParam String dictName);
 }

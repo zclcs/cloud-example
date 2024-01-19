@@ -1,6 +1,7 @@
 package com.zclcs.cloud.lib.dict.cache;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.RedisCachePrefix;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import com.zclcs.cloud.lib.dict.fegin.RemoteDictItemService;
@@ -15,7 +16,7 @@ import java.util.List;
  * @author zclcs
  */
 @Service
-public class DictTreeCache extends CacheService<List<DictItemTreeVo>> {
+public class DictTreeCache extends CacheService<List<Tree<DictItemTreeVo>>> {
 
     private RemoteDictItemService remoteDictItemService;
 
@@ -30,13 +31,13 @@ public class DictTreeCache extends CacheService<List<DictItemTreeVo>> {
 
 
     @Override
-    protected List<DictItemTreeVo> findByKey(Object... key) {
+    protected List<Tree<DictItemTreeVo>> findByKey(Object... key) {
         return remoteDictItemService.tree((String) key[0]);
     }
 
     @Override
-    protected List<DictItemTreeVo> serialization(String json) {
-        TypeReference<List<DictItemTreeVo>> valueTypeRef = new TypeReference<>() {
+    protected List<Tree<DictItemTreeVo>> serialization(String json) {
+        TypeReference<List<Tree<DictItemTreeVo>>> valueTypeRef = new TypeReference<>() {
         };
         return JsonUtil.readValue(json, valueTypeRef);
     }

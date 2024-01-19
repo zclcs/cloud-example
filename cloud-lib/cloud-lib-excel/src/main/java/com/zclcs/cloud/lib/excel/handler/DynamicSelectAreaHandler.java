@@ -3,7 +3,6 @@ package com.zclcs.cloud.lib.excel.handler;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
-import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import com.zclcs.common.export.excel.starter.handler.ColumnDynamicSelectDataHandler;
 import org.springframework.stereotype.Component;
@@ -22,12 +21,12 @@ public class DynamicSelectAreaHandler implements ColumnDynamicSelectDataHandler<
     @Override
     public Function<String, Map<String, List<String>>> source(String dictName) {
         return param -> {
-            List<DictItemTreeVo> dictTree = DictCacheUtil.getDictTree(dictName);
+            List<Tree<DictItemTreeVo>> dictTree = DictCacheUtil.getDictTree(dictName);
             Map<String, List<String>> data = new HashMap<>(20);
-            for (DictItemTreeVo dictItemTreeVo : dictTree) {
+            for (Tree<DictItemTreeVo> dictItemTreeVo : dictTree) {
                 if (dictItemTreeVo.isHasChildren()) {
-                    List<Tree<DictItemVo>> children = dictItemTreeVo.getChildren();
-                    for (Tree<DictItemVo> child : children) {
+                    List<Tree<DictItemTreeVo>> children = dictItemTreeVo.getChildren();
+                    for (Tree<DictItemTreeVo> child : children) {
                         if (child.isHasChildren()) {
                             data.put(child.getLabel(), child.getChildren().stream().map(Tree::getLabel).toList());
                         }

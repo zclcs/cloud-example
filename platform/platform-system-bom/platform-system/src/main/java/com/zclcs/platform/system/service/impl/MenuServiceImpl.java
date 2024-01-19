@@ -11,6 +11,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.FieldException;
@@ -122,14 +123,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<MenuTreeVo> findMenus(MenuVo menu) {
+    public List<Tree<MenuTreeVo>> findMenus(MenuVo menu) {
         List<MenuVo> menus = findMenuList(menu);
-        List<MenuTreeVo> trees = new ArrayList<>();
+        List<Tree<MenuTreeVo>> trees = new ArrayList<>();
         buildTrees(trees, menus);
         if (StrUtil.equals(menu.getType(), Dict.TYPE_BUTTON) || StrUtil.isNotBlank(menu.getMenuName())) {
             return trees;
         } else {
-            return (List<MenuTreeVo>) TreeUtil.build(trees);
+            return TreeUtil.build(trees);
         }
     }
 
@@ -220,27 +221,29 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
     }
 
-    private void buildTrees(List<MenuTreeVo> trees, List<MenuVo> menus) {
+    private void buildTrees(List<Tree<MenuTreeVo>> trees, List<MenuVo> menus) {
         menus.forEach(menu -> {
-            MenuTreeVo tree = new MenuTreeVo();
+            Tree<MenuTreeVo> tree = new Tree<>();
             tree.setId(menu.getMenuId());
             tree.setCode(menu.getMenuCode());
             tree.setParentCode(menu.getParentCode());
             tree.setLabel(menu.getMenuName());
-            tree.setKeepAliveName(menu.getKeepAliveName());
-            tree.setPath(menu.getPath());
-            tree.setComponent(menu.getComponent());
-            tree.setRedirect(menu.getRedirect());
-            tree.setPerms(menu.getPerms());
-            tree.setIcon(menu.getIcon());
-            tree.setType(menu.getType());
-            tree.setHideMenu(menu.getHideMenu());
-            tree.setIgnoreKeepAlive(menu.getIgnoreKeepAlive());
-            tree.setHideBreadcrumb(menu.getHideBreadcrumb());
-            tree.setHideChildrenInMenu(menu.getHideChildrenInMenu());
-            tree.setCurrentActiveMenu(menu.getCurrentActiveMenu());
-            tree.setOrderNum(menu.getOrderNum());
-            tree.setCreateAt(menu.getCreateAt());
+            MenuTreeVo extra = new MenuTreeVo();
+            extra.setKeepAliveName(menu.getKeepAliveName());
+            extra.setPath(menu.getPath());
+            extra.setComponent(menu.getComponent());
+            extra.setRedirect(menu.getRedirect());
+            extra.setPerms(menu.getPerms());
+            extra.setIcon(menu.getIcon());
+            extra.setType(menu.getType());
+            extra.setHideMenu(menu.getHideMenu());
+            extra.setIgnoreKeepAlive(menu.getIgnoreKeepAlive());
+            extra.setHideBreadcrumb(menu.getHideBreadcrumb());
+            extra.setHideChildrenInMenu(menu.getHideChildrenInMenu());
+            extra.setCurrentActiveMenu(menu.getCurrentActiveMenu());
+            extra.setOrderNum(menu.getOrderNum());
+            extra.setCreateAt(menu.getCreateAt());
+            tree.setExtra(extra);
             trees.add(tree);
         });
     }

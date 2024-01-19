@@ -3,6 +3,7 @@ package com.zclcs.platform.system.service;
 import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.platform.system.api.bean.ao.DeptAo;
 import com.zclcs.platform.system.api.bean.entity.Dept;
 import com.zclcs.platform.system.api.bean.vo.DeptTreeVo;
@@ -57,7 +58,7 @@ public interface DeptService extends IService<Dept> {
      * @param deptVo deptTreeVo
      * @return 部门列表
      */
-    List<DeptTreeVo> findDeptTree(DeptVo deptVo);
+    List<Tree<DeptTreeVo>> findDeptTree(DeptVo deptVo);
 
     /**
      * 返回本级以及下级部门编号

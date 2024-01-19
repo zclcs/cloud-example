@@ -26,7 +26,7 @@ public class RouterFunctionConfiguration {
     @Bean
     public RouterFunction<ServerResponse> routerFunction() {
         return RouterFunctions.route(
-                RequestPredicates.path("/code").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), imageCodeHandler);
+                RequestPredicates.path("/system/code").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), imageCodeHandler);
     }
 
 }

@@ -1,8 +1,6 @@
 package com.zclcs.platform.system.api.bean.vo;
 
-import com.zclcs.cloud.lib.core.bean.Tree;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,8 +12,7 @@ import java.time.LocalDateTime;
  * @author zclcs
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class DeptTreeVo extends Tree<DeptVo> implements Serializable {
+public class DeptTreeVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

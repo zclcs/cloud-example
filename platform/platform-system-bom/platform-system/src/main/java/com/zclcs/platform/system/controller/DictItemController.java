@@ -7,6 +7,7 @@ import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
@@ -152,7 +153,7 @@ public class DictItemController {
      * @see DictItemService#tree(String)
      */
     @GetMapping("/inner/tree")
-    public List<DictItemTreeVo> tree(@RequestParam @NotBlank(message = "{required}") String dictName) {
+    public List<Tree<DictItemTreeVo>> tree(@RequestParam @NotBlank(message = "{required}") String dictName) {
         return this.dictItemService.tree(dictName);
     }
 
@@ -164,8 +165,8 @@ public class DictItemController {
      */
     @GetMapping("/tree")
     @SaCheckPermission("dictItem:view")
-    public BaseRsp<List<DictItemTreeVo>> findDictItemTree(@Validated DictItemVo dictItemVo) {
-        List<DictItemTreeVo> dictItemTree = this.dictItemService.findDictItemTree(dictItemVo);
+    public BaseRsp<List<Tree<DictItemTreeVo>>> findDictItemTree(@Validated DictItemVo dictItemVo) {
+        List<Tree<DictItemTreeVo>> dictItemTree = this.dictItemService.findDictItemTree(dictItemVo);
         return RspUtil.data(dictItemTree);
     }
 

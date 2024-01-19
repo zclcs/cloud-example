@@ -1,6 +1,7 @@
 package com.zclcs.cloud.lib.dict.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.exception.FieldException;
@@ -65,7 +66,7 @@ public class DictCacheUtil {
         DICT_TITLE_CACHE.deleteCache(keys);
     }
 
-    public static List<DictItemTreeVo> getDictTree(String dictName) {
+    public static List<Tree<DictItemTreeVo>> getDictTree(String dictName) {
         return DICT_TREE_CACHE.findCache(dictName);
     }
 

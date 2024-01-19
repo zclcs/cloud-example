@@ -7,6 +7,7 @@ import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
@@ -90,8 +91,8 @@ public class DeptController {
      */
     @GetMapping("/tree")
     @SaCheckPermission(value = {"user:view", "dept:view"}, mode = SaMode.OR)
-    public BaseRsp<List<DeptTreeVo>> deptTree(@Valid DeptVo deptVo) {
-        List<DeptTreeVo> list = this.deptService.findDeptTree(deptVo);
+    public BaseRsp<List<Tree<DeptTreeVo>>> deptTree(@Valid DeptVo deptVo) {
+        List<Tree<DeptTreeVo>> list = this.deptService.findDeptTree(deptVo);
         return RspUtil.data(list);
     }
 

@@ -8,6 +8,7 @@ import com.zclcs.cloud.lib.aop.annotation.ControllerEndpoint;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
 import com.zclcs.cloud.lib.core.base.BaseRsp;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.Strings;
 import com.zclcs.cloud.lib.core.strategy.ValidGroups;
 import com.zclcs.cloud.lib.core.utils.RspUtil;
@@ -93,8 +94,8 @@ public class MenuController {
      */
     @GetMapping("/tree")
     @SaCheckPermission(value = {"role:view", "menu:view", "oauthClientDetails:view"}, mode = SaMode.OR)
-    public BaseRsp<List<MenuTreeVo>> menuList(MenuVo menu) {
-        List<MenuTreeVo> systemMenus = this.menuService.findMenus(menu);
+    public BaseRsp<List<Tree<MenuTreeVo>>> menuList(MenuVo menu) {
+        List<Tree<MenuTreeVo>> systemMenus = this.menuService.findMenus(menu);
         return RspUtil.data(systemMenus);
     }
 

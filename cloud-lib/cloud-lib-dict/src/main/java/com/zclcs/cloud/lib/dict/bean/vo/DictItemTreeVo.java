@@ -1,6 +1,5 @@
 package com.zclcs.cloud.lib.dict.bean.vo;
 
-import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -20,7 +19,7 @@ import java.io.Serializable;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class DictItemTreeVo extends Tree<DictItemVo> implements Serializable {
+public class DictItemTreeVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

@@ -41,6 +41,11 @@ public class Tree<T> implements Serializable {
     private String label;
 
     /**
+     * 额外信息
+     */
+    private T extra;
+
+    /**
      * 子级
      */
     private List<Tree<T>> children;

@@ -9,6 +9,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.core.constant.CommonCore;
 import com.zclcs.cloud.lib.core.constant.Dict;
 import com.zclcs.cloud.lib.core.exception.FieldException;
@@ -88,22 +89,22 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
     }
 
     @Override
-    public List<DictItemTreeVo> tree(String dictName) {
+    public List<Tree<DictItemTreeVo>> tree(String dictName) {
         List<DictItemVo> dictItemList = findDictItemList(DictItemVo.builder().dictName(dictName).build());
-        List<DictItemTreeVo> trees = new ArrayList<>();
+        List<Tree<DictItemTreeVo>> trees = new ArrayList<>();
         buildTrees(trees, dictItemList);
-        return (List<DictItemTreeVo>) TreeUtil.build(trees);
+        return TreeUtil.build(trees);
     }
 
     @Override
-    public List<DictItemTreeVo> findDictItemTree(DictItemVo dictItemVo) {
+    public List<Tree<DictItemTreeVo>> findDictItemTree(DictItemVo dictItemVo) {
         List<DictItemVo> dictItemList = findDictItemList(dictItemVo);
-        List<DictItemTreeVo> trees = new ArrayList<>();
+        List<Tree<DictItemTreeVo>> trees = new ArrayList<>();
         buildTrees(trees, dictItemList);
         if (StrUtil.isNotBlank(dictItemVo.getTitle())) {
             return trees;
         } else {
-            return (List<DictItemTreeVo>) TreeUtil.build(trees);
+            return TreeUtil.build(trees);
         }
     }
 
@@ -221,17 +222,19 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         }
     }
 
-    public void buildTrees(List<DictItemTreeVo> trees, List<DictItemVo> dictItemVos) {
+    public void buildTrees(List<Tree<DictItemTreeVo>> trees, List<DictItemVo> dictItemVos) {
         dictItemVos.forEach(dictItemVo -> {
-            DictItemTreeVo tree = new DictItemTreeVo();
+            Tree<DictItemTreeVo> tree = new Tree<>();
             tree.setId(dictItemVo.getId());
             tree.setCode(dictItemVo.getValue());
             tree.setParentCode(dictItemVo.getParentValue());
             tree.setLabel(dictItemVo.getTitle());
-            tree.setType(dictItemVo.getType());
-            tree.setWhetherSystemDict(dictItemVo.getWhetherSystemDict());
-            tree.setDescription(dictItemVo.getDescription());
-            tree.setSorted(dictItemVo.getSorted());
+            DictItemTreeVo dictItemTreeVo = new DictItemTreeVo();
+            dictItemTreeVo.setType(dictItemVo.getType());
+            dictItemTreeVo.setWhetherSystemDict(dictItemVo.getWhetherSystemDict());
+            dictItemTreeVo.setDescription(dictItemVo.getDescription());
+            dictItemTreeVo.setSorted(dictItemVo.getSorted());
+            tree.setExtra(dictItemTreeVo);
             trees.add(tree);
         });
     }

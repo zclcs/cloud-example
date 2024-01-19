@@ -1,10 +1,8 @@
 package com.zclcs.platform.system.api.bean.vo;
 
 
-import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.utils.DictCacheUtil;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,8 +14,7 @@ import java.time.LocalDateTime;
  * @author zclcs
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class MenuTreeVo extends Tree<MenuVo> implements Serializable {
+public class MenuTreeVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

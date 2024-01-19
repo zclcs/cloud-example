@@ -3,6 +3,7 @@ package com.zclcs.platform.system.service;
 import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.platform.system.api.bean.ao.MenuAo;
 import com.zclcs.platform.system.api.bean.cache.MenuCacheVo;
 import com.zclcs.platform.system.api.bean.entity.Menu;
@@ -59,7 +60,7 @@ public interface MenuService extends IService<Menu> {
      * @param menu menu
      * @return 用户菜单
      */
-    List<MenuTreeVo> findMenus(MenuVo menu);
+    List<Tree<MenuTreeVo>> findMenus(MenuVo menu);
 
     /**
      * 新增

@@ -3,6 +3,7 @@ package com.zclcs.platform.system.service;
 import com.mybatisflex.core.service.IService;
 import com.zclcs.cloud.lib.core.base.BasePage;
 import com.zclcs.cloud.lib.core.base.BasePageAo;
+import com.zclcs.cloud.lib.core.bean.Tree;
 import com.zclcs.cloud.lib.dict.bean.entity.DictItem;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemTreeVo;
 import com.zclcs.cloud.lib.dict.bean.vo.DictItemVo;
@@ -82,7 +83,7 @@ public interface DictItemService extends IService<DictItem> {
      *
      * @return 字典树
      */
-    List<DictItemTreeVo> tree(String dictName);
+    List<Tree<DictItemTreeVo>> tree(String dictName);
 
     /**
      * 获取字典树
@@ -90,7 +91,7 @@ public interface DictItemService extends IService<DictItem> {
      * @param dictItemVo dictItemVo
      * @return 字典树
      */
-    List<DictItemTreeVo> findDictItemTree(DictItemVo dictItemVo);
+    List<Tree<DictItemTreeVo>> findDictItemTree(DictItemVo dictItemVo);
 
     /**
      * 统计
