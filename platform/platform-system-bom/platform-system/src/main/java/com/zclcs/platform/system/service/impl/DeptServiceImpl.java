@@ -126,6 +126,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         validateDeptName(deptAo.getDeptName(), deptAo.getDeptId());
         Dept dept = new Dept();
         BeanUtil.copyProperties(deptAo, dept);
+        if (dept.getParentCode() == null) {
+            dept.setParentCode(CommonCore.TOP_PARENT_CODE);
+        }
         this.save(dept);
         SystemCacheUtil.deleteDeptByDeptId(dept.getDeptId());
         return dept;
@@ -137,6 +140,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         validateDeptName(deptAo.getDeptName(), deptAo.getDeptId());
         Dept dept = new Dept();
         BeanUtil.copyProperties(deptAo, dept);
+        if (dept.getParentCode() == null) {
+            dept.setParentCode(CommonCore.TOP_PARENT_CODE);
+        } else if (dept.getParentCode().equals(dept.getDeptCode())) {
+            throw new FieldException("不能设置上级部门为当前部门");
+        }
         dept.setDeptCode(null);
         this.updateById(dept);
         SystemCacheUtil.deleteDeptByDeptId(dept.getDeptId());
