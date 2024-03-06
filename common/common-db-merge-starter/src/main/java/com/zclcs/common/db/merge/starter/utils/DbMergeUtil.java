@@ -1,10 +1,12 @@
 package com.zclcs.common.db.merge.starter.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @UtilityClass
@@ -371,5 +375,15 @@ public class DbMergeUtil {
         }
         connection.close();
         statement.close();
+    }
+
+    public void merge(DataSourceProperties dataSourceProperties, ResourcePatternResolver resourcePatternResolver, String sqlLocation, String nacosNamespace, boolean replace) throws ClassNotFoundException, SQLException, IOException {
+        createDataBase(dataSourceProperties, "utf8mb4", "utf8mb4_unicode_ci");
+        createProcedure(dataSourceProperties);
+        List<Resource> resourceList = new ArrayList<>(List.of(resourcePatternResolver.getResources(sqlLocation)));
+        if (CollectionUtil.isNotEmpty(resourceList)) {
+            resourceList.sort(Comparator.comparing(Resource::getFilename));
+        }
+        executeSql(dataSourceProperties, resourceList, nacosNamespace, replace);
     }
 }

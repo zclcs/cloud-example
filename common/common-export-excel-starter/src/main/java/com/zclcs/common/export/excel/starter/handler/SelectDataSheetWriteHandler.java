@@ -39,7 +39,6 @@ public class SelectDataSheetWriteHandler implements SheetWriteHandler {
         selectedMap.forEach((colIndex, model) -> {
             if (model.getSource() != null) {
                 if (StrUtil.isNotEmpty(model.getParentColumn())) {
-                    //直接粘贴该工具类方法到你的项目中
                     tmpCascadeSheet.set(
                             ExcelUtil.addCascadeValidationToSheet(
                                     writeWorkbookHolder,
@@ -54,7 +53,6 @@ public class SelectDataSheetWriteHandler implements SheetWriteHandler {
                             )
                     );
                 } else {
-                    //直接粘贴该工具类方法到你的项目中
                     tmpSheet.set(
                             ExcelUtil.addSelectValidationToSheet(
                                     writeWorkbookHolder,

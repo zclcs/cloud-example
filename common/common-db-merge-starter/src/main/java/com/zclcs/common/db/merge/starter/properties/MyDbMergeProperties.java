@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
@@ -24,24 +25,13 @@ public class MyDbMergeProperties {
     private Boolean enable = false;
 
     /**
+     * 数据源配置
+     */
+    private DataSourceProperties dataSourceProperties;
+
+    /**
      * sql脚本
      */
     private String sql = "classpath:sql/**.sql";
-
-    public Boolean getEnable() {
-        return enable;
-    }
-
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
-
-    public String getSql() {
-        return sql;
-    }
-
-    public void setSql(String sql) {
-        this.sql = sql;
-    }
 
 }

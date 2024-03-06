@@ -6,7 +6,7 @@ local max = tonumber(ARGV[1])
 -- 超时时间
 local ttl = tonumber(ARGV[2])
 -- 读取 redis 毫秒数
-local time = redis.call("TIME")
+local time = redis.call('TIME')
 local now = tonumber(time[1]) * 1000 + math.floor(tonumber(time[2]) / 1000)
 -- 已经过期的时间点
 local expired = now - ttl
@@ -21,8 +21,8 @@ if nextLimit > max then
     return 0;
 else
     -- 没有达到阈值 value + 1
-    redis.call("zadd", KEYS[1], now, now)
+    redis.call('zadd', KEYS[1], now, now)
     -- 秒为单位设置 key 的生存时间
-    redis.call("pexpire", KEYS[1], ttl)
+    redis.call('pexpire', KEYS[1], ttl)
     return nextLimit
 end
